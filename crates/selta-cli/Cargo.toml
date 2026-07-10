@@ -1,0 +1,16 @@
+[package]
+name = "selta-cli"
+version.workspace = true
+edition.workspace = true
+description = "The psql of Selta: pools, schemas, verification (docs/06)"
+
+[[bin]]
+name = "selta"
+path = "src/main.rs"
+
+[dependencies]
+selta-core = { path = "../selta-core" }
+serde_json.workspace = true
+anyhow.workspace = true
+clap.workspace = true
+ureq.workspace = true

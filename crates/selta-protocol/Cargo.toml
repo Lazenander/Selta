@@ -1,0 +1,9 @@
+[package]
+name = "selta-protocol"
+version.workspace = true
+edition.workspace = true
+description = "Selta extension-host wire types: JSON-RPC 2.0, newline-delimited (docs/05)"
+
+[dependencies]
+serde.workspace = true
+serde_json.workspace = true

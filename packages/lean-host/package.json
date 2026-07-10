@@ -1,0 +1,9 @@
+{
+  "name": "@selta/lean-host",
+  "version": "0.1.0",
+  "description": "Selta extension host for Lean 4: compiler check + codex reflection judge",
+  "type": "module",
+  "main": "index.js",
+  "license": "MIT",
+  "engines": { "node": ">=18" }
+}

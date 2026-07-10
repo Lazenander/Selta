@@ -1,0 +1,18 @@
+[package]
+name = "selta-core"
+version.workspace = true
+edition.workspace = true
+description = "Selta: a schema layer for regulating LLM output — embeddable core"
+
+[dependencies]
+selta-protocol = { path = "../selta-protocol" }
+serde.workspace = true
+serde_json.workspace = true
+indexmap.workspace = true
+thiserror.workspace = true
+tokio.workspace = true
+async-trait.workspace = true
+futures.workspace = true
+regex.workspace = true
+tempfile.workspace = true
+time.workspace = true

@@ -1,4 +1,4 @@
-# Selta $\llbracket\Delta\rrbracket$
+# Selta
 
 **Se**(semantic) + d**elta** — a schema layer for regulating LLM output.
 

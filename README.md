@@ -1,6 +1,6 @@
-# Selta
+# Selta $\llbracket\Delta\rrbracket$
 
-**Sel**(semantic) + del**ta** — a schema layer for regulating LLM output.
+**Se**(semantic) + d**elta** — a schema layer for regulating LLM output.
 
 A Selta schema is a JSON-shaped type tree with verifiers attached to its nodes. Verification
 takes a schema, a value (typically raw model output), and an environment, and returns a

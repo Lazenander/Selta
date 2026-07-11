@@ -49,7 +49,7 @@ Selta is a type-check layer and nothing more.
 | [docs/06-server.md](docs/06-server.md) | `seltad`: pools, catalog, versioning, HTTP API |
 | [docs/07-plan.md](docs/07-plan.md) | Workspace layout, milestones, decision log |
 | [docs/08-theory.md](docs/08-theory.md) | Theoretic model: refinements, K3, change structures, kernels, step-indexing |
-| [docs/09-foundation-soundness.md](docs/09-foundation-soundness.md) | Runtime soundness, strict admission, and consumer-migration invariants |
+| [docs/09-runtime-soundness.md](docs/09-runtime-soundness.md) | Runtime soundness, strict admission, and consumer-migration invariants |
 
 ## Glossary
 
@@ -105,8 +105,8 @@ the schema — runs as an integration test, as does a dependency-free websocket 
 [packages/lean-host](packages/lean-host/README.md): a compiler check with typed
 structured deltas, plus a codex judge voting on whether the code reflects exactly the
 statement supplied in context. Known deviations from the design live in the deferred
-table of [docs/07-plan.md](docs/07-plan.md). Foundation H0 runtime-soundness hardening
-and H1 strict admission are implemented; safe migration from compatibility parsing is
-tracked in [docs/09-foundation-soundness.md](docs/09-foundation-soundness.md).
+table of [docs/07-plan.md](docs/07-plan.md). H0 runtime-soundness hardening and
+H1 strict admission are implemented; safe migration from compatibility parsing is
+tracked in [docs/09-runtime-soundness.md](docs/09-runtime-soundness.md).
 Proof-grade consumers admit original source bytes through `Registry::admit_source` and
 an explicit policy. Documents originated 2026-07-04.

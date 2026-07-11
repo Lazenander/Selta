@@ -1,4 +1,4 @@
-# 09 — Foundation soundness hardening
+# 09 — Runtime soundness hardening
 
 Status: accepted design. H0 runtime soundness and H1 strict admission are
 implemented and locked; H2 consumer migrations remain integration work. This

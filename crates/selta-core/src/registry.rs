@@ -28,7 +28,7 @@ impl Registry {
         Self::with_builtin_declarations(declarations, cmds)
     }
 
-    /// Foundation-safe in-process profile: pure builtins only, never `cmd`.
+    /// Proof-oriented in-process profile: pure builtins only, never `cmd`.
     pub fn with_pure_builtins() -> Registry {
         Self::with_builtin_declarations(BuiltinHost::pure_decls(), None)
     }

@@ -16,7 +16,7 @@ pub fn validate(schema: &Node, registry: &Registry) -> Vec<String> {
 
 fn walk_node(node: &Node, path: &Path, registry: &Registry, errors: &mut Vec<String>) {
     for spec in &node.verify {
-        walk_spec(spec, path, registry, errors);
+        walk_spec(spec, &node.ty, path, registry, errors);
     }
     match &node.ty {
         Type::Object { fields, .. } => {
@@ -24,7 +24,12 @@ fn walk_node(node: &Node, path: &Path, registry: &Registry, errors: &mut Vec<Str
                 walk_node(&field.node, &path.child_key(name), registry, errors);
             }
         }
-        Type::Array { item, .. } => {
+        Type::Array { item, len } => {
+            if let Some(bounds) = len {
+                if matches!((bounds.min, bounds.max), (Some(min), Some(max)) if min > max) {
+                    errors.push(format!("{path}: array len.min must not exceed len.max"));
+                }
+            }
             walk_node(item, &path.child_index(0), registry, errors);
         }
         Type::Union { variants } => {
@@ -39,14 +44,20 @@ fn walk_node(node: &Node, path: &Path, registry: &Registry, errors: &mut Vec<Str
     }
 }
 
-fn walk_spec(spec: &VerifierSpec, path: &Path, registry: &Registry, errors: &mut Vec<String>) {
+fn walk_spec(
+    spec: &VerifierSpec,
+    node_type: &Type,
+    path: &Path,
+    registry: &Registry,
+    errors: &mut Vec<String>,
+) {
     match spec {
         VerifierSpec::AllOf { all_of } => {
             if all_of.is_empty() {
                 errors.push(format!("{path}: all_of must not be empty"));
             }
             for child in all_of {
-                walk_spec(child, path, registry, errors);
+                walk_spec(child, node_type, path, registry, errors);
             }
         }
         VerifierSpec::AnyOf { any_of } => {
@@ -54,7 +65,7 @@ fn walk_spec(spec: &VerifierSpec, path: &Path, registry: &Registry, errors: &mut
                 errors.push(format!("{path}: any_of must not be empty"));
             }
             for child in any_of {
-                walk_spec(child, path, registry, errors);
+                walk_spec(child, node_type, path, registry, errors);
             }
         }
         VerifierSpec::Not { not, message } => {
@@ -64,13 +75,20 @@ fn walk_spec(spec: &VerifierSpec, path: &Path, registry: &Registry, errors: &mut
                      produces no delta to negate"
                 ));
             }
-            walk_spec(not, path, registry, errors);
+            walk_spec(not, node_type, path, registry, errors);
         }
         VerifierSpec::Leaf(leaf) => {
             let Some(decl) = registry.decl(&leaf.ext) else {
                 errors.push(format!("{path}: unknown extension '{}'", leaf.ext));
                 return;
             };
+            if !decl.accepted_input.accepts_type(node_type) {
+                errors.push(format!(
+                    "{path}: extension '{}' does not accept node type '{}'",
+                    leaf.ext,
+                    node_type.name()
+                ));
+            }
             if let Some(sampling) = &leaf.sampling {
                 if decl.determinism == Determinism::Deterministic {
                     errors.push(format!(
@@ -82,6 +100,9 @@ fn walk_spec(spec: &VerifierSpec, path: &Path, registry: &Registry, errors: &mut
                     errors.push(format!("{path}: sampling.samples must be at least 1"));
                 }
                 if let VotePolicy::AtLeast { at_least } = sampling.vote {
+                    if at_least == 0 {
+                        errors.push(format!("{path}: at_least must be at least 1"));
+                    }
                     if at_least > sampling.samples {
                         errors.push(format!(
                             "{path}: at_least ({at_least}) exceeds samples ({})",
@@ -95,6 +116,9 @@ fn walk_spec(spec: &VerifierSpec, path: &Path, registry: &Registry, errors: &mut
                     }
                 }
                 if let Some(min_valid) = sampling.min_valid {
+                    if min_valid == 0 {
+                        errors.push(format!("{path}: min_valid must be at least 1"));
+                    }
                     if min_valid > sampling.samples {
                         errors.push(format!(
                             "{path}: min_valid ({min_valid}) exceeds samples ({})",
@@ -104,13 +128,20 @@ fn walk_spec(spec: &VerifierSpec, path: &Path, registry: &Registry, errors: &mut
                 }
             }
             if !contains_env_ref(&leaf.config) {
-                if let Some(config_schema) = &decl.config_schema {
-                    if !structure_only_ok(config_schema, &leaf.config) {
-                        errors.push(format!(
-                            "{path}: config for '{}' does not satisfy its config_schema",
-                            leaf.ext
-                        ));
-                    }
+                let structure_valid = decl
+                    .config_schema
+                    .as_ref()
+                    .is_none_or(|config_schema| structure_only_ok(config_schema, &leaf.config));
+                if !structure_valid {
+                    errors.push(format!(
+                        "{path}: config for '{}' does not satisfy its config_schema",
+                        leaf.ext
+                    ));
+                } else if let Err(message) = decl.preflight_config(&leaf.config) {
+                    errors.push(format!(
+                        "{path}: config for '{}' failed semantic preflight: {message}",
+                        leaf.ext
+                    ));
                 }
             }
         }
@@ -173,7 +204,9 @@ pub fn structure_only_ok(node: &Node, value: &Value) -> bool {
                     return false;
                 }
             }
-            items.iter().all(|item_value| structure_only_ok(item, item_value))
+            items
+                .iter()
+                .all(|item_value| structure_only_ok(item, item_value))
         }
         Type::Union { variants } => variants
             .iter()

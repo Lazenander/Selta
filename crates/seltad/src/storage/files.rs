@@ -5,10 +5,8 @@ use std::collections::BTreeMap;
 use std::fs;
 use std::path::PathBuf;
 
-use anyhow::{bail, Context, Result};
-use serde_json::Value;
-
 use super::{valid_name, PoolConfig, StatsRow, Storage};
+use anyhow::{bail, Context, Result};
 
 pub struct FileStorage {
     root: PathBuf,
@@ -90,21 +88,19 @@ impl Storage for FileStorage {
         Ok(names)
     }
 
-    fn register_schema(&self, pool: &str, name: &str, schema: &Value) -> Result<u32> {
+    fn register_schema(&self, pool: &str, name: &str, source: &[u8]) -> Result<u32> {
         if !valid_name(name) {
             bail!("invalid schema name '{name}'");
         }
+        std::str::from_utf8(source).context("schema source is not UTF-8")?;
         let dir = self.pool_dir(pool).join("schemas").join(name);
         fs::create_dir_all(&dir)?;
         let version = self.versions(pool, name)?.last().copied().unwrap_or(0) + 1;
-        fs::write(
-            dir.join(format!("{version}.json")),
-            serde_json::to_vec_pretty(schema)?,
-        )?;
+        fs::write(dir.join(format!("{version}.json")), source)?;
         Ok(version)
     }
 
-    fn load_schema(&self, pool: &str, name: &str, version: Option<u32>) -> Result<(u32, Value)> {
+    fn load_schema(&self, pool: &str, name: &str, version: Option<u32>) -> Result<(u32, Vec<u8>)> {
         let version = match version {
             Some(v) => v,
             None => match self.versions(pool, name)?.last() {
@@ -117,9 +113,9 @@ impl Storage for FileStorage {
             .join("schemas")
             .join(name)
             .join(format!("{version}.json"));
-        let text = fs::read_to_string(&path)
+        let source = fs::read(&path)
             .with_context(|| format!("schema '{name}@{version}' not found in pool '{pool}'"))?;
-        Ok((version, serde_json::from_str(&text)?))
+        Ok((version, source))
     }
 
     fn list_schemas(&self, pool: &str) -> Result<BTreeMap<String, Vec<u32>>> {

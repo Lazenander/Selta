@@ -31,6 +31,14 @@ export type Handler = (value: unknown, ctx: Context) => VerifyResult | Promise<V
 
 export interface VerifierOptions {
   determinism?: "deterministic" | "nondeterministic";
+  /** Stable identity for observable verifier semantics. Required when cacheable is true. */
+  semanticRevision?: string;
+  /** Opt in only for deterministic, referentially transparent verifiers. Defaults to false. */
+  cacheable?: boolean;
+  /** Coarse effect claim. Omitted declarations are treated as unknown. */
+  effectClass?: "pure" | "process_io" | "unknown";
+  /** Selta node kinds accepted by this verifier. Omission preserves legacy any-kind behavior. */
+  acceptedInput?: ("null" | "bool" | "int" | "float" | "str" | "object" | "array")[];
   configSchema?: unknown;
   settingsSchema?: unknown;
   deltaSchema?: unknown;

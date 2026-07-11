@@ -42,14 +42,16 @@ error (`inconclusive`) — the request is malformed, not the value.
 
 **Deterministic** — executed once. `pass`, `fail(delta)`, or `error` (timeout, crash,
 missing tool). A failing check's delta is a typed value and is verified against the
-extension's `delta_schema` at `depth − 1`; a delta that fails its own schema turns the
-check into an error, never a delta against the user's value. Results are cacheable by
-content hash (below).
+extension's `delta_schema` at `depth − 1`; only a `pass` is accepted. A `fail` or
+`inconclusive` delta-schema result turns the check into an error, never a delta against
+the user's value. Eligible results may be cached by content hash (below).
 
 **Non-deterministic** — executed as a sampling round:
 
-1. The engine requests `samples` independent executions from the host (concurrently,
-   subject to scheduling limits).
+1. The engine requests `samples` independent executions from the host. It materializes
+   them in windows of at most `MAX_SAMPLE_IN_FLIGHT_PER_JOB` (currently 64); this bounds
+   per-job futures and host-call concurrency without changing the requested vote count,
+   retry allowance, or shared request budget.
 2. Each execution returns a result envelope or an error. The envelope is verified before
    it may count as a vote:
    - always: structurally, against the built-in vote schema
@@ -104,7 +106,7 @@ The report's top-level verdict is the fold at `$`.
 Only valid votes participate; errors reduce the vote count.
 
 ```text
-valid = samples that produced a verified envelope
+valid = samples that produced a verified envelope; at least one is always required
 if |valid| < min_valid          → check is inconclusive (quorum failure)
 else apply policy over valid:
   majority        pass iff pass_votes > fail_votes
@@ -114,6 +116,9 @@ else apply policy over valid:
 ```
 
 Defaults: `samples = 3`, `vote = majority`, `min_valid = ceil(samples / 2)`, `depth = 1`.
+`samples`, `min_valid`, and `at_least(k)` must be positive; ratios must be in `(0, 1]`.
+The runtime applies the same fail-closed predicates if an embedded caller bypasses
+meta-validation, and it caps futures allocation before using an untrusted sample count.
 
 On a failing outcome, the deltas of the failing votes are merged into one delta for the
 check: distinct messages are kept (they are the difference, in words), byte-identical
@@ -148,25 +153,35 @@ A budget rides in the context and only ever shrinks:
 | `deadline` | Wall-clock cutoff for the whole request |
 
 Pool-level caps (`max_depth`, `max_samples`, concurrency, spend — see
-[06-server.md](06-server.md)) clamp whatever the schema asks for; a schema can tighten
-its pool's budget, never exceed it. When a budget runs out mid-verification, affected
-checks become `inconclusive` with an explanatory error — never `fail`.
+[06-server.md](06-server.md)) bound execution. At catalog admission, every
+non-deterministic leaf's explicit `sampling` request — or Selta's default when it is
+omitted — must individually fit the pool's depth and sample caps. This makes one leaf
+invocation feasible; it does not reserve that budget. The request-wide counter still
+arbitrates across sibling checks, repeated array items, and retries. When that shared
+budget runs out mid-verification, affected checks become `inconclusive` with an
+explanatory error — never `fail`.
 
 ## Caching
 
 Verifier executions are memoizable by content hash:
 
 ```text
-key = hash(extension name, extension version, config, resolved settings fingerprint,
-           value at path, env fields the extension declared in `needs`)
+key = hash(extension name, semantic revision, config, resolved settings fingerprint,
+           value, JSON path, recursion depth,
+           root/env fields the extension declared in `needs`)
 ```
 
-Deterministic verdicts cache indefinitely — same key, same verdict, by definition.
-Settings participate in the key because a verdict from one model is not a verdict from
-another ([05-extensions.md](05-extensions.md)).
+Only deterministic extensions that explicitly declare themselves `cacheable` use the
+cache. Determinism controls execution strategy; it does not prove referential transparency.
+Settings, path, and depth participate because a verifier may observe all three, while the
+semantic revision prevents results surviving a behavior change under the same extension
+name ([05-extensions.md](05-extensions.md)). External extensions default to non-cacheable.
 Non-deterministic vote sets are reused only within a single request (a retry loop
-re-judging unchanged fields is the caller's concern, not the engine's). The cache is a
-trait with a no-op default; a real store is a server concern.
+re-judging unchanged fields is the caller's concern, not the engine's). The cache remains
+a trait and `NoCache` is the explicit no-op implementation. `MemoryCache::default()` is a
+deterministic least-recently-used cache bounded to 16,384 entries and 128 MiB of
+approximate serialized-envelope weight. `MemoryCache::with_limits` selects smaller or
+larger bounds; either zero limit disables caching. A durable store is a server concern.
 
 ## Cancellation and timeouts
 
@@ -174,5 +189,6 @@ Every in-flight verifier execution carries the request deadline. Cancelling a re
 propagates `cancel` to hosts for all its in-flight executions ([05-extensions.md](05-extensions.md)).
 A verifier that outlives its per-call timeout is treated as an error (→ `inconclusive`
 pressure), and the host is considered unhealthy after repeated timeouts — supervision is
-the server's job. The engine guarantees: no hung extension can hang a verification past
+the server's job. The `cmd` builtin additionally kills its child when a timeout cancels
+the wait future. The engine guarantees: no hung extension can hang a verification past
 its deadline.

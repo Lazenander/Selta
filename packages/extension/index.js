@@ -17,7 +17,41 @@ export function fail(delta) {
 
 export const host = {
   verifier(name, options, handler) {
-    registry.set(name, { options: options ?? {}, handler });
+    const normalized = options ?? {};
+    if (
+      normalized.semanticRevision !== undefined &&
+      (typeof normalized.semanticRevision !== "string" || normalized.semanticRevision.trim() === "")
+    ) {
+      throw new TypeError(`verifier '${name}': semanticRevision must be a non-empty string`);
+    }
+    if (normalized.cacheable === true && normalized.semanticRevision === undefined) {
+      throw new TypeError(`verifier '${name}': cacheable verifiers require semanticRevision`);
+    }
+    if (
+      normalized.cacheable === true &&
+      (normalized.determinism ?? "nondeterministic") !== "deterministic"
+    ) {
+      throw new TypeError(`verifier '${name}': only deterministic verifiers may be cacheable`);
+    }
+    if (normalized.cacheable === true && normalized.effectClass !== "pure") {
+      throw new TypeError(`verifier '${name}': cacheable verifiers must declare effectClass 'pure'`);
+    }
+    if (normalized.needs !== undefined) {
+      if (!Array.isArray(normalized.needs)) {
+        throw new TypeError(`verifier '${name}': needs must be an array`);
+      }
+      const seenNeeds = new Set();
+      for (const need of normalized.needs) {
+        if (need !== "root" && need !== "env") {
+          throw new TypeError(`verifier '${name}': unknown need '${String(need)}'`);
+        }
+        if (seenNeeds.has(need)) {
+          throw new TypeError(`verifier '${name}': duplicate need '${need}'`);
+        }
+        seenNeeds.add(need);
+      }
+    }
+    registry.set(name, { options: normalized, handler });
   },
 
   run(info = { name: "selta-ts-host", version: "0.1.0" }) {
@@ -43,6 +77,10 @@ export const host = {
           extensions: [...registry.entries()].map(([name, { options }]) => ({
             name,
             determinism: options.determinism ?? "nondeterministic",
+            semantic_revision: options.semanticRevision ?? null,
+            cacheable: options.cacheable ?? false,
+            effect_class: options.effectClass ?? null,
+            accepted_input: options.acceptedInput ?? null,
             config_schema: options.configSchema ?? null,
             needs: options.needs ?? [],
             settings_schema: options.settingsSchema ?? null,

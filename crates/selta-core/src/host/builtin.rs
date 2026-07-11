@@ -12,7 +12,8 @@ use serde::{Deserialize, Serialize};
 use serde_json::{json, Value};
 
 use super::{
-    Determinism, Envelope, ExtensionDecl, ExtensionHost, HostCall, Needs, WireDelta,
+    ConfigPreflight, Determinism, EffectClass, Envelope, ExtensionDecl, ExtensionHost, HostCall,
+    InputDomain, InputKind, Needs, WireDelta,
 };
 use crate::schema::Node;
 
@@ -57,10 +58,19 @@ impl BuiltinHost {
     }
 
     pub fn decls() -> Vec<ExtensionDecl> {
-        let decl = |name: &str, config_schema: Value| ExtensionDecl {
+        let decl = |name: &str,
+                    effect_class: EffectClass,
+                    accepted_input: InputDomain,
+                    config_preflight: Option<ConfigPreflight>,
+                    config_schema: Value| ExtensionDecl {
             name: name.to_string(),
+            semantic_revision: format!("selta.builtin.{name}.v1"),
+            cacheable: effect_class == EffectClass::Pure,
             determinism: Determinism::Deterministic,
+            effect_class,
+            accepted_input,
             config_schema: Some(Node::from_value(config_schema).expect("builtin config schema")),
+            config_preflight,
             needs: Needs::default(),
             settings_schema: None,
             delta_schema: None,
@@ -68,12 +78,19 @@ impl BuiltinHost {
         vec![
             decl(
                 "one_of",
+                EffectClass::Pure,
+                InputDomain::any(),
+                Some(preflight_one_of),
                 json!({ "type": "object", "fields": {
                     "values": { "type": "array", "item": { "type": "any" } }
                 }}),
             ),
             decl(
                 "range",
+                EffectClass::Pure,
+                InputDomain::new([InputKind::Int, InputKind::Float])
+                    .expect("non-empty builtin input domain"),
+                Some(preflight_range),
                 json!({ "type": "object", "fields": {
                     "min": { "type": "float", "required": false },
                     "max": { "type": "float", "required": false }
@@ -81,20 +98,37 @@ impl BuiltinHost {
             ),
             decl(
                 "regex",
+                EffectClass::Pure,
+                InputDomain::new([InputKind::Str]).expect("non-empty builtin input domain"),
+                Some(preflight_regex),
                 json!({ "type": "object", "fields": {
                     "pattern": { "type": "str" }
                 }}),
             ),
             decl(
                 "len",
+                EffectClass::Pure,
+                InputDomain::new([InputKind::Str, InputKind::Array])
+                    .expect("non-empty builtin input domain"),
+                Some(preflight_len),
                 json!({ "type": "object", "fields": {
                     "min": { "type": "int", "required": false },
                     "max": { "type": "int", "required": false }
                 }}),
             ),
-            decl("non_empty", json!({ "type": "object", "fields": {} })),
+            decl(
+                "non_empty",
+                EffectClass::Pure,
+                InputDomain::new([InputKind::Str, InputKind::Array, InputKind::Object])
+                    .expect("non-empty builtin input domain"),
+                None,
+                json!({ "type": "object", "fields": {} }),
+            ),
             decl(
                 "cmd",
+                EffectClass::ProcessIo,
+                InputDomain::any(),
+                None,
                 json!({ "type": "object", "fields": {
                     "name": { "type": "str" },
                     "args": { "type": "array", "item": { "type": "str" }, "required": false }
@@ -102,6 +136,82 @@ impl BuiltinHost {
             ),
         ]
     }
+
+    pub fn pure_decls() -> Vec<ExtensionDecl> {
+        Self::decls()
+            .into_iter()
+            .filter(|declaration| declaration.effect_class == EffectClass::Pure)
+            .collect()
+    }
+}
+
+fn preflight_one_of(config: &Value) -> Result<(), String> {
+    let values = config
+        .get("values")
+        .and_then(Value::as_array)
+        .ok_or("one_of: config.values must be an array")?;
+    if values.is_empty() {
+        return Err("one_of: config.values must not be empty".to_string());
+    }
+    Ok(())
+}
+
+fn numeric_bounds(config: &Value, extension: &str) -> Result<(Option<f64>, Option<f64>), String> {
+    let parse = |name: &str| -> Result<Option<f64>, String> {
+        match config.get(name) {
+            Some(value) => value
+                .as_f64()
+                .map(Some)
+                .ok_or_else(|| format!("{extension}: config.{name} must be a number")),
+            None => Ok(None),
+        }
+    };
+    let min = parse("min")?;
+    let max = parse("max")?;
+    if min.is_none() && max.is_none() {
+        return Err(format!("{extension}: config requires min, max, or both"));
+    }
+    if matches!((min, max), (Some(min), Some(max)) if min > max) {
+        return Err(format!(
+            "{extension}: config.min must not exceed config.max"
+        ));
+    }
+    Ok((min, max))
+}
+
+fn preflight_range(config: &Value) -> Result<(), String> {
+    numeric_bounds(config, "range").map(|_| ())
+}
+
+fn preflight_regex(config: &Value) -> Result<(), String> {
+    let pattern = config
+        .get("pattern")
+        .and_then(Value::as_str)
+        .ok_or("regex: config.pattern must be a string")?;
+    regex::Regex::new(pattern)
+        .map(|_| ())
+        .map_err(|error| format!("regex: invalid pattern: {error}"))
+}
+
+fn preflight_len(config: &Value) -> Result<(), String> {
+    let parse = |name: &str| -> Result<Option<u64>, String> {
+        match config.get(name) {
+            Some(value) => value
+                .as_u64()
+                .map(Some)
+                .ok_or_else(|| format!("len: config.{name} must be a non-negative integer")),
+            None => Ok(None),
+        }
+    };
+    let min = parse("min")?;
+    let max = parse("max")?;
+    if min.is_none() && max.is_none() {
+        return Err("len: config requires min, max, or both".to_string());
+    }
+    if matches!((min, max), (Some(min), Some(max)) if min > max) {
+        return Err("len: config.min must not exceed config.max".to_string());
+    }
+    Ok(())
 }
 
 #[async_trait]
@@ -139,7 +249,11 @@ fn one_of(config: &Value, value: &Value) -> Result<Envelope, String> {
     }
     let expected = Value::Array(values.clone());
     Ok(Envelope::fail(WireDelta {
-        message: format!("expected one of {}, got {}", compact(&expected), compact(value)),
+        message: format!(
+            "expected one of {}, got {}",
+            compact(&expected),
+            compact(value)
+        ),
         data: None,
         expected: Some(compact(&expected)),
         actual: Some(compact(value)),
@@ -158,9 +272,7 @@ fn bound_text(min: Option<f64>, max: Option<f64>) -> String {
 fn range(config: &Value, value: &Value) -> Result<Envelope, String> {
     let min = config.get("min").and_then(Value::as_f64);
     let max = config.get("max").and_then(Value::as_f64);
-    let n = value
-        .as_f64()
-        .ok_or("range: value is not a number")?;
+    let n = value.as_f64().ok_or("range: value is not a number")?;
     let ok = min.map(|lo| n >= lo).unwrap_or(true) && max.map(|hi| n <= hi).unwrap_or(true);
     if ok {
         return Ok(Envelope::pass());
@@ -288,7 +400,11 @@ impl BuiltinHost {
             .ok_or("cmd: template has an empty command")?;
 
         let mut command = tokio::process::Command::new(program);
-        command.args(args).stdout(Stdio::null()).stderr(Stdio::piped());
+        command
+            .args(args)
+            .stdout(Stdio::null())
+            .stderr(Stdio::piped())
+            .kill_on_drop(true);
         command.stdin(if template.input == CmdInput::Stdin {
             Stdio::piped()
         } else {

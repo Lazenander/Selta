@@ -49,6 +49,7 @@ Selta is a type-check layer and nothing more.
 | [docs/06-server.md](docs/06-server.md) | `seltad`: pools, catalog, versioning, HTTP API |
 | [docs/07-plan.md](docs/07-plan.md) | Workspace layout, milestones, decision log |
 | [docs/08-theory.md](docs/08-theory.md) | Theoretic model: refinements, K3, change structures, kernels, step-indexing |
+| [docs/09-foundation-soundness.md](docs/09-foundation-soundness.md) | Runtime soundness, strict admission, and Cosmiz cutover invariants |
 
 ## Glossary
 
@@ -93,7 +94,7 @@ arrives online, with each request, through `env` — the `$env` mechanism of
 
 ## Status
 
-v0.1 implemented and verified end-to-end: `selta-core` (engine, builtins, combinators,
+v0.1 is an executable, end-to-end prototype: `selta-core` (engine, builtins, combinators,
 voting, depth recursion, cache, settings, monitoring), `selta-protocol` +
 `@selta/extension` (TypeScript SDK), `seltad` (sqlite-backed catalog with a file-tree
 option behind one storage trait, jobs, settings resolution with `$secret` references,
@@ -104,4 +105,8 @@ the schema — runs as an integration test, as does a dependency-free websocket 
 [packages/lean-host](packages/lean-host/README.md): a compiler check with typed
 structured deltas, plus a codex judge voting on whether the code reflects exactly the
 statement supplied in context. Known deviations from the design live in the deferred
-table of [docs/07-plan.md](docs/07-plan.md). Documents dated 2026-07-04.
+table of [docs/07-plan.md](docs/07-plan.md). Foundation H0 runtime-soundness hardening
+is implemented; the additive strict-admission authority and Cosmiz cutover remain H1/H2
+work tracked in [docs/09-foundation-soundness.md](docs/09-foundation-soundness.md).
+Until H1 lands, consumers needing proof-grade schema admission must retain their strict
+raw-shape gate. Documents originated 2026-07-04.

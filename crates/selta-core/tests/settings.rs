@@ -7,11 +7,12 @@ mod common;
 use std::sync::{Arc, Mutex};
 
 use async_trait::async_trait;
-use serde_json::{json, Value};
 use selta_core::{
-    Determinism, Envelope, ExtensionDecl, ExtensionHost, HostCall, MemoryCache, Needs, Node,
-    Options, Registry, ResolvedSettings, Runtime, SettingsResolver, Verdict,
+    Determinism, EffectClass, Envelope, ExtensionDecl, ExtensionHost, HostCall, InputDomain,
+    MemoryCache, Needs, Node, Options, Registry, ResolvedSettings, Runtime, SettingsResolver,
+    Verdict,
 };
+use serde_json::{json, Value};
 
 use common::schema;
 
@@ -56,8 +57,13 @@ async fn settings_reach_the_host_and_fingerprint_reaches_the_report() {
     let registry = registry_with_decl(
         ExtensionDecl {
             name: "judge".to_string(),
+            semantic_revision: "selta.test.judge.v1".to_string(),
+            cacheable: false,
             determinism: Determinism::Deterministic,
+            effect_class: EffectClass::Unknown,
+            accepted_input: InputDomain::any(),
             config_schema: None,
+            config_preflight: None,
             needs: Needs::default(),
             settings_schema: None,
             delta_schema: None,
@@ -86,7 +92,10 @@ async fn settings_reach_the_host_and_fingerprint_reaches_the_report() {
         host.seen.lock().unwrap().as_slice(),
         &[json!({ "model": "claude-sonnet-5" })]
     );
-    let fingerprint = report.extensions.get("judge").expect("fingerprint recorded");
+    let fingerprint = report
+        .extensions
+        .get("judge")
+        .expect("fingerprint recorded");
     assert_eq!(
         fingerprint,
         &selta_core::settings::fingerprint(&json!({ "model": "claude-sonnet-5" }))
@@ -99,8 +108,13 @@ async fn cache_keys_include_the_settings_fingerprint() {
     let registry = registry_with_decl(
         ExtensionDecl {
             name: "judge".to_string(),
+            semantic_revision: "selta.test.judge.v1".to_string(),
+            cacheable: true,
             determinism: Determinism::Deterministic,
+            effect_class: EffectClass::Pure,
+            accepted_input: InputDomain::any(),
             config_schema: None,
+            config_preflight: None,
             needs: Needs::default(),
             settings_schema: None,
             delta_schema: None,
@@ -139,8 +153,13 @@ async fn settings_schema_violation_is_inconclusive_not_fail() {
     let registry = registry_with_decl(
         ExtensionDecl {
             name: "judge".to_string(),
+            semantic_revision: "selta.test.judge.v1".to_string(),
+            cacheable: false,
             determinism: Determinism::Deterministic,
+            effect_class: EffectClass::Unknown,
+            accepted_input: InputDomain::any(),
             config_schema: None,
+            config_preflight: None,
             needs: Needs::default(),
             settings_schema: Some(schema(json!({
                 "type": "object", "open": true,
@@ -168,7 +187,10 @@ async fn settings_schema_violation_is_inconclusive_not_fail() {
     .await;
 
     assert_eq!(report.verdict, Verdict::Inconclusive);
-    assert!(report.deltas.is_empty(), "misconfiguration is never a delta");
+    assert!(
+        report.deltas.is_empty(),
+        "misconfiguration is never a delta"
+    );
     assert!(report.errors[0].error.contains("settings_schema"));
     assert!(host.seen.lock().unwrap().is_empty(), "host never called");
 }

@@ -130,10 +130,26 @@ pub struct Usage {
 }
 
 impl Usage {
-    pub fn add_wire(&mut self, wire: &crate::host::WireUsage) {
-        self.input_tokens += wire.input_tokens;
-        self.output_tokens += wire.output_tokens;
-        self.cost_usd += wire.cost_usd;
+    pub fn try_add_wire(&mut self, wire: &crate::host::WireUsage) -> Result<(), &'static str> {
+        if !wire.cost_usd.is_finite() || wire.cost_usd < 0.0 {
+            return Err("host usage cost must be finite and non-negative");
+        }
+        let input_tokens = self
+            .input_tokens
+            .checked_add(wire.input_tokens)
+            .ok_or("host input-token usage overflow")?;
+        let output_tokens = self
+            .output_tokens
+            .checked_add(wire.output_tokens)
+            .ok_or("host output-token usage overflow")?;
+        let cost_usd = self.cost_usd + wire.cost_usd;
+        if !cost_usd.is_finite() {
+            return Err("host cost usage overflow");
+        }
+        self.input_tokens = input_tokens;
+        self.output_tokens = output_tokens;
+        self.cost_usd = cost_usd;
+        Ok(())
     }
 }
 

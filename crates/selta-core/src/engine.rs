@@ -17,12 +17,17 @@ use crate::intake::Mode;
 use crate::meta::structure_only_ok;
 use crate::monitor::{CallOutcome, Monitor};
 use crate::path::Path;
-use crate::settings::{ResolvedSettings, SettingsResolver};
 use crate::registry::Registry;
 use crate::report::{CheckResult, Children, NodeResult, Usage};
 use crate::schema::{LeafSpec, Node, Type, VerifierSpec};
+use crate::settings::{ResolvedSettings, SettingsResolver};
 use crate::verdict::{CheckError, Delta, DeltaKind, Notice, Verdict, VoteTally};
 use crate::Options;
+
+/// Maximum number of nondeterministic host calls materialized and polled as
+/// one sampling batch. The request-wide sample budget still governs the total
+/// number of attempts; this ceiling bounds only per-job in-flight allocation.
+pub const MAX_SAMPLE_IN_FLIGHT_PER_JOB: u32 = 64;
 
 pub(crate) struct Shared {
     pub samples_left: AtomicU32,
@@ -71,10 +76,7 @@ impl<'e> Engine<'e> {
             let mut coerced: Option<Value> = None;
             if self.opts.mode == Mode::Lenient {
                 if let Some(number) = coerce_numeric_string(&node.ty, value) {
-                    self.push_notice(
-                        &path,
-                        format!("coerced string {value} to number {number}"),
-                    );
+                    self.push_notice(&path, format!("coerced string {value} to number {number}"));
                     coerced = Some(number);
                 }
             }
@@ -165,6 +167,7 @@ impl<'e> Engine<'e> {
                             );
                         } else {
                             mismatch("int", &mut deltas);
+                            proceed = false;
                         }
                     } else {
                         mismatch("int", &mut deltas);
@@ -293,9 +296,32 @@ impl<'e> Engine<'e> {
         path: Path,
         depth: u32,
     ) -> NodeResult {
+        if variants.is_empty() {
+            let delta = Delta::structure(
+                path.to_string(),
+                "union must contain at least one variant".to_string(),
+            );
+            let result = NodeResult {
+                path: path.to_string(),
+                verdict: Verdict::Fail,
+                checks: vec![CheckResult::failing("structure", vec![delta])],
+                children: None,
+            };
+            if self.opts.fail_fast {
+                self.stop.store(true, Ordering::Relaxed);
+            }
+            return result;
+        }
         let mut attempts: Vec<(usize, NodeResult)> = Vec::new();
         for (index, variant) in variants.iter().enumerate() {
-            let result = self.verify_node(variant, value, path.clone(), depth).await;
+            // A union branch is speculative. Its fail-fast state must never
+            // suppress checks in a later branch or escape before the union
+            // itself has selected a result.
+            let variant_stop = AtomicBool::new(false);
+            let result = self
+                .with_stop(&variant_stop)
+                .verify_node(variant, value, path.clone(), depth)
+                .await;
             let passed = result.verdict == Verdict::Pass;
             attempts.push((index, result));
             if passed {
@@ -344,6 +370,9 @@ impl<'e> Engine<'e> {
         chosen.checks.extend(spec_checks);
         chosen.verdict = union_verdict.and(spec_verdict);
         chosen.path = path.to_string();
+        if chosen.verdict == Verdict::Fail && self.opts.fail_fast {
+            self.stop.store(true, Ordering::Relaxed);
+        }
         chosen
     }
 
@@ -459,6 +488,17 @@ impl<'e> Engine<'e> {
                 );
             }
         }
+        if let Err(message) = decl.preflight_config(&config) {
+            return self.error_check(
+                &leaf.ext,
+                path,
+                format!(
+                    "resolved config failed the semantic preflight of '{}': {message}",
+                    leaf.ext
+                ),
+                0,
+            );
+        }
         let resolved = match self.settings.resolve(&leaf.ext) {
             Ok(resolved) => resolved,
             Err(message) => {
@@ -516,26 +556,37 @@ impl<'e> Engine<'e> {
     ) -> CheckResult {
         let root_ctx = decl.needs.root.then_some(self.root);
         let env_ctx = decl.needs.env.then_some(self.env);
-        let key = cache::key(
-            &leaf.ext,
-            config,
-            &resolved.fingerprint,
-            value,
-            root_ctx,
-            env_ctx,
-        );
-        let envelope = match self.cache.get(key).await {
-            Some(hit) => hit,
-            None => match self
-                .call_host(host, decl, config, &resolved.value, value, path, depth)
-                .await
-            {
-                Ok(envelope) => {
-                    self.cache.put(key, envelope.clone()).await;
-                    envelope
+        let envelope = if decl.cacheable {
+            let key = cache::key(cache::KeyMaterial {
+                ext: &leaf.ext,
+                semantic_revision: &decl.semantic_revision,
+                config,
+                settings_fingerprint: &resolved.fingerprint,
+                value,
+                path: &path.to_string(),
+                depth,
+                root: root_ctx,
+                env: env_ctx,
+            });
+            match self.cache.get(key).await {
+                Some(hit) => Ok(hit),
+                None => {
+                    let result = self
+                        .call_host(host, decl, config, &resolved.value, value, path, depth)
+                        .await;
+                    if let Ok(envelope) = &result {
+                        self.cache.put(key, envelope.clone()).await;
+                    }
+                    result
                 }
-                Err(message) => return self.error_check(&leaf.ext, path, message, 0),
-            },
+            }
+        } else {
+            self.call_host(host, decl, config, &resolved.value, value, path, depth)
+                .await
+        };
+        let envelope = match envelope {
+            Ok(envelope) => envelope,
+            Err(message) => return self.error_check(&leaf.ext, path, message, 0),
         };
         match envelope.verdict {
             PassFail::Pass => CheckResult::passing(&leaf.ext),
@@ -588,24 +639,37 @@ impl<'e> Engine<'e> {
             return CheckResult::skipped(&leaf.ext);
         }
         let quorum = sampling.quorum();
-        let max_attempts = sampling.samples.saturating_mul(2);
+        // Bound futures allocation before constructing it. The shared counter
+        // remains the atomic authority when sibling checks race for budget.
+        let available = self.shared.samples_left.load(Ordering::Relaxed);
+        let max_attempts = sampling.samples.saturating_mul(2).min(available);
 
         let mut votes_pass: u32 = 0;
         let mut fail_wires: Vec<WireDelta> = Vec::new();
         let mut errors: Vec<String> = Vec::new();
         let mut attempts: u32 = 0;
-        let mut pending = sampling.samples;
+        let mut pending = sampling.samples.min(max_attempts);
 
         while pending > 0 && attempts < max_attempts {
-            let batch = pending.min(max_attempts - attempts);
+            let batch = pending
+                .min(max_attempts - attempts)
+                .min(MAX_SAMPLE_IN_FLIGHT_PER_JOB);
             attempts += batch;
+            pending -= batch;
             let futures: Vec<_> = (0..batch)
                 .map(|_| {
-                    self.sample_once(decl, host, config, &resolved.value, value, path, effective_depth)
+                    self.sample_once(
+                        decl,
+                        host,
+                        config,
+                        &resolved.value,
+                        value,
+                        path,
+                        effective_depth,
+                    )
                 })
                 .collect();
             let mut budget_exhausted = false;
-            pending = 0;
             for result in join_all(futures).await {
                 match result {
                     Ok(SampleVote::Pass) => votes_pass += 1,
@@ -635,8 +699,7 @@ impl<'e> Engine<'e> {
         }
 
         if valid < quorum {
-            let message =
-                format!("quorum not met: {valid} valid votes of {quorum} needed");
+            let message = format!("quorum not met: {valid} valid votes of {quorum} needed");
             self.push_error(
                 path,
                 &leaf.ext,
@@ -752,12 +815,30 @@ impl<'e> Engine<'e> {
             deadline_ms,
         };
         let start = Instant::now();
-        let result = match deadline_ms {
+        let mut result = match deadline_ms {
             Some(ms) => tokio::time::timeout(Duration::from_millis(ms), host.verify(call))
                 .await
                 .unwrap_or_else(|_| Err("deadline exceeded".to_string())),
             None => host.verify(call).await,
         };
+        if let Ok(envelope) = &result {
+            let accounting = (|| {
+                let mut usage = self.shared.usage.lock().unwrap();
+                let mut next = *usage;
+                next.samples = next
+                    .samples
+                    .checked_add(1)
+                    .ok_or("host sample usage overflow")?;
+                if let Some(wire) = &envelope.usage {
+                    next.try_add_wire(wire)?;
+                }
+                *usage = next;
+                Ok::<(), &'static str>(())
+            })();
+            if let Err(message) = accounting {
+                result = Err(message.to_string());
+            }
+        }
         if let Some(monitor) = self.monitor {
             let outcome = match &result {
                 Ok(_) => CallOutcome::Ok,
@@ -773,13 +854,6 @@ impl<'e> Engine<'e> {
                 start.elapsed().as_millis() as u64,
                 usage,
             );
-        }
-        if let Ok(envelope) = &result {
-            let mut usage = self.shared.usage.lock().unwrap();
-            usage.samples += 1;
-            if let Some(wire) = &envelope.usage {
-                usage.add_wire(wire);
-            }
         }
         result
     }
@@ -817,11 +891,22 @@ impl<'e> Engine<'e> {
         let result = sub
             .verify_node(schema, &delta_value, Path::root(), depth)
             .await;
-        if result.verdict == Verdict::Fail {
+        if result.verdict != Verdict::Pass {
             let mut deltas = Vec::new();
             result.collect_deltas(&mut deltas);
             let messages: Vec<String> = deltas.into_iter().map(|d| d.message).collect();
-            Err(messages.join("; "))
+            if messages.is_empty() {
+                Err(format!(
+                    "delta schema was {}, not pass",
+                    match result.verdict {
+                        Verdict::Inconclusive => "inconclusive",
+                        Verdict::Fail => "fail",
+                        Verdict::Pass => unreachable!("non-pass branch"),
+                    }
+                ))
+            } else {
+                Err(messages.join("; "))
+            }
         } else {
             Ok(())
         }
@@ -831,10 +916,30 @@ impl<'e> Engine<'e> {
         self.opts.fail_fast && self.stop.load(Ordering::Relaxed)
     }
 
+    fn with_stop<'scope>(self, stop: &'scope AtomicBool) -> Engine<'scope>
+    where
+        'e: 'scope,
+    {
+        Engine {
+            reg: self.reg,
+            cache: self.cache,
+            settings: self.settings,
+            monitor: self.monitor,
+            opts: self.opts,
+            env: self.env,
+            root: self.root,
+            shared: self.shared,
+            sinks: self.sinks,
+            stop,
+        }
+    }
+
     fn remaining_ms(self) -> Option<u64> {
-        self.shared
-            .deadline
-            .map(|deadline| deadline.saturating_duration_since(Instant::now()).as_millis() as u64)
+        self.shared.deadline.map(|deadline| {
+            deadline
+                .saturating_duration_since(Instant::now())
+                .as_millis() as u64
+        })
     }
 
     fn push_notice(self, path: &Path, message: String) {
@@ -854,7 +959,13 @@ impl<'e> Engine<'e> {
         });
     }
 
-    fn error_check(self, source: &str, path: &Path, message: String, samples_lost: u32) -> CheckResult {
+    fn error_check(
+        self,
+        source: &str,
+        path: &Path,
+        message: String,
+        samples_lost: u32,
+    ) -> CheckResult {
         self.push_error(path, source, message.clone(), samples_lost);
         CheckResult::erroring(source, message)
     }

@@ -78,8 +78,10 @@ pub trait Storage: Send + Sync {
     fn load_pool(&self, name: &str) -> Result<Option<PoolConfig>>;
     fn list_pools(&self) -> Result<Vec<String>>;
     /// Registering again writes the next version; nothing is ever mutated.
-    fn register_schema(&self, pool: &str, name: &str, schema: &Value) -> Result<u32>;
-    fn load_schema(&self, pool: &str, name: &str, version: Option<u32>) -> Result<(u32, Value)>;
+    /// Schema sources stay as UTF-8 bytes across this boundary so strict
+    /// admission can still detect duplicate object keys after a reload.
+    fn register_schema(&self, pool: &str, name: &str, source: &[u8]) -> Result<u32>;
+    fn load_schema(&self, pool: &str, name: &str, version: Option<u32>) -> Result<(u32, Vec<u8>)>;
     fn list_schemas(&self, pool: &str) -> Result<BTreeMap<String, Vec<u32>>>;
     /// Monitoring counters (docs/06 §Monitoring), persisted as opaque
     /// snapshots per pool × extension — storage never reads inside `data`.

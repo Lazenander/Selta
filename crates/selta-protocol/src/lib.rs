@@ -3,6 +3,7 @@
 //! the boundary is the protocol, never a language.
 
 use serde::{Deserialize, Serialize};
+use serde_json::value::RawValue;
 use serde_json::Value;
 
 pub const PROTOCOL_VERSION: u32 = 1;
@@ -72,6 +73,7 @@ pub struct InitializeParams {
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
+#[serde(deny_unknown_fields)]
 pub struct InitializeResult {
     pub host: PeerInfo,
     pub extensions: Vec<ExtensionManifest>,
@@ -80,20 +82,35 @@ pub struct InitializeResult {
 /// The host's registration (docs/05 §initialize). `determinism` is
 /// load-bearing: the engine decides run-once vs sample-and-vote from it.
 #[derive(Debug, Clone, Serialize, Deserialize)]
+#[serde(deny_unknown_fields)]
 pub struct ExtensionManifest {
     pub name: String,
     pub determinism: String,
+    /// Stable verifier-semantics identity. Optional for protocol compatibility;
+    /// a declaration without one is treated as unversioned and non-cacheable.
     #[serde(default, skip_serializing_if = "Option::is_none")]
-    pub config_schema: Option<Value>,
+    pub semantic_revision: Option<String>,
+    /// Opt-in only. Older hosts omit this field and safely default to false.
+    #[serde(default)]
+    pub cacheable: bool,
+    /// Coarse effect declaration. Omitted legacy values are treated as unknown.
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub effect_class: Option<String>,
+    /// Selta node kinds accepted by the verifier. Omitted legacy values accept
+    /// any kind for compatibility; new manifests should be explicit.
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub accepted_input: Option<Vec<String>>,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub config_schema: Option<Box<RawValue>>,
     #[serde(default)]
     pub needs: Vec<String>,
     /// A Selta schema for the extension's operational settings (docs/05
     /// §Three kinds of configuration). Values live in the server catalog,
     /// never in schemas.
     #[serde(default, skip_serializing_if = "Option::is_none")]
-    pub settings_schema: Option<Value>,
+    pub settings_schema: Option<Box<RawValue>>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
-    pub delta_schema: Option<Value>,
+    pub delta_schema: Option<Box<RawValue>>,
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize)]

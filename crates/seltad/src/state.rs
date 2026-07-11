@@ -6,7 +6,10 @@ use std::collections::{HashMap, HashSet};
 use std::sync::atomic::AtomicBool;
 use std::sync::Arc;
 
-use selta_core::{meta, ExtensionHost, MemoryCache, Node, Registry, Report, Type, VerifierSpec};
+use selta_core::{
+    meta, Determinism, ExtensionHost, MemoryCache, Node, Registry, Report, Sampling, Type,
+    VerifierSpec,
+};
 use serde_json::Value;
 use tokio::sync::{watch, Mutex, RwLock, Semaphore};
 use tokio::task::JoinHandle;
@@ -70,9 +73,11 @@ impl AppState {
                 let mut registry = (*self.registry).clone();
                 for entry in entries.values() {
                     let host: Arc<dyn ExtensionHost> = entry.host.clone();
-                    // Clashes were rejected at connect; a race with a fresh
-                    // server host loses to the server host.
-                    let _ = registry.register(vec![(*entry.decl).clone()], host);
+                    // Every entry passed this exact atomic Registry gate while
+                    // the pool-host map was write-locked at connect time.
+                    registry
+                        .register(vec![(*entry.decl).clone()], host)
+                        .expect("validated pool-host entry remains registrable");
                 }
                 Arc::new(registry)
             }
@@ -103,29 +108,30 @@ pub fn pool_validate(
     pool_host_exts: &HashSet<String>,
 ) -> Vec<String> {
     let mut errors = meta::validate(schema, registry);
-    walk_node(schema, pool, pool_host_exts, &mut errors);
+    walk_node(schema, pool, registry, pool_host_exts, &mut errors);
     errors
 }
 
 fn walk_node(
     node: &Node,
     pool: &PoolConfig,
+    registry: &Registry,
     pool_host_exts: &HashSet<String>,
     errors: &mut Vec<String>,
 ) {
     for spec in &node.verify {
-        walk_spec(spec, pool, pool_host_exts, errors);
+        walk_spec(spec, pool, registry, pool_host_exts, errors);
     }
     match &node.ty {
         Type::Object { fields, .. } => {
             for field in fields.values() {
-                walk_node(&field.node, pool, pool_host_exts, errors);
+                walk_node(&field.node, pool, registry, pool_host_exts, errors);
             }
         }
-        Type::Array { item, .. } => walk_node(item, pool, pool_host_exts, errors),
+        Type::Array { item, .. } => walk_node(item, pool, registry, pool_host_exts, errors),
         Type::Union { variants } => {
             for variant in variants {
-                walk_node(variant, pool, pool_host_exts, errors);
+                walk_node(variant, pool, registry, pool_host_exts, errors);
             }
         }
         _ => {}
@@ -135,21 +141,22 @@ fn walk_node(
 fn walk_spec(
     spec: &VerifierSpec,
     pool: &PoolConfig,
+    registry: &Registry,
     pool_host_exts: &HashSet<String>,
     errors: &mut Vec<String>,
 ) {
     match spec {
         VerifierSpec::AllOf { all_of } => {
             for child in all_of {
-                walk_spec(child, pool, pool_host_exts, errors);
+                walk_spec(child, pool, registry, pool_host_exts, errors);
             }
         }
         VerifierSpec::AnyOf { any_of } => {
             for child in any_of {
-                walk_spec(child, pool, pool_host_exts, errors);
+                walk_spec(child, pool, registry, pool_host_exts, errors);
             }
         }
-        VerifierSpec::Not { not, .. } => walk_spec(not, pool, pool_host_exts, errors),
+        VerifierSpec::Not { not, .. } => walk_spec(not, pool, registry, pool_host_exts, errors),
         VerifierSpec::Leaf(leaf) => {
             if !BUILTINS.contains(&leaf.ext.as_str())
                 && !pool.extensions.iter().any(|e| e == &leaf.ext)
@@ -174,6 +181,108 @@ fn walk_spec(
                     ),
                 }
             }
+
+            // A non-deterministic leaf always samples, even when its schema
+            // omits `sampling` and therefore selects Selta's defaults. Reject
+            // a version that cannot fit one leaf invocation in this pool;
+            // the request-wide counter remains authoritative across sibling
+            // leaves, arrays, and retry attempts.
+            if registry
+                .decl(&leaf.ext)
+                .is_some_and(|decl| decl.determinism == Determinism::Nondeterministic)
+            {
+                check_sampling_budget(&leaf.ext, leaf.sampling, pool, errors);
+            }
         }
+    }
+}
+
+fn check_sampling_budget(
+    extension: &str,
+    requested: Option<Sampling>,
+    pool: &PoolConfig,
+    errors: &mut Vec<String>,
+) {
+    let sampling = requested.unwrap_or_default();
+    if sampling.samples > pool.budget.max_samples_per_request {
+        errors.push(format!(
+            "extension '{extension}': sampling.samples ({}) exceeds pool '{}' \
+             max_samples_per_request ({})",
+            sampling.samples, pool.name, pool.budget.max_samples_per_request
+        ));
+    }
+    if sampling.depth > pool.budget.max_depth {
+        errors.push(format!(
+            "extension '{extension}': sampling.depth ({}) exceeds pool '{}' max_depth ({})",
+            sampling.depth, pool.name, pool.budget.max_depth
+        ));
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use std::collections::BTreeMap;
+
+    use selta_core::VotePolicy;
+
+    use super::*;
+    use crate::storage::PoolBudget;
+
+    fn pool(max_depth: u32, max_samples_per_request: u32) -> PoolConfig {
+        PoolConfig {
+            name: "test-pool".to_string(),
+            extensions: Vec::new(),
+            cmd: Vec::new(),
+            settings: BTreeMap::new(),
+            budget: PoolBudget {
+                max_depth,
+                max_samples_per_request,
+                max_concurrency: 1,
+            },
+        }
+    }
+
+    #[test]
+    fn omitted_sampling_is_checked_as_the_runtime_default() {
+        let mut errors = Vec::new();
+        check_sampling_budget("judge", None, &pool(0, 2), &mut errors);
+
+        assert_eq!(errors.len(), 2);
+        assert!(errors[0].contains("sampling.samples (3)"));
+        assert!(errors[1].contains("sampling.depth (1)"));
+    }
+
+    #[test]
+    fn explicit_sampling_must_fit_each_pool_cap() {
+        let request = Sampling {
+            samples: 8,
+            vote: VotePolicy::default(),
+            depth: 4,
+            min_valid: None,
+        };
+        let mut errors = Vec::new();
+        check_sampling_budget("judge", Some(request), &pool(3, 7), &mut errors);
+
+        assert_eq!(errors.len(), 2);
+        assert!(errors[0].contains("max_samples_per_request (7)"));
+        assert!(errors[1].contains("max_depth (3)"));
+    }
+
+    #[test]
+    fn feasible_sampling_is_accepted() {
+        let mut errors = Vec::new();
+        check_sampling_budget(
+            "judge",
+            Some(Sampling {
+                samples: 7,
+                vote: VotePolicy::default(),
+                depth: 3,
+                min_valid: None,
+            }),
+            &pool(3, 7),
+            &mut errors,
+        );
+
+        assert!(errors.is_empty());
     }
 }

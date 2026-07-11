@@ -11,9 +11,11 @@ pub mod meta;
 pub mod monitor;
 pub mod path;
 pub mod registry;
+mod registry_admission;
 pub mod report;
 pub mod schema;
 pub mod settings;
+pub mod strict_admission;
 pub mod verdict;
 
 use std::sync::atomic::{AtomicBool, AtomicU32};
@@ -22,22 +24,28 @@ use std::time::{Duration, Instant};
 
 use serde_json::Value;
 
-pub use cache::{Cache, MemoryCache, NoCache};
-pub use host::builtin::{CmdInput, CmdTemplate, CmdTemplates};
-pub use host::rpc::{
-    decl_from_manifest, initialize_over_peer, verify_over_peer, RpcHost, RpcPeer,
+pub use cache::{
+    Cache, MemoryCache, NoCache, DEFAULT_MEMORY_CACHE_MAX_BYTES, DEFAULT_MEMORY_CACHE_MAX_ENTRIES,
 };
+pub use engine::MAX_SAMPLE_IN_FLIGHT_PER_JOB;
+pub use host::builtin::{CmdInput, CmdTemplate, CmdTemplates};
+pub use host::rpc::{decl_from_manifest, initialize_over_peer, verify_over_peer, RpcHost, RpcPeer};
 pub use host::{
-    Determinism, Envelope, ExtensionDecl, ExtensionHost, HostCall, Needs, PassFail, WireDelta,
-    WireUsage,
+    ConfigPreflight, Determinism, EffectClass, Envelope, ExtensionDecl, ExtensionHost, HostCall,
+    InputDomain, InputKind, Needs, PassFail, WireDelta, WireUsage,
 };
 pub use intake::Mode;
 pub use monitor::{CallOutcome, Monitor};
 pub use path::Path;
 pub use registry::Registry;
+pub use registry_admission::{AdmissionPolicy, BuiltinAdmissionLimits};
 pub use report::{CheckResult, Children, NodeResult, Report, Timing, Usage};
 pub use schema::{Field, LeafSpec, LenBounds, Node, Sampling, Type, VerifierSpec, VotePolicy};
 pub use settings::{NoSettings, ResolvedSettings, SettingsResolver};
+pub use strict_admission::{
+    validate_config_structure_with_env_holes, AdmittedNode, ConfigStructureValidator, MetaIssue,
+    MetaIssueCode, SELTA_META_VALIDATOR_REVISION, SELTA_SCHEMA_LANGUAGE_REVISION,
+};
 pub use verdict::{CheckError, Delta, DeltaKind, Notice, Verdict, VoteTally};
 
 /// Everything a verification runs against, minus the request itself. The

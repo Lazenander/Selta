@@ -6,11 +6,9 @@ use std::collections::BTreeMap;
 use std::path::Path;
 use std::sync::Mutex;
 
+use super::{valid_name, PoolConfig, StatsRow, Storage};
 use anyhow::{bail, Context, Result};
 use rusqlite::{Connection, OptionalExtension};
-use serde_json::Value;
-
-use super::{valid_name, PoolConfig, StatsRow, Storage};
 
 pub struct SqliteStorage {
     conn: Mutex<Connection>,
@@ -103,10 +101,11 @@ impl Storage for SqliteStorage {
         Ok(names)
     }
 
-    fn register_schema(&self, pool: &str, name: &str, schema: &Value) -> Result<u32> {
+    fn register_schema(&self, pool: &str, name: &str, source: &[u8]) -> Result<u32> {
         if !valid_name(name) {
             bail!("invalid schema name '{name}'");
         }
+        let source = std::str::from_utf8(source).context("schema source is not UTF-8")?;
         let mut conn = self.conn.lock().unwrap();
         let tx = conn.transaction()?;
         let version: u32 = tx.query_row(
@@ -116,13 +115,13 @@ impl Storage for SqliteStorage {
         )?;
         tx.execute(
             "INSERT INTO schemas (pool, name, version, body) VALUES (?1, ?2, ?3, ?4)",
-            (pool, name, version, serde_json::to_string_pretty(schema)?),
+            (pool, name, version, source),
         )?;
         tx.commit()?;
         Ok(version)
     }
 
-    fn load_schema(&self, pool: &str, name: &str, version: Option<u32>) -> Result<(u32, Value)> {
+    fn load_schema(&self, pool: &str, name: &str, version: Option<u32>) -> Result<(u32, Vec<u8>)> {
         let conn = self.conn.lock().unwrap();
         let row: Option<(u32, String)> = match version {
             Some(v) => conn
@@ -143,7 +142,7 @@ impl Storage for SqliteStorage {
                 .optional()?,
         };
         match (row, version) {
-            (Some((version, body)), _) => Ok((version, serde_json::from_str(&body)?)),
+            (Some((version, body)), _) => Ok((version, body.into_bytes())),
             (None, Some(v)) => bail!("schema '{name}@{v}' not found in pool '{pool}'"),
             (None, None) => bail!("schema '{name}' not found in pool '{pool}'"),
         }
@@ -151,9 +150,8 @@ impl Storage for SqliteStorage {
 
     fn list_schemas(&self, pool: &str) -> Result<BTreeMap<String, Vec<u32>>> {
         let conn = self.conn.lock().unwrap();
-        let mut statement = conn.prepare(
-            "SELECT name, version FROM schemas WHERE pool = ?1 ORDER BY name, version",
-        )?;
+        let mut statement = conn
+            .prepare("SELECT name, version FROM schemas WHERE pool = ?1 ORDER BY name, version")?;
         let mut out: BTreeMap<String, Vec<u32>> = BTreeMap::new();
         let rows = statement.query_map([pool], |row| {
             Ok((row.get::<_, String>(0)?, row.get::<_, u32>(1)?))
@@ -167,8 +165,7 @@ impl Storage for SqliteStorage {
 
     fn load_stats(&self) -> Result<Vec<StatsRow>> {
         let conn = self.conn.lock().unwrap();
-        let mut statement =
-            conn.prepare("SELECT pool, ext, data FROM stats ORDER BY pool, ext")?;
+        let mut statement = conn.prepare("SELECT pool, ext, data FROM stats ORDER BY pool, ext")?;
         let rows = statement.query_map([], |row| {
             Ok((
                 row.get::<_, String>(0)?,

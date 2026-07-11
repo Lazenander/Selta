@@ -6,8 +6,8 @@ use std::sync::atomic::{AtomicU32, Ordering};
 use std::sync::Arc;
 
 use selta_core::{
-    CmdInput, CmdTemplate, CmdTemplates, Determinism, ExtensionDecl, MemoryCache, Needs, Node,
-    Options, Registry, Runtime, Verdict,
+    CmdInput, CmdTemplate, CmdTemplates, Determinism, EffectClass, ExtensionDecl, InputDomain,
+    MemoryCache, Needs, Node, Options, Registry, Runtime, Verdict,
 };
 use serde_json::{json, Value};
 
@@ -28,7 +28,10 @@ fn registry_with_decl(
                 semantic_revision: semantic_revision.to_string(),
                 cacheable,
                 determinism,
+                effect_class: EffectClass::Pure,
+                accepted_input: InputDomain::any(),
                 config_schema: None,
+                config_preflight: None,
                 needs: Needs::default(),
                 settings_schema: None,
                 delta_schema: None,
@@ -193,7 +196,10 @@ fn registry_rejects_cacheable_nondeterministic_declarations() {
                 semantic_revision: "selta.test.unsafe_cache.v1".to_string(),
                 cacheable: true,
                 determinism: Determinism::Nondeterministic,
+                effect_class: EffectClass::Pure,
+                accepted_input: InputDomain::any(),
                 config_schema: None,
+                config_preflight: None,
                 needs: Needs::default(),
                 settings_schema: None,
                 delta_schema: None,
@@ -212,7 +218,10 @@ fn registry_rejects_duplicate_batch_names_before_mutation() {
         semantic_revision: "selta.test.duplicate_batch.v1".to_string(),
         cacheable: false,
         determinism: Determinism::Deterministic,
+        effect_class: EffectClass::Unknown,
+        accepted_input: InputDomain::any(),
         config_schema: None,
+        config_preflight: None,
         needs: Needs::default(),
         settings_schema: None,
         delta_schema: None,

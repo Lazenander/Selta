@@ -21,6 +21,8 @@ host.verifier(
     determinism: "deterministic",
     semanticRevision: "selta.test.always_pass.v1",
     cacheable: true,
+    effectClass: "pure",
+    acceptedInput: ["str"],
   },
   () => pass(),
 );

@@ -68,8 +68,22 @@ reproducibility story: last week's outputs can be re-verified against exactly th
 that judged them.
 
 **Registration** runs meta-validation ([02-schema.md](02-schema.md)): well-formedness,
-extension enablement, config validation, budget fit. A schema that registers cannot fail
-at verify time for catalog-detectable reasons.
+extension enablement, config validation, and per-leaf budget fit. For every
+non-deterministic leaf, its explicit sampling depth/count (or Selta's defaults) must be
+no larger than the pool caps. This is a feasibility check, not a reservation: the shared
+request budget can still be exhausted by siblings, arrays, or retries. A schema that
+registers cannot fail at verify time for catalog-detectable reasons.
+
+Schema JSON stays as raw UTF-8 through admission. The daemon checks the closed grammar
+and duplicate object keys before projecting it into the Rust model, persists a normalized
+admitted source, and repeats strict admission whenever a version is fetched or executed.
+Both storage backends preserve source bytes exactly. A damaged database row or a manual
+edit to the file catalog therefore fails closed instead of being interpreted by the
+compatibility parser.
+
+The default registry exposes the pure in-process builtin profile. `cmd` appears only when
+the daemon has at least one configured command template; a registry constructed without a
+template provider cannot admit schemas that name it.
 
 ## Configuration resolution
 
@@ -114,6 +128,22 @@ semantics before half-built security.
 | `GET /pools/{pool}/hosts/connect` | WebSocket upgrade: an app-provided pool host dials in |
 | `GET /pools/{pool}/stats` | Per-extension counters (see Monitoring) |
 
+A strict schema-admission rejection is `400` with stable, pointer-addressed issues:
+
+```json
+{
+  "error": "schema rejected by strict admission",
+  "issues": [
+    { "code": "DUPLICATE_OBJECT_KEY", "pointer": "/type", "detail": "duplicate object key" }
+  ]
+}
+```
+
+Clients branch on `code` and use the RFC 6901 `pointer` to locate the problem; `detail`
+is diagnostic prose. Rejected sources do not allocate a schema version. If persisted
+bytes later fail the same check, read and verify endpoints return `500` with the typed
+issues because the immutable catalog invariant has been violated.
+
 ### Verify
 
 ```jsonc
@@ -140,10 +170,12 @@ not also see.
 ## Scheduling and budgets
 
 Per pool, `max_concurrency` bounds concurrent verify jobs (per-execution limits are
-deferred), and request budgets (`max_depth`, `max_samples`) are clamped to pool budgets
-before the engine sees them; exhaustion makes checks `inconclusive`, never `fail`, and
-never takes the daemon down. Spend caps are deferred — the protocol already collects
-the `usage` numbers they need ([07-plan.md](07-plan.md)). Cancellation flows: HTTP
+deferred). Catalog admission rejects a non-deterministic leaf whose explicit or default
+sampling request cannot fit the pool's `max_depth` and `max_samples`; request options are
+then clamped to those pool caps before the engine sees them. The request-wide budget is
+shared rather than pre-reserved per leaf, so exhaustion still makes affected checks
+`inconclusive`, never `fail`, and never takes the daemon down. Spend caps are deferred —
+the protocol already collects the `usage` numbers they need ([07-plan.md](07-plan.md)). Cancellation flows: HTTP
 `DELETE` → job abort → in-flight host calls dropped, with `cancel` notifications on
 per-call timeouts.
 

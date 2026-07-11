@@ -168,7 +168,9 @@ Schemas are validated at registration time, before they enter a pool:
 
 - well-formed per this document (Selta dogfoods: the meta-schema is itself a Selta schema);
 - every `ext` resolves to an extension enabled for the pool;
-- every `config` satisfies that extension's `config_schema`;
+- the node type is inside the extension's declared accepted-input domain;
+- every `config` satisfies that extension's `config_schema` and any builtin semantic
+  preflight (repeated after dynamic `$env` resolution);
 - `sampling` appears only on non-deterministic extensions and within pool budgets.
 
 A schema that registers is guaranteed not to fail at verify time for reasons the catalog

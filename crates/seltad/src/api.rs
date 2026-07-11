@@ -5,6 +5,7 @@ use std::sync::atomic::Ordering;
 use std::sync::Arc;
 use std::time::Duration;
 
+use axum::body::Bytes;
 use axum::extract::ws::WebSocketUpgrade;
 use axum::extract::{Path, State};
 use axum::http::StatusCode;
@@ -18,7 +19,9 @@ use serde_json::{json, Value};
 use uuid::Uuid;
 
 use selta_core::meta::structure_only_ok;
-use selta_core::{ExtensionDecl, Input, Mode, Node, Options, Runtime};
+use selta_core::{
+    AdmissionPolicy, AdmittedNode, ExtensionDecl, Input, MetaIssue, Mode, Node, Options, Runtime,
+};
 
 use crate::settings::{self, PoolSettings};
 use crate::state::{pool_validate, AppState, Job, BUILTINS};
@@ -26,24 +29,63 @@ use crate::stats::PoolMonitor;
 use crate::storage::PoolConfig;
 use crate::ws;
 
-pub struct ApiError(pub StatusCode, pub String);
+pub struct ApiError {
+    status: StatusCode,
+    message: String,
+    issues: Option<Vec<MetaIssue>>,
+}
 
 impl IntoResponse for ApiError {
     fn into_response(self) -> Response {
-        (self.0, Json(json!({ "error": self.1 }))).into_response()
+        let mut body = json!({ "error": self.message });
+        if let Some(issues) = self.issues {
+            body["issues"] = serde_json::to_value(issues)
+                .unwrap_or_else(|_| json!([{ "code": "INTERNAL_SERIALIZATION_ERROR" }]));
+        }
+        (self.status, Json(body)).into_response()
+    }
+}
+
+fn api_error(status: StatusCode, message: impl Into<String>) -> ApiError {
+    ApiError {
+        status,
+        message: message.into(),
+        issues: None,
     }
 }
 
 fn not_found(message: impl Into<String>) -> ApiError {
-    ApiError(StatusCode::NOT_FOUND, message.into())
+    api_error(StatusCode::NOT_FOUND, message)
 }
 
 fn bad_request(message: impl Into<String>) -> ApiError {
-    ApiError(StatusCode::BAD_REQUEST, message.into())
+    api_error(StatusCode::BAD_REQUEST, message)
 }
 
 fn internal(error: impl std::fmt::Display) -> ApiError {
-    ApiError(StatusCode::INTERNAL_SERVER_ERROR, error.to_string())
+    api_error(StatusCode::INTERNAL_SERVER_ERROR, error.to_string())
+}
+
+fn strict_schema_error(
+    status: StatusCode,
+    message: impl Into<String>,
+    issues: Vec<MetaIssue>,
+) -> ApiError {
+    ApiError {
+        status,
+        message: message.into(),
+        issues: Some(issues),
+    }
+}
+
+fn admit_catalog_schema(source: &[u8], label: &str) -> Result<AdmittedNode, ApiError> {
+    AdmittedNode::admit_source(source).map_err(|issues| {
+        strict_schema_error(
+            StatusCode::INTERNAL_SERVER_ERROR,
+            format!("registered schema '{label}' failed strict admission"),
+            issues,
+        )
+    })
 }
 
 pub fn router(state: Arc<AppState>) -> Router {
@@ -79,11 +121,19 @@ fn decl_json(decl: &ExtensionDecl, source: &str, available: bool) -> Value {
     if decl.needs.env {
         needs.push("env");
     }
+    let accepted_input = decl
+        .accepted_input
+        .kinds()
+        .iter()
+        .map(|kind| kind.as_str())
+        .collect::<Vec<_>>();
     json!({
         "name": decl.name,
         "determinism": decl.determinism,
         "semantic_revision": decl.semantic_revision,
         "cacheable": decl.cacheable,
+        "effect_class": decl.effect_class,
+        "accepted_input": accepted_input,
         "needs": needs,
         "config_schema": schema_json(&decl.config_schema),
         "settings_schema": schema_json(&decl.settings_schema),
@@ -264,7 +314,7 @@ async fn create_pool(
     if created {
         Ok((StatusCode::CREATED, Json(json!({ "pool": config.name }))).into_response())
     } else {
-        Err(ApiError(
+        Err(api_error(
             StatusCode::CONFLICT,
             format!("pool '{}' already exists", config.name),
         ))
@@ -292,27 +342,35 @@ async fn get_pool(
 async fn put_schema(
     State(state): State<Arc<AppState>>,
     Path((pool, name)): Path<(String, String)>,
-    Json(schema_value): Json<Value>,
+    source: Bytes,
 ) -> Result<Response, ApiError> {
     let pool_config = state
         .catalog
         .load_pool(&pool)
         .map_err(internal)?
         .ok_or_else(|| not_found(format!("pool '{pool}' not found")))?;
-    let node = Node::from_value(schema_value.clone())
-        .map_err(|e| bad_request(format!("schema does not parse: {e}")))?;
     let registry = state.effective_registry(&pool).await;
+    let admitted = registry
+        .admit_source(&source, &AdmissionPolicy::allow_all())
+        .map_err(|issues| {
+            strict_schema_error(
+                StatusCode::BAD_REQUEST,
+                "schema rejected by strict admission",
+                issues,
+            )
+        })?;
     let pool_host_exts = state.pool_host_extensions(&pool).await;
-    let errors = pool_validate(&node, &pool_config, &registry, &pool_host_exts);
+    let errors = pool_validate(admitted.as_node(), &pool_config, &registry, &pool_host_exts);
     if !errors.is_empty() {
-        return Err(ApiError(
-            StatusCode::BAD_REQUEST,
-            format!("schema rejected: {}", errors.join("; ")),
-        ));
+        return Err(bad_request(format!(
+            "schema rejected: {}",
+            errors.join("; ")
+        )));
     }
+    let normalized = serde_json::to_vec_pretty(admitted.as_node()).map_err(internal)?;
     let version = state
         .catalog
-        .register_schema(&pool, &name, &schema_value)
+        .register_schema(&pool, &name, &normalized)
         .map_err(|e| bad_request(e.to_string()))?;
     Ok(Json(json!({ "name": name, "version": version })).into_response())
 }
@@ -322,10 +380,12 @@ async fn get_schema(
     Path((pool, reference)): Path<(String, String)>,
 ) -> Result<Response, ApiError> {
     let (name, version) = parse_schema_ref(&reference)?;
-    let (version, schema) = state
+    let (version, source) = state
         .catalog
         .load_schema(&pool, &name, version)
         .map_err(|e| not_found(e.to_string()))?;
+    let admitted = admit_catalog_schema(&source, &format!("{name}@{version}"))?;
+    let schema = serde_json::to_value(admitted.as_node()).map_err(internal)?;
     Ok(Json(json!({ "name": name, "version": version, "schema": schema })).into_response())
 }
 
@@ -387,12 +447,11 @@ async fn verify(
         .map_err(internal)?
         .ok_or_else(|| not_found(format!("pool '{pool}' not found")))?;
     let (schema_name, requested_version) = parse_schema_ref(&request.schema)?;
-    let (version, schema_value) = state
+    let (version, source) = state
         .catalog
         .load_schema(&pool, &schema_name, requested_version)
         .map_err(|e| not_found(e.to_string()))?;
-    let node = Node::from_value(schema_value)
-        .map_err(|e| internal(format!("registered schema no longer parses: {e}")))?;
+    let node = admit_catalog_schema(&source, &format!("{schema_name}@{version}"))?.into_node();
 
     // Request budgets are clamped to pool budgets before the engine sees them.
     let budget = pool_config.budget;
@@ -554,15 +613,25 @@ mod tests {
     #[test]
     fn declaration_json_exposes_cache_identity_and_eligibility() {
         let registry = selta_core::Registry::with_builtins(None);
+        assert!(
+            registry.decl("cmd").is_none(),
+            "cmd is unavailable without a template provider"
+        );
 
         let regex = registry.decl("regex").expect("regex builtin");
         let regex_json = decl_json(&regex, "builtin", true);
         assert_eq!(regex_json["semantic_revision"], "selta.builtin.regex.v1");
         assert_eq!(regex_json["cacheable"], true);
+        assert_eq!(regex_json["effect_class"], "pure");
+        assert_eq!(regex_json["accepted_input"], json!(["str"]));
 
-        let cmd = registry.decl("cmd").expect("cmd builtin");
+        let templates: Arc<dyn selta_core::CmdTemplates> =
+            Arc::new(std::collections::HashMap::<String, selta_core::CmdTemplate>::new());
+        let registry = selta_core::Registry::with_builtins(Some(templates));
+        let cmd = registry.decl("cmd").expect("cmd builtin with provider");
         let cmd_json = decl_json(&cmd, "builtin", true);
         assert_eq!(cmd_json["semantic_revision"], "selta.builtin.cmd.v1");
         assert_eq!(cmd_json["cacheable"], false);
+        assert_eq!(cmd_json["effect_class"], "process_io");
     }
 }

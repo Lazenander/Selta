@@ -24,6 +24,11 @@ use crate::settings::{ResolvedSettings, SettingsResolver};
 use crate::verdict::{CheckError, Delta, DeltaKind, Notice, Verdict, VoteTally};
 use crate::Options;
 
+/// Maximum number of nondeterministic host calls materialized and polled as
+/// one sampling batch. The request-wide sample budget still governs the total
+/// number of attempts; this ceiling bounds only per-job in-flight allocation.
+pub const MAX_SAMPLE_IN_FLIGHT_PER_JOB: u32 = 64;
+
 pub(crate) struct Shared {
     pub samples_left: AtomicU32,
     pub usage: Mutex<Usage>,
@@ -483,6 +488,17 @@ impl<'e> Engine<'e> {
                 );
             }
         }
+        if let Err(message) = decl.preflight_config(&config) {
+            return self.error_check(
+                &leaf.ext,
+                path,
+                format!(
+                    "resolved config failed the semantic preflight of '{}': {message}",
+                    leaf.ext
+                ),
+                0,
+            );
+        }
         let resolved = match self.settings.resolve(&leaf.ext) {
             Ok(resolved) => resolved,
             Err(message) => {
@@ -635,8 +651,11 @@ impl<'e> Engine<'e> {
         let mut pending = sampling.samples.min(max_attempts);
 
         while pending > 0 && attempts < max_attempts {
-            let batch = pending.min(max_attempts - attempts);
+            let batch = pending
+                .min(max_attempts - attempts)
+                .min(MAX_SAMPLE_IN_FLIGHT_PER_JOB);
             attempts += batch;
+            pending -= batch;
             let futures: Vec<_> = (0..batch)
                 .map(|_| {
                     self.sample_once(
@@ -651,7 +670,6 @@ impl<'e> Engine<'e> {
                 })
                 .collect();
             let mut budget_exhausted = false;
-            pending = 0;
             for result in join_all(futures).await {
                 match result {
                     Ok(SampleVote::Pass) => votes_pass += 1,

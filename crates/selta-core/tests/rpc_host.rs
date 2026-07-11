@@ -3,7 +3,7 @@
 
 mod common;
 
-use selta_core::{Options, Registry, RpcHost, Verdict};
+use selta_core::{EffectClass, InputKind, Options, Registry, RpcHost, Verdict};
 use serde_json::json;
 
 fn node_available() -> bool {
@@ -37,12 +37,16 @@ async fn ts_host_end_to_end() {
         "selta.extension.unversioned"
     );
     assert!(!length_judge.cacheable, "legacy manifests fail safe");
+    assert_eq!(length_judge.effect_class, EffectClass::Unknown);
+    assert_eq!(length_judge.accepted_input.kinds(), InputKind::ALL);
     let always_pass = decls
         .iter()
         .find(|declaration| declaration.name == "always_pass")
         .expect("versioned declaration propagated");
     assert_eq!(always_pass.semantic_revision, "selta.test.always_pass.v1");
     assert!(always_pass.cacheable);
+    assert_eq!(always_pass.effect_class, EffectClass::Pure);
+    assert_eq!(always_pass.accepted_input.kinds(), &[InputKind::Str]);
 
     let mut registry = Registry::with_builtins(None);
     registry

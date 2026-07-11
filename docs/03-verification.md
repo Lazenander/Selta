@@ -48,8 +48,10 @@ the user's value. Eligible results may be cached by content hash (below).
 
 **Non-deterministic** — executed as a sampling round:
 
-1. The engine requests `samples` independent executions from the host (concurrently,
-   subject to scheduling limits).
+1. The engine requests `samples` independent executions from the host. It materializes
+   them in windows of at most `MAX_SAMPLE_IN_FLIGHT_PER_JOB` (currently 64); this bounds
+   per-job futures and host-call concurrency without changing the requested vote count,
+   retry allowance, or shared request budget.
 2. Each execution returns a result envelope or an error. The envelope is verified before
    it may count as a vote:
    - always: structurally, against the built-in vote schema
@@ -151,9 +153,13 @@ A budget rides in the context and only ever shrinks:
 | `deadline` | Wall-clock cutoff for the whole request |
 
 Pool-level caps (`max_depth`, `max_samples`, concurrency, spend — see
-[06-server.md](06-server.md)) clamp whatever the schema asks for; a schema can tighten
-its pool's budget, never exceed it. When a budget runs out mid-verification, affected
-checks become `inconclusive` with an explanatory error — never `fail`.
+[06-server.md](06-server.md)) bound execution. At catalog admission, every
+non-deterministic leaf's explicit `sampling` request — or Selta's default when it is
+omitted — must individually fit the pool's depth and sample caps. This makes one leaf
+invocation feasible; it does not reserve that budget. The request-wide counter still
+arbitrates across sibling checks, repeated array items, and retries. When that shared
+budget runs out mid-verification, affected checks become `inconclusive` with an
+explanatory error — never `fail`.
 
 ## Caching
 
@@ -171,8 +177,11 @@ Settings, path, and depth participate because a verifier may observe all three, 
 semantic revision prevents results surviving a behavior change under the same extension
 name ([05-extensions.md](05-extensions.md)). External extensions default to non-cacheable.
 Non-deterministic vote sets are reused only within a single request (a retry loop
-re-judging unchanged fields is the caller's concern, not the engine's). The cache is a
-trait with a no-op default; a real store is a server concern.
+re-judging unchanged fields is the caller's concern, not the engine's). The cache remains
+a trait and `NoCache` is the explicit no-op implementation. `MemoryCache::default()` is a
+deterministic least-recently-used cache bounded to 16,384 entries and 128 MiB of
+approximate serialized-envelope weight. `MemoryCache::with_limits` selects smaller or
+larger bounds; either zero limit disables caching. A durable store is a server concern.
 
 ## Cancellation and timeouts
 

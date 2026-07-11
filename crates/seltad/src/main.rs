@@ -33,9 +33,8 @@ async fn shutdown_signal() {
     let ctrl_c = tokio::signal::ctrl_c();
     #[cfg(unix)]
     {
-        let mut sigterm =
-            tokio::signal::unix::signal(tokio::signal::unix::SignalKind::terminate())
-                .expect("sigterm handler installs");
+        let mut sigterm = tokio::signal::unix::signal(tokio::signal::unix::SignalKind::terminate())
+            .expect("sigterm handler installs");
         tokio::select! {
             _ = ctrl_c => {}
             _ = sigterm.recv() => {}
@@ -54,8 +53,9 @@ async fn main() -> anyhow::Result<()> {
         .unwrap_or_else(|| "selta.toml".to_string());
     let config = Config::load(Path::new(&config_path))?;
 
-    let templates: Arc<dyn CmdTemplates> = Arc::new(config.cmd.clone());
-    let mut registry = Registry::with_builtins(Some(templates));
+    let templates: Option<Arc<dyn CmdTemplates>> =
+        (!config.cmd.is_empty()).then(|| Arc::new(config.cmd.clone()) as Arc<dyn CmdTemplates>);
+    let mut registry = Registry::with_builtins(templates);
     for (name, host_config) in &config.hosts {
         let (decls, host) = RpcHost::spawn(&host_config.run, "seltad")
             .await

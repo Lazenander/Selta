@@ -44,7 +44,7 @@ pub async fn handle_socket(state: Arc<AppState>, pool: String, socket: WebSocket
     let (mut sink, mut stream) = socket.split();
     let (peer, mut outbox) = RpcPeer::new();
 
-    let writer = tokio::spawn(async move {
+    let mut writer = tokio::spawn(async move {
         while let Some(line) = outbox.recv().await {
             if sink.send(Message::Text(line.into())).await.is_err() {
                 break;
@@ -52,7 +52,7 @@ pub async fn handle_socket(state: Arc<AppState>, pool: String, socket: WebSocket
         }
     });
     let reader_peer = peer.clone();
-    let reader = tokio::spawn(async move {
+    let mut reader = tokio::spawn(async move {
         while let Some(Ok(message)) = stream.next().await {
             match message {
                 Message::Text(text) => reader_peer.accept_line(&text),
@@ -60,24 +60,32 @@ pub async fn handle_socket(state: Arc<AppState>, pool: String, socket: WebSocket
                 _ => {}
             }
         }
-        reader_peer.fail_all("pool host disconnected");
     });
 
     match register(&state, &pool, &peer, connection).await {
         Ok(names) => {
-            eprintln!("seltad: pool '{pool}' host connected ({})", names.join(", "));
+            eprintln!(
+                "seltad: pool '{pool}' host connected ({})",
+                names.join(", ")
+            );
         }
         Err(error) => {
             eprintln!("seltad: pool '{pool}' host rejected: {error}");
             reader.abort();
             writer.abort();
+            peer.fail_all("pool host registration rejected");
             return;
         }
     }
 
-    // Stay resident until the host goes away, then clean up its entries.
-    let _ = reader.await;
-    writer.abort();
+    // Either transport half ending makes the host unavailable. In particular,
+    // a failed writer must not leave declarations advertised until the reader
+    // happens to notice the dead connection.
+    tokio::select! {
+        _ = &mut reader => writer.abort(),
+        _ = &mut writer => reader.abort(),
+    }
+    peer.fail_all("pool host disconnected");
     let mut hosts = state.pool_hosts.write().await;
     if let Some(entries) = hosts.get_mut(&pool) {
         entries.retain(|_, entry| entry.connection != connection);
@@ -101,12 +109,18 @@ async fn register(
     let host = Arc::new(WsHost { peer: peer.clone() });
     let mut hosts = state.pool_hosts.write().await;
     let entries = hosts.entry(pool.to_string()).or_default();
-    // Collisions are rejected on the spot — at connect, for pool hosts (docs/05).
-    for decl in &decls {
-        if state.registry.decl(&decl.name).is_some() || entries.contains_key(&decl.name) {
-            return Err(format!("extension name clash: '{}'", decl.name));
-        }
+
+    // Route the complete declaration batch through the same prospective,
+    // atomic registry validation as stdio hosts. This catches same-batch
+    // duplicates and declaration-schema faults before any entry is visible.
+    let mut prospective = (*state.registry).clone();
+    for entry in entries.values() {
+        let existing_host: Arc<dyn ExtensionHost> = entry.host.clone();
+        prospective.register(vec![(*entry.decl).clone()], existing_host)?;
     }
+    let prospective_host: Arc<dyn ExtensionHost> = host.clone();
+    prospective.register(decls.clone(), prospective_host)?;
+
     let mut names = Vec::new();
     for decl in decls {
         names.push(decl.name.clone());

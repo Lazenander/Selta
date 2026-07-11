@@ -33,6 +33,24 @@ export const host = {
     ) {
       throw new TypeError(`verifier '${name}': only deterministic verifiers may be cacheable`);
     }
+    if (normalized.cacheable === true && normalized.effectClass !== "pure") {
+      throw new TypeError(`verifier '${name}': cacheable verifiers must declare effectClass 'pure'`);
+    }
+    if (normalized.needs !== undefined) {
+      if (!Array.isArray(normalized.needs)) {
+        throw new TypeError(`verifier '${name}': needs must be an array`);
+      }
+      const seenNeeds = new Set();
+      for (const need of normalized.needs) {
+        if (need !== "root" && need !== "env") {
+          throw new TypeError(`verifier '${name}': unknown need '${String(need)}'`);
+        }
+        if (seenNeeds.has(need)) {
+          throw new TypeError(`verifier '${name}': duplicate need '${need}'`);
+        }
+        seenNeeds.add(need);
+      }
+    }
     registry.set(name, { options: normalized, handler });
   },
 
@@ -61,6 +79,8 @@ export const host = {
             determinism: options.determinism ?? "nondeterministic",
             semantic_revision: options.semanticRevision ?? null,
             cacheable: options.cacheable ?? false,
+            effect_class: options.effectClass ?? null,
+            accepted_input: options.acceptedInput ?? null,
             config_schema: options.configSchema ?? null,
             needs: options.needs ?? [],
             settings_schema: options.settingsSchema ?? null,

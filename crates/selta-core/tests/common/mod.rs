@@ -6,8 +6,8 @@ use std::sync::{Arc, Mutex};
 
 use async_trait::async_trait;
 use selta_core::{
-    Determinism, Envelope, ExtensionDecl, ExtensionHost, HostCall, Needs, Node, Options, Registry,
-    Report, WireDelta,
+    Determinism, EffectClass, Envelope, ExtensionDecl, ExtensionHost, HostCall, InputDomain, Needs,
+    Node, Options, Registry, Report, WireDelta,
 };
 use serde_json::Value;
 
@@ -58,7 +58,10 @@ pub fn registry_with(
                 semantic_revision: format!("selta.test.{name}.v1"),
                 cacheable: determinism == Determinism::Deterministic,
                 determinism,
+                effect_class: EffectClass::Pure,
+                accepted_input: InputDomain::any(),
                 config_schema: None,
+                config_preflight: None,
                 needs: Needs::default(),
                 settings_schema: None,
                 delta_schema,

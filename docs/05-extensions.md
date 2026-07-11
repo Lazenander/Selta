@@ -15,16 +15,19 @@ An extension is:
 | `determinism` | `"deterministic"` or `"nondeterministic"` — fixes how the engine runs it |
 | `semantic_revision` | Stable, non-empty identity for the verifier's observable semantics |
 | `cacheable` | Opt-in claim that deterministic executions are referentially transparent; external declarations default `false` |
+| `effect_class` | `"pure"`, `"process_io"`, or `"unknown"`; omitted external declarations default `unknown` |
+| `accepted_input` | Non-empty list of Selta node kinds the verifier safely accepts; omitted legacy declarations accept all kinds |
 | `config_schema` | A Selta schema for the `config` block; enforced at schema registration |
-| `needs` | Context fields it wants shipped: any of `"root"`, `"env"` (default: none) |
+| `needs` | Context fields it wants shipped: a duplicate-free subset of `"root"`, `"env"` (default: none; unknown names are rejected) |
 | `settings_schema` | Optional: a Selta schema for the extension's operational settings (model, endpoint, key). Values live in the server catalog, never in schemas — see below |
 | `delta_schema` | Optional: a Selta schema for the deltas this extension emits (`{ message, data? }`); default `{ "message": str, "data": any }`. Every emitted delta is verified against it at `depth − 1` — deltas are typed values too |
 
 The determinism declaration is load-bearing: the engine decides run-once versus
 sample-and-vote from it, and the schema author never restates it. Cache eligibility is a
-separate explicit claim. A host that lies about determinism, semantic revision, or
-cacheability breaks the corresponding execution or cache invariant; this is an extension
-trust boundary, documented, not policed.
+separate explicit claim and requires a pure effect class. A host that lies about
+determinism, semantic revision, effect, accepted input, or cacheability breaks the
+corresponding execution or cache invariant; this is an extension trust boundary,
+documented, not policed.
 
 ## Three kinds of configuration
 
@@ -50,8 +53,8 @@ not survive it.
 
 | Tier | What | Code required |
 |---|---|---|
-| Builtin | Compiled into the engine's in-process host | none — always available |
-| `cmd` | A builtin that runs an allowlisted command | none — server config only |
+| Builtin | Pure checks compiled into the engine's in-process host | none — always available |
+| `cmd` | A builtin that runs an allowlisted command | only available when the registry has a command-template provider |
 | Host extension | Any process speaking the wire protocol below | any language |
 
 ### Builtins
@@ -59,19 +62,24 @@ not survive it.
 All deterministic. The pure in-process checks are cacheable under their built-in semantic
 revisions; `cmd` performs process I/O and is never cacheable. `config` shapes:
 
-| Name | Config | Fails when |
-|---|---|---|
-| `one_of` | `{ "values": [...] }` | value not in the list |
-| `range` | `{ "min"?, "max"? }` | number outside bounds |
-| `regex` | `{ "pattern": "..." }` | string does not match |
-| `len` | `{ "min"?, "max"? }` | string/array length outside bounds |
-| `non_empty` | `{}` | empty string/array/object |
-| `cmd` | `{ "name": "...", "args"?: [...] }` | non-zero exit |
+| Name | Accepted input | Config | Fails when |
+|---|---|---|---|
+| `one_of` | any | `{ "values": [...] }` | value not in the non-empty list |
+| `range` | int/float | `{ "min"?, "max"? }` | number outside ordered, non-empty bounds |
+| `regex` | string | `{ "pattern": "..." }` | string does not match a valid regex |
+| `len` | string/array | `{ "min"?, "max"? }` | length outside ordered, non-negative, non-empty bounds |
+| `non_empty` | string/array/object | `{}` | value is empty |
+| `cmd` | any | `{ "name": "...", "args"?: [...] }` | non-zero exit |
 
 Like any config field, these values may be `$env` references
 ([02-schema.md](02-schema.md)) — e.g. `regex` with
 `{ "pattern": { "$env": "expected_pattern" } }` checks the value against a regular
 language supplied with each request.
+
+Builtin config semantics are preflighted at schema registration when fully literal and
+again after `$env` resolution. Invalid regexes, empty `one_of`, and empty, inverted, or
+negative bounds are configuration errors (`inconclusive` at runtime), never failures of
+the user's value.
 
 The pure in-process builtins opt into deterministic result caching. `cmd` does not:
 process state and toolchain identity are outside its current declaration, so identical
@@ -127,6 +135,8 @@ identical on both transports.
         "determinism": "nondeterministic",
         "semantic_revision": "example.llm_judge.v1",
         "cacheable": false,
+        "effect_class": "unknown",
+        "accepted_input": ["str"],
         "config_schema": { "type": "object", "fields": { "question": { "type": "str" } } },
         "needs": ["env"],
         "settings_schema": { "type": "object", "fields": { "model": { "type": "str" } } },
@@ -136,8 +146,18 @@ identical on both transports.
 The manifest is the host's registration; extension names must be unique across builtins,
 server hosts, and the pool's own hosts, and collisions are rejected on the spot —
 at startup for server hosts, at connect for pool hosts. For compatibility, an omitted
-`semantic_revision` is recorded as unversioned and an omitted `cacheable` is `false`;
-an unversioned extension cannot opt into caching.
+`semantic_revision` is recorded as unversioned, an omitted `cacheable` is `false`, an
+omitted `effect_class` is `unknown`, and omitted `accepted_input` preserves the legacy
+any-kind declaration. An unversioned, non-deterministic, or non-pure extension cannot opt
+into caching.
+
+Initialization is a raw-JSON admission boundary. The server preserves the original bytes
+of each `config_schema`, `settings_schema`, and `delta_schema` until Selta strict admission
+has rejected duplicate keys, mixed discriminants, and unknown fields; serializing an
+already parsed generic JSON value is not an admission substitute. The initialize result
+and extension-manifest objects are closed wire shapes. `needs` is parsed as an exact,
+duplicate-free set, so misspellings do not silently remove context. Declaration schemas
+then pass registry validation atomically before any extension becomes visible.
 
 ### `verify` (server → host, concurrent)
 

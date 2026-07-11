@@ -73,6 +73,167 @@ async fn http(method: &'static str, url: String, body: Option<Value>) -> (u16, V
     .expect("http task")
 }
 
+async fn put_raw(url: String, source: &str) -> (u16, Value) {
+    let source = source.to_string();
+    tokio::task::spawn_blocking(move || {
+        let result = ureq::put(&url)
+            .set("content-type", "application/json")
+            .send_string(&source);
+        match result {
+            Ok(response) => {
+                let status = response.status();
+                (status, response.into_json().unwrap_or_else(|_| json!({})))
+            }
+            Err(ureq::Error::Status(status, response)) => {
+                (status, response.into_json().unwrap_or_else(|_| json!({})))
+            }
+            Err(error) => panic!("http PUT {url}: {error}"),
+        }
+    })
+    .await
+    .expect("http task")
+}
+
+#[tokio::test]
+async fn schema_registration_is_raw_strict_typed_and_atomic() {
+    let dir = tempfile::tempdir().expect("tempdir");
+    let base = serve(app_state(
+        Registry::with_builtins(None),
+        HashMap::new(),
+        &dir,
+    ))
+    .await;
+    let (status, _) = http(
+        "POST",
+        format!("{base}/pools"),
+        Some(json!({ "name": "app" })),
+    )
+    .await;
+    assert_eq!(status, 201);
+
+    let (status, duplicate) = put_raw(
+        format!("{base}/pools/app/schemas/strict"),
+        r#"{ "type": "str", "type": "int" }"#,
+    )
+    .await;
+    assert_eq!(status, 400, "{duplicate}");
+    assert_eq!(duplicate["error"], "schema rejected by strict admission");
+    assert_eq!(duplicate["issues"][0]["code"], "DUPLICATE_OBJECT_KEY");
+    assert_eq!(duplicate["issues"][0]["pointer"], "/type");
+
+    let (status, unknown) = put_raw(
+        format!("{base}/pools/app/schemas/strict"),
+        r#"{ "type": "str", "ignored": true }"#,
+    )
+    .await;
+    assert_eq!(status, 400, "{unknown}");
+    assert!(unknown["issues"].as_array().is_some_and(|issues| {
+        issues
+            .iter()
+            .any(|issue| issue["code"] == "UNEXPECTED_PROPERTY" && issue["pointer"] == "/ignored")
+    }));
+
+    let (status, missing) = http("GET", format!("{base}/pools/app/schemas/strict"), None).await;
+    assert_eq!(
+        status, 404,
+        "rejected sources must not allocate a version: {missing}"
+    );
+
+    // A valid dynamic hole does not excuse invalid literal siblings in the
+    // same config object.
+    let (status, sibling) = put_raw(
+        format!("{base}/pools/app/schemas/strict"),
+        r#"{
+          "type": "str",
+          "verify": [{
+            "ext": "regex",
+            "config": { "pattern": { "$env": "expected.pattern" }, "ignored": true }
+          }]
+        }"#,
+    )
+    .await;
+    assert_eq!(status, 400, "{sibling}");
+    assert!(sibling["issues"].as_array().is_some_and(|issues| {
+        issues.iter().any(|issue| {
+            issue["code"] == "CONFIG_STRUCTURE" && issue["pointer"] == "/verify/0/config/ignored"
+        })
+    }));
+
+    let (status, accepted) = put_raw(
+        format!("{base}/pools/app/schemas/strict"),
+        r#"{
+          "type": "str",
+          "verify": [{
+            "ext": "regex",
+            "config": { "pattern": { "$env": "expected.pattern" } }
+          }]
+        }"#,
+    )
+    .await;
+    assert_eq!(status, 200, "{accepted}");
+    assert_eq!(accepted["version"], 1, "rejections consumed no versions");
+
+    let (status, fetched) = http("GET", format!("{base}/pools/app/schemas/strict@1"), None).await;
+    assert_eq!(status, 200, "{fetched}");
+    assert_eq!(fetched["schema"]["type"], "str");
+    assert_eq!(
+        fetched["schema"]["verify"][0]["config"]["pattern"]["$env"],
+        "expected.pattern"
+    );
+}
+
+#[tokio::test]
+async fn catalog_schema_bytes_are_strictly_read_before_get_or_verify() {
+    let dir = tempfile::tempdir().expect("tempdir");
+    let base = serve(app_state(
+        Registry::with_builtins(None),
+        HashMap::new(),
+        &dir,
+    ))
+    .await;
+    let (status, _) = http(
+        "POST",
+        format!("{base}/pools"),
+        Some(json!({ "name": "app" })),
+    )
+    .await;
+    assert_eq!(status, 201);
+    let (status, body) = put_raw(
+        format!("{base}/pools/app/schemas/tampered"),
+        r#"{ "type": "str" }"#,
+    )
+    .await;
+    assert_eq!(status, 200, "{body}");
+
+    let connection = rusqlite::Connection::open(dir.path().join("selta.db")).expect("db opens");
+    connection
+        .execute(
+            "UPDATE schemas SET body = ?1 WHERE pool = 'app' AND name = 'tampered' AND version = 1",
+            [r#"{ "type": "str", "type": "int" }"#],
+        )
+        .expect("catalog tamper");
+
+    let assert_corruption = |status: u16, body: &Value| {
+        assert_eq!(status, 500, "{body}");
+        assert!(body["error"]
+            .as_str()
+            .is_some_and(|error| error.contains("failed strict admission")));
+        assert_eq!(body["issues"][0]["code"], "DUPLICATE_OBJECT_KEY");
+        assert_eq!(body["issues"][0]["pointer"], "/type");
+    };
+
+    let (status, body) = http("GET", format!("{base}/pools/app/schemas/tampered@1"), None).await;
+    assert_corruption(status, &body);
+
+    let (status, body) = http(
+        "POST",
+        format!("{base}/pools/app/verify"),
+        Some(json!({ "schema": "tampered@1", "value": "hello" })),
+    )
+    .await;
+    assert_corruption(status, &body);
+}
+
 /// M4 acceptance (docs/07): the worked judge is reconfigured at pool scope —
 /// the schema is never touched — and the report pins the fingerprints.
 #[tokio::test]
@@ -109,8 +270,14 @@ async fn pool_scope_settings_reconfigure_the_judge_without_touching_the_schema()
     .await;
     assert_eq!(status, 200, "{body}");
 
-    let request = json!({ "schema": "answer", "value": "an answer", "options": { "wait_ms": 30000 } });
-    let (status, report) = http("POST", format!("{base}/pools/app/verify"), Some(request.clone())).await;
+    let request =
+        json!({ "schema": "answer", "value": "an answer", "options": { "wait_ms": 30000 } });
+    let (status, report) = http(
+        "POST",
+        format!("{base}/pools/app/verify"),
+        Some(request.clone()),
+    )
+    .await;
     assert_eq!(status, 200, "{report}");
     assert_eq!(report["verdict"], "fail", "{report}");
     assert!(report["deltas"][0]["message"]
@@ -141,7 +308,10 @@ async fn pool_scope_settings_reconfigure_the_judge_without_touching_the_schema()
     let (status, stats) = http("GET", format!("{base}/pools/app/stats"), None).await;
     assert_eq!(status, 200);
     let judge = &stats["extensions"]["model_judge"];
-    assert!(judge["calls"].as_u64().expect("calls counted") >= 6, "{stats}");
+    assert!(
+        judge["calls"].as_u64().expect("calls counted") >= 6,
+        "{stats}"
+    );
     assert_eq!(judge["agreement"], json!(1.0), "unanimous rounds");
 
     // Redaction: API responses echo the reference, never the secret value.
@@ -160,7 +330,12 @@ async fn pool_host_dials_in_serves_verifies_and_disconnect_is_inconclusive() {
     let state = app_state(Registry::with_builtins(None), HashMap::new(), &dir);
     let base = serve(state).await;
 
-    let (status, _) = http("POST", format!("{base}/pools"), Some(json!({ "name": "wspool" }))).await;
+    let (status, _) = http(
+        "POST",
+        format!("{base}/pools"),
+        Some(json!({ "name": "wspool" })),
+    )
+    .await;
     assert_eq!(status, 201);
 
     let ws_url = format!(
@@ -175,9 +350,11 @@ async fn pool_host_dials_in_serves_verifies_and_disconnect_is_inconclusive() {
         .expect("pool host spawns");
 
     let listed = |body: &Value| {
-        body["extensions"]
-            .as_array()
-            .is_some_and(|items| items.iter().any(|i| i["name"] == "parity" && i["available"] == true))
+        body["extensions"].as_array().is_some_and(|items| {
+            items
+                .iter()
+                .any(|i| i["name"] == "parity" && i["available"] == true)
+        })
     };
     let mut connected = false;
     for _ in 0..100 {
@@ -200,14 +377,25 @@ async fn pool_host_dials_in_serves_verifies_and_disconnect_is_inconclusive() {
     .await;
     assert_eq!(status, 200, "{body}");
 
-    let request = |n: i64| json!({ "schema": "evenness", "value": n, "options": { "wait_ms": 10000 } });
-    let (_, report) = http("POST", format!("{base}/pools/wspool/verify"), Some(request(3))).await;
+    let request =
+        |n: i64| json!({ "schema": "evenness", "value": n, "options": { "wait_ms": 10000 } });
+    let (_, report) = http(
+        "POST",
+        format!("{base}/pools/wspool/verify"),
+        Some(request(3)),
+    )
+    .await;
     assert_eq!(report["verdict"], "fail", "{report}");
     assert!(report["deltas"][0]["message"]
         .as_str()
         .expect("delta message")
         .contains("even number"));
-    let (_, report) = http("POST", format!("{base}/pools/wspool/verify"), Some(request(4))).await;
+    let (_, report) = http(
+        "POST",
+        format!("{base}/pools/wspool/verify"),
+        Some(request(4)),
+    )
+    .await;
     assert_eq!(report["verdict"], "pass", "{report}");
 
     child.kill().await.expect("kill pool host");
@@ -222,7 +410,16 @@ async fn pool_host_dials_in_serves_verifies_and_disconnect_is_inconclusive() {
     }
     assert!(gone, "pool host entry never cleaned up");
 
-    let (_, report) = http("POST", format!("{base}/pools/wspool/verify"), Some(request(4))).await;
+    let (_, report) = http(
+        "POST",
+        format!("{base}/pools/wspool/verify"),
+        Some(request(4)),
+    )
+    .await;
     assert_eq!(report["verdict"], "inconclusive", "{report}");
-    assert_eq!(report["deltas"], json!([]), "disconnection is never a delta");
+    assert_eq!(
+        report["deltas"],
+        json!([]),
+        "disconnection is never a delta"
+    );
 }

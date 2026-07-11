@@ -1,8 +1,8 @@
 # 09 — Foundation soundness hardening
 
-Status: accepted design. H0 runtime soundness is implemented and locked; H1
-strict admission and H2 Cosmiz cutover remain staged. This document records invariants that
-must hold together and the tests that make each claim executable.
+Status: accepted design. H0 runtime soundness and H1 strict admission are
+implemented and locked; H2 Cosmiz cutover remains staged. This document records
+invariants that must hold together and the tests that make each claim executable.
 
 Selta v0.1 is an executable prototype, not yet a sufficient sole admission
 authority for Cosmiz. The existing API assumes callers meta-validate a parsed
@@ -99,6 +99,39 @@ The schema-language and meta-validator revisions are exported constants. The
 strict issue vocabulary and JSON-pointer locations are stable protocol data,
 not prose parsed from `Vec<String>`.
 
+The additive core seam is raw-source only:
+
+- `AdmittedNode::admit_source(&[u8])` rejects duplicate keys before a JSON map
+  can overwrite them and constructs the opaque proof only after closed grammar
+  projection succeeds;
+- `AdmittedNode::admit_source_with_config_validator` lets a registry add typed
+  config/extension issues without creating a second grammar path;
+- `Registry::admit_source(source, policy)` composes that raw proof with the
+  concrete registry: extension existence, effect grant, input domain,
+  deterministic sampling, env-hole-aware config structure, literal semantic
+  preflight, and optional generic builtin resource ceilings;
+- `AdmissionPolicy::new` enumerates granted `EffectClass` values;
+  `AdmissionPolicy::pure_only` is the least-effect builtin profile, while
+  `BuiltinAdmissionLimits` optionally bounds `one_of` values and regex UTF-8
+  bytes without naming or embedding a downstream product;
+- `validate_config_structure_with_env_holes` treats only an exact, well-formed
+  `{ "$env": "dot.path" }` object as deferred and continues checking every
+  literal sibling; and
+- `SELTA_SCHEMA_LANGUAGE_REVISION`, `SELTA_META_VALIDATOR_REVISION`,
+  `MetaIssueCode`, and RFC 6901 `MetaIssue.pointer` are the integration contract.
+
+There is deliberately no admitted `serde_json::Value` constructor: once a
+duplicate-tolerant parser has produced a map, uniqueness evidence is
+irrecoverable. `Node::from_value` remains available but carries no admission
+claim.
+
+Registry batches are prospective and atomic. Before the registry mutates,
+every declaration schema is serialized and re-admitted through the strict
+grammar; config and settings schemas reject verifier annotations recursively;
+and every delta schema is meta-validated against a temporary registry that
+already contains the complete incoming batch. This permits intentional
+cross-declaration delta references but never leaves a partial batch behind.
+
 ## H2 — Cosmiz cutover
 
 Cosmiz moves its canonical schema loader to Selta's strict admission API and
@@ -147,3 +180,29 @@ passed
 The 43 core tests include nine runtime-soundness regressions and six cache-
 identity regressions. Live host tests for the TypeScript and Lean adapters also
 passed in this environment.
+
+## H1 verification record
+
+At the H1 checkpoint, including the resource-bounding regressions found during
+the integration audit:
+
+```text
+cargo test --workspace
+selta-core: 81 passed; 0 failed
+seltad: 13 passed; 0 failed
+workspace/doc tests: all passed
+
+cargo clippy --workspace --all-targets -- -D warnings
+passed
+
+node --check packages/extension/index.js
+node --check crates/selta-core/tests/fixtures/host.mjs
+passed
+```
+
+The core total includes 13 closed raw-grammar tests, seven registry-policy and
+atomic-declaration tests, six raw RPC/cancellation tests, five builtin-profile
+tests, six bounded-cache unit tests, and the large sampling-window regression.
+The daemon total includes four raw catalog/HTTP and live WebSocket/server tests
+plus four storage-contract tests. The live socket tests passed with localhost
+binding enabled; they are not merely compile-only checks.

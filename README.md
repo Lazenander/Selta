@@ -50,6 +50,10 @@ Selta is a type-check layer and nothing more.
 | [docs/07-plan.md](docs/07-plan.md) | Workspace layout, milestones, decision log |
 | [docs/08-theory.md](docs/08-theory.md) | Theoretic model: refinements, K3, change structures, kernels, step-indexing |
 | [docs/09-runtime-soundness.md](docs/09-runtime-soundness.md) | Runtime soundness, strict admission, and consumer-migration invariants |
+| [docs/10-evidence-and-decision.md](docs/10-evidence-and-decision.md) | Non-normative research note on evidence, assumptions, and decision projection |
+| [docs/11-compatibility-and-versioning.md](docs/11-compatibility-and-versioning.md) | Frozen 0.1 boundary and compatibility gates for epistemic research |
+| [docs/12-evidence-evaluation-plan.md](docs/12-evidence-evaluation-plan.md) | Gated theory, DSL, falsification, evaluation, and migration plan |
+| [docs/13-evidence-research-ledger.md](docs/13-evidence-research-ledger.md) | Primary research results, transfer constraints, and limits |
 
 ## Glossary
 

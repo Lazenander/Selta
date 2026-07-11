@@ -57,9 +57,7 @@ impl RpcPeer {
         if let Some(sender) = sender {
             let outcome = match (response.result, response.error) {
                 (Some(result), _) => Ok(result),
-                (None, Some(error)) => {
-                    Err(format!("host error {}: {}", error.code, error.message))
-                }
+                (None, Some(error)) => Err(format!("host error {}: {}", error.code, error.message)),
                 (None, None) => Err("host response had neither result nor error".to_string()),
             };
             let _ = sender.send(outcome);
@@ -74,7 +72,12 @@ impl RpcPeer {
         }
     }
 
-    pub async fn call(&self, method: &str, params: Value, timeout_ms: u64) -> Result<Value, String> {
+    pub async fn call(
+        &self,
+        method: &str,
+        params: Value,
+        timeout_ms: u64,
+    ) -> Result<Value, String> {
         let id = self.next_id.fetch_add(1, Ordering::Relaxed);
         let (tx, rx) = oneshot::channel();
         self.pending.lock().unwrap().insert(id, tx);
@@ -93,7 +96,9 @@ impl RpcPeer {
                     "cancel",
                     serde_json::to_value(proto::CancelParams { id }).expect("cancel params"),
                 );
-                Err(format!("host call '{method}' timed out after {timeout_ms} ms"))
+                Err(format!(
+                    "host call '{method}' timed out after {timeout_ms} ms"
+                ))
             }
         }
     }
@@ -163,11 +168,35 @@ pub fn decl_from_manifest(manifest: proto::ExtensionManifest) -> Result<Extensio
             ))
         }
     };
+    let semantic_revision = match manifest.semantic_revision.as_deref() {
+        Some(revision) if revision.trim().is_empty() => {
+            return Err(format!(
+                "extension '{}': semantic_revision must not be empty",
+                manifest.name
+            ));
+        }
+        Some(revision) => revision.to_string(),
+        None if manifest.cacheable => {
+            return Err(format!(
+                "extension '{}': cacheable extensions require semantic_revision",
+                manifest.name
+            ));
+        }
+        None => "selta.extension.unversioned".to_string(),
+    };
+    if manifest.cacheable && determinism != Determinism::Deterministic {
+        return Err(format!(
+            "extension '{}': only deterministic extensions may be cacheable",
+            manifest.name
+        ));
+    }
     let config_schema = parse_schema(&manifest.name, manifest.config_schema, "config_schema")?;
     let settings_schema =
         parse_schema(&manifest.name, manifest.settings_schema, "settings_schema")?;
     let delta_schema = parse_schema(&manifest.name, manifest.delta_schema, "delta_schema")?;
     Ok(ExtensionDecl {
+        semantic_revision,
+        cacheable: manifest.cacheable,
         determinism,
         config_schema,
         needs: Needs::from_list(&manifest.needs),

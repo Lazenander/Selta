@@ -13,15 +13,18 @@ An extension is:
 |---|---|
 | `name` | Unique within the server; referenced by schemas as `ext` |
 | `determinism` | `"deterministic"` or `"nondeterministic"` — fixes how the engine runs it |
+| `semantic_revision` | Stable, non-empty identity for the verifier's observable semantics |
+| `cacheable` | Opt-in claim that deterministic executions are referentially transparent; external declarations default `false` |
 | `config_schema` | A Selta schema for the `config` block; enforced at schema registration |
 | `needs` | Context fields it wants shipped: any of `"root"`, `"env"` (default: none) |
 | `settings_schema` | Optional: a Selta schema for the extension's operational settings (model, endpoint, key). Values live in the server catalog, never in schemas — see below |
 | `delta_schema` | Optional: a Selta schema for the deltas this extension emits (`{ message, data? }`); default `{ "message": str, "data": any }`. Every emitted delta is verified against it at `depth − 1` — deltas are typed values too |
 
 The determinism declaration is load-bearing: the engine decides run-once versus
-sample-and-vote from it, and the schema author never restates it. A "deterministic"
-extension that is not, in fact, deterministic breaks voting semantics and cache
-correctness; this is a trust boundary, documented, not policed.
+sample-and-vote from it, and the schema author never restates it. Cache eligibility is a
+separate explicit claim. A host that lies about determinism, semantic revision, or
+cacheability breaks the corresponding execution or cache invariant; this is an extension
+trust boundary, documented, not policed.
 
 ## Three kinds of configuration
 
@@ -53,7 +56,8 @@ not survive it.
 
 ### Builtins
 
-All deterministic. `config` shapes:
+All deterministic. The pure in-process checks are cacheable under their built-in semantic
+revisions; `cmd` performs process I/O and is never cacheable. `config` shapes:
 
 | Name | Config | Fails when |
 |---|---|---|
@@ -68,6 +72,11 @@ Like any config field, these values may be `$env` references
 ([02-schema.md](02-schema.md)) — e.g. `regex` with
 `{ "pattern": { "$env": "expected_pattern" } }` checks the value against a regular
 language supplied with each request.
+
+The pure in-process builtins opt into deterministic result caching. `cmd` does not:
+process state and toolchain identity are outside its current declaration, so identical
+input is executed again. A timed-out command child is killed when its wait future is
+canceled.
 
 ### `cmd` and the allowlist
 
@@ -116,6 +125,8 @@ identical on both transports.
     "extensions": [
       { "name": "llm_judge",
         "determinism": "nondeterministic",
+        "semantic_revision": "example.llm_judge.v1",
+        "cacheable": false,
         "config_schema": { "type": "object", "fields": { "question": { "type": "str" } } },
         "needs": ["env"],
         "settings_schema": { "type": "object", "fields": { "model": { "type": "str" } } },
@@ -124,7 +135,9 @@ identical on both transports.
 
 The manifest is the host's registration; extension names must be unique across builtins,
 server hosts, and the pool's own hosts, and collisions are rejected on the spot —
-at startup for server hosts, at connect for pool hosts.
+at startup for server hosts, at connect for pool hosts. For compatibility, an omitted
+`semantic_revision` is recorded as unversioned and an omitted `cacheable` is `false`;
+an unversioned extension cannot opt into caching.
 
 ### `verify` (server → host, concurrent)
 

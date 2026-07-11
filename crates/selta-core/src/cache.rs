@@ -44,24 +44,33 @@ impl Cache for MemoryCache {
     }
 }
 
-/// Content hash over the extension, resolved config, settings fingerprint,
-/// value, and exactly the context fields the extension declared in `needs`.
+/// Content hash over the extension semantics, resolved config, settings
+/// fingerprint, value, call site, recursion budget, and exactly the context
+/// fields the extension declared in `needs`.
 /// Settings participate because a verdict from one model is not a verdict
 /// from another (docs/03 §Caching).
-pub fn key(
-    ext: &str,
-    config: &Value,
-    settings_fingerprint: &str,
-    value: &Value,
-    root: Option<&Value>,
-    env: Option<&Value>,
-) -> u64 {
+pub struct KeyMaterial<'a> {
+    pub ext: &'a str,
+    pub semantic_revision: &'a str,
+    pub config: &'a Value,
+    pub settings_fingerprint: &'a str,
+    pub value: &'a Value,
+    pub path: &'a str,
+    pub depth: u32,
+    pub root: Option<&'a Value>,
+    pub env: Option<&'a Value>,
+}
+
+pub fn key(material: KeyMaterial<'_>) -> u64 {
     let mut hasher = std::collections::hash_map::DefaultHasher::new();
-    ext.hash(&mut hasher);
-    config.to_string().hash(&mut hasher);
-    settings_fingerprint.hash(&mut hasher);
-    value.to_string().hash(&mut hasher);
-    root.map(Value::to_string).hash(&mut hasher);
-    env.map(Value::to_string).hash(&mut hasher);
+    material.ext.hash(&mut hasher);
+    material.semantic_revision.hash(&mut hasher);
+    material.config.to_string().hash(&mut hasher);
+    material.settings_fingerprint.hash(&mut hasher);
+    material.value.to_string().hash(&mut hasher);
+    material.path.hash(&mut hasher);
+    material.depth.hash(&mut hasher);
+    material.root.map(Value::to_string).hash(&mut hasher);
+    material.env.map(Value::to_string).hash(&mut hasher);
     hasher.finish()
 }

@@ -31,6 +31,10 @@ export type Handler = (value: unknown, ctx: Context) => VerifyResult | Promise<V
 
 export interface VerifierOptions {
   determinism?: "deterministic" | "nondeterministic";
+  /** Stable identity for observable verifier semantics. Required when cacheable is true. */
+  semanticRevision?: string;
+  /** Opt in only for deterministic, referentially transparent verifiers. Defaults to false. */
+  cacheable?: boolean;
   configSchema?: unknown;
   settingsSchema?: unknown;
   deltaSchema?: unknown;

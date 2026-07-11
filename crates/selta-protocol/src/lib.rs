@@ -83,6 +83,13 @@ pub struct InitializeResult {
 pub struct ExtensionManifest {
     pub name: String,
     pub determinism: String,
+    /// Stable verifier-semantics identity. Optional for protocol compatibility;
+    /// a declaration without one is treated as unversioned and non-cacheable.
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub semantic_revision: Option<String>,
+    /// Opt-in only. Older hosts omit this field and safely default to false.
+    #[serde(default)]
+    pub cacheable: bool,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub config_schema: Option<Value>,
     #[serde(default)]

@@ -51,7 +51,10 @@ pub fn router(state: Arc<AppState>) -> Router {
         .route("/extensions", get(list_extensions))
         .route("/pools", post(create_pool).get(list_pools))
         .route("/pools/{pool}", get(get_pool))
-        .route("/pools/{pool}/schemas/{name}", put(put_schema).get(get_schema))
+        .route(
+            "/pools/{pool}/schemas/{name}",
+            put(put_schema).get(get_schema),
+        )
         .route("/pools/{pool}/extensions", get(pool_extensions))
         .route("/pools/{pool}/settings/{ext}", put(put_settings))
         .route("/pools/{pool}/hosts/connect", get(host_connect))
@@ -79,6 +82,8 @@ fn decl_json(decl: &ExtensionDecl, source: &str, available: bool) -> Value {
     json!({
         "name": decl.name,
         "determinism": decl.determinism,
+        "semantic_revision": decl.semantic_revision,
+        "cacheable": decl.cacheable,
         "needs": needs,
         "config_schema": schema_json(&decl.config_schema),
         "settings_schema": schema_json(&decl.settings_schema),
@@ -126,7 +131,12 @@ async fn pool_extensions(
         }
         seen.insert(decl.name.clone());
         let source = if builtin { "builtin" } else { "server" };
-        items.push(with_settings(decl_json(&decl, source, true), &state, &pool_config, &decl.name));
+        items.push(with_settings(
+            decl_json(&decl, source, true),
+            &state,
+            &pool_config,
+            &decl.name,
+        ));
     }
     let hosts = state.pool_hosts.read().await;
     if let Some(entries) = hosts.get(&pool) {
@@ -135,7 +145,12 @@ async fn pool_extensions(
         for name in names {
             seen.insert(name.clone());
             let entry = &entries[name];
-            items.push(with_settings(decl_json(&entry.decl, "pool", true), &state, &pool_config, name));
+            items.push(with_settings(
+                decl_json(&entry.decl, "pool", true),
+                &state,
+                &pool_config,
+                name,
+            ));
         }
     }
     drop(hosts);
@@ -154,7 +169,8 @@ async fn pool_extensions(
 }
 
 fn with_settings(mut item: Value, state: &AppState, pool: &PoolConfig, ext: &str) -> Value {
-    let (redacted, fingerprint) = settings::public_view(&state.server_settings, &pool.settings, ext);
+    let (redacted, fingerprint) =
+        settings::public_view(&state.server_settings, &pool.settings, ext);
     item["settings"] = redacted;
     item["fingerprint"] = Value::String(fingerprint);
     item
@@ -187,14 +203,13 @@ async fn put_settings(
         }
     }
     pool_config.settings.insert(ext.clone(), body);
-    state
-        .catalog
-        .update_pool(&pool_config)
-        .map_err(internal)?;
+    state.catalog.update_pool(&pool_config).map_err(internal)?;
     let (redacted, fingerprint) =
         settings::public_view(&state.server_settings, &pool_config.settings, &ext);
-    Ok(Json(json!({ "ext": ext, "settings": redacted, "fingerprint": fingerprint }))
-        .into_response())
+    Ok(
+        Json(json!({ "ext": ext, "settings": redacted, "fingerprint": fingerprint }))
+            .into_response(),
+    )
 }
 
 /// An app-provided pool host dials in (docs/05 §websocket).
@@ -411,9 +426,7 @@ async fn verify(
 
     let (job, id) = Job::new(pool.clone());
     state.jobs.write().await.insert(id, job.clone());
-    let semaphore = state
-        .pool_semaphore(&pool, budget.max_concurrency)
-        .await;
+    let semaphore = state.pool_semaphore(&pool, budget.max_concurrency).await;
     let registry = state.effective_registry(&pool).await;
     let cache = state.cache.clone();
     let pool_settings = PoolSettings {
@@ -532,4 +545,24 @@ async fn job_events(
         Ok::<Event, Infallible>(event)
     });
     Ok(Sse::new(stream).keep_alive(KeepAlive::default()))
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn declaration_json_exposes_cache_identity_and_eligibility() {
+        let registry = selta_core::Registry::with_builtins(None);
+
+        let regex = registry.decl("regex").expect("regex builtin");
+        let regex_json = decl_json(&regex, "builtin", true);
+        assert_eq!(regex_json["semantic_revision"], "selta.builtin.regex.v1");
+        assert_eq!(regex_json["cacheable"], true);
+
+        let cmd = registry.decl("cmd").expect("cmd builtin");
+        let cmd_json = decl_json(&cmd, "builtin", true);
+        assert_eq!(cmd_json["semantic_revision"], "selta.builtin.cmd.v1");
+        assert_eq!(cmd_json["cacheable"], false);
+    }
 }

@@ -37,6 +37,12 @@ impl Needs {
 #[derive(Debug, Clone)]
 pub struct ExtensionDecl {
     pub name: String,
+    /// Stable identity for the verifier's observable semantics. Cache entries
+    /// are never shared across different revisions.
+    pub semantic_revision: String,
+    /// Whether deterministic executions are referentially transparent and may
+    /// therefore use the configured result cache.
+    pub cacheable: bool,
     pub determinism: Determinism,
     pub config_schema: Option<Node>,
     pub needs: Needs,

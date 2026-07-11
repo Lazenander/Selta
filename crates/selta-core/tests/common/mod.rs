@@ -5,11 +5,11 @@ use std::sync::atomic::{AtomicU32, Ordering};
 use std::sync::{Arc, Mutex};
 
 use async_trait::async_trait;
-use serde_json::Value;
 use selta_core::{
-    Determinism, Envelope, ExtensionDecl, ExtensionHost, HostCall, Needs, Node, Options,
-    Registry, Report, WireDelta,
+    Determinism, Envelope, ExtensionDecl, ExtensionHost, HostCall, Needs, Node, Options, Registry,
+    Report, WireDelta,
 };
+use serde_json::Value;
 
 /// A scripted host: pops pre-programmed responses; defaults to `pass` when
 /// the script runs out. The "test handler" from docs/08.
@@ -55,6 +55,8 @@ pub fn registry_with(
         .register(
             vec![ExtensionDecl {
                 name: name.to_string(),
+                semantic_revision: format!("selta.test.{name}.v1"),
+                cacheable: determinism == Determinism::Deterministic,
                 determinism,
                 config_schema: None,
                 needs: Needs::default(),

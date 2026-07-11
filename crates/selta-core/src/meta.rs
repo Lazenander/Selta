@@ -24,7 +24,12 @@ fn walk_node(node: &Node, path: &Path, registry: &Registry, errors: &mut Vec<Str
                 walk_node(&field.node, &path.child_key(name), registry, errors);
             }
         }
-        Type::Array { item, .. } => {
+        Type::Array { item, len } => {
+            if let Some(bounds) = len {
+                if matches!((bounds.min, bounds.max), (Some(min), Some(max)) if min > max) {
+                    errors.push(format!("{path}: array len.min must not exceed len.max"));
+                }
+            }
             walk_node(item, &path.child_index(0), registry, errors);
         }
         Type::Union { variants } => {
@@ -82,6 +87,9 @@ fn walk_spec(spec: &VerifierSpec, path: &Path, registry: &Registry, errors: &mut
                     errors.push(format!("{path}: sampling.samples must be at least 1"));
                 }
                 if let VotePolicy::AtLeast { at_least } = sampling.vote {
+                    if at_least == 0 {
+                        errors.push(format!("{path}: at_least must be at least 1"));
+                    }
                     if at_least > sampling.samples {
                         errors.push(format!(
                             "{path}: at_least ({at_least}) exceeds samples ({})",
@@ -95,6 +103,9 @@ fn walk_spec(spec: &VerifierSpec, path: &Path, registry: &Registry, errors: &mut
                     }
                 }
                 if let Some(min_valid) = sampling.min_valid {
+                    if min_valid == 0 {
+                        errors.push(format!("{path}: min_valid must be at least 1"));
+                    }
                     if min_valid > sampling.samples {
                         errors.push(format!(
                             "{path}: min_valid ({min_valid}) exceeds samples ({})",
@@ -173,7 +184,9 @@ pub fn structure_only_ok(node: &Node, value: &Value) -> bool {
                     return false;
                 }
             }
-            items.iter().all(|item_value| structure_only_ok(item, item_value))
+            items
+                .iter()
+                .all(|item_value| structure_only_ok(item, item_value))
         }
         Type::Union { variants } => variants
             .iter()

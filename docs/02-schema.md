@@ -139,10 +139,12 @@ reporting; opt out per node with `"open": true`.
 `null` is a value, not an absence — it only passes a `null` node (or a union containing
 one).
 
-**Unions match best, not first.** Every variant is verified; if any passes, the union
-passes. If none passes, the union reports the deltas of the variant with the fewest
-deltas (ties: first such variant), labeled with the variant index. Best-match costs more
-than first-match and pays for it in delta quality.
+**Unions stop on the first pass, then match the best failure.** Variants are verified in
+document order until one passes. If none passes, every variant has been evaluated and
+the union reports the deltas of the variant with the fewest deltas (ties: first such
+variant), labeled with the variant index. A rejected speculative variant has private
+fail-fast state and cannot suppress checks in a later variant. An empty union is a
+structural failure even when a caller bypasses meta-validation.
 
 **Numeric strictness.** `int` rejects `1.5` and accepts `1.0` written as `1`. In lenient
 mode (below) a numeric string such as `"1.7"` coerces to a number and the coercion is

@@ -138,7 +138,7 @@ impl Default for Sampling {
 impl Sampling {
     /// Quorum: explicit `min_valid`, or `ceil(samples / 2)`.
     pub fn quorum(&self) -> u32 {
-        self.min_valid.unwrap_or(self.samples.div_ceil(2))
+        self.min_valid.unwrap_or(self.samples.div_ceil(2)).max(1)
     }
 }
 
@@ -177,10 +177,13 @@ impl VotePolicy {
         let valid = pass + fail;
         match self {
             VotePolicy::Named(NamedVote::Majority) => pass > fail,
-            VotePolicy::Named(NamedVote::Unanimous) => fail == 0,
-            VotePolicy::AtLeast { at_least } => pass >= *at_least,
+            VotePolicy::Named(NamedVote::Unanimous) => valid > 0 && fail == 0,
+            VotePolicy::AtLeast { at_least } => *at_least > 0 && pass >= *at_least,
             VotePolicy::Ratio { ratio } => {
-                valid > 0 && (pass as f64) / (valid as f64) >= *ratio
+                valid > 0
+                    && *ratio > 0.0
+                    && *ratio <= 1.0
+                    && (pass as f64) / (valid as f64) >= *ratio
             }
         }
     }

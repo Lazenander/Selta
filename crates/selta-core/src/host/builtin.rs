@@ -11,9 +11,7 @@ use async_trait::async_trait;
 use serde::{Deserialize, Serialize};
 use serde_json::{json, Value};
 
-use super::{
-    Determinism, Envelope, ExtensionDecl, ExtensionHost, HostCall, Needs, WireDelta,
-};
+use super::{Determinism, Envelope, ExtensionDecl, ExtensionHost, HostCall, Needs, WireDelta};
 use crate::schema::Node;
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
@@ -59,6 +57,8 @@ impl BuiltinHost {
     pub fn decls() -> Vec<ExtensionDecl> {
         let decl = |name: &str, config_schema: Value| ExtensionDecl {
             name: name.to_string(),
+            semantic_revision: format!("selta.builtin.{name}.v1"),
+            cacheable: name != "cmd",
             determinism: Determinism::Deterministic,
             config_schema: Some(Node::from_value(config_schema).expect("builtin config schema")),
             needs: Needs::default(),
@@ -139,7 +139,11 @@ fn one_of(config: &Value, value: &Value) -> Result<Envelope, String> {
     }
     let expected = Value::Array(values.clone());
     Ok(Envelope::fail(WireDelta {
-        message: format!("expected one of {}, got {}", compact(&expected), compact(value)),
+        message: format!(
+            "expected one of {}, got {}",
+            compact(&expected),
+            compact(value)
+        ),
         data: None,
         expected: Some(compact(&expected)),
         actual: Some(compact(value)),
@@ -158,9 +162,7 @@ fn bound_text(min: Option<f64>, max: Option<f64>) -> String {
 fn range(config: &Value, value: &Value) -> Result<Envelope, String> {
     let min = config.get("min").and_then(Value::as_f64);
     let max = config.get("max").and_then(Value::as_f64);
-    let n = value
-        .as_f64()
-        .ok_or("range: value is not a number")?;
+    let n = value.as_f64().ok_or("range: value is not a number")?;
     let ok = min.map(|lo| n >= lo).unwrap_or(true) && max.map(|hi| n <= hi).unwrap_or(true);
     if ok {
         return Ok(Envelope::pass());
@@ -288,7 +290,11 @@ impl BuiltinHost {
             .ok_or("cmd: template has an empty command")?;
 
         let mut command = tokio::process::Command::new(program);
-        command.args(args).stdout(Stdio::null()).stderr(Stdio::piped());
+        command
+            .args(args)
+            .stdout(Stdio::null())
+            .stderr(Stdio::piped())
+            .kill_on_drop(true);
         command.stdin(if template.input == CmdInput::Stdin {
             Stdio::piped()
         } else {

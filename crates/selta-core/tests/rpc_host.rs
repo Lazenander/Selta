@@ -3,8 +3,8 @@
 
 mod common;
 
-use serde_json::json;
 use selta_core::{Options, Registry, RpcHost, Verdict};
+use serde_json::json;
 
 fn node_available() -> bool {
     std::process::Command::new("node")
@@ -28,11 +28,26 @@ async fn ts_host_end_to_end() {
     .await
     .expect("host spawns and initializes");
 
-    assert!(decls.iter().any(|d| d.name == "length_judge"));
-    assert!(decls.iter().any(|d| d.name == "always_pass"));
+    let length_judge = decls
+        .iter()
+        .find(|declaration| declaration.name == "length_judge")
+        .expect("legacy declaration propagated");
+    assert_eq!(
+        length_judge.semantic_revision,
+        "selta.extension.unversioned"
+    );
+    assert!(!length_judge.cacheable, "legacy manifests fail safe");
+    let always_pass = decls
+        .iter()
+        .find(|declaration| declaration.name == "always_pass")
+        .expect("versioned declaration propagated");
+    assert_eq!(always_pass.semantic_revision, "selta.test.always_pass.v1");
+    assert!(always_pass.cacheable);
 
     let mut registry = Registry::with_builtins(None);
-    registry.register(decls, host.clone()).expect("register host extensions");
+    registry
+        .register(decls, host.clone())
+        .expect("register host extensions");
 
     let schema = common::schema(json!({
         "type": "str",
@@ -44,9 +59,19 @@ async fn ts_host_end_to_end() {
     }));
     let options = Options::default();
 
-    let ok = common::run(&schema, json!("long enough"), json!({}), &options, &registry).await;
+    let ok = common::run(
+        &schema,
+        json!("long enough"),
+        json!({}),
+        &options,
+        &registry,
+    )
+    .await;
     assert_eq!(ok.verdict, Verdict::Pass);
-    assert_eq!(ok.usage.samples, 4, "one deterministic call + three judge samples");
+    assert_eq!(
+        ok.usage.samples, 4,
+        "one deterministic call + three judge samples"
+    );
 
     let short = common::run(&schema, json!("hi"), json!({}), &options, &registry).await;
     assert_eq!(short.verdict, Verdict::Fail);

@@ -15,6 +15,14 @@ host.verifier(
   },
 );
 
-host.verifier("always_pass", { determinism: "deterministic" }, () => pass());
+host.verifier(
+  "always_pass",
+  {
+    determinism: "deterministic",
+    semanticRevision: "selta.test.always_pass.v1",
+    cacheable: true,
+  },
+  () => pass(),
+);
 
 host.run({ name: "selta-test-host", version: "0.0.1" });

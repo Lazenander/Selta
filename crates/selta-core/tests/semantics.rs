@@ -3,10 +3,8 @@
 
 mod common;
 
+use selta_core::{Determinism, Input, MemoryCache, Mode, NoCache, Options, Registry, Verdict};
 use serde_json::json;
-use selta_core::{
-    Determinism, Input, MemoryCache, Mode, NoCache, Options, Registry, Verdict,
-};
 
 use common::{err, fail, fail_with_data, pass, registry_with, schema, ScriptedHost};
 
@@ -95,8 +93,12 @@ async fn at_least_fails_and_merges_distinct_critiques() {
 #[tokio::test]
 async fn quorum_failure_is_inconclusive_never_fail() {
     let host = ScriptedHost::script(vec![
-        err("api down"), err("api down"), err("api down"),
-        err("api down"), err("api down"), err("api down"),
+        err("api down"),
+        err("api down"),
+        err("api down"),
+        err("api down"),
+        err("api down"),
+        err("api down"),
     ]);
     let registry = registry_with("judge", Determinism::Nondeterministic, None, host);
     let report = common::run(
@@ -165,7 +167,12 @@ async fn structured_delta_satisfying_its_schema_counts_as_a_vote() {
         fail_with_data("bad fix", json!({ "reason": "still panics" })),
         pass(),
     ]);
-    let registry = registry_with("judge", Determinism::Nondeterministic, Some(delta_schema), host);
+    let registry = registry_with(
+        "judge",
+        Determinism::Nondeterministic,
+        Some(delta_schema),
+        host,
+    );
     let report = common::run(
         &judge_schema(3, json!("majority")),
         json!("value"),
@@ -176,7 +183,10 @@ async fn structured_delta_satisfying_its_schema_counts_as_a_vote() {
     .await;
 
     assert_eq!(report.verdict, Verdict::Fail);
-    assert_eq!(report.deltas[0].data, Some(json!({ "reason": "still panics" })));
+    assert_eq!(
+        report.deltas[0].data,
+        Some(json!({ "reason": "still panics" }))
+    );
 }
 
 // --- depth (docs/03): step-indexed stratification ---
@@ -266,7 +276,10 @@ async fn not_inverts_and_uses_the_schema_authors_message() {
 
     let dirty = common::run(&node, json!("TODO: fix"), json!({}), &options, &registry).await;
     assert_eq!(dirty.verdict, Verdict::Fail);
-    assert_eq!(dirty.deltas[0].message, "output must not contain TODO markers");
+    assert_eq!(
+        dirty.deltas[0].message,
+        "output must not contain TODO markers"
+    );
 }
 
 // --- dynamic config: the regular language arrives with the request ---
@@ -310,11 +323,23 @@ async fn missing_env_reference_is_inconclusive_not_fail() {
         "type": "str",
         "verify": [ { "ext": "regex", "config": { "pattern": { "$env": "expected_pattern" } } } ]
     }));
-    let report = common::run(&node, json!("hello"), json!({}), &Options::default(), &registry).await;
+    let report = common::run(
+        &node,
+        json!("hello"),
+        json!({}),
+        &Options::default(),
+        &registry,
+    )
+    .await;
 
     assert_eq!(report.verdict, Verdict::Inconclusive);
-    assert!(report.deltas.is_empty(), "the value is not wrong — the request is");
-    assert!(report.errors[0].error.contains("missing env field 'expected_pattern'"));
+    assert!(
+        report.deltas.is_empty(),
+        "the value is not wrong — the request is"
+    );
+    assert!(report.errors[0]
+        .error
+        .contains("missing env field 'expected_pattern'"));
 }
 
 // --- intake (docs/03 §1) ---
@@ -358,7 +383,11 @@ async fn strict_mode_rejects_fences_and_coercions() {
     assert_eq!(fenced.verdict, Verdict::Fail);
 
     let coerced = common::run(&node, json!("1.7"), json!({}), &options, &registry).await;
-    assert_eq!(coerced.verdict, Verdict::Fail, "no string→number coercion in strict mode");
+    assert_eq!(
+        coerced.verdict,
+        Verdict::Fail,
+        "no string→number coercion in strict mode"
+    );
 }
 
 #[tokio::test]
@@ -368,9 +397,20 @@ async fn lenient_mode_coerces_numeric_strings_with_a_notice() {
         "type": "float",
         "verify": [ { "ext": "range", "config": { "min": 0.0, "max": 1.0 } } ]
     }));
-    let report = common::run(&node, json!("0.7"), json!({}), &Options::default(), &registry).await;
+    let report = common::run(
+        &node,
+        json!("0.7"),
+        json!({}),
+        &Options::default(),
+        &registry,
+    )
+    .await;
 
-    assert_eq!(report.verdict, Verdict::Pass, "coerced value flows into verifiers");
+    assert_eq!(
+        report.verdict,
+        Verdict::Pass,
+        "coerced value flows into verifiers"
+    );
     assert!(report.notices.iter().any(|n| n.message.contains("coerced")));
 }
 
@@ -382,7 +422,14 @@ async fn closed_objects_report_unexpected_and_missing_keys() {
     let node = schema(json!({ "type": "object", "fields": { "a": { "type": "int" } } }));
     let options = Options::default();
 
-    let extra = common::run(&node, json!({ "a": 1, "b": 2 }), json!({}), &options, &registry).await;
+    let extra = common::run(
+        &node,
+        json!({ "a": 1, "b": 2 }),
+        json!({}),
+        &options,
+        &registry,
+    )
+    .await;
     assert_eq!(extra.verdict, Verdict::Fail);
     assert!(extra.deltas[0].message.contains("unexpected key 'b'"));
 
@@ -412,7 +459,11 @@ async fn union_reports_the_fewest_delta_variant() {
     .await;
 
     assert_eq!(report.verdict, Verdict::Fail);
-    assert_eq!(report.root.checks[0].variant, Some(1), "best-match variant recorded");
+    assert_eq!(
+        report.root.checks[0].variant,
+        Some(1),
+        "best-match variant recorded"
+    );
     assert_eq!(report.deltas.len(), 1);
     assert_eq!(report.deltas[0].path, "$.b");
 }
@@ -457,7 +508,9 @@ fn meta_validation_catches_catalog_level_mistakes() {
                       "sampling": { "samples": 3 } } ]
     }));
     let errors = selta_core::meta::validate(&sampled_deterministic, &registry);
-    assert!(errors.iter().any(|e| e.contains("sampling on deterministic")));
+    assert!(errors
+        .iter()
+        .any(|e| e.contains("sampling on deterministic")));
 
     let bad_config = schema(json!({
         "type": "str",

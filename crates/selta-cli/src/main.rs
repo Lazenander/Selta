@@ -102,10 +102,7 @@ enum SchemaCommand {
         file: String,
     },
     /// Fetch a schema: name or name@version
-    Get {
-        pool: String,
-        reference: String,
-    },
+    Get { pool: String, reference: String },
 }
 
 fn main() {
@@ -325,10 +322,16 @@ fn render(report: &Report) {
             .votes
             .map(|t| format!("  [{}/{} votes pass]", t.pass, t.pass + t.fail))
             .unwrap_or_default();
-        println!("{symbol}  {:<20} {:<12} {detail}{votes}", path, check.source);
+        println!(
+            "{symbol}  {:<20} {:<12} {detail}{votes}",
+            path, check.source
+        );
     }
     for notice in &report.notices {
-        println!("·  {:<20} {:<12} {}", notice.path, notice.source, notice.message);
+        println!(
+            "·  {:<20} {:<12} {}",
+            notice.path, notice.source, notice.message
+        );
     }
     let shown: std::collections::HashSet<(&str, &str)> = rows
         .iter()
@@ -339,7 +342,12 @@ fn render(report: &Report) {
         if shown.contains(&(error.path.as_str(), error.source.as_str())) {
             continue;
         }
-        println!("?  {:<20} {:<12} {}", error.path, error.source, first_line(&error.error));
+        println!(
+            "?  {:<20} {:<12} {}",
+            error.path,
+            error.source,
+            first_line(&error.error)
+        );
     }
     println!();
     println!(

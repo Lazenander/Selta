@@ -49,7 +49,7 @@ Selta is a type-check layer and nothing more.
 | [docs/06-server.md](docs/06-server.md) | `seltad`: pools, catalog, versioning, HTTP API |
 | [docs/07-plan.md](docs/07-plan.md) | Workspace layout, milestones, decision log |
 | [docs/08-theory.md](docs/08-theory.md) | Theoretic model: refinements, K3, change structures, kernels, step-indexing |
-| [docs/09-foundation-soundness.md](docs/09-foundation-soundness.md) | Runtime soundness, strict admission, and Cosmiz cutover invariants |
+| [docs/09-foundation-soundness.md](docs/09-foundation-soundness.md) | Runtime soundness, strict admission, and consumer-migration invariants |
 
 ## Glossary
 
@@ -106,7 +106,7 @@ the schema — runs as an integration test, as does a dependency-free websocket 
 structured deltas, plus a codex judge voting on whether the code reflects exactly the
 statement supplied in context. Known deviations from the design live in the deferred
 table of [docs/07-plan.md](docs/07-plan.md). Foundation H0 runtime-soundness hardening
-is implemented; the additive strict-admission authority and Cosmiz cutover remain H1/H2
-work tracked in [docs/09-foundation-soundness.md](docs/09-foundation-soundness.md).
-Until H1 lands, consumers needing proof-grade schema admission must retain their strict
-raw-shape gate. Documents originated 2026-07-04.
+and H1 strict admission are implemented; safe migration from compatibility parsing is
+tracked in [docs/09-foundation-soundness.md](docs/09-foundation-soundness.md).
+Proof-grade consumers admit original source bytes through `Registry::admit_source` and
+an explicit policy. Documents originated 2026-07-04.

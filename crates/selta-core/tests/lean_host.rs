@@ -6,8 +6,8 @@ mod common;
 
 use std::sync::Arc;
 
-use serde_json::json;
 use selta_core::{Determinism, Options, Registry, RpcHost, Verdict};
+use serde_json::json;
 
 fn node_available() -> bool {
     std::process::Command::new("node")
@@ -31,8 +31,7 @@ fn find_lean() -> Option<String> {
     }
     let home = std::env::var("HOME").ok()?;
     let elan = std::path::PathBuf::from(home).join(".elan/bin/lean");
-    elan.exists()
-        .then(|| elan.to_string_lossy().into_owned())
+    elan.exists().then(|| elan.to_string_lossy().into_owned())
 }
 
 async fn spawn_lean_host() -> Option<(Registry, Arc<RpcHost>)> {
@@ -56,14 +55,22 @@ async fn spawn_lean_host() -> Option<(Registry, Arc<RpcHost>)> {
     .await
     .expect("lean host spawns and initializes");
 
-    let check = decls.iter().find(|d| d.name == "lean_check").expect("lean_check declared");
+    let check = decls
+        .iter()
+        .find(|d| d.name == "lean_check")
+        .expect("lean_check declared");
     assert_eq!(check.determinism, Determinism::Deterministic);
     assert!(check.delta_schema.is_some(), "compiler deltas are typed");
-    let reflects = decls.iter().find(|d| d.name == "lean_reflects").expect("lean_reflects declared");
+    let reflects = decls
+        .iter()
+        .find(|d| d.name == "lean_reflects")
+        .expect("lean_reflects declared");
     assert_eq!(reflects.determinism, Determinism::Nondeterministic);
 
     let mut registry = Registry::with_builtins(None);
-    registry.register(decls, host.clone()).expect("register lean extensions");
+    registry
+        .register(decls, host.clone())
+        .expect("register lean extensions");
     Some((registry, host))
 }
 
@@ -193,7 +200,12 @@ async fn lean_reflects_with_real_codex() {
         &registry,
     )
     .await;
-    assert_eq!(faithful.verdict, Verdict::Pass, "errors: {:?}", faithful.errors);
+    assert_eq!(
+        faithful.verdict,
+        Verdict::Pass,
+        "errors: {:?}",
+        faithful.errors
+    );
     assert!(
         faithful.usage.input_tokens > 0,
         "real tokens were spent and reported"

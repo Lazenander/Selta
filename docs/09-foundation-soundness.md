@@ -1,16 +1,17 @@
 # 09 — Foundation soundness hardening
 
 Status: accepted design. H0 runtime soundness and H1 strict admission are
-implemented and locked; H2 Cosmiz cutover remains staged. This document records
-invariants that must hold together and the tests that make each claim executable.
+implemented and locked; H2 consumer migrations remain integration work. This
+document records invariants that must hold together and the tests that make
+each claim executable.
 
-Selta v0.1 is an executable prototype, not yet a sufficient sole admission
-authority for Cosmiz. The existing API assumes callers meta-validate a parsed
-`Node`, while the public verifier must nevertheless remain fail-closed for any
-parseable value. The schema parser also accepts shapes that Serde can flatten
-by discarding unknown fields. Cosmiz currently compensates with a duplicate
-strict raw walker. The following slices close those gaps without conflating
-Selta's general union semantics with Cosmiz's domain-specific exact-one rule.
+Selta v0.1 began as an executable prototype whose compatibility API assumes
+callers meta-validate an already parsed `Node`, while the public verifier must
+nevertheless remain fail-closed for any parseable value. The compatibility
+schema parser also accepts shapes that Serde can flatten by discarding unknown
+fields. Proof-grade consumers therefore needed an independent raw-shape gate.
+The following slices close those gaps without conflating Selta's general union
+semantics with a consumer's stricter domain-specific selection rules.
 
 ## H0 — Runtime soundness
 
@@ -91,9 +92,9 @@ Extension declarations add a semantic revision, effect class, cacheability,
 and accepted input domain. Selta exposes a pure builtin registry/profile that
 excludes `cmd`; `with_builtins` remains the compatibility constructor. Core
 builtin correctness rejects empty `one_of`, empty/inverted `range` and `len`,
-negative length bounds, and invalid regex. Consumer resource ceilings such as
-Cosmiz's 4,096-entry and 4,096-byte limits remain explicit admission-policy
-inputs rather than hidden application logic in Selta.
+negative length bounds, and invalid regex. Consumer resource ceilings remain
+explicit admission-policy inputs rather than hidden application logic in
+Selta.
 
 The schema-language and meta-validator revisions are exported constants. The
 strict issue vocabulary and JSON-pointer locations are stable protocol data,
@@ -132,29 +133,30 @@ and every delta schema is meta-validated against a temporary registry that
 already contains the complete incoming batch. This permits intentional
 cross-declaration delta references but never leaves a partial batch behind.
 
-## H2 — Cosmiz cutover
+## H2 — Consumer migration
 
-Cosmiz moves its canonical schema loader to Selta's strict admission API and
-pure registry, then deletes duplicate node/verifier/config shape logic.
-Cosmiz retains only its own proof and policy:
+A proof-grade consumer moves its canonical schema loader to Selta's strict
+raw-source admission API and an explicit registry/policy, then deletes any
+duplicate general node, verifier, and builtin-config grammar. The consumer
+retains only its domain proof and policy, which may include:
 
-- duplicate-safe I-JSON and canonical bytes;
-- schema IDs, self fields, schema/value digests, and exact bootstrap pins;
-- Foundation resource ceilings and the exact admitted extension manifest;
-- nested dynamic-carrier closure and exact-one union selection; and
-- source/conformance/build attestation boundaries.
+- canonical byte and digest rules;
+- application schema identities and self-binding fields;
+- resource ceilings and an exact admitted extension profile;
+- nested carrier closure or stricter union-selection proofs; and
+- source, conformance, and build-attestation boundaries.
 
-Every Selta source change regenerates Cosmiz's Selta source closure,
-conformance manifest, aggregate bootstrap, and Rust pins. The cutover is atomic:
-both repositories' locked suites and Cosmiz's bootstrap generator check must be
-green before the duplicate loader is removed.
+Consumers that pin Selta source or conformance identity regenerate those pins
+after every accepted Selta source change. A migration is atomic: Selta's locked
+suite, the consumer's suite, and any generated-artifact consistency checks must
+be green before its duplicate loader is removed.
 
 ## Explicit non-claims
 
 - H0 does not make an unversioned external extension cache-safe.
 - H1 does not make `Node::from_value` strict or remove it in v0.1.
-- Selta's general union remains first-pass/best-failure; Cosmiz exact-one dynamic
-  union admission is a separate domain proof.
+- Selta's general union remains first-pass/best-failure; a consumer's exact-one
+  admission rule is a separate domain proof.
 - A pure registry proves only declared in-process effect classification, not
   full build or executable attestation.
 

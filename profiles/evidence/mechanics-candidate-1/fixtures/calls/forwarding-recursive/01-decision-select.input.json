@@ -1,0 +1,49 @@
+{
+  "operation": "select",
+  "parameters": {},
+  "manifest": "sha256:ec245dbfb4ae078b20eebd6218a1550a796428d3f72d1536096c956112afdf52",
+  "observed_plans": [
+    "sha256:07481dcd594b3990db9d0be75c8ed171e37abb4efbda3b1ee79235b840743ebb"
+  ],
+  "manifest_view": {
+    "frame": {
+      "$ref": "sha256:3ef6016dc550098cdef78602d84a73599e08a4fb621fb4e3b6d76d21f17e5074",
+      "contract": "sha256:a587092a0074c9b57a2a22225b99fb20cb6fd0ba69ea27156cab7b8b1ca6ed21"
+    },
+    "channel": {
+      "$ref": "sha256:e6a598698ba0e2bfa422ba253ab47ab3b04e41398afcacb5ef37e1866c3e97bf",
+      "contract": "sha256:a587092a0074c9b57a2a22225b99fb20cb6fd0ba69ea27156cab7b8b1ca6ed21"
+    },
+    "context": {
+      "$ref": "sha256:67b470ab136f4bce1f41169ace78815314014737de3fd9dbbe1b48941b57f192",
+      "contract": "sha256:a587092a0074c9b57a2a22225b99fb20cb6fd0ba69ea27156cab7b8b1ca6ed21"
+    },
+    "sources": [
+      {
+        "$ref": "sha256:90917d788d588cbfa4f0814e27d89f13f842c044dfdd669e02e8adba90fca835",
+        "contract": "sha256:a587092a0074c9b57a2a22225b99fb20cb6fd0ba69ea27156cab7b8b1ca6ed21"
+      }
+    ],
+    "budget": {
+      "$ref": "sha256:73ef25c03d3d2471c904c61dcd242639436050c343bd84ad0538acfbf289d3d6",
+      "contract": "sha256:a587092a0074c9b57a2a22225b99fb20cb6fd0ba69ea27156cab7b8b1ca6ed21"
+    }
+  },
+  "snapshot": {
+    "plan_id": "sha256:07481dcd594b3990db9d0be75c8ed171e37abb4efbda3b1ee79235b840743ebb",
+    "outcome": {
+      "kind": "observed",
+      "response": {
+        "$ref": "sha256:6389c9410c0d86b0da77d960acf2bae10f51c59dae9b80aae0de7479d9c9bade",
+        "contract": "sha256:a587092a0074c9b57a2a22225b99fb20cb6fd0ba69ea27156cab7b8b1ca6ed21"
+      }
+    },
+    "disposition": {
+      "kind": "include",
+      "reason": {
+        "$ref": "sha256:ae2472e6eb98e61f68f547e534a6453fff83a7a1d9046bb3e60685e8682c1378",
+        "contract": "sha256:a587092a0074c9b57a2a22225b99fb20cb6fd0ba69ea27156cab7b8b1ca6ed21"
+      }
+    }
+  }
+}

@@ -3,9 +3,10 @@
 This directory is the immutable environment artifact for the mechanics
 conformance profile in
 [document 22](../../../docs/22-mechanics-conformance-profile.md).
-It is a specification oracle and future conformance-corpus root, not an
-application policy, shipped runtime, or platform-support claim. Mechanics
-fixtures have not been generated in this slice.
+It is a specification oracle and conformance-corpus root, not an application
+policy, shipped runtime, or platform-support claim. The complete mechanics
+vectors and semantic-call ledgers are indexed in
+[fixtures/README.md](fixtures/README.md).
 
 The environment reuses contracts and schema-source identities from the core
 and presence artifact trees; it does not copy their source files. It reuses
@@ -142,5 +143,5 @@ descriptor, and environment preimages; canonical UTF-8 ordering; complete
 resolver closure; descriptor signatures; and duplicate identities.
 
 The complete digest-to-path resolver inventory is
-[ARTIFACTS.md](ARTIFACTS.md). Conformance fixtures and semantic-result oracles
-remain a separate later slice.
+[ARTIFACTS.md](ARTIFACTS.md). Fixtures remain separate from the immutable
+environment artifact and do not enter its identity.

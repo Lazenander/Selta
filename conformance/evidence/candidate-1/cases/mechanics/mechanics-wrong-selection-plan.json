@@ -1,0 +1,13 @@
+{
+  "revision": "selta.evidence.conformance-case/s2-1",
+  "id": "mechanics-wrong-selection-plan",
+  "operation": {
+    "kind": "assess",
+    "context": "mechanics-candidate-1",
+    "package_source": "sha256:c8d4fc92cf81ec890b3dbe2b35d9fa7dbcd7718938a009ab16324fe84e0bea24",
+    "expected_basis": {
+      "$ref": "sha256:26dbb43faa41649ab9287520a5d317cb2a25a9a0abd6a88d4280d5a59d8b3a80",
+      "contract": "sha256:938e5e124cb9648bb532949ff8588edeef0570eee18f6c7bfaf579af17a352a0"
+    }
+  }
+}

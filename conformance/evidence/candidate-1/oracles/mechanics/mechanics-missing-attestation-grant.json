@@ -1,0 +1,9 @@
+{
+  "revision": "selta.evidence.conformance-oracle/s2-1",
+  "case": "mechanics-missing-attestation-grant",
+  "expected": {
+    "kind": "returned",
+    "package": "sha256:5c10f3c5f4949491b9b924dbc8a9152dfed31330977f21820b76a9730b13b6fb",
+    "compare": "conformance_projection"
+  }
+}

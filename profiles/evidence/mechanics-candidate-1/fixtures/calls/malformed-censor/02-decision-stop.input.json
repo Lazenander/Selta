@@ -1,0 +1,37 @@
+{
+  "operation": "stop",
+  "parameters": {},
+  "manifest": "sha256:2deeb5e4d2b5ef583c93c4e52c5e4b70714aef13c15931780688aeaf418944bf",
+  "observed_plans": [
+    "sha256:0590a12f9629bd1540311686a95b0de30ffb4c1ea1539223c23f5bb3597d7959"
+  ],
+  "manifest_view": {
+    "frame": {
+      "$ref": "sha256:2121873607e5a427e440519e13a93a37e7b44d86556bcbb886229c4b0667eac8",
+      "contract": "sha256:a587092a0074c9b57a2a22225b99fb20cb6fd0ba69ea27156cab7b8b1ca6ed21"
+    },
+    "channel": {
+      "$ref": "sha256:9eee5004f90991233eca6cf8df2aa73209d5a15474d070a3d705dc2efc6eadd4",
+      "contract": "sha256:a587092a0074c9b57a2a22225b99fb20cb6fd0ba69ea27156cab7b8b1ca6ed21"
+    },
+    "context": {
+      "$ref": "sha256:45c8540e5a7c980395ba2eb20340a0a3fc571f82259b28dc32c36766ae632063",
+      "contract": "sha256:a587092a0074c9b57a2a22225b99fb20cb6fd0ba69ea27156cab7b8b1ca6ed21"
+    },
+    "sources": [
+      {
+        "$ref": "sha256:d3694c46ccb74d217fc828ab397a37aa6ba2077eed8c7d5be0ab91240e834505",
+        "contract": "sha256:a587092a0074c9b57a2a22225b99fb20cb6fd0ba69ea27156cab7b8b1ca6ed21"
+      }
+    ],
+    "budget": {
+      "$ref": "sha256:34e1ece17093e40988e0a75023f4d3f9672d90f4d31d8bbfe8db251eae1d4e44",
+      "contract": "sha256:a587092a0074c9b57a2a22225b99fb20cb6fd0ba69ea27156cab7b8b1ca6ed21"
+    }
+  },
+  "snapshot": {
+    "transition": {
+      "stop": true
+    }
+  }
+}

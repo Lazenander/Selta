@@ -1,0 +1,22 @@
+{
+  "parameters": {
+    "status": "rejected"
+  },
+  "recorder": {
+    "$ref": "sha256:f012b1707d14f82dad9b6982a2555ab9881bf9c3013861cb31a31a463f74ed83",
+    "contract": "sha256:a587092a0074c9b57a2a22225b99fb20cb6fd0ba69ea27156cab7b8b1ca6ed21"
+  },
+  "scope": {
+    "$ref": "sha256:8eb090b592e295309949b9ff09f9801087a5c78f633f3c5508327c9b57391940",
+    "contract": "sha256:a587092a0074c9b57a2a22225b99fb20cb6fd0ba69ea27156cab7b8b1ca6ed21"
+  },
+  "checkpoint": {
+    "$ref": "sha256:edef4a328b4c81c98ff78420309471f746be8cd93bbd9ad0f8b6e6804af1bd15",
+    "contract": "sha256:a587092a0074c9b57a2a22225b99fb20cb6fd0ba69ea27156cab7b8b1ca6ed21"
+  },
+  "exceptions": [],
+  "attestation": {
+    "$ref": "sha256:fb27eb918824416d339cea810f702aa2c251eeace1933d092f882747ecd0716e",
+    "contract": "sha256:a587092a0074c9b57a2a22225b99fb20cb6fd0ba69ea27156cab7b8b1ca6ed21"
+  }
+}

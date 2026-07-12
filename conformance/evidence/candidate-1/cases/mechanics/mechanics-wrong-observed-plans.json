@@ -1,0 +1,13 @@
+{
+  "revision": "selta.evidence.conformance-case/s2-1",
+  "id": "mechanics-wrong-observed-plans",
+  "operation": {
+    "kind": "assess",
+    "context": "mechanics-candidate-1",
+    "package_source": "sha256:255e8296ca16bd242f49430abdcdbacb6d5aa38057ac3dc4b63f9846349819b4",
+    "expected_basis": {
+      "$ref": "sha256:3edf1fa116c40129be2b1df3d606344aab8851d84d428657dc0faabc2ac0d3fa",
+      "contract": "sha256:938e5e124cb9648bb532949ff8588edeef0570eee18f6c7bfaf579af17a352a0"
+    }
+  }
+}

@@ -1,0 +1,17 @@
+{
+  "parameters": {},
+  "basis": {
+    "$ref": "sha256:28ee25365d99c06072938217d923b8827179e7c8670be52c3152bd517f7b787a",
+    "contract": "sha256:938e5e124cb9648bb532949ff8588edeef0570eee18f6c7bfaf579af17a352a0"
+  },
+  "graph": {
+    "$ref": "sha256:43757d2e2a8bbfa961a97ac147e1866cef3e99a6d8a1db88438d2e2cd5b4a85b",
+    "contract": "sha256:563110eb157d8aae350362c6529fec57bb18907834e3c28f6e0d068477ca177c"
+  },
+  "targets": [
+    {
+      "$ref": "sha256:e024a8713118ff6d641287ca92838136e1f4cf367fb961cfc20ee68113849422",
+      "contract": "sha256:751cc09329f4a485fce9683a29ea5432786cf22b43df9cfd4b3900a326594239"
+    }
+  ]
+}

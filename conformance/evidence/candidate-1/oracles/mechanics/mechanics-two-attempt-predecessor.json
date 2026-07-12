@@ -1,0 +1,9 @@
+{
+  "revision": "selta.evidence.conformance-oracle/s2-1",
+  "case": "mechanics-two-attempt-predecessor",
+  "expected": {
+    "kind": "returned",
+    "package": "sha256:02b9793f12cdc2503633ca18a8bd47f44854ee8d0c38d3c125d85426ed40f7d6",
+    "compare": "conformance_projection"
+  }
+}

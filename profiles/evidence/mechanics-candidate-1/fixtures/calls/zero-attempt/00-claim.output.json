@@ -1,0 +1,14 @@
+{
+  "subject": {
+    "$ref": "sha256:0555f019993d337b9a4fbcd2e30a0ab229f5800ca22a71834d9217b6b1604c1c",
+    "contract": "sha256:a587092a0074c9b57a2a22225b99fb20cb6fd0ba69ea27156cab7b8b1ca6ed21"
+  },
+  "proposition": {
+    "$ref": "sha256:24b900b351bcd68a9f7a6999e17393bab9d39c2fb8caea3f394831831f797cc9",
+    "contract": "sha256:a587092a0074c9b57a2a22225b99fb20cb6fd0ba69ea27156cab7b8b1ca6ed21"
+  },
+  "boundary": {
+    "$ref": "sha256:1b1e42a8aca06a89c9d563faa07e3a6eba3075204b465a9ba96dd9bde17ce243",
+    "contract": "sha256:a587092a0074c9b57a2a22225b99fb20cb6fd0ba69ea27156cab7b8b1ca6ed21"
+  }
+}

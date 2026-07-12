@@ -1,0 +1,13 @@
+{
+  "revision": "selta.evidence.conformance-case/s2-1",
+  "id": "mechanics-wrong-manifest-view",
+  "operation": {
+    "kind": "assess",
+    "context": "mechanics-candidate-1",
+    "package_source": "sha256:d63674c1aafe332ef2f59c0b6b9898d1470350f870d31c0f2f8205b9e69d6ee5",
+    "expected_basis": {
+      "$ref": "sha256:c751e1d54da44624165cf0d4b96548b608bffded3af1e82ab1c0ca56e07ca81c",
+      "contract": "sha256:938e5e124cb9648bb532949ff8588edeef0570eee18f6c7bfaf579af17a352a0"
+    }
+  }
+}

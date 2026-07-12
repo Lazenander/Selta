@@ -1,0 +1,13 @@
+{
+  "revision": "selta.evidence.conformance-case/s2-1",
+  "id": "mechanics-zero-attempt",
+  "operation": {
+    "kind": "assess",
+    "context": "mechanics-candidate-1",
+    "package_source": "sha256:c5ccb3254d590f5875f8aaad0b50deaa149a106145149422708d05dfffe16f0c",
+    "expected_basis": {
+      "$ref": "sha256:4d1411ef368c8aad1d35e2f4aae99db57fc63f97d87efc830cc5a4592d679431",
+      "contract": "sha256:938e5e124cb9648bb532949ff8588edeef0570eee18f6c7bfaf579af17a352a0"
+    }
+  }
+}

@@ -1,0 +1,9 @@
+{
+  "revision": "selta.evidence.conformance-oracle/s2-1",
+  "case": "mechanics-wrong-manifest-view",
+  "expected": {
+    "kind": "returned",
+    "package": "sha256:e8a4de4ee1d460105e488bf9bdacb4369bcc4daa96b905767fb4ce2fcd3aefd8",
+    "compare": "conformance_projection"
+  }
+}

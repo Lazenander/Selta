@@ -1,0 +1,13 @@
+{
+  "revision": "selta.evidence.conformance-case/s2-1",
+  "id": "mechanics-malformed-include",
+  "operation": {
+    "kind": "assess",
+    "context": "mechanics-candidate-1",
+    "package_source": "sha256:145434c1eb3c30d4ad7c94f76c6f2e247fd9b5cf85539acd82cfdd00b3b5556d",
+    "expected_basis": {
+      "$ref": "sha256:8ff4e6cbc29a11d07edf6821238f392d2349ca8d5375adbf627a02b80c6d7fc8",
+      "contract": "sha256:938e5e124cb9648bb532949ff8588edeef0570eee18f6c7bfaf579af17a352a0"
+    }
+  }
+}

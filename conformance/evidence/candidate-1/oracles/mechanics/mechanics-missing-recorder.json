@@ -1,0 +1,9 @@
+{
+  "revision": "selta.evidence.conformance-oracle/s2-1",
+  "case": "mechanics-missing-recorder",
+  "expected": {
+    "kind": "returned",
+    "package": "sha256:ce1678fef6b7c4f909be540151620da92999f3237ce4c616007da7c78b6ab1f7",
+    "compare": "conformance_projection"
+  }
+}

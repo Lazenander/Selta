@@ -1,0 +1,31 @@
+{
+  "parameters": {
+    "claim": {
+      "$ref": "sha256:dcc669cfca3d7106650454623979091be25e90b44b7107461080449b2e9783a1",
+      "contract": "sha256:751cc09329f4a485fce9683a29ea5432786cf22b43df9cfd4b3900a326594239"
+    },
+    "stance": "support",
+    "modality": {
+      "$ref": "sha256:7d3cd0214101d120881064390660ab461c2dcd83775673ab3605c11ddbb9a830",
+      "contract": "sha256:a587092a0074c9b57a2a22225b99fb20cb6fd0ba69ea27156cab7b8b1ca6ed21"
+    },
+    "payload": {
+      "$ref": "sha256:835168986595faadf16b46f3148f6229d0c5ef90fce87ae3dd48332ba8cba84f",
+      "contract": "sha256:a587092a0074c9b57a2a22225b99fb20cb6fd0ba69ea27156cab7b8b1ca6ed21"
+    }
+  },
+  "attempt": {
+    "acquisition": {
+      "$ref": "sha256:7a35047aae7d352849804f65efb828e1fbd68f0695666b03984ab94824217b6c",
+      "contract": "sha256:febf5ad5f7f06e0a014163c97de740272ce0229c8df949a4c553a84ce849cf91"
+    },
+    "attempt": "sha256:d962917dc785d11b43ffdfb06d77374731b61b1ca8145a8755ceb88d86ae6bd8"
+  },
+  "response": {
+    "reference": {
+      "$ref": "sha256:8488fb35c4b7cd05c03030aa2546f23811f6e96d412077c7cb7c82e5782ffc30",
+      "contract": "sha256:a587092a0074c9b57a2a22225b99fb20cb6fd0ba69ea27156cab7b8b1ca6ed21"
+    },
+    "value": "included supporting observation"
+  }
+}

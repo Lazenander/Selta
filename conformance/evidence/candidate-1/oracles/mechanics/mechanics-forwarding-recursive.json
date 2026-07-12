@@ -1,0 +1,9 @@
+{
+  "revision": "selta.evidence.conformance-oracle/s2-1",
+  "case": "mechanics-forwarding-recursive",
+  "expected": {
+    "kind": "returned",
+    "package": "sha256:b73b58e35b0f4d4fff70a084290f70495eb0dda8fd12829b8e9b8bb2ddc0378b",
+    "compare": "conformance_projection"
+  }
+}

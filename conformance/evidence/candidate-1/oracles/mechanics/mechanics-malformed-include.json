@@ -1,0 +1,9 @@
+{
+  "revision": "selta.evidence.conformance-oracle/s2-1",
+  "case": "mechanics-malformed-include",
+  "expected": {
+    "kind": "returned",
+    "package": "sha256:d5751ef8db75423ad36f8027c6a9354031c1f88c640812b76eadb417d3f68c6e",
+    "compare": "conformance_projection"
+  }
+}

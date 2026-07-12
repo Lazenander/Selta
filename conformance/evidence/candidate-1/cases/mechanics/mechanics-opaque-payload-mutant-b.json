@@ -1,0 +1,40 @@
+{
+  "revision": "selta.evidence.conformance-case/s2-1",
+  "id": "mechanics-opaque-payload-mutant-b",
+  "operation": {
+    "kind": "assess",
+    "context": "mechanics-candidate-1",
+    "package_source": "sha256:6fc0c662556c372b6502aa2eb4d08df865d3a85b384d6d76fdaae7410f88eeea",
+    "expected_basis": {
+      "$ref": "sha256:b9133b03f5d8907e33e480d5f05aab751b6c3fd089b292009aaf42d355dddd81",
+      "contract": "sha256:938e5e124cb9648bb532949ff8588edeef0570eee18f6c7bfaf579af17a352a0"
+    },
+    "controls": {
+      "identity_results": [],
+      "semantic_outputs": [
+        {
+          "call_ordinal": 4,
+          "semantics": "sha256:a65164fc8aa89fffccb627fda5b5de126a9e0c6bbfe4d41f3b93f1b71f763076",
+          "output": {
+            "claim": {
+              "$ref": "sha256:6ac99a9671ca640ea99f42acad8a95a56648498520c3908638a9f20972ee3ac2",
+              "contract": "sha256:751cc09329f4a485fce9683a29ea5432786cf22b43df9cfd4b3900a326594239"
+            },
+            "stance": "support",
+            "modality": {
+              "$ref": "sha256:3136109f963da5a6eaac5e360196b9833997fdb276b64bcd5e77e8b0a8f2247a",
+              "contract": "sha256:a587092a0074c9b57a2a22225b99fb20cb6fd0ba69ea27156cab7b8b1ca6ed21"
+            },
+            "payload": {
+              "$ref": "sha256:13a2f18f98cf8fe972ac8c96dec08415febbee9bd15a6a4cb0e0a9979bbca0e8",
+              "contract": "sha256:a587092a0074c9b57a2a22225b99fb20cb6fd0ba69ea27156cab7b8b1ca6ed21"
+            }
+          }
+        }
+      ],
+      "semantic_reads": [],
+      "verification_faults": [],
+      "forbidden_reads": []
+    }
+  }
+}

@@ -1,0 +1,9 @@
+{
+  "revision": "selta.evidence.conformance-oracle/s2-1",
+  "case": "mechanics-noncanonical-predecessors",
+  "expected": {
+    "kind": "returned",
+    "package": "sha256:36364c8428bc70a9b5069603f280696e7a086f8a13ace34777d7b471ef79533e",
+    "compare": "conformance_projection"
+  }
+}

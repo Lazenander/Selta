@@ -1,0 +1,9 @@
+{
+  "revision": "selta.evidence.conformance-oracle/s2-1",
+  "case": "mechanics-scoped-rejected",
+  "expected": {
+    "kind": "returned",
+    "package": "sha256:bb53c428204a6fdab8feab62f4d51c6387d109257b2f60e71224cf31e7f8145e",
+    "compare": "conformance_projection"
+  }
+}

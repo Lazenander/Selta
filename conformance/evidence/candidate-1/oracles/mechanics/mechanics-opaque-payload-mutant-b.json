@@ -1,0 +1,9 @@
+{
+  "revision": "selta.evidence.conformance-oracle/s2-1",
+  "case": "mechanics-opaque-payload-mutant-b",
+  "expected": {
+    "kind": "returned",
+    "package": "sha256:c86bd1b1a6dfd6b364855ccecad4306ceadda708e43475d8db60ec76765b6c21",
+    "compare": "conformance_projection"
+  }
+}

@@ -350,6 +350,15 @@ and snapshot digests—must be committed and pushed to the private remote before
 disclosure. That external commit is the pre-reveal receipt; a locally rewritable
 completion file alone is not a seal.
 
+The first post-reveal scoring attempt failed before producing metrics because
+the committed oracle omitted redundant authored `state` values. Compatibility
+is deterministic: validate the disclosed support/refutation spans under the
+unchanged contract, derive state from their presence, and require any optional
+authored state to agree. Commitment verification, parsing, and the reported
+oracle digest use the same single read of the exact disclosed bytes. No prompt,
+prediction, oracle byte, or scorer semantic may change for this compatibility
+correction.
+
 The round order is strict:
 
 1. withhold heldout wording, oracle, and nonce;

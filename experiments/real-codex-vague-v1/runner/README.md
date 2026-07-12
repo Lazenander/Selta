@@ -171,6 +171,23 @@ to score without the nonce. Before disclosure, commit
 and push the complete portable run directory to the private remote. That Git
 object is the external receipt for the completion digest.
 
+## Post-reveal oracle compatibility
+
+The first post-freeze scoring attempt stopped before metrics because the
+committed held-out oracle omitted the redundant authored `state` field. Its
+records contain `id`, `support`, and `refute` plus ignorable annotation metadata.
+Predictions, prompt, scorer semantics, and committed oracle bytes were not
+changed.
+
+Oracle decoding now treats authored `state` as optional wire metadata. Support
+and refutation spans must first pass the unchanged Selta and deterministic
+evidence checks; canonical state is always derived from their presence. If a
+wire record does include `state`, it must be non-null and equal that derivation
+or scoring fails. The scoring command still reads the oracle once: those exact in-memory
+bytes are commitment-verified, parsed, hashed, and reported without rewriting
+or canonicalizing the disclosed file. This is deterministic format
+compatibility, not a scoring-rule or semantic change.
+
 The author-constructed corpora remain engineering fixtures. Passing this runner
 does not turn them into the three-human-adjudicated pilot required by the parent
 protocol.

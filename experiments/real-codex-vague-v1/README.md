@@ -47,8 +47,8 @@ second model-authored field:
 - [`DEVELOPMENT-DECISION.md`](DEVELOPMENT-DECISION.md) freezes the `p0`-only
   selection and held-out configuration before input or oracle disclosure.
 - [`runner/README.md`](runner/README.md) documents the Rust dry-run, frozen-run
-  validation, raw audit, scoring, and commitment workflow. No development or
-  semantically evaluated model result has completed.
+  validation, raw audit, scoring, and commitment workflow. The completed
+  engineering development result is recorded in `DEVELOPMENT-DECISION.md`.
 - `runs/smoke-terra-low-001` is an immutable failed infrastructure smoke from
   Codex CLI `0.142.5`: that CLI was too old for `gpt-5.6-terra`, and the attempt
   revealed remote-plugin state entering a fresh `CODEX_HOME`. It made no

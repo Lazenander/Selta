@@ -8,7 +8,7 @@ use selta_core::{
     Verdict,
 };
 use serde::de::DeserializeOwned;
-use serde::{Deserialize, Serialize};
+use serde::{Deserialize, Deserializer, Serialize};
 use serde_json::Value;
 use sha2::{Digest, Sha256};
 use std::collections::{BTreeMap, BTreeSet};
@@ -34,6 +34,24 @@ pub struct Oracle {
     pub support: Vec<String>,
     #[serde(default)]
     pub refute: Vec<String>,
+}
+
+#[derive(Deserialize)]
+struct OracleWire {
+    id: String,
+    #[serde(default, deserialize_with = "deserialize_optional_state")]
+    state: Option<EvidenceState>,
+    #[serde(default)]
+    support: Vec<String>,
+    #[serde(default)]
+    refute: Vec<String>,
+}
+
+fn deserialize_optional_state<'de, D>(deserializer: D) -> Result<Option<EvidenceState>, D::Error>
+where
+    D: Deserializer<'de>,
+{
+    EvidenceState::deserialize(deserializer).map(Some)
 }
 
 #[derive(Clone, Debug, Deserialize, Serialize, PartialEq, Eq)]
@@ -324,7 +342,7 @@ pub fn read_oracles_bytes(
     contract: &SeltaContract,
 ) -> Result<Vec<Oracle>> {
     let content = std::str::from_utf8(bytes).context("oracle JSONL is not UTF-8")?;
-    let oracles: Vec<Oracle> = content
+    let wires: Vec<OracleWire> = content
         .lines()
         .enumerate()
         .filter(|(_, line)| !line.trim().is_empty())
@@ -335,32 +353,42 @@ pub fn read_oracles_bytes(
         .collect::<Result<_>>()?;
     let case_by_id: BTreeMap<_, _> = cases.iter().map(|case| (&case.id, case)).collect();
     let mut ids = BTreeSet::new();
-    for oracle in &oracles {
+    let mut oracles = Vec::with_capacity(wires.len());
+    for wire in wires {
         let case = case_by_id
-            .get(&oracle.id)
-            .with_context(|| format!("oracle references unknown case `{}`", oracle.id))?;
-        if !ids.insert(&oracle.id) {
-            bail!("duplicate oracle for case `{}`", oracle.id);
+            .get(&wire.id)
+            .with_context(|| format!("oracle references unknown case `{}`", wire.id))?;
+        if !ids.insert(wire.id.clone()) {
+            bail!("duplicate oracle for case `{}`", wire.id);
         }
         let evidence = Evidence {
-            support: oracle.support.clone(),
-            refute: oracle.refute.clone(),
+            support: wire.support,
+            refute: wire.refute,
         };
         contract
             .verify_evidence(&evidence)
             .map_err(anyhow::Error::new)
-            .with_context(|| format!("oracle for case `{}` failed Selta", oracle.id))?;
+            .with_context(|| format!("oracle for case `{}` failed Selta", wire.id))?;
         validate_evidence(&evidence, &case.text)
             .map_err(anyhow::Error::new)
-            .with_context(|| format!("invalid oracle for case `{}`", oracle.id))?;
-        if evidence.state() != oracle.state {
-            bail!(
-                "oracle state for `{}` is {:?}, but its spans derive {:?}",
-                oracle.id,
-                oracle.state,
-                evidence.state()
-            );
+            .with_context(|| format!("invalid oracle for case `{}`", wire.id))?;
+        let state = evidence.state();
+        if let Some(authored) = wire.state {
+            if authored != state {
+                bail!(
+                    "oracle state for `{}` is {:?}, but its spans derive {:?}",
+                    wire.id,
+                    authored,
+                    state
+                );
+            }
         }
+        oracles.push(Oracle {
+            id: wire.id,
+            state,
+            support: evidence.support,
+            refute: evidence.refute,
+        });
     }
     if ids.len() != cases.len() {
         let missing: Vec<_> = cases
@@ -797,6 +825,76 @@ mod tests {
         assert!(contract.verify_raw(within_side_raw).is_ok());
         let within_side_duplicate = validate_response(within_side_raw, "x", &contract).unwrap_err();
         assert_eq!(within_side_duplicate.class, "response_contract");
+    }
+
+    #[test]
+    fn oracle_without_authored_state_derives_all_four_states() {
+        let cases = vec![
+            case("neither", "alpha beta"),
+            case("support", "alpha beta"),
+            case("refute", "alpha beta"),
+            case("both", "alpha beta"),
+        ];
+        let bytes = concat!(
+            "{\"id\":\"neither\",\"support\":[],\"refute\":[],\"metadata\":\"ignored\"}\n",
+            "{\"id\":\"support\",\"support\":[\"alpha\"],\"refute\":[]}\n",
+            "{\"id\":\"refute\",\"support\":[],\"refute\":[\"beta\"]}\n",
+            "{\"id\":\"both\",\"support\":[\"alpha\"],\"refute\":[\"beta\"]}\n",
+        );
+        let oracles = read_oracles_bytes(bytes.as_bytes(), &cases, &contract()).unwrap();
+        assert_eq!(
+            oracles
+                .iter()
+                .map(|oracle| oracle.state)
+                .collect::<Vec<_>>(),
+            EvidenceState::ALL
+        );
+    }
+
+    #[test]
+    fn authored_oracle_state_must_match_derived_state() {
+        let cases = vec![case("one", "alpha")];
+        let error = read_oracles_bytes(
+            br#"{"id":"one","state":"neither","support":["alpha"],"refute":[]}
+"#,
+            &cases,
+            &contract(),
+        )
+        .unwrap_err();
+        assert!(error.to_string().contains("spans derive SupportOnly"));
+    }
+
+    #[test]
+    fn explicit_null_oracle_state_is_rejected() {
+        let cases = vec![case("one", "alpha")];
+        let error = read_oracles_bytes(
+            br#"{"id":"one","state":null,"support":["alpha"],"refute":[]}
+"#,
+            &cases,
+            &contract(),
+        )
+        .unwrap_err();
+        assert!(error.to_string().contains("invalid oracle on line 1"));
+    }
+
+    #[test]
+    fn authored_development_oracle_behavior_is_unchanged() {
+        let experiment = Path::new(env!("CARGO_MANIFEST_DIR")).join("..");
+        let cases = read_cases(&experiment.join("corpus/dev.inputs.jsonl")).unwrap();
+        let oracles = read_oracles(
+            &experiment.join("corpus/dev.oracle.jsonl"),
+            &cases,
+            &contract(),
+        )
+        .unwrap();
+        assert_eq!(oracles.len(), 24);
+        assert!(oracles.iter().all(|oracle| {
+            oracle.state
+                == EvidenceState::from_presence(
+                    !oracle.support.is_empty(),
+                    !oracle.refute.is_empty(),
+                )
+        }));
     }
 
     #[test]

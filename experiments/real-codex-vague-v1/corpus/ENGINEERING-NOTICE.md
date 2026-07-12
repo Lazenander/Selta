@@ -24,9 +24,10 @@ development/held-out split, and a withheld oracle procedure.
 
 Separately prepared engineering heldout inputs, oracle, and nonce are withheld
 outside the checkout. Only `holdout.commitment.json` remains visible before the
-prompt freeze. The baseline prompt's pre-development amendment now states the
-general no-repeat invariant covering both within-side uniqueness and cross-side
-disjointness. It has not been run against these cases.
+prompt freeze. Pre-development synthetic smoke calibration clarified the
+baseline prompt's general byte-fidelity and no-repeat invariants; it did not use
+these cases or held-out data. No semantic correctness, polarity, or selection
+threshold informed that wording.
 
 ## Constructed balance
 

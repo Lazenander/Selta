@@ -1982,10 +1982,11 @@ mod tests {
     }
 
     #[test]
-    fn baseline_prompt_keeps_the_general_no_repeat_invariant_lean() {
+    fn baseline_prompt_keeps_byte_fidelity_and_no_repeat_invariants_lean() {
         let prompt = include_str!("../../prompts/p0.txt");
-        assert_eq!(prompt.split_whitespace().count(), 86);
-        assert!(prompt.contains("Do not repeat quotations."));
+        assert_eq!(prompt.split_whitespace().count(), 88);
+        assert!(prompt.contains("Copy short evidence spans byte-for-byte from the text"));
+        assert!(prompt.contains("Do not repeat spans."));
     }
 
     #[test]
@@ -2021,6 +2022,22 @@ mod tests {
         assert!(matches!(
             &verified.predictions[0].outcome,
             Outcome::OperationalError { class, .. } if class == "process_exit"
+        ));
+    }
+
+    #[test]
+    fn exact_membership_smoke_bundle_remains_validatable() {
+        let run = Path::new(env!("CARGO_MANIFEST_DIR")).join("../runs/smoke-terra-low-003");
+        let verified = load_verified_run(&run).unwrap();
+        assert_eq!(verified.manifest.mode, RunMode::EngineeringSmoke);
+        assert_eq!(
+            verified.manifest.codex.version.as_deref(),
+            Some("codex-cli 0.144.1")
+        );
+        assert!(verified.predictions[0].response_contract_valid);
+        assert!(matches!(
+            &verified.predictions[0].outcome,
+            Outcome::OperationalError { class, .. } if class == "exact_quotation"
         ));
     }
 

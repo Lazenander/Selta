@@ -109,6 +109,16 @@ Bound validation recognizes the old schema only in `engineering-smoke` mode and
 by its single frozen SHA-256, so both historical smoke bundles remain
 verifiable; a new `run` cannot use it.
 
+`runs/smoke-terra-low-003` is retained unchanged as interface-only engineering
+evidence. CLI `0.144.1`, isolation, transport, and Terra execution succeeded;
+the response passed Selta and the structural contract, then failed only exact
+decoded-string membership after adding literal delimiter quote characters.
+This mechanically motivated the pre-development `byte-for-byte` prompt wording
+and nothing else. The reusable synthetic smoke fixture is separate from
+development and held-out data; semantic correctness, polarity, and selection
+thresholds were not consulted, so the run is not semantic or prompt-quality
+evidence.
+
 A completed run retains:
 
 - `manifest.json`: exact artifacts, model configuration, command template, and

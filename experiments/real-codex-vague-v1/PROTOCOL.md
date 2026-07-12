@@ -123,6 +123,17 @@ general `Do not repeat quotations.` This reduced `p0` from 89 to 86 words and
 aligns it with the unchanged deterministic uniqueness and disjointness rules; it
 is not a development-tuned `p1` attempt.
 
+Smoke 003 then exposed a purely mechanical interface mismatch on the reusable
+synthetic smoke fixture, which is separate from development and held-out data.
+The response passed Selta admission and the structural response contract, then
+failed only decoded-string exact membership because delimiter quote characters
+had been added around copied text. Neither semantic correctness, polarity, nor
+any selection threshold was consulted. Before development, `p0` was therefore
+clarified to say `Copy short evidence spans byte-for-byte from the text` and
+`Do not repeat spans.` The resulting prompt remains general and zero-shot and
+grew from 86 to 88 words. This is interface calibration, not a semantic or
+prompt-quality result and not a `p1` attempt.
+
 Every prompt must:
 
 - remain zero-shot and domain-neutral;
@@ -215,6 +226,17 @@ occurred before model judgment, made no development-corpus calls, and supplies
 no semantic or prompt-quality evidence. The bundle remains unchanged; the live
 transport schema alone drops `uniqueItems`, while post-Selta deterministic
 uniqueness and disjointness checks remain authoritative.
+
+`runs/smoke-terra-low-003` is an immutable engineering record of a mechanical
+interface failure. CLI `0.144.1`, the isolated configuration, transport schema,
+and Terra execution succeeded without a tool, plugin, hook, or isolation
+failure; usage was 2,506 input and 41 output tokens. The response passed Selta
+and the structural contract but failed exact decoded-string membership after
+adding literal delimiter quote characters. This is evidence for clarifying byte
+fidelity before development, but it supplies no semantic/polarity or
+prompt-quality evidence. It used only the reusable synthetic smoke fixture,
+separate from development and held-out data, and no semantic correctness or
+selection threshold informed the revision.
 
 Calls are run in a precommitted randomized order with at most four concurrently.
 There is exactly one scored attempt per prompt-case pair. Semantic failure,

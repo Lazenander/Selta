@@ -1,8 +1,9 @@
 # Real-Codex vague-verifier experiment
 
-Status: engineering preparation in progress. Engineering-only inputs, a development
-oracle, and a committed holdout procedure exist; no formal three-human corpus or
-completed model result exists.
+Status: engineering preparation in progress. Engineering-only inputs, a
+development oracle, and a committed holdout procedure exist; no formal
+three-human corpus or completed development or semantically evaluated model
+result exists.
 
 This experiment asks a deliberately small question: can a concise, general
 prompt make a real Codex assessor preserve textual support, textual refutation,
@@ -44,8 +45,8 @@ second model-authored field:
 - `corpus/ENGINEERING-NOTICE.md` states the permitted uses and non-claims for
   these artifacts.
 - [`runner/README.md`](runner/README.md) documents the Rust dry-run, frozen-run
-  validation, raw audit, scoring, and commitment workflow. No real model result
-  has completed.
+  validation, raw audit, scoring, and commitment workflow. No development or
+  semantically evaluated model result has completed.
 - `runs/smoke-terra-low-001` is an immutable failed infrastructure smoke from
   Codex CLI `0.142.5`: that CLI was too old for `gpt-5.6-terra`, and the attempt
   revealed remote-plugin state entering a fresh `CODEX_HOME`. It made no
@@ -54,6 +55,12 @@ second model-authored field:
   `0.144.1` and its isolated configuration succeeded, but the API rejected
   `uniqueItems` before judgment. It made no development-corpus calls and is not
   semantic or prompt-quality evidence.
+- `runs/smoke-terra-low-003` is an immutable interface-calibration smoke. The
+  isolated CLI, transport, and Terra execution succeeded, but the structurally
+  valid response added delimiter quote characters and failed exact membership.
+  It justifies only the pre-development byte-fidelity clarification, used a
+  reusable synthetic fixture separate from development and held-out data, and
+  supplies no semantic/polarity or prompt-quality evidence.
 
 The engineering artifacts are not the formal pilot corpus. A formal result still
 requires newly sourced cases, three blinded human annotations per case, retained

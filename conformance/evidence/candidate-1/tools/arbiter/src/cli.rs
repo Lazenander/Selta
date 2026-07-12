@@ -1,6 +1,6 @@
 //! Diagnostic command boundary for implemented arbiter invariants.
 
-use std::collections::{BTreeMap, BTreeSet};
+use std::collections::BTreeSet;
 use std::io::{self, Write};
 use std::path::{Path, PathBuf};
 
@@ -12,12 +12,12 @@ use crate::artifact::{self, ArtifactLimits};
 use crate::digest::{bytes_sha256, h, hb, Digest};
 use crate::finite;
 use crate::json::{jcs, parse_ijson, render_record, ParseLimits};
-use crate::path::{PinnedDirectory, PinnedFile, RepoPath, Repository};
+use crate::path::{NodeKind, PinnedDirectory, PinnedFile, RepoPath, Repository};
 use crate::stable::StableSelta;
 
 const CANDIDATE: &str = "conformance/evidence/candidate-1";
 const ARTIFACT_LIMIT: usize = 1_048_576;
-const FIXTURE_ARTIFACT_LIMITS: ArtifactLimits = ArtifactLimits::new(301, 2, 5, 10);
+const FIXTURE_ARTIFACT_LIMITS: ArtifactLimits = ArtifactLimits::new(301, 2, 16, 5, 10);
 const SCHEMA_FILES: [&str; 15] = [
     "artifact-set.schema.json",
     "case.schema.json",
@@ -90,6 +90,8 @@ enum ArtifactSetCommand {
         max_record_bytes: usize,
         #[arg(long, default_value_t = 250_000)]
         max_artifacts: usize,
+        #[arg(long, default_value_t = 1_000_000)]
+        max_directory_entries: usize,
         #[arg(long, default_value_t = 17_179_869_184)]
         max_file_bytes: u64,
         #[arg(long, default_value_t = 1_099_511_627_776)]
@@ -108,6 +110,7 @@ pub(crate) fn run() -> Result<()> {
                 record,
                 max_record_bytes,
                 max_artifacts,
+                max_directory_entries,
                 max_file_bytes,
                 max_total_file_bytes,
             } => admit_artifact_set(
@@ -117,6 +120,7 @@ pub(crate) fn run() -> Result<()> {
                 ArtifactLimits::new(
                     max_record_bytes,
                     max_artifacts,
+                    max_directory_entries,
                     max_file_bytes,
                     max_total_file_bytes,
                 ),
@@ -130,30 +134,25 @@ fn check_foundation(repository: &Path) -> Result<()> {
     let stable = StableSelta::new();
     let schemas = format!("{CANDIDATE}/schemas").parse::<RepoPath>()?;
     let expected = SCHEMA_FILES.into_iter().collect::<BTreeSet<_>>();
-    let mut found = BTreeSet::new();
-    let mut folded = BTreeMap::new();
     let schema_directory = repository.open_directory(&schemas)?;
-    for name in schema_directory.list(1024)? {
-        if name.ends_with(b".json") {
-            let name = std::str::from_utf8(&name)
-                .context("matching conformance schema name is not UTF-8")?;
-            if !name.is_ascii() {
-                bail!("matching conformance schema name is not ASCII");
-            }
-            let lower = name.to_ascii_lowercase();
-            if folded.insert(lower, name.to_owned()).is_some() {
-                bail!("case-insensitive conformance schema path collision");
-            }
-            found.insert(name.to_owned());
+    let entries = schema_directory.entries(1024)?;
+    let mut found = BTreeSet::new();
+    for entry in &entries {
+        if entry.kind() != NodeKind::Regular {
+            bail!("conformance schema inventory contains a non-regular entry");
         }
+        found.insert(entry.name().as_str());
     }
-    if found.iter().map(String::as_str).collect::<BTreeSet<_>>() != expected {
+    if found != expected {
         bail!("conformance schema inventory differs from the closed 15-file set");
     }
     let mut artifact_schema = None;
     let mut vector_schema = None;
-    for name in SCHEMA_FILES {
-        let source = schema_directory.read_regular_file(name, ARTIFACT_LIMIT)?;
+    for entry in entries {
+        let name = entry.name().as_str();
+        let source = entry
+            .open_regular()?
+            .read_all_verified(name, ARTIFACT_LIMIT)?;
         let admitted = stable.admit_schema(&source)?;
         match name {
             "artifact-set.schema.json" => artifact_schema = Some(admitted),
@@ -287,14 +286,16 @@ fn check_artifact_fixture(
 fn check_finite_corpus(repository: &Path) -> Result<()> {
     let repository = Repository::open(repository)?;
     let stable = StableSelta::new();
-    let schema_path = format!("{CANDIDATE}/schemas").parse::<RepoPath>()?;
-    let schema_directory = repository.open_directory(&schema_path)?;
-    let world_schema = stable.admit_schema(
-        &schema_directory.read_regular_file("finite-world.schema.json", ARTIFACT_LIMIT)?,
-    )?;
-    let result_schema = stable.admit_schema(
-        &schema_directory.read_regular_file("finite-result.schema.json", ARTIFACT_LIMIT)?,
-    )?;
+    let world_schema = stable.admit_schema(&read(
+        &repository,
+        &format!("{CANDIDATE}/schemas/finite-world.schema.json"),
+        ARTIFACT_LIMIT,
+    )?)?;
+    let result_schema = stable.admit_schema(&read(
+        &repository,
+        &format!("{CANDIDATE}/schemas/finite-result.schema.json"),
+        ARTIFACT_LIMIT,
+    )?)?;
     let runtime = tokio::runtime::Builder::new_current_thread().build()?;
 
     for name in FINITE_CASES {

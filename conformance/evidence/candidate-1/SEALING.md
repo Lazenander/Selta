@@ -78,6 +78,13 @@ non-regular matching entry, unreadable entry, path outside the repository, or
 case-insensitive path collision fails derivation. Non-JSON files under those
 three roots are ignored and cannot enter the manifest through discovery.
 
+Every traversed entry, including an ignored non-JSON entry, must have one
+canonical ASCII component name and a safe regular-file or directory type.
+Authored and discovered paths use the exact stored component bytes: a
+case-insensitive filesystem lookup is not permission to substitute different
+spelling. Enumeration is bound to the subsequently opened object by physical
+file identity; replacement between those operations fails.
+
 `artifact_roots` is different: it is a canonical, non-empty ASCII-lexical set
 of containment roots and does not recursively add files. An exact file path
 authored in `contexts`, `resolver_sources`, `raw_only`, or `public_inputs` is
@@ -89,6 +96,17 @@ symbolic links, and a file path used as a root fail admission. Derived closure
 begins only from authored paths and references in admitted records; an
 unrelated regular file under an artifact root is never included merely because
 it exists.
+
+Pinned handles make ancestor and subtree rename/replacement unable to redirect
+an in-progress operation. A file is stamped before and after its exact read;
+any observed identity, mode, size, modification-time, or change-time drift
+fails conservatively. This is not an atomic recursive filesystem snapshot:
+freeze and sealing operations therefore require a quiescent tree and mount
+namespace, or a read-only filesystem snapshot. Restoring timestamps or coarse
+filesystem timestamp resolution is outside the claimed mutation detector. A
+detected mutation aborts without producing an identity. Candidate-1
+containment is handle-relative namespace containment; other filesystem and
+network-filesystem guarantees require their own platform qualification.
 
 “Falsifier” means a case that kills a stated nonconforming mutation. It need
 not itself be an error input, and a case may legitimately occur in both the
@@ -105,13 +123,19 @@ non-regular files, case-insensitive path collisions, and byte mismatches fail
 admission. Distinct ordinary member paths may be hard links: the record binds
 layout and bytes, not inode identity.
 
+Every entry in a directory visited to resolve a member counts toward the
+directory-entry ceiling and must have a canonical name without a case-folded
+sibling. An unrelated canonical entry is inspected for that namespace rule but
+does not become a set member.
+
 The enclosing operation may use the physical repository root as the set root;
 no `.` member path is thereby serialized. An artifact-set record never lists
 itself, including under case folding or through a hard link. Operational
-record, entry, per-file, and aggregate-byte ceilings abort the operation but
-do not enter artifact-set identity. The set may list an index or ledger that
-does not refer back to the set. A final outer release set may list the
-completion seal, but the completion seal cannot refer to that outer set.
+record-byte, artifact-count, visited-directory-entry, per-file, and
+aggregate-byte ceilings abort the operation but do not enter artifact-set
+identity. The set may list an index or ledger that does not refer back to the
+set. A final outer release set may list the completion seal, but the completion
+seal cannot refer to that outer set.
 
 ## Acyclic lifecycle
 

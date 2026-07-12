@@ -1,6 +1,7 @@
 //! Generic exact-layout artifact sets.
 
-use std::collections::BTreeSet;
+use std::cmp::Ordering;
+use std::collections::{BTreeMap, BTreeSet};
 use std::io::Read;
 
 use anyhow::{bail, Context, Result};
@@ -8,7 +9,7 @@ use serde::{Deserialize, Serialize};
 
 use crate::digest::{bytes_sha256, h, stream_sha256_exact, Digest, RecordRef};
 use crate::json::{parse_ijson, render_record, ParseLimits};
-use crate::path::{FileKey, PinnedDirectory, PinnedFile, RepoPath};
+use crate::path::{FileKey, PinnedDirectory, PinnedEntry, PinnedFile, RepoPath};
 use crate::stable::{AdmittedSchema, StableSelta};
 
 pub(crate) const REVISION: &str = "selta.evidence.conformance-artifact-set/s2-1";
@@ -17,6 +18,7 @@ pub(crate) const REVISION: &str = "selta.evidence.conformance-artifact-set/s2-1"
 pub(crate) struct ArtifactLimits {
     max_record_bytes: usize,
     max_artifacts: usize,
+    max_directory_entries: usize,
     max_file_bytes: u64,
     max_total_file_bytes: u64,
 }
@@ -25,12 +27,14 @@ impl ArtifactLimits {
     pub(crate) const fn new(
         max_record_bytes: usize,
         max_artifacts: usize,
+        max_directory_entries: usize,
         max_file_bytes: u64,
         max_total_file_bytes: u64,
     ) -> Self {
         Self {
             max_record_bytes,
             max_artifacts,
+            max_directory_entries,
             max_file_bytes,
             max_total_file_bytes,
         }
@@ -128,14 +132,12 @@ pub(crate) async fn derive(
         );
     }
 
-    let mut total_bytes = 0_u64;
-    let mut artifacts = Vec::with_capacity(bounded_paths.len());
-    for path in bounded_paths {
-        artifacts.push(Artifact {
-            bytes_sha256: observe_file(root, &path, None, limits, &mut total_bytes)?,
-            path,
-        });
-    }
+    let digests = observe_files(root, bounded_paths.iter(), None, limits)?;
+    let artifacts = bounded_paths
+        .into_iter()
+        .zip(digests)
+        .map(|(path, bytes_sha256)| Artifact { path, bytes_sha256 })
+        .collect();
 
     let record = ArtifactSet {
         revision: REVISION.to_owned(),
@@ -238,15 +240,13 @@ pub(crate) async fn admit(
         .context("artifact-set schema value does not project to its wire type")?;
     validate_record(&record, record_path, limits)?;
 
-    let mut total_bytes = 0_u64;
-    for artifact in &record.artifacts {
-        let actual = observe_file(
-            root,
-            &artifact.path,
-            Some(record_key),
-            limits,
-            &mut total_bytes,
-        )?;
+    let actual = observe_files(
+        root,
+        record.artifacts.iter().map(|artifact| &artifact.path),
+        Some(record_key),
+        limits,
+    )?;
+    for (artifact, actual) in record.artifacts.iter().zip(actual) {
         if actual != artifact.bytes_sha256 {
             bail!("artifact byte digest differs at {}", artifact.path);
         }
@@ -314,16 +314,162 @@ fn validate_canonical_paths<'a>(
     Ok(())
 }
 
-fn observe_file(
+#[derive(Default)]
+struct MemberTrie<'path> {
+    member: Option<usize>,
+    children: BTreeMap<&'path str, MemberTrie<'path>>,
+}
+
+impl<'path> MemberTrie<'path> {
+    fn from_paths(paths: &[&'path RepoPath]) -> Result<Self> {
+        let mut root = Self::default();
+        for (index, path) in paths.iter().enumerate() {
+            root.insert(path, index)?;
+        }
+        Ok(root)
+    }
+
+    fn insert(&mut self, path: &'path RepoPath, index: usize) -> Result<()> {
+        let mut node = self;
+        let mut components = path.as_str().split('/').peekable();
+        while let Some(component) = components.next() {
+            if node.member.is_some() {
+                bail!("artifact path {path} is nested beneath another artifact member");
+            }
+            node = node.children.entry(component).or_default();
+            if components.peek().is_none() {
+                if !node.children.is_empty() {
+                    bail!("artifact path {path} is an ancestor of another artifact member");
+                }
+                if node.member.replace(index).is_some() {
+                    bail!("artifact path occurs more than once: {path}");
+                }
+            }
+        }
+        Ok(())
+    }
+}
+
+fn observe_files<'path>(
     root: &PinnedDirectory,
+    paths: impl IntoIterator<Item = &'path RepoPath>,
+    record_key: Option<FileKey>,
+    limits: ArtifactLimits,
+) -> Result<Vec<Digest>> {
+    let paths = paths.into_iter().collect::<Vec<_>>();
+    let trie = MemberTrie::from_paths(&paths)?;
+    let mut observed = vec![None; paths.len()];
+    let mut total_bytes = 0_u64;
+    observe_directory(
+        root,
+        &trie,
+        &paths,
+        record_key,
+        limits,
+        &mut total_bytes,
+        &mut observed,
+    )?;
+    observed
+        .into_iter()
+        .enumerate()
+        .map(|(index, digest)| {
+            digest
+                .with_context(|| format!("artifact-set member was not observed: {}", paths[index]))
+        })
+        .collect()
+}
+
+fn observe_directory(
+    directory: &PinnedDirectory,
+    trie: &MemberTrie<'_>,
+    paths: &[&RepoPath],
+    record_key: Option<FileKey>,
+    limits: ArtifactLimits,
+    total_bytes: &mut u64,
+    observed: &mut [Option<Digest>],
+) -> Result<()> {
+    let entries = directory
+        .entries(limits.max_directory_entries)
+        .context("cannot enumerate artifact-set directory")?;
+    let mut entries = entries.iter().peekable();
+    for (name, child) in &trie.children {
+        let entry = loop {
+            match entries.peek() {
+                Some(entry) => match entry.name().as_str().cmp(name) {
+                    Ordering::Less => {
+                        entries.next();
+                    }
+                    Ordering::Equal => break entries.next().expect("peeked entry"),
+                    Ordering::Greater => bail!("artifact-set member does not exist: {name}"),
+                },
+                None => bail!("artifact-set member does not exist: {name}"),
+            }
+        };
+        observe_entry(
+            entry,
+            child,
+            paths,
+            record_key,
+            limits,
+            total_bytes,
+            observed,
+        )?;
+    }
+    Ok(())
+}
+
+fn observe_entry(
+    entry: &PinnedEntry<'_>,
+    trie: &MemberTrie<'_>,
+    paths: &[&RepoPath],
+    record_key: Option<FileKey>,
+    limits: ArtifactLimits,
+    total_bytes: &mut u64,
+    observed: &mut [Option<Digest>],
+) -> Result<()> {
+    match (trie.member, trie.children.is_empty()) {
+        (Some(index), true) => {
+            let path = paths[index];
+            let file = entry
+                .open_regular()
+                .with_context(|| format!("cannot open artifact-set member {path}"))?;
+            observed[index] = Some(observe_open_file(
+                file,
+                path,
+                record_key,
+                limits,
+                total_bytes,
+            )?);
+        }
+        (None, false) => {
+            let directory = entry.open_directory().with_context(|| {
+                format!(
+                    "artifact-set path component is not a directory: {}",
+                    entry.name()
+                )
+            })?;
+            observe_directory(
+                &directory,
+                trie,
+                paths,
+                record_key,
+                limits,
+                total_bytes,
+                observed,
+            )?;
+        }
+        _ => bail!("artifact-set member trie has an impossible file/directory shape"),
+    }
+    Ok(())
+}
+
+fn observe_open_file(
+    mut file: PinnedFile,
     path: &RepoPath,
     record_key: Option<FileKey>,
     limits: ArtifactLimits,
     total_bytes: &mut u64,
 ) -> Result<Digest> {
-    let mut file = root
-        .open_regular_file(path)
-        .with_context(|| format!("cannot open artifact-set member {path}"))?;
     if record_key.is_some_and(|key| key == file.key()) {
         bail!("artifact-set member {path} is a hard-link alias of its record");
     }
@@ -337,8 +483,11 @@ fn observe_file(
             limits.max_total_file_bytes
         );
     }
-    stream_sha256_exact(&mut file, file_bytes, limits.max_file_bytes)
-        .with_context(|| format!("cannot hash artifact-set member {path}"))
+    let digest = stream_sha256_exact(&mut file, file_bytes, limits.max_file_bytes)
+        .with_context(|| format!("cannot hash artifact-set member {path}"))?;
+    file.verify_unchanged()
+        .with_context(|| format!("artifact-set member changed while hashing: {path}"))?;
+    Ok(digest)
 }
 
 fn read_record(file: &mut PinnedFile, max_bytes: usize) -> Result<Vec<u8>> {
@@ -362,6 +511,8 @@ fn read_record(file: &mut PinnedFile, max_bytes: usize) -> Result<Vec<u8>> {
     if source.len() as u64 != expected {
         bail!("artifact-set record changed length while it was read");
     }
+    file.verify_unchanged()
+        .context("artifact-set record changed while it was read")?;
     Ok(source)
 }
 
@@ -380,7 +531,7 @@ mod tests {
     use crate::path::Repository;
 
     #[cfg(unix)]
-    const LIMITS: ArtifactLimits = ArtifactLimits::new(1_048_576, 32, 1_048_576, 2_097_152);
+    const LIMITS: ArtifactLimits = ArtifactLimits::new(1_048_576, 32, 1_024, 1_048_576, 2_097_152);
 
     #[cfg(unix)]
     fn stable_schema() -> (StableSelta, AdmittedSchema) {
@@ -421,6 +572,45 @@ mod tests {
         assert!(
             collect_bounded_paths(std::iter::repeat_with(|| "a".parse().unwrap()), 1,).is_err()
         );
+
+        let prefixed: [RepoPath; 2] = ["a".parse().unwrap(), "a/b".parse().unwrap()];
+        let prefixed = prefixed.iter().collect::<Vec<_>>();
+        assert!(MemberTrie::from_paths(&prefixed).is_err());
+    }
+
+    #[cfg(unix)]
+    #[test]
+    fn directory_inventory_limit_is_independent_of_member_limit() {
+        let outer = tempfile::tempdir().unwrap();
+        fs::create_dir(outer.path().join("root")).unwrap();
+        fs::write(outer.path().join("root/member"), b"x").unwrap();
+        fs::write(outer.path().join("root/unrelated-a"), b"x").unwrap();
+        fs::write(outer.path().join("root/unrelated-b"), b"x").unwrap();
+        let repository = Repository::open(&fs::canonicalize(outer.path()).unwrap()).unwrap();
+        let root = repository.open_directory(&"root".parse().unwrap()).unwrap();
+        let (stable, schema) = stable_schema();
+        let runtime = runtime();
+
+        assert!(runtime
+            .block_on(derive(
+                &stable,
+                &schema,
+                &root,
+                ["member".parse().unwrap()],
+                None,
+                ArtifactLimits::new(1024, 1, 3, 1, 1),
+            ))
+            .is_ok());
+        assert!(runtime
+            .block_on(derive(
+                &stable,
+                &schema,
+                &root,
+                ["member".parse().unwrap()],
+                None,
+                ArtifactLimits::new(1024, 1, 2, 1, 1),
+            ))
+            .is_err());
     }
 
     #[cfg(unix)]
@@ -458,7 +648,7 @@ mod tests {
             record_size(&canonical_paths).unwrap(),
             generated.bytes().len()
         );
-        let exact_record_limit = ArtifactLimits::new(generated.bytes().len(), 2, 5, 10);
+        let exact_record_limit = ArtifactLimits::new(generated.bytes().len(), 2, 16, 5, 10);
         assert!(runtime
             .block_on(derive(
                 &stable,
@@ -476,7 +666,7 @@ mod tests {
                 &root,
                 canonical_paths,
                 None,
-                ArtifactLimits::new(generated.bytes().len() - 1, 2, 5, 10),
+                ArtifactLimits::new(generated.bytes().len() - 1, 2, 16, 5, 10),
             ))
             .is_err());
 
@@ -519,7 +709,7 @@ mod tests {
                 &root,
                 std::iter::repeat_with(|| "a".parse().unwrap()),
                 None,
-                ArtifactLimits::new(1024, 1, 1, 1),
+                ArtifactLimits::new(1024, 1, 16, 1, 1),
             ))
             .is_err());
         assert!(runtime
@@ -563,7 +753,7 @@ mod tests {
                 &root,
                 ["a".parse().unwrap()],
                 None,
-                ArtifactLimits::new(1024, 1, 1, 1),
+                ArtifactLimits::new(1024, 1, 1, 1, 1),
             ))
             .is_ok());
         assert!(runtime
@@ -573,7 +763,7 @@ mod tests {
                 &root,
                 ["a".parse().unwrap()],
                 None,
-                ArtifactLimits::new(1024, 1, 0, 1),
+                ArtifactLimits::new(1024, 1, 1, 0, 1),
             ))
             .is_err());
         let error = runtime
@@ -583,7 +773,7 @@ mod tests {
                 &root,
                 ["missing".parse().unwrap()],
                 None,
-                ArtifactLimits::new(0, 1, 1, 1),
+                ArtifactLimits::new(0, 1, 1, 1, 1),
             ))
             .unwrap_err();
         assert!(error.to_string().contains("record is"));
@@ -758,7 +948,7 @@ mod tests {
                 &root,
                 &mut record,
                 None,
-                ArtifactLimits::new(source.len() - 1, 2, 1, 2),
+                ArtifactLimits::new(source.len() - 1, 2, 2, 1, 2),
             ))
             .is_err());
 

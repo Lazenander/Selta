@@ -1,5 +1,6 @@
 //! Repository-relative paths and handle-pinned, no-follow artifact access.
 
+use std::collections::BTreeMap;
 use std::fmt;
 use std::fs::File;
 use std::io::{Read, Result as IoResult};
@@ -13,6 +14,11 @@ use serde::{Deserialize, Deserializer, Serialize, Serializer};
 #[derive(Debug, Clone, PartialEq, Eq, PartialOrd, Ord, Hash)]
 pub(crate) struct RepoPath(String);
 
+/// One canonical ASCII path component obtained from an exact directory entry.
+#[allow(dead_code)] // Public to the immediately following manifest-derivation slice.
+#[derive(Debug, Clone, PartialEq, Eq, PartialOrd, Ord, Hash)]
+pub(crate) struct ChildName(String);
+
 /// One repository directory pinned for an entire arbiter operation.
 ///
 /// File and directory methods descend from the retained root handle. No path
@@ -21,6 +27,42 @@ pub(crate) struct Repository(platform::Repository);
 
 /// One repository directory retained across inventory and child reads.
 pub(crate) struct PinnedDirectory(platform::PinnedDirectory);
+
+/// The no-follow type observed for one entry in a pinned directory.
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub(crate) enum NodeKind {
+    Directory,
+    Regular,
+    Symlink,
+    Other,
+}
+
+/// One enumerated name, type, and physical identity bound to its parent.
+///
+/// Opening this entry verifies that the name still denotes the observed
+/// object. A rename or replacement between enumeration and opening fails.
+#[allow(dead_code)] // Public to the immediately following manifest-derivation slice.
+pub(crate) struct PinnedEntry<'directory> {
+    parent: &'directory PinnedDirectory,
+    name: ChildName,
+    stamp: EntryStamp,
+}
+
+/// Immutable descriptor-visible metadata captured during enumeration.
+///
+/// The complete stamp, rather than identity alone, makes a same-inode rename
+/// or mutation fail when the enumerated entry is subsequently opened.
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+struct EntryStamp {
+    key: FileKey,
+    kind: NodeKind,
+    mode: u32,
+    len: u64,
+    modified_seconds: i64,
+    modified_nanoseconds: i64,
+    changed_seconds: i64,
+    changed_nanoseconds: i64,
+}
 
 /// Physical identity of one regular file, observed from its retained handle.
 ///
@@ -34,6 +76,7 @@ pub(crate) struct PinnedFile {
     file: File,
     len: u64,
     key: FileKey,
+    stamp: EntryStamp,
 }
 
 impl Repository {
@@ -59,24 +102,65 @@ impl Repository {
 }
 
 impl PinnedDirectory {
-    pub(crate) fn list(&self, max_entries: usize) -> Result<Vec<Vec<u8>>> {
-        self.0.list(max_entries)
-    }
-
-    pub(crate) fn read_regular_file(&self, name: &str, max_bytes: usize) -> Result<Vec<u8>> {
-        let path = name.parse::<RepoPath>()?;
-        if path.0.contains('/') {
-            bail!("pinned-directory child name must contain one component");
-        }
-        read_open_file(self.open_regular_file(&path)?, name, max_bytes)
-    }
-
     pub(crate) fn open_regular_file(&self, path: &RepoPath) -> Result<PinnedFile> {
         self.0.open_regular_file(path)
     }
 
     pub(crate) fn open_directory(&self, path: &RepoPath) -> Result<PinnedDirectory> {
         self.0.open_directory(path).map(PinnedDirectory)
+    }
+
+    /// Enumerate canonical children in raw ASCII lexical order.
+    ///
+    /// Every returned entry carries the no-follow type and physical identity
+    /// observed from this exact directory handle. Noncanonical names and
+    /// ASCII-case-folded sibling collisions fail the closed inventory.
+    #[allow(dead_code)] // Public to the immediately following manifest-derivation slice.
+    pub(crate) fn entries(&self, max_entries: usize) -> Result<Vec<PinnedEntry<'_>>> {
+        let observed = self.0.entries(max_entries)?;
+        let mut folded = BTreeMap::new();
+        let mut entries = Vec::with_capacity(observed.len());
+        for (raw_name, stamp) in observed {
+            let name = ChildName::from_bytes(&raw_name)?;
+            let fold = name.as_str().to_ascii_lowercase();
+            if let Some(prior) = folded.insert(fold, name.clone()) {
+                bail!("directory contains an ASCII-case-folded name collision: {prior} and {name}");
+            }
+            entries.push(PinnedEntry {
+                parent: self,
+                name,
+                stamp,
+            });
+        }
+        Ok(entries)
+    }
+}
+
+#[allow(dead_code)] // Public to the immediately following manifest-derivation slice.
+impl PinnedEntry<'_> {
+    pub(crate) fn name(&self) -> &ChildName {
+        &self.name
+    }
+
+    pub(crate) const fn kind(&self) -> NodeKind {
+        self.stamp.kind
+    }
+
+    pub(crate) fn open_regular(&self) -> Result<PinnedFile> {
+        if self.stamp.kind != NodeKind::Regular {
+            bail!("directory entry is not a regular file: {}", self.name);
+        }
+        self.parent.0.open_regular_entry(&self.name, self.stamp)
+    }
+
+    pub(crate) fn open_directory(&self) -> Result<PinnedDirectory> {
+        if self.stamp.kind != NodeKind::Directory {
+            bail!("directory entry is not a directory: {}", self.name);
+        }
+        self.parent
+            .0
+            .open_directory_entry(&self.name, self.stamp)
+            .map(PinnedDirectory)
     }
 }
 
@@ -88,9 +172,59 @@ impl PinnedFile {
     pub(crate) const fn key(&self) -> FileKey {
         self.key
     }
+
+    /// Verify that descriptor-visible metadata still equals the stamp taken
+    /// when this exact handle was opened.
+    pub(crate) fn verify_unchanged(&self) -> Result<()> {
+        platform::verify_file_stamp(&self.file, &self.stamp)
+            .context("retained artifact changed while it was consumed")
+    }
+
+    /// Consume this retained handle completely and verify it before exposing
+    /// any bytes to the caller.
+    pub(crate) fn read_all_verified(self, label: &str, max_bytes: usize) -> Result<Vec<u8>> {
+        read_open_file(self, label, max_bytes)
+    }
 }
 
 impl RepoPath {
+    pub(crate) fn as_str(&self) -> &str {
+        &self.0
+    }
+
+    #[allow(dead_code)] // Public to the immediately following manifest-derivation slice.
+    pub(crate) fn join_child(&self, child: &ChildName) -> Result<Self> {
+        format!("{self}/{child}").parse()
+    }
+
+    /// Return the non-empty component suffix when `self` is strictly beneath
+    /// `root`. Equality and textual prefixes without a `/` boundary return
+    /// `None`.
+    #[allow(dead_code)] // Public to the immediately following manifest-derivation slice.
+    pub(crate) fn strict_relative_to(&self, root: &RepoPath) -> Option<Self> {
+        self.0
+            .strip_prefix(root.as_str())
+            .and_then(|suffix| suffix.strip_prefix('/'))
+            .and_then(|suffix| suffix.parse().ok())
+    }
+
+    #[allow(dead_code)] // Public to the immediately following manifest-derivation slice.
+    pub(crate) fn ascii_folded(&self) -> String {
+        self.0.to_ascii_lowercase()
+    }
+}
+
+#[allow(dead_code)] // Public to the immediately following manifest-derivation slice.
+impl ChildName {
+    fn from_bytes(value: &[u8]) -> Result<Self> {
+        let value = std::str::from_utf8(value).context("directory entry name is not UTF-8")?;
+        let path = value.parse::<RepoPath>()?;
+        if path.0.contains('/') {
+            bail!("directory entry name contains more than one component");
+        }
+        Ok(Self(path.0))
+    }
+
     pub(crate) fn as_str(&self) -> &str {
         &self.0
     }
@@ -126,10 +260,18 @@ fn read_open_file(mut file: PinnedFile, label: &str, max_bytes: usize) -> Result
     if bytes.len() as u64 != file.len() {
         bail!("artifact {label} changed length while it was read");
     }
+    file.verify_unchanged()
+        .with_context(|| format!("cannot finalize open artifact {label}"))?;
     Ok(bytes)
 }
 
 impl fmt::Display for RepoPath {
+    fn fmt(&self, formatter: &mut fmt::Formatter<'_>) -> fmt::Result {
+        formatter.write_str(&self.0)
+    }
+}
+
+impl fmt::Display for ChildName {
     fn fmt(&self, formatter: &mut fmt::Formatter<'_>) -> fmt::Result {
         formatter.write_str(&self.0)
     }
@@ -203,7 +345,6 @@ mod platform {
     use std::ffi::{CStr, CString, OsStr};
     use std::os::fd::{AsRawFd, FromRawFd, OwnedFd, RawFd};
     use std::os::unix::ffi::OsStrExt;
-    use std::os::unix::fs::MetadataExt;
     use std::path::Component;
 
     use anyhow::{Context, Result};
@@ -231,12 +372,17 @@ mod platform {
             } else {
                 OsStr::new(".")
             };
-            let mut current = open_directory(libc::AT_FDCWD, start, "repository root anchor")?;
+            let mut current = open_anchor(libc::AT_FDCWD, start, "repository root anchor")?;
             for component in root.components() {
                 match component {
                     Component::RootDir | Component::CurDir => {}
                     Component::Normal(name) => {
-                        current = open_directory(current.as_raw_fd(), name, "repository root")?;
+                        current = open_directory_exact(
+                            current.as_raw_fd(),
+                            name.as_bytes(),
+                            None,
+                            "repository root",
+                        )?;
                     }
                     Component::ParentDir => {
                         bail!("repository root must not contain a parent component")
@@ -250,12 +396,12 @@ mod platform {
         }
 
         pub(super) fn open_regular_file(&self, relative: &RepoPath) -> Result<PinnedFile> {
-            let descriptor = open_relative(self.root.as_raw_fd(), relative, false)?;
+            let descriptor = open_relative_exact(self.root.as_raw_fd(), relative, false)?;
             pinned_file(descriptor, &relative.to_string())
         }
 
         pub(super) fn open_directory(&self, relative: &RepoPath) -> Result<PinnedDirectory> {
-            open_relative(self.root.as_raw_fd(), relative, true)
+            open_relative_exact(self.root.as_raw_fd(), relative, true)
                 .map(|handle| PinnedDirectory { handle })
         }
 
@@ -284,58 +430,58 @@ mod platform {
 
     impl PinnedDirectory {
         pub(super) fn open_regular_file(&self, relative: &RepoPath) -> Result<PinnedFile> {
-            let descriptor = open_relative(self.handle.as_raw_fd(), relative, false)?;
+            let descriptor = open_relative_exact(self.handle.as_raw_fd(), relative, false)?;
             pinned_file(descriptor, &relative.to_string())
         }
 
         pub(super) fn open_directory(&self, relative: &RepoPath) -> Result<PinnedDirectory> {
-            open_relative(self.handle.as_raw_fd(), relative, true)
+            open_relative_exact(self.handle.as_raw_fd(), relative, true)
                 .map(|handle| PinnedDirectory { handle })
         }
 
-        pub(super) fn list(&self, max_entries: usize) -> Result<Vec<Vec<u8>>> {
-            let current = c".";
-            let descriptor = unsafe {
-                libc::openat(
-                    self.handle.as_raw_fd(),
-                    current.as_ptr(),
-                    libc::O_RDONLY | libc::O_CLOEXEC | libc::O_DIRECTORY | libc::O_NOFOLLOW,
-                )
-            };
-            if descriptor < 0 {
-                return Err(std::io::Error::last_os_error())
-                    .context("cannot reopen pinned directory handle");
-            }
-            // fdopendir owns the descriptor after success.
-            let directory = unsafe { libc::fdopendir(descriptor) };
-            if directory.is_null() {
-                let error = std::io::Error::last_os_error();
-                unsafe { libc::close(descriptor) };
-                return Err(error).context("cannot enumerate open directory handle");
-            }
-            let directory = DirectoryStream(directory);
-            let mut names = Vec::new();
-            loop {
-                set_errno(Errno(0));
-                let entry = unsafe { libc::readdir(directory.0) };
-                if entry.is_null() {
-                    let error = errno();
-                    if error.0 != 0 {
-                        bail!("cannot read open directory handle: {error}");
-                    }
-                    break;
-                }
-                let name = unsafe { CStr::from_ptr((*entry).d_name.as_ptr()) }.to_bytes();
-                if name == b"." || name == b".." {
-                    continue;
-                }
-                if names.len() == max_entries {
+        #[allow(dead_code)] // Public to the immediately following manifest-derivation slice.
+        pub(super) fn open_regular_entry(
+            &self,
+            name: &ChildName,
+            expected: EntryStamp,
+        ) -> Result<PinnedFile> {
+            let descriptor = open_regular_exact(
+                self.handle.as_raw_fd(),
+                name.as_str().as_bytes(),
+                Some(expected),
+                &name.to_string(),
+            )?;
+            pinned_file_with_stamp(descriptor, expected, &name.to_string())
+        }
+
+        #[allow(dead_code)] // Public to the immediately following manifest-derivation slice.
+        pub(super) fn open_directory_entry(
+            &self,
+            name: &ChildName,
+            expected: EntryStamp,
+        ) -> Result<PinnedDirectory> {
+            open_directory_exact(
+                self.handle.as_raw_fd(),
+                name.as_str().as_bytes(),
+                Some(expected),
+                &name.to_string(),
+            )
+            .map(|handle| PinnedDirectory { handle })
+        }
+
+        #[allow(dead_code)] // Public to the immediately following manifest-derivation slice.
+        pub(super) fn entries(&self, max_entries: usize) -> Result<Vec<(Vec<u8>, EntryStamp)>> {
+            let mut entries = Vec::new();
+            visit_directory(self.handle.as_raw_fd(), |name| {
+                if entries.len() == max_entries {
                     bail!("directory exceeds its entry ceiling of {max_entries}");
                 }
-                names.push(name.to_vec());
-            }
-            names.sort();
-            Ok(names)
+                let stamp = entry_stamp_at(self.handle.as_raw_fd(), name)?;
+                entries.push((name.to_vec(), stamp));
+                Ok(())
+            })?;
+            entries.sort_by(|left, right| left.0.cmp(&right.0));
+            Ok(entries)
         }
     }
 
@@ -348,49 +494,44 @@ mod platform {
     }
 
     fn pinned_file(descriptor: OwnedFd, label: &str) -> Result<PinnedFile> {
-        let file = File::from(descriptor);
-        let metadata = file
-            .metadata()
-            .with_context(|| format!("cannot inspect open artifact {label}"))?;
-        if !metadata.is_file() {
+        let stamp = entry_stamp_from_fd(descriptor.as_raw_fd())?;
+        pinned_file_with_stamp(descriptor, stamp, label)
+    }
+
+    fn pinned_file_with_stamp(
+        descriptor: OwnedFd,
+        stamp: EntryStamp,
+        label: &str,
+    ) -> Result<PinnedFile> {
+        if stamp.kind != NodeKind::Regular {
             bail!("artifact path is not a regular file: {label}");
         }
         Ok(PinnedFile {
-            len: metadata.len(),
-            key: FileKey(PlatformFileKey {
-                device: metadata.dev(),
-                inode: metadata.ino(),
-            }),
-            file,
+            len: stamp.len,
+            key: stamp.key,
+            stamp,
+            file: File::from(descriptor),
         })
     }
 
-    fn open_relative(root: RawFd, relative: &RepoPath, directory: bool) -> Result<OwnedFd> {
+    fn open_relative_exact(root: RawFd, relative: &RepoPath, directory: bool) -> Result<OwnedFd> {
         let mut parent = root;
         let mut opened = None;
         let component_count = relative.0.split('/').count();
         for (index, component) in relative.0.split('/').enumerate() {
-            let component = CString::new(component).expect("RepoPath excludes NUL");
             let is_final = index + 1 == component_count;
-            let mut flags = libc::O_RDONLY | libc::O_CLOEXEC | libc::O_NOFOLLOW;
-            if !is_final || directory {
-                flags |= libc::O_DIRECTORY;
+            let descriptor = if !is_final || directory {
+                open_directory_exact(parent, component.as_bytes(), None, &relative.to_string())?
             } else {
-                flags |= libc::O_NONBLOCK;
-            }
-            let descriptor = unsafe { libc::openat(parent, component.as_ptr(), flags) };
-            if descriptor < 0 {
-                return Err(std::io::Error::last_os_error())
-                    .with_context(|| format!("cannot securely open artifact {relative}"));
-            }
-            let descriptor = unsafe { OwnedFd::from_raw_fd(descriptor) };
+                open_regular_exact(parent, component.as_bytes(), None, &relative.to_string())?
+            };
             parent = descriptor.as_raw_fd();
             opened = Some(descriptor);
         }
         opened.context("repository-relative path has no component")
     }
 
-    fn open_directory(parent: RawFd, name: &OsStr, label: &str) -> Result<OwnedFd> {
+    fn open_anchor(parent: RawFd, name: &OsStr, label: &str) -> Result<OwnedFd> {
         let name =
             CString::new(name.as_bytes()).with_context(|| format!("{label} contains NUL"))?;
         let descriptor = unsafe {
@@ -405,6 +546,205 @@ mod platform {
                 .with_context(|| format!("cannot securely open {label}"));
         }
         Ok(unsafe { OwnedFd::from_raw_fd(descriptor) })
+    }
+
+    fn open_directory_exact(
+        parent: RawFd,
+        name: &[u8],
+        expected: Option<EntryStamp>,
+        label: &str,
+    ) -> Result<OwnedFd> {
+        open_node_exact(
+            parent,
+            name,
+            libc::O_DIRECTORY,
+            NodeKind::Directory,
+            expected,
+            label,
+        )
+    }
+
+    fn open_regular_exact(
+        parent: RawFd,
+        name: &[u8],
+        expected: Option<EntryStamp>,
+        label: &str,
+    ) -> Result<OwnedFd> {
+        open_node_exact(
+            parent,
+            name,
+            libc::O_NONBLOCK,
+            NodeKind::Regular,
+            expected,
+            label,
+        )
+    }
+
+    fn open_node_exact(
+        parent: RawFd,
+        name: &[u8],
+        type_flag: libc::c_int,
+        wanted_kind: NodeKind,
+        expected: Option<EntryStamp>,
+        label: &str,
+    ) -> Result<OwnedFd> {
+        let name = CString::new(name).with_context(|| format!("{label} contains NUL"))?;
+        let descriptor = unsafe {
+            libc::openat(
+                parent,
+                name.as_ptr(),
+                libc::O_RDONLY | libc::O_CLOEXEC | libc::O_NOFOLLOW | type_flag,
+            )
+        };
+        if descriptor < 0 {
+            return Err(std::io::Error::last_os_error())
+                .with_context(|| format!("cannot securely open {label}"));
+        }
+        let descriptor = unsafe { OwnedFd::from_raw_fd(descriptor) };
+        let actual = entry_stamp_from_fd(descriptor.as_raw_fd())?;
+        if actual.kind != wanted_kind {
+            bail!("opened path has the wrong type for {label}");
+        }
+        if let Some(expected) = expected {
+            if expected != actual {
+                bail!("directory entry changed before it could be opened: {label}");
+            }
+        } else {
+            ensure_exact_mapping(parent, name.as_bytes(), actual, label)?;
+        }
+        Ok(descriptor)
+    }
+
+    fn ensure_exact_mapping(
+        parent: RawFd,
+        requested: &[u8],
+        opened: EntryStamp,
+        label: &str,
+    ) -> Result<()> {
+        let mut exact = None;
+        let mut folded_alias = None;
+        visit_directory(parent, |name| {
+            if name == requested {
+                exact = Some(entry_stamp_at(parent, name)?);
+            } else if name.eq_ignore_ascii_case(requested) {
+                folded_alias = Some(name.to_vec());
+            }
+            Ok(())
+        })?;
+        if let Some(alias) = folded_alias {
+            bail!(
+                "path component has an ASCII-case-folded sibling while opening {label}: {:?}",
+                String::from_utf8_lossy(&alias)
+            );
+        }
+        let exact = exact.with_context(|| {
+            format!("path component is not present with exact raw spelling while opening {label}")
+        })?;
+        if exact.key != opened.key || exact.kind != opened.kind {
+            bail!("path component changed during exact-spelling validation: {label}");
+        }
+        Ok(())
+    }
+
+    fn entry_stamp_at(parent: RawFd, name: &[u8]) -> Result<EntryStamp> {
+        let name = CString::new(name).context("directory entry contains NUL")?;
+        let mut status = std::mem::MaybeUninit::<libc::stat>::uninit();
+        let result = unsafe {
+            libc::fstatat(
+                parent,
+                name.as_ptr(),
+                status.as_mut_ptr(),
+                libc::AT_SYMLINK_NOFOLLOW,
+            )
+        };
+        if result < 0 {
+            return Err(std::io::Error::last_os_error())
+                .context("cannot inspect directory entry without following links");
+        }
+        let status = unsafe { status.assume_init() };
+        Ok(entry_stamp(&status))
+    }
+
+    fn entry_stamp_from_fd(descriptor: RawFd) -> Result<EntryStamp> {
+        let mut status = std::mem::MaybeUninit::<libc::stat>::uninit();
+        let result = unsafe { libc::fstat(descriptor, status.as_mut_ptr()) };
+        if result < 0 {
+            return Err(std::io::Error::last_os_error()).context("cannot inspect opened entry");
+        }
+        let status = unsafe { status.assume_init() };
+        Ok(entry_stamp(&status))
+    }
+
+    #[allow(clippy::unnecessary_cast)] // libc field widths vary across Unix targets.
+    fn entry_stamp(status: &libc::stat) -> EntryStamp {
+        let mode = status.st_mode as libc::mode_t;
+        let kind = match mode & libc::S_IFMT {
+            libc::S_IFDIR => NodeKind::Directory,
+            libc::S_IFREG => NodeKind::Regular,
+            libc::S_IFLNK => NodeKind::Symlink,
+            _ => NodeKind::Other,
+        };
+        EntryStamp {
+            key: FileKey(PlatformFileKey {
+                device: status.st_dev as u64,
+                inode: status.st_ino as u64,
+            }),
+            kind,
+            mode: status.st_mode as u32,
+            len: status.st_size as u64,
+            modified_seconds: status.st_mtime as i64,
+            modified_nanoseconds: status.st_mtime_nsec as i64,
+            changed_seconds: status.st_ctime as i64,
+            changed_nanoseconds: status.st_ctime_nsec as i64,
+        }
+    }
+
+    fn visit_directory(parent: RawFd, mut visit: impl FnMut(&[u8]) -> Result<()>) -> Result<()> {
+        let current = c".";
+        let descriptor = unsafe {
+            libc::openat(
+                parent,
+                current.as_ptr(),
+                libc::O_RDONLY | libc::O_CLOEXEC | libc::O_DIRECTORY | libc::O_NOFOLLOW,
+            )
+        };
+        if descriptor < 0 {
+            return Err(std::io::Error::last_os_error())
+                .context("cannot reopen pinned directory handle");
+        }
+        // fdopendir owns the descriptor after success.
+        let directory = unsafe { libc::fdopendir(descriptor) };
+        if directory.is_null() {
+            let error = std::io::Error::last_os_error();
+            unsafe { libc::close(descriptor) };
+            return Err(error).context("cannot enumerate open directory handle");
+        }
+        let directory = DirectoryStream(directory);
+        loop {
+            set_errno(Errno(0));
+            let entry = unsafe { libc::readdir(directory.0) };
+            if entry.is_null() {
+                let error = errno();
+                if error.0 != 0 {
+                    bail!("cannot read open directory handle: {error}");
+                }
+                break;
+            }
+            let name = unsafe { CStr::from_ptr((*entry).d_name.as_ptr()) }.to_bytes();
+            if name != b"." && name != b".." {
+                visit(name)?;
+            }
+        }
+        Ok(())
+    }
+
+    pub(super) fn verify_file_stamp(file: &File, expected: &EntryStamp) -> Result<()> {
+        let actual = entry_stamp_from_fd(file.as_raw_fd())
+            .context("cannot reinspect retained artifact handle")?;
+        if &actual != expected {
+            bail!("file identity, mode, length, or timestamp metadata differs");
+        }
+        Ok(())
     }
 }
 
@@ -446,9 +786,32 @@ mod platform {
             bail!("secure no-follow artifact access is not implemented on this platform")
         }
 
-        pub(super) fn list(&self, _max_entries: usize) -> Result<Vec<Vec<u8>>> {
+        #[allow(dead_code)] // Public to the immediately following manifest-derivation slice.
+        pub(super) fn open_regular_entry(
+            &self,
+            _name: &ChildName,
+            _expected: EntryStamp,
+        ) -> Result<PinnedFile> {
             bail!("secure no-follow artifact access is not implemented on this platform")
         }
+
+        #[allow(dead_code)] // Public to the immediately following manifest-derivation slice.
+        pub(super) fn open_directory_entry(
+            &self,
+            _name: &ChildName,
+            _expected: EntryStamp,
+        ) -> Result<PinnedDirectory> {
+            bail!("secure no-follow artifact access is not implemented on this platform")
+        }
+
+        #[allow(dead_code)] // Public to the immediately following manifest-derivation slice.
+        pub(super) fn entries(&self, _max_entries: usize) -> Result<Vec<(Vec<u8>, EntryStamp)>> {
+            bail!("secure no-follow artifact access is not implemented on this platform")
+        }
+    }
+
+    pub(super) fn verify_file_stamp(_file: &File, _expected: &EntryStamp) -> Result<()> {
+        bail!("secure no-follow artifact access is not implemented on this platform")
     }
 }
 
@@ -480,9 +843,25 @@ mod tests {
         }
     }
 
+    #[test]
+    fn joins_folds_and_checks_strict_component_containment() {
+        let root: RepoPath = "root".parse().unwrap();
+        let child = ChildName::from_bytes(b"Nested").unwrap();
+        let joined = root.join_child(&child).unwrap();
+        assert_eq!(joined.as_str(), "root/Nested");
+        assert_eq!(joined.ascii_folded(), "root/nested");
+        assert_eq!(joined.strict_relative_to(&root).unwrap().as_str(), "Nested");
+        assert!(root.strict_relative_to(&root).is_none());
+        assert!("rooted/file"
+            .parse::<RepoPath>()
+            .unwrap()
+            .strict_relative_to(&root)
+            .is_none());
+    }
+
     #[cfg(unix)]
     #[test]
-    fn reads_and_lists_from_one_pinned_repository_handle() {
+    fn reads_and_enumerates_from_one_pinned_repository_handle() {
         let root = tempfile::tempdir().unwrap();
         fs::create_dir(root.path().join("a")).unwrap();
         fs::write(root.path().join("a/file.json"), b"bytes").unwrap();
@@ -494,23 +873,44 @@ mod tests {
         assert!(repository.read_regular_file(&file, 4).is_err());
         let directory: RepoPath = "a".parse().unwrap();
         let pinned = repository.open_directory(&directory).unwrap();
+        let entries = pinned.entries(2).unwrap();
         assert_eq!(
-            pinned.list(2).unwrap(),
-            [b"another.json".to_vec(), b"file.json".to_vec()]
+            entries
+                .iter()
+                .map(|entry| entry.name().as_str())
+                .collect::<Vec<_>>(),
+            ["another.json", "file.json"]
         );
-        assert_eq!(pinned.read_regular_file("file.json", 5).unwrap(), b"bytes");
-        assert!(pinned.read_regular_file("nested/file", 5).is_err());
-        assert!(pinned.list(1).is_err());
+        assert_eq!(
+            entries[1]
+                .open_regular()
+                .unwrap()
+                .read_all_verified("file.json", 5)
+                .unwrap(),
+            b"bytes"
+        );
+        assert!(pinned.entries(1).is_err());
         assert!(repository.read_regular_file(&directory, 5).is_err());
 
         fs::rename(physical_root.join("a"), physical_root.join("old-a")).unwrap();
         fs::create_dir(physical_root.join("a")).unwrap();
         fs::write(physical_root.join("a/file.json"), b"replacement").unwrap();
+        let renamed_entries = pinned.entries(2).unwrap();
         assert_eq!(
-            pinned.list(2).unwrap(),
-            [b"another.json".to_vec(), b"file.json".to_vec()]
+            renamed_entries
+                .iter()
+                .map(|entry| entry.name().as_str())
+                .collect::<Vec<_>>(),
+            ["another.json", "file.json"]
         );
-        assert_eq!(pinned.read_regular_file("file.json", 5).unwrap(), b"bytes");
+        assert_eq!(
+            renamed_entries[1]
+                .open_regular()
+                .unwrap()
+                .read_all_verified("file.json", 5)
+                .unwrap(),
+            b"bytes"
+        );
     }
 
     #[cfg(unix)]
@@ -547,6 +947,7 @@ mod tests {
         let mut bytes = Vec::new();
         original.read_to_end(&mut bytes).unwrap();
         assert_eq!(bytes, b"original");
+        assert!(original.verify_unchanged().is_err());
         assert_eq!(
             repository.read_regular_file(&original_path, 11).unwrap(),
             b"replacement"
@@ -564,7 +965,14 @@ mod tests {
         let pinned_root = repository.pinned_root().unwrap();
         let a = pinned_root.open_directory(&"a".parse().unwrap()).unwrap();
         let nested = a.open_directory(&"nested".parse().unwrap()).unwrap();
-        assert_eq!(nested.read_regular_file("file", 6).unwrap(), b"nested");
+        assert_eq!(
+            nested
+                .open_regular_file(&"file".parse().unwrap())
+                .unwrap()
+                .read_all_verified("file", 6)
+                .unwrap(),
+            b"nested"
+        );
         assert_eq!(
             pinned_root
                 .open_regular_file(&"a/nested/file".parse().unwrap())
@@ -572,6 +980,150 @@ mod tests {
                 .len(),
             6
         );
+    }
+
+    #[cfg(unix)]
+    #[test]
+    fn enumerated_entries_bind_name_type_and_identity_to_their_parent() {
+        use std::os::unix::fs::symlink;
+        use std::os::unix::net::UnixListener;
+
+        let root = tempfile::tempdir().unwrap();
+        fs::create_dir(root.path().join("directory")).unwrap();
+        fs::write(root.path().join("regular"), b"bytes").unwrap();
+        symlink("regular", root.path().join("symlink")).unwrap();
+        let _socket = UnixListener::bind(root.path().join("socket")).unwrap();
+        let physical = fs::canonicalize(root.path()).unwrap();
+        let repository = Repository::open(&physical).unwrap();
+        let pinned = repository.pinned_root().unwrap();
+        let entries = pinned.entries(4).unwrap();
+        assert_eq!(
+            entries
+                .iter()
+                .map(|entry| entry.name().as_str())
+                .collect::<Vec<_>>(),
+            ["directory", "regular", "socket", "symlink"]
+        );
+
+        let directory = &entries[0];
+        assert_eq!(directory.kind(), NodeKind::Directory);
+        assert!(directory.open_directory().is_ok());
+        assert!(directory.open_regular().is_err());
+
+        let regular = &entries[1];
+        assert_eq!(regular.kind(), NodeKind::Regular);
+        assert!(regular.open_regular().is_ok());
+        assert!(regular.open_directory().is_err());
+
+        assert_eq!(entries[2].kind(), NodeKind::Other);
+        assert!(entries[2].open_regular().is_err());
+        assert_eq!(entries[3].kind(), NodeKind::Symlink);
+        assert!(entries[3].open_regular().is_err());
+        assert!(entries[3].open_directory().is_err());
+    }
+
+    #[cfg(unix)]
+    #[test]
+    fn enumerated_entry_replacement_fails_instead_of_opening_new_bytes() {
+        let root = tempfile::tempdir().unwrap();
+        fs::write(root.path().join("member"), b"original").unwrap();
+        let physical = fs::canonicalize(root.path()).unwrap();
+        let repository = Repository::open(&physical).unwrap();
+        let pinned = repository.pinned_root().unwrap();
+        let entries = pinned.entries(1).unwrap();
+        let member = &entries[0];
+
+        fs::rename(physical.join("member"), physical.join("old-member")).unwrap();
+        fs::write(physical.join("member"), b"replacement").unwrap();
+        assert!(member.open_regular().is_err());
+    }
+
+    #[cfg(unix)]
+    #[test]
+    fn enumerated_entry_case_rename_fails_even_when_the_inode_is_unchanged() {
+        use std::os::unix::fs::MetadataExt as _;
+
+        let root = tempfile::tempdir().unwrap();
+        let original = root.path().join("Member");
+        let renamed = root.path().join("member");
+        fs::write(&original, b"bytes").unwrap();
+        let physical = fs::canonicalize(root.path()).unwrap();
+        let repository = Repository::open(&physical).unwrap();
+        let pinned = repository.pinned_root().unwrap();
+        let entries = pinned.entries(1).unwrap();
+        let before = fs::metadata(&original).unwrap();
+
+        fs::rename(&original, &renamed).unwrap();
+        let after = fs::metadata(&renamed).unwrap();
+        assert_eq!((before.dev(), before.ino()), (after.dev(), after.ino()));
+        assert!(entries[0].open_regular().is_err());
+    }
+
+    #[cfg(unix)]
+    #[test]
+    fn exact_open_and_inventory_reject_casefold_aliases() {
+        let root = tempfile::tempdir().unwrap();
+        fs::write(root.path().join("Name"), b"first").unwrap();
+        fs::write(root.path().join("name"), b"second").unwrap();
+        let physical = fs::canonicalize(root.path()).unwrap();
+        let actual_names = fs::read_dir(&physical)
+            .unwrap()
+            .map(|entry| entry.unwrap().file_name().into_string().unwrap())
+            .collect::<Vec<_>>();
+        let repository = Repository::open(&physical).unwrap();
+        let pinned = repository.pinned_root().unwrap();
+
+        if actual_names.len() == 2 {
+            assert!(pinned.entries(2).is_err());
+            assert!(repository
+                .open_regular_file(&"Name".parse().unwrap())
+                .is_err());
+            assert!(repository
+                .open_regular_file(&"name".parse().unwrap())
+                .is_err());
+        } else {
+            let actual = actual_names.first().unwrap();
+            let wrong_case = if actual == "Name" { "name" } else { "Name" };
+            assert!(repository
+                .open_regular_file(&wrong_case.parse().unwrap())
+                .is_err());
+        }
+    }
+
+    #[cfg(unix)]
+    #[test]
+    fn same_length_in_place_mutation_fails_explicit_finalization() {
+        use std::io::Read as _;
+
+        let root = tempfile::tempdir().unwrap();
+        let path = root.path().join("member");
+        fs::write(&path, b"original").unwrap();
+        let physical = fs::canonicalize(root.path()).unwrap();
+        let repository = Repository::open(&physical).unwrap();
+        let mut pinned = repository
+            .open_regular_file(&"member".parse().unwrap())
+            .unwrap();
+        let before = fs::metadata(&path).unwrap().modified().unwrap();
+        for value in [b"mutation".as_slice(), b"changed!".as_slice()] {
+            fs::write(&path, value).unwrap();
+            if fs::metadata(&path).unwrap().modified().unwrap() != before {
+                break;
+            }
+        }
+        assert_ne!(fs::metadata(&path).unwrap().modified().unwrap(), before);
+        let mut bytes = Vec::new();
+        pinned.read_to_end(&mut bytes).unwrap();
+        assert!(pinned.verify_unchanged().is_err());
+    }
+
+    #[cfg(unix)]
+    #[test]
+    fn closed_inventory_rejects_noncanonical_names() {
+        let root = tempfile::tempdir().unwrap();
+        fs::write(root.path().join(".hidden"), b"x").unwrap();
+        let physical = fs::canonicalize(root.path()).unwrap();
+        let repository = Repository::open(&physical).unwrap();
+        assert!(repository.pinned_root().unwrap().entries(1).is_err());
     }
 
     #[cfg(unix)]
@@ -606,5 +1158,16 @@ mod tests {
     #[test]
     fn rejects_parent_components_in_the_repository_root() {
         assert!(Repository::open(Path::new("somewhere/../elsewhere")).is_err());
+    }
+
+    #[cfg(unix)]
+    #[test]
+    fn repository_root_rejects_an_observed_users_case_alias() {
+        let exact = Path::new("/Users");
+        let alias = Path::new("/users");
+        if exact.is_dir() && alias.is_dir() {
+            assert!(Repository::open(exact).is_ok());
+            assert!(Repository::open(alias).is_err());
+        }
     }
 }

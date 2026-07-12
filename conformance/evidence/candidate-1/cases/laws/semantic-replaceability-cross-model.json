@@ -1614,6 +1614,21 @@
         "relation": "equal",
         "left": {
           "producer": "model_a",
+          "case": "presence-empty-label-projection",
+          "view": "conformance_projection",
+          "pointer": ""
+        },
+        "right": {
+          "producer": "model_b",
+          "case": "presence-empty-label-projection",
+          "view": "conformance_projection",
+          "pointer": ""
+        }
+      },
+      {
+        "relation": "equal",
+        "left": {
+          "producer": "model_a",
           "case": "presence-equal-label-projection",
           "view": "conformance_projection",
           "pointer": ""

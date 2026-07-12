@@ -1,0 +1,9 @@
+{
+  "revision": "selta.evidence.conformance-oracle/s2-1",
+  "case": "presence-empty-label-projection",
+  "expected": {
+    "kind": "returned",
+    "package": "sha256:81e57ec38aa2d8a8c6619697195e21ce33facc52f7b17105397eb6f408220843",
+    "compare": "conformance_projection"
+  }
+}

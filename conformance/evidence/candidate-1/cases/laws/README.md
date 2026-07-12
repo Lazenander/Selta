@@ -11,6 +11,6 @@ the assertion is valid only after the prediction protocol has proved that the
 two sealed executable identities differ. Projection equality and full-package
 inequality together state semantic replaceability without erasing provenance.
 
-The current derived inventory has 142 assessment equalities and one package
+The current derived inventory has 143 assessment equalities and one package
 inequality. Adding, removing, or reclassifying an assessment case invalidates
 this record and requires mechanical regeneration before manifest freeze.

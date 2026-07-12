@@ -63,6 +63,24 @@ manifest is never edited manually. Its artifact entries are unique by raw
 digest and carry a canonical set of zero or more Selta admission obligations.
 The manifest cannot inventory itself.
 
+The three singular discovery roots have exact recursive meanings. `case_root`
+and `oracle_root` inventory every regular file whose repository-relative path
+ends in `.json`; `conformance_schema_root` does the same. A directory entry is
+walked in raw ASCII lexical name order. A symbolic link at any component,
+non-regular matching entry, unreadable entry, path outside the repository, or
+case-insensitive path collision fails derivation. Non-JSON files under those
+three roots are ignored and cannot enter the manifest through discovery.
+
+`artifact_roots` is different: it is a canonical, non-empty ASCII-lexical set
+of containment roots and does not recursively add files. Every environment,
+resolver source, raw-only file, public inclusion, and transitively referenced
+artifact outside the three discovered inventories must be beneath at least one
+of these roots. Equal roots, a root nested beneath another listed root, `.` or
+`..`, symbolic links, and a file path used as a root fail admission. Derived
+closure begins only from authored paths and references in admitted records;
+an unrelated regular file under an artifact root is never included merely
+because it exists.
+
 “Falsifier” means a case that kills a stated nonconforming mutation. It need
 not itself be an error input, and a case may legitimately occur in both the
 positive and falsifier sets when its several observations distinguish both.

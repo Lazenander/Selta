@@ -20,6 +20,7 @@ coverage, and encode the finite exact countermodels from document 14:
 - `schemas/response.schema.json` — the private model's exact stdout response;
 - `schemas/finite-world.schema.json` — one small exact finite calculation;
 - `schemas/finite-result.schema.json` — its canonical result ledger;
+- `schemas/jcs-vectors.schema.json` — the public RFC 8785 vector record;
 - `schemas/artifact-set.schema.json` — an exact path-and-byte set;
 - `schemas/kit-index.schema.json` — the producer-neutral model input index;
 - `schemas/prediction-ledger.schema.json` — one model's complete executions;
@@ -180,13 +181,15 @@ For a `world_table`:
 - a world-table case is relationally invalid if any exact weight aggregate
   required to answer it exceeds 4096 decimal digits;
 - explicit row subsets occur only on `distinct_values` and `argmax`; every row
-  ID there resolves and each list is a canonical set;
+  ID there resolves and each list is a canonical set; absence selects all rows
+  for either operation;
 - every row selected by `distinct_values` or `argmax` contains exactly one
   value for every field read by that query;
 - `distinct_values` returns the number of distinct canonical tuples over its
   named fields, using all rows when `rows` is absent; and
 - `argmax` requires a safe-integer score field, chooses the largest score, and
-  breaks a tie by lexical row ID before returning the named projected fact.
+  breaks a tie by the lexically smallest row ID before returning the named
+  projected fact.
 
 For `repeat_event`, every trial count is at least one and each trial computes
 `1 - (1 - p)^n`. A `reduced` result is admissible only when `count *
@@ -208,6 +211,18 @@ and result entries are in canonical name order. A `weighted_event` produces a
 same scalar kind as the projected or observed value. A `repeat_event` trial
 produces a `rational` when its requested representation is `reduced` and a
 `one_minus_power` when it is `factored`.
+
+The arbiter admits both the computed ledger and the separately retained oracle
+artifact, then compares their JCS bytes. The oracle's raw-byte digest still
+binds its retained formatting, but presentation whitespace is not an evaluator
+result. Comparison assertions likewise compare selected I-JSON values by JCS
+bytes; an unresolved non-empty JSON Pointer invalidates the comparison instead
+of selecting `null`.
+
+This evaluator has no arbitrary-program or product surface. It evaluates only
+the finite programs enumerated by the admitted conformance manifest. The
+4096-digit arithmetic bounds are semantic limits; this protocol does not claim
+a general resource bound for unsealed third-party finite programs.
 
 These operations are sufficient for the finite probability tables, recursive
 fixed point, proxy selection, observational indistinguishability, optional

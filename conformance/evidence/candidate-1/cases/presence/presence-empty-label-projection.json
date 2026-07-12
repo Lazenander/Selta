@@ -1,0 +1,37 @@
+{
+  "revision": "selta.evidence.conformance-case/s2-1",
+  "id": "presence-empty-label-projection",
+  "operation": {
+    "kind": "assess",
+    "context": "presence-candidate-1",
+    "package_source": "sha256:70e81945a0690b619163645e0fc1974b8a3fa62961c8c2c6804ab87bb55a036b",
+    "expected_basis": {
+      "$ref": "sha256:8362b21c1aa7bcbe120b6c17bbcbd21b9e4a34b8d13f396ef9fc4de9bd963adb",
+      "contract": "sha256:938e5e124cb9648bb532949ff8588edeef0570eee18f6c7bfaf579af17a352a0"
+    },
+    "controls": {
+      "identity_results": [],
+      "semantic_outputs": [
+        {
+          "call_ordinal": 2,
+          "semantics": "sha256:e409e51e75d345e931f9024f904600e0ccea7cf676738686dde9b054345ae546",
+          "output": {
+            "conclusions": [
+              {
+                "claim": {
+                  "$ref": "sha256:7bfb4ef573349711620effe363c9d4881eb1df277c92764fae8fc6625e723e32",
+                  "contract": "sha256:751cc09329f4a485fce9683a29ea5432786cf22b43df9cfd4b3900a326594239"
+                },
+                "labels": []
+              }
+            ]
+          }
+        }
+      ],
+      "semantic_output_bytes": [],
+      "verification_faults": [],
+      "semantic_reads": [],
+      "forbidden_reads": []
+    }
+  }
+}

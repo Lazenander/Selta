@@ -1,0 +1,54 @@
+{
+  "language": "selta.evidence.package/candidate-1",
+  "environment": "sha256:0c153635b88d6dee3f1301f1a46b20d1a4439d5f7b755fe276e8d93a8ccdf8a3",
+  "documents": [
+    {
+      "contract": "sha256:86ed6b6f38c1b1a1d6bc5f09e2997a0df9e0f1e8554624372031034f17ebf7fb",
+      "digest": "sha256:3db9f8b1b0749c82cb622c2769564384dcba425d36704bab719b1846b3b4b564",
+      "value": {
+        "revision": "selta.evidence.outcome/candidate-1",
+        "status": "error",
+        "environment": "sha256:0c153635b88d6dee3f1301f1a46b20d1a4439d5f7b755fe276e8d93a8ccdf8a3",
+        "errors": [
+          {
+            "phase": "project",
+            "code": "evaluation.invalid_output",
+            "path": "/generated/conclusions",
+            "message": "semantic relation returned an invalid typed output"
+          }
+        ],
+        "executions": [
+          {
+            "semantics": "sha256:0207e530315247b35e2593faf0ec8a2bdc8b20e406732f71cfe4882380ff8a1c",
+            "implementation": "sha256:bc899c6733c11b1c452e811ef662cb7bc808e792c3c18af64fd4e6f763283ea0"
+          },
+          {
+            "semantics": "sha256:e229afb0f7788286165dc081f68fe1e7e2d82d4f2b6eed88b4fe8041f62143f3",
+            "implementation": "sha256:bc899c6733c11b1c452e811ef662cb7bc808e792c3c18af64fd4e6f763283ea0"
+          },
+          {
+            "semantics": "sha256:e409e51e75d345e931f9024f904600e0ccea7cf676738686dde9b054345ae546",
+            "implementation": "sha256:bc899c6733c11b1c452e811ef662cb7bc808e792c3c18af64fd4e6f763283ea0"
+          }
+        ],
+        "resources": {
+          "documents": 11,
+          "total_document_bytes": 5876,
+          "attempts_total": 0,
+          "graph_nodes": 0,
+          "graph_edges": 0,
+          "max_fan_in_observed": 0,
+          "graph_depth": 0,
+          "semantic_calls": 3,
+          "semantic_fuel": 3784,
+          "state_bytes": 301,
+          "conclusion_labels_total": 0
+        }
+      }
+    }
+  ],
+  "root": {
+    "$ref": "sha256:3db9f8b1b0749c82cb622c2769564384dcba425d36704bab719b1846b3b4b564",
+    "contract": "sha256:86ed6b6f38c1b1a1d6bc5f09e2997a0df9e0f1e8554624372031034f17ebf7fb"
+  }
+}

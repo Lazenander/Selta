@@ -71,7 +71,7 @@ arbiter comparison remain required.
 | 40 | `interpret` | `evaluation.fuel_exhausted` | wire | — | `resource-relation-fuel-exact-interpret-crossing` |
 | 41 | `interpret` | `evaluation.arithmetic_overflow` | control | `semantic_output_bytes` | `mechanics-arithmetic-overflow-interpret` |
 | 42 | `project` | `resource.basis_exceeded` | wire | — | `resource-project-labels-exceeded`, `resource-project-call-limit` |
-| 43 | `project` | `evaluation.invalid_output` | control | `semantic_output` | `control-project-invalid-output` |
+| 43 | `project` | `evaluation.invalid_output` | control | `semantic_output` | `control-project-invalid-output`, `presence-empty-label-projection` |
 | 44 | `project` | `evaluation.fuel_exhausted` | wire | — | `presence-fuel-crossing`, `resource-interpret-fuel-exact-project-crossing` |
 | 45 | `project` | `evaluation.arithmetic_overflow` | control | `semantic_output_bytes` | `mechanics-arithmetic-overflow-project` |
 | 46 | `output` | `identity.collision` | control | `identity_result` | `control-outcome-identity-collision` |

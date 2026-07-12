@@ -1,0 +1,13 @@
+{
+  "type": "object",
+  "fields": {
+    "revision": {
+      "type": "str",
+      "verify": [{ "ext": "one_of", "config": { "values": ["selta.evidence.sha256-preimage-existential/candidate-1"] } }]
+    },
+    "target": {
+      "type": "str",
+      "verify": [{ "ext": "regex", "config": { "pattern": "\\Asha256:[0-9a-f]{64}\\z" } }]
+    }
+  }
+}

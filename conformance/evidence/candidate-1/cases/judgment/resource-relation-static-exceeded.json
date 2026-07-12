@@ -1,0 +1,13 @@
+{
+  "revision": "selta.evidence.conformance-case/s2-1",
+  "id": "resource-relation-static-exceeded",
+  "operation": {
+    "kind": "assess",
+    "context": "positive-controls-candidate-1",
+    "package_source": "sha256:abd86fbcb2eff0186de77b9af8cdbb5d6b63ba5dadec51c6f838df5c1262b43f",
+    "expected_basis": {
+      "$ref": "sha256:cc5dd822a64b910e1fcc74d7ce5267c1344b17ccea67fbb0c53266116197bc54",
+      "contract": "sha256:938e5e124cb9648bb532949ff8588edeef0570eee18f6c7bfaf579af17a352a0"
+    }
+  }
+}

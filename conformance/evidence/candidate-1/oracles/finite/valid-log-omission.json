@@ -1,0 +1,8 @@
+{
+  "revision": "selta.evidence.conformance-oracle/s2-1",
+  "case": "valid-log-omission",
+  "expected": {
+    "kind": "finite_result",
+    "result": "sha256:5a80675bada698d907209c2d902319f26fbabd3d47e7ca65fcd0c848e7a144e3"
+  }
+}

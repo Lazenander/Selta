@@ -1,0 +1,9 @@
+{
+  "revision": "selta.evidence.conformance-oracle/s2-1",
+  "case": "mechanics-zero-attempt",
+  "expected": {
+    "kind": "returned",
+    "package": "sha256:3af75e25016e86dc972fe838836922317a30692bba01bbaf5096730d6560fe6f",
+    "compare": "conformance_projection"
+  }
+}

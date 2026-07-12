@@ -1,0 +1,53 @@
+{
+  "operation": "select",
+  "parameters": {},
+  "manifest": "sha256:8fe9c4da85d38387fb50d454063646e880aa24780d19661297a79e192a70652a",
+  "observed_plans": [
+    "sha256:bd059bebd6b6315ef5983248f356d090ef208fd0071668d20c73e3089075829b"
+  ],
+  "manifest_view": {
+    "frame": {
+      "$ref": "sha256:c3416b1a1f6c9768481ec76eb8b6580686acb44d3d514702948caed553dbd79a",
+      "contract": "sha256:a587092a0074c9b57a2a22225b99fb20cb6fd0ba69ea27156cab7b8b1ca6ed21"
+    },
+    "channel": {
+      "$ref": "sha256:527e546f5f7a41ac1250a25d9c422c66f766d4280ff59ab5c2c602550299b93c",
+      "contract": "sha256:a587092a0074c9b57a2a22225b99fb20cb6fd0ba69ea27156cab7b8b1ca6ed21"
+    },
+    "context": {
+      "$ref": "sha256:5bf834f9a18527b06b14d73aaffe7730b3343afa740d11f9383097d3be93c8a0",
+      "contract": "sha256:a587092a0074c9b57a2a22225b99fb20cb6fd0ba69ea27156cab7b8b1ca6ed21"
+    },
+    "sources": [
+      {
+        "$ref": "sha256:5d1157610e56189c5cb210870d9185505bc5fa6b42732793f66da415a889b9b0",
+        "contract": "sha256:a587092a0074c9b57a2a22225b99fb20cb6fd0ba69ea27156cab7b8b1ca6ed21"
+      }
+    ],
+    "budget": {
+      "$ref": "sha256:3d45630044da073fae4962b372d5415883e8ae145f83fcac9f6d36affd21c044",
+      "contract": "sha256:a587092a0074c9b57a2a22225b99fb20cb6fd0ba69ea27156cab7b8b1ca6ed21"
+    }
+  },
+  "snapshot": {
+    "plan_id": "sha256:bd059bebd6b6315ef5983248f356d090ef208fd0071668d20c73e3089075829b",
+    "outcome": {
+      "kind": "malformed",
+      "raw": {
+        "$ref": "sha256:74235f00d1d041bccba0fda80f8db1c6aecd46a737210f1f851a0a7b98004cd6",
+        "contract": "sha256:a587092a0074c9b57a2a22225b99fb20cb6fd0ba69ea27156cab7b8b1ca6ed21"
+      },
+      "error": {
+        "$ref": "sha256:142acb091720eb1de7dc92251940949f20b2d38e1a6c03913499bad7172869e4",
+        "contract": "sha256:a587092a0074c9b57a2a22225b99fb20cb6fd0ba69ea27156cab7b8b1ca6ed21"
+      }
+    },
+    "disposition": {
+      "kind": "exclude",
+      "reason": {
+        "$ref": "sha256:1333d4d6a02bd93dea5cc02b99b228e60da8576a12b257ef7b8c76ee33c8d560",
+        "contract": "sha256:a587092a0074c9b57a2a22225b99fb20cb6fd0ba69ea27156cab7b8b1ca6ed21"
+      }
+    }
+  }
+}

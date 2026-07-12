@@ -1,0 +1,16 @@
+{
+  "operation": "canonicalize",
+  "parameters": {},
+  "subject": {
+    "$ref": "sha256:6d45d3d848213a3b7dc0aa295afe29f204552bb231ac8eb5e4c885a1b902601d",
+    "contract": "sha256:a587092a0074c9b57a2a22225b99fb20cb6fd0ba69ea27156cab7b8b1ca6ed21"
+  },
+  "proposition": {
+    "$ref": "sha256:f8c2a2d6b82db621ec4fe57f1d37bb0a9b9dea35f0e3aad62353aadaf01957fb",
+    "contract": "sha256:d521883b7a6a07fba996b6ff4dca34ea498428c0710e0fd7636d176d530afbd6"
+  },
+  "boundary": {
+    "$ref": "sha256:9a0123043d6466663fd390846849e1e88dc45562835f35114a7678030595d733",
+    "contract": "sha256:a587092a0074c9b57a2a22225b99fb20cb6fd0ba69ea27156cab7b8b1ca6ed21"
+  }
+}

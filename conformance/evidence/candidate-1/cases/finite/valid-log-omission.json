@@ -1,0 +1,8 @@
+{
+  "revision": "selta.evidence.conformance-case/s2-1",
+  "id": "valid-log-omission",
+  "operation": {
+    "kind": "finite_world",
+    "program": "sha256:fad515dfb3f5cfa699698e329022e1fbaa26bbf6903277f529572b0d8ff9ccf3"
+  }
+}

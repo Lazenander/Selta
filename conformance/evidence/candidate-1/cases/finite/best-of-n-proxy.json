@@ -1,0 +1,8 @@
+{
+  "revision": "selta.evidence.conformance-case/s2-1",
+  "id": "best-of-n-proxy",
+  "operation": {
+    "kind": "finite_world",
+    "program": "sha256:c78df9e887d7f87c20f8ee579a1eef9ba393e205495ebb14940a687be5cc4735"
+  }
+}

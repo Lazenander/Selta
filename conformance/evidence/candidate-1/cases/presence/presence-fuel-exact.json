@@ -1,0 +1,13 @@
+{
+  "revision": "selta.evidence.conformance-case/s2-1",
+  "id": "presence-fuel-exact",
+  "operation": {
+    "kind": "assess",
+    "context": "presence-candidate-1",
+    "package_source": "sha256:276a0104d1c29e73538afad8f72399efa04f1fbfaab5bd98e27a4f0f1e674db4",
+    "expected_basis": {
+      "$ref": "sha256:d1891428d4665c285d03baae0c99383d0918b6df63ab815bbd5cd997f842e187",
+      "contract": "sha256:938e5e124cb9648bb532949ff8588edeef0570eee18f6c7bfaf579af17a352a0"
+    }
+  }
+}

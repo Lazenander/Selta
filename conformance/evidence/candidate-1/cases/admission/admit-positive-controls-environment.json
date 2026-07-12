@@ -1,0 +1,8 @@
+{
+  "revision": "selta.evidence.conformance-case/s2-1",
+  "id": "admit-positive-controls-environment",
+  "operation": {
+    "kind": "admit_environment",
+    "context": "positive-controls-candidate-1"
+  }
+}

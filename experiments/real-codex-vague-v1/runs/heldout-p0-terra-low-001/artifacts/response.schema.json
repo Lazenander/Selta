@@ -1,0 +1,28 @@
+{
+  "type": "object",
+  "properties": {
+    "support": {
+      "type": "array",
+      "maxItems": 3,
+      "items": {
+        "type": "string",
+        "minLength": 1,
+        "maxLength": 160
+      }
+    },
+    "refute": {
+      "type": "array",
+      "maxItems": 3,
+      "items": {
+        "type": "string",
+        "minLength": 1,
+        "maxLength": 160
+      }
+    }
+  },
+  "required": [
+    "support",
+    "refute"
+  ],
+  "additionalProperties": false
+}

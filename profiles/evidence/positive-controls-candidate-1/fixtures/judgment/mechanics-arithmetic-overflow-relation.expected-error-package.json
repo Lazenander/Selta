@@ -1,0 +1,46 @@
+{
+  "language": "selta.evidence.package/candidate-1",
+  "environment": "sha256:97a2795354041b74443f8686d75be998eebf563275b479d9d23a055adf92eba4",
+  "documents": [
+    {
+      "contract": "sha256:86ed6b6f38c1b1a1d6bc5f09e2997a0df9e0f1e8554624372031034f17ebf7fb",
+      "digest": "sha256:f9e183af7c25053289bced1ed5f8b05d2fe3f1eaf3c0acd256522eafa70ec3a1",
+      "value": {
+        "revision": "selta.evidence.outcome/candidate-1",
+        "status": "error",
+        "environment": "sha256:97a2795354041b74443f8686d75be998eebf563275b479d9d23a055adf92eba4",
+        "errors": [
+          {
+            "phase": "relation",
+            "code": "evaluation.arithmetic_overflow",
+            "path": "/generated/resources/semantic_fuel",
+            "message": "candidate resource arithmetic overflowed SafeInt"
+          }
+        ],
+        "executions": [
+          {
+            "semantics": "sha256:e229afb0f7788286165dc081f68fe1e7e2d82d4f2b6eed88b4fe8041f62143f3",
+            "implementation": "sha256:bc899c6733c11b1c452e811ef662cb7bc808e792c3c18af64fd4e6f763283ea0"
+          }
+        ],
+        "resources": {
+          "documents": 33,
+          "total_document_bytes": 28003,
+          "attempts_total": 1,
+          "graph_nodes": 2,
+          "graph_edges": 1,
+          "max_fan_in_observed": 1,
+          "graph_depth": 2,
+          "semantic_calls": 1,
+          "semantic_fuel": 0,
+          "state_bytes": 0,
+          "conclusion_labels_total": 0
+        }
+      }
+    }
+  ],
+  "root": {
+    "$ref": "sha256:f9e183af7c25053289bced1ed5f8b05d2fe3f1eaf3c0acd256522eafa70ec3a1",
+    "contract": "sha256:86ed6b6f38c1b1a1d6bc5f09e2997a0df9e0f1e8554624372031034f17ebf7fb"
+  }
+}

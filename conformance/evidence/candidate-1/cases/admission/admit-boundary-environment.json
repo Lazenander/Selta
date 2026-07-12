@@ -1,0 +1,8 @@
+{
+  "revision": "selta.evidence.conformance-case/s2-1",
+  "id": "admit-boundary-environment",
+  "operation": {
+    "kind": "admit_environment",
+    "context": "boundary-candidate-1"
+  }
+}

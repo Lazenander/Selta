@@ -1,0 +1,9 @@
+{
+  "revision": "selta.evidence.conformance-oracle/s2-1",
+  "case": "positive-controls-checked-witness-wrong-theory-statement",
+  "expected": {
+    "kind": "returned",
+    "package": "sha256:1cee5fd2b0cf1723f6f316a56f3c8b1dfda1f5860fa9507b10e35e0ca907db5a",
+    "compare": "conformance_projection"
+  }
+}

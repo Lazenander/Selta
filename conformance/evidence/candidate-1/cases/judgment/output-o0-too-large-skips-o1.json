@@ -1,0 +1,22 @@
+{
+  "revision": "selta.evidence.conformance-case/s2-1",
+  "id": "output-o0-too-large-skips-o1",
+  "operation": {
+    "kind": "assess",
+    "context": "presence-candidate-1",
+    "package_source": "sha256:e39f902312d6151c075da889d1eedc37ba0d3778a87b6c3defe50fc026f0695f",
+    "expected_basis": {
+      "$ref": "sha256:7592375c80fbf0c525f90d8cde9c48264d50683c4765c8cbb032b2fd8b78686c",
+      "contract": "sha256:938e5e124cb9648bb532949ff8588edeef0570eee18f6c7bfaf579af17a352a0"
+    },
+    "controls": {
+      "identity_results": [],
+      "semantic_outputs": [],
+      "semantic_output_bytes": [],
+      "verification_faults": [],
+      "semantic_reads": [],
+      "forbidden_reads": [],
+      "forbidden_boundary": "concluded_outcome_insertion"
+    }
+  }
+}

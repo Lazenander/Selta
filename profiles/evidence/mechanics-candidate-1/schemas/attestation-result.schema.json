@@ -1,0 +1,17 @@
+{
+  "type": "union",
+  "variants": [
+    {
+      "type": "object",
+      "fields": {
+        "status": { "type": "str", "verify": [{ "ext": "one_of", "config": { "values": ["accepted"] } }] }
+      }
+    },
+    {
+      "type": "object",
+      "fields": {
+        "status": { "type": "str", "verify": [{ "ext": "one_of", "config": { "values": ["rejected"] } }] }
+      }
+    }
+  ]
+}

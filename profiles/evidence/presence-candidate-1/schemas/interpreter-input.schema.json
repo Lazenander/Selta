@@ -1,0 +1,31 @@
+{
+  "type": "object",
+  "fields": {
+    "parameters": { "type": "object", "fields": {} },
+    "basis": {
+      "type": "object",
+      "fields": {
+        "$ref": { "type": "str", "verify": [{ "ext": "regex", "config": { "pattern": "\\Asha256:[0-9a-f]{64}\\z" } }] },
+        "contract": { "type": "str", "verify": [{ "ext": "regex", "config": { "pattern": "\\Asha256:[0-9a-f]{64}\\z" } }] }
+      }
+    },
+    "graph": {
+      "type": "object",
+      "fields": {
+        "$ref": { "type": "str", "verify": [{ "ext": "regex", "config": { "pattern": "\\Asha256:[0-9a-f]{64}\\z" } }] },
+        "contract": { "type": "str", "verify": [{ "ext": "regex", "config": { "pattern": "\\Asha256:[0-9a-f]{64}\\z" } }] }
+      }
+    },
+    "targets": {
+      "type": "array",
+      "len": { "min": 1 },
+      "item": {
+        "type": "object",
+        "fields": {
+          "$ref": { "type": "str", "verify": [{ "ext": "regex", "config": { "pattern": "\\Asha256:[0-9a-f]{64}\\z" } }] },
+          "contract": { "type": "str", "verify": [{ "ext": "regex", "config": { "pattern": "\\Asha256:[0-9a-f]{64}\\z" } }] }
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,9 @@
+{
+  "revision": "selta.evidence.conformance-oracle/s2-1",
+  "case": "mechanics-observed-censor",
+  "expected": {
+    "kind": "returned",
+    "package": "sha256:d9b6c867e1c3af5e1a077bffbab57c8cd84cb483c5be7e979d3e60aabc44c030",
+    "compare": "conformance_projection"
+  }
+}

@@ -1,0 +1,14 @@
+{
+  "revision": "selta.evidence.finite-result/s2-1",
+  "results": [
+    {
+      "name": "at-least-one-perfect",
+      "value": {
+        "kind": "one_minus_power",
+        "base_numerator": "1023",
+        "base_denominator": "1024",
+        "exponent": 1024
+      }
+    }
+  ]
+}

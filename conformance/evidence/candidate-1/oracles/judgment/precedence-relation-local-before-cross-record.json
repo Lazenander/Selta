@@ -1,0 +1,9 @@
+{
+  "revision": "selta.evidence.conformance-oracle/s2-1",
+  "case": "precedence-relation-local-before-cross-record",
+  "expected": {
+    "kind": "returned",
+    "package": "sha256:1fc0d907ad86ee9b2a5355603e0f28600fb92f0c1ef755311ba22da081a39be4",
+    "compare": "conformance_projection"
+  }
+}

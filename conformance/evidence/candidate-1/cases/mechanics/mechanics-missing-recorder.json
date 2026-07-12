@@ -1,0 +1,13 @@
+{
+  "revision": "selta.evidence.conformance-case/s2-1",
+  "id": "mechanics-missing-recorder",
+  "operation": {
+    "kind": "assess",
+    "context": "mechanics-candidate-1",
+    "package_source": "sha256:a9ad90074337c3bd83e50b604f16751f94797be2c75a4755b9fe2c47cb9e92b8",
+    "expected_basis": {
+      "$ref": "sha256:0fcb62bcc110461a4fdbc818daee22972c9133ae7ad2c6dbfc19cd1abdc4d674",
+      "contract": "sha256:938e5e124cb9648bb532949ff8588edeef0570eee18f6c7bfaf579af17a352a0"
+    }
+  }
+}

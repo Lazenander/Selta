@@ -1,0 +1,31 @@
+{
+  "type": "object",
+  "fields": {
+    "ordinal": { "type": "int", "verify": [{ "ext": "range", "config": { "min": 0, "max": 9007199254740991 } }] },
+    "predecessors": {
+      "type": "array",
+      "item": { "type": "str", "verify": [{ "ext": "regex", "config": { "pattern": "\\Asha256:[0-9a-f]{64}\\z" } }] }
+    },
+    "source": {
+      "type": "object",
+      "fields": {
+        "$ref": { "type": "str", "verify": [{ "ext": "regex", "config": { "pattern": "\\Asha256:[0-9a-f]{64}\\z" } }] },
+        "contract": { "type": "str", "verify": [{ "ext": "regex", "config": { "pattern": "\\Asha256:[0-9a-f]{64}\\z" } }] }
+      }
+    },
+    "request": {
+      "type": "object",
+      "fields": {
+        "$ref": { "type": "str", "verify": [{ "ext": "regex", "config": { "pattern": "\\Asha256:[0-9a-f]{64}\\z" } }] },
+        "contract": { "type": "str", "verify": [{ "ext": "regex", "config": { "pattern": "\\Asha256:[0-9a-f]{64}\\z" } }] }
+      }
+    },
+    "context_view": {
+      "type": "object",
+      "fields": {
+        "$ref": { "type": "str", "verify": [{ "ext": "regex", "config": { "pattern": "\\Asha256:[0-9a-f]{64}\\z" } }] },
+        "contract": { "type": "str", "verify": [{ "ext": "regex", "config": { "pattern": "\\Asha256:[0-9a-f]{64}\\z" } }] }
+      }
+    }
+  }
+}

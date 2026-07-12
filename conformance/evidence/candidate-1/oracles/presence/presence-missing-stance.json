@@ -1,0 +1,9 @@
+{
+  "revision": "selta.evidence.conformance-oracle/s2-1",
+  "case": "presence-missing-stance",
+  "expected": {
+    "kind": "returned",
+    "package": "sha256:fdd033a34a952eafa79ede4894e0b8807aa761d0914410505708d3cf53c2ba61",
+    "compare": "conformance_projection"
+  }
+}

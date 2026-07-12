@@ -1,0 +1,13 @@
+{
+  "revision": "selta.evidence.conformance-case/s2-1",
+  "id": "presence-two-support",
+  "operation": {
+    "kind": "assess",
+    "context": "presence-candidate-1",
+    "package_source": "sha256:74b8fdc1153af3d5fc9ac10b820f886860b637c91db3da9ed57fbdcb9e8a3b16",
+    "expected_basis": {
+      "$ref": "sha256:1aca644182ca767fc0d307f7e8c67193a71a2d14473c673018e684a407d1198d",
+      "contract": "sha256:938e5e124cb9648bb532949ff8588edeef0570eee18f6c7bfaf579af17a352a0"
+    }
+  }
+}

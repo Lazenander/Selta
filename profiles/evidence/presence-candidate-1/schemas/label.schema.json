@@ -1,0 +1,13 @@
+{
+  "type": "object",
+  "fields": {
+    "revision": {
+      "type": "str",
+      "verify": [{ "ext": "one_of", "config": { "values": ["selta.evidence.presence-label/candidate-1"] } }]
+    },
+    "label": {
+      "type": "str",
+      "verify": [{ "ext": "one_of", "config": { "values": ["affirm", "deny"] } }]
+    }
+  }
+}

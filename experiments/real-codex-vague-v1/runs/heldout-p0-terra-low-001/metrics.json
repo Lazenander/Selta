@@ -1,0 +1,1076 @@
+{
+  "binding": {
+    "completion_sha256": "56236cb59a091841810ec44db468c4364f04660085546d524e56d06417b8e345",
+    "inputs_sha256": "e4290fbf27ad1ceb0e91a2295bede0995cafcfc87298fedb60539c44b31c3e25",
+    "jobs_sha256": "f695041fc6ab44ef599d05066294f6d6c9dc508990b9764adbeae016ae950473",
+    "manifest_sha256": "9e0dbb1ea7633d77b3fd2e207efd7276b6ffcd34c5c19ef3ec0a1275c71e5183",
+    "predictions_sha256": "3637098d833fb227641feafc56a494d64ec8da8316931ab9d681db96565d7c65",
+    "raw_index_sha256": "4682d47393e7485ab140a131d411d9898904f90a18d9053a58ed7e7351dbd7a8"
+  },
+  "oracle_sha256": "14f59e4f2add8d374db2271ae7460cf6cc9807105a5cc5a6131912addc13cdb5",
+  "prompts": {
+    "p0": {
+      "by_clarity": {
+        "boundary": {
+          "aligned_decisive_coverage": 0.3333333333333333,
+          "aligned_decisive_risk": 0.0,
+          "aligned_state_accuracy": 0.75,
+          "both_recall": 0.6666666666666666,
+          "cases": 12,
+          "confusion": {
+            "both": {
+              "both": 2,
+              "neither": 0,
+              "operational_error": 0,
+              "refute_only": 0,
+              "semantic_unaligned": 1,
+              "support_only": 0
+            },
+            "neither": {
+              "both": 0,
+              "neither": 3,
+              "operational_error": 0,
+              "refute_only": 0,
+              "semantic_unaligned": 0,
+              "support_only": 0
+            },
+            "refute_only": {
+              "both": 0,
+              "neither": 0,
+              "operational_error": 0,
+              "refute_only": 2,
+              "semantic_unaligned": 1,
+              "support_only": 0
+            },
+            "support_only": {
+              "both": 0,
+              "neither": 0,
+              "operational_error": 0,
+              "refute_only": 0,
+              "semantic_unaligned": 1,
+              "support_only": 2
+            }
+          },
+          "decisive_gold_recall": 0.6666666666666666,
+          "exact_evidence_set_accuracy": 0.75,
+          "exact_membership_given_contract_rate": 1.0,
+          "fully_mechanically_valid_rate": 1.0,
+          "macro_f1": 0.8500000000000001,
+          "neither_recall": 1.0,
+          "operational_error_rate": 0.0,
+          "operational_errors": {},
+          "per_state": {
+            "both": {
+              "f1": 0.8,
+              "false_negative": 1,
+              "false_positive": 0,
+              "precision": 1.0,
+              "recall": 0.6666666666666666,
+              "true_positive": 2
+            },
+            "neither": {
+              "f1": 1.0,
+              "false_negative": 0,
+              "false_positive": 0,
+              "precision": 1.0,
+              "recall": 1.0,
+              "true_positive": 3
+            },
+            "refute_only": {
+              "f1": 0.8,
+              "false_negative": 1,
+              "false_positive": 0,
+              "precision": 1.0,
+              "recall": 0.6666666666666666,
+              "true_positive": 2
+            },
+            "support_only": {
+              "f1": 0.8,
+              "false_negative": 1,
+              "false_positive": 0,
+              "precision": 1.0,
+              "recall": 0.6666666666666666,
+              "true_positive": 2
+            }
+          },
+          "raw_presence_state": {
+            "confusion": {
+              "both": {
+                "both": 3,
+                "neither": 0,
+                "operational_error": 0,
+                "refute_only": 0,
+                "support_only": 0
+              },
+              "neither": {
+                "both": 0,
+                "neither": 3,
+                "operational_error": 0,
+                "refute_only": 0,
+                "support_only": 0
+              },
+              "refute_only": {
+                "both": 0,
+                "neither": 0,
+                "operational_error": 0,
+                "refute_only": 3,
+                "support_only": 0
+              },
+              "support_only": {
+                "both": 0,
+                "neither": 0,
+                "operational_error": 0,
+                "refute_only": 0,
+                "support_only": 3
+              }
+            },
+            "decisive_coverage": 0.5,
+            "decisive_risk": 0.0,
+            "exact_state_accuracy": 1.0,
+            "macro_f1": 1.0,
+            "per_state": {
+              "both": {
+                "f1": 1.0,
+                "false_negative": 0,
+                "false_positive": 0,
+                "precision": 1.0,
+                "recall": 1.0,
+                "true_positive": 3
+              },
+              "neither": {
+                "f1": 1.0,
+                "false_negative": 0,
+                "false_positive": 0,
+                "precision": 1.0,
+                "recall": 1.0,
+                "true_positive": 3
+              },
+              "refute_only": {
+                "f1": 1.0,
+                "false_negative": 0,
+                "false_positive": 0,
+                "precision": 1.0,
+                "recall": 1.0,
+                "true_positive": 3
+              },
+              "support_only": {
+                "f1": 1.0,
+                "false_negative": 0,
+                "false_positive": 0,
+                "precision": 1.0,
+                "recall": 1.0,
+                "true_positive": 3
+              }
+            },
+            "refutation_presence": {
+              "f1": 1.0,
+              "false_negative": 0,
+              "false_positive": 0,
+              "precision": 1.0,
+              "recall": 1.0,
+              "true_positive": 6
+            },
+            "support_presence": {
+              "f1": 1.0,
+              "false_negative": 0,
+              "false_positive": 0,
+              "precision": 1.0,
+              "recall": 1.0,
+              "true_positive": 6
+            }
+          },
+          "refutation_presence": {
+            "f1": 0.8,
+            "false_negative": 2,
+            "false_positive": 0,
+            "precision": 1.0,
+            "recall": 0.6666666666666666,
+            "true_positive": 4
+          },
+          "refutation_span_alignment": {
+            "f1": 0.8333333333333334,
+            "false_negative": 1,
+            "false_positive": 1,
+            "precision": 0.8333333333333334,
+            "recall": 0.8333333333333334,
+            "true_positive": 5
+          },
+          "response_contract_rate": 1.0,
+          "support_presence": {
+            "f1": 0.8,
+            "false_negative": 2,
+            "false_positive": 0,
+            "precision": 1.0,
+            "recall": 0.6666666666666666,
+            "true_positive": 4
+          },
+          "support_span_alignment": {
+            "f1": 0.6666666666666666,
+            "false_negative": 2,
+            "false_positive": 2,
+            "precision": 0.6666666666666666,
+            "recall": 0.6666666666666666,
+            "true_positive": 4
+          },
+          "usage": {
+            "cached_input_tokens": 23040,
+            "calls_with_usage": 12,
+            "input_tokens": 30165,
+            "mean_input_tokens": 2513.75,
+            "mean_latency_ms": 3063.5833333333335,
+            "mean_output_tokens": 31.583333333333332,
+            "output_tokens": 379
+          }
+        },
+        "clear": {
+          "aligned_decisive_coverage": 0.25,
+          "aligned_decisive_risk": 0.0,
+          "aligned_state_accuracy": 0.75,
+          "both_recall": 1.0,
+          "cases": 12,
+          "confusion": {
+            "both": {
+              "both": 3,
+              "neither": 0,
+              "operational_error": 0,
+              "refute_only": 0,
+              "semantic_unaligned": 0,
+              "support_only": 0
+            },
+            "neither": {
+              "both": 0,
+              "neither": 3,
+              "operational_error": 0,
+              "refute_only": 0,
+              "semantic_unaligned": 0,
+              "support_only": 0
+            },
+            "refute_only": {
+              "both": 0,
+              "neither": 0,
+              "operational_error": 0,
+              "refute_only": 1,
+              "semantic_unaligned": 2,
+              "support_only": 0
+            },
+            "support_only": {
+              "both": 0,
+              "neither": 0,
+              "operational_error": 0,
+              "refute_only": 0,
+              "semantic_unaligned": 1,
+              "support_only": 2
+            }
+          },
+          "decisive_gold_recall": 0.5,
+          "exact_evidence_set_accuracy": 0.75,
+          "exact_membership_given_contract_rate": 1.0,
+          "fully_mechanically_valid_rate": 1.0,
+          "macro_f1": 0.825,
+          "neither_recall": 1.0,
+          "operational_error_rate": 0.0,
+          "operational_errors": {},
+          "per_state": {
+            "both": {
+              "f1": 1.0,
+              "false_negative": 0,
+              "false_positive": 0,
+              "precision": 1.0,
+              "recall": 1.0,
+              "true_positive": 3
+            },
+            "neither": {
+              "f1": 1.0,
+              "false_negative": 0,
+              "false_positive": 0,
+              "precision": 1.0,
+              "recall": 1.0,
+              "true_positive": 3
+            },
+            "refute_only": {
+              "f1": 0.5,
+              "false_negative": 2,
+              "false_positive": 0,
+              "precision": 1.0,
+              "recall": 0.3333333333333333,
+              "true_positive": 1
+            },
+            "support_only": {
+              "f1": 0.8,
+              "false_negative": 1,
+              "false_positive": 0,
+              "precision": 1.0,
+              "recall": 0.6666666666666666,
+              "true_positive": 2
+            }
+          },
+          "raw_presence_state": {
+            "confusion": {
+              "both": {
+                "both": 3,
+                "neither": 0,
+                "operational_error": 0,
+                "refute_only": 0,
+                "support_only": 0
+              },
+              "neither": {
+                "both": 0,
+                "neither": 3,
+                "operational_error": 0,
+                "refute_only": 0,
+                "support_only": 0
+              },
+              "refute_only": {
+                "both": 0,
+                "neither": 0,
+                "operational_error": 0,
+                "refute_only": 3,
+                "support_only": 0
+              },
+              "support_only": {
+                "both": 0,
+                "neither": 0,
+                "operational_error": 0,
+                "refute_only": 0,
+                "support_only": 3
+              }
+            },
+            "decisive_coverage": 0.5,
+            "decisive_risk": 0.0,
+            "exact_state_accuracy": 1.0,
+            "macro_f1": 1.0,
+            "per_state": {
+              "both": {
+                "f1": 1.0,
+                "false_negative": 0,
+                "false_positive": 0,
+                "precision": 1.0,
+                "recall": 1.0,
+                "true_positive": 3
+              },
+              "neither": {
+                "f1": 1.0,
+                "false_negative": 0,
+                "false_positive": 0,
+                "precision": 1.0,
+                "recall": 1.0,
+                "true_positive": 3
+              },
+              "refute_only": {
+                "f1": 1.0,
+                "false_negative": 0,
+                "false_positive": 0,
+                "precision": 1.0,
+                "recall": 1.0,
+                "true_positive": 3
+              },
+              "support_only": {
+                "f1": 1.0,
+                "false_negative": 0,
+                "false_positive": 0,
+                "precision": 1.0,
+                "recall": 1.0,
+                "true_positive": 3
+              }
+            },
+            "refutation_presence": {
+              "f1": 1.0,
+              "false_negative": 0,
+              "false_positive": 0,
+              "precision": 1.0,
+              "recall": 1.0,
+              "true_positive": 6
+            },
+            "support_presence": {
+              "f1": 1.0,
+              "false_negative": 0,
+              "false_positive": 0,
+              "precision": 1.0,
+              "recall": 1.0,
+              "true_positive": 6
+            }
+          },
+          "refutation_presence": {
+            "f1": 0.8,
+            "false_negative": 2,
+            "false_positive": 0,
+            "precision": 1.0,
+            "recall": 0.6666666666666666,
+            "true_positive": 4
+          },
+          "refutation_span_alignment": {
+            "f1": 0.8571428571428571,
+            "false_negative": 0,
+            "false_positive": 2,
+            "precision": 0.75,
+            "recall": 1.0,
+            "true_positive": 6
+          },
+          "response_contract_rate": 1.0,
+          "support_presence": {
+            "f1": 0.9090909090909091,
+            "false_negative": 1,
+            "false_positive": 0,
+            "precision": 1.0,
+            "recall": 0.8333333333333334,
+            "true_positive": 5
+          },
+          "support_span_alignment": {
+            "f1": 0.923076923076923,
+            "false_negative": 0,
+            "false_positive": 1,
+            "precision": 0.8571428571428571,
+            "recall": 1.0,
+            "true_positive": 6
+          },
+          "usage": {
+            "cached_input_tokens": 20736,
+            "calls_with_usage": 12,
+            "input_tokens": 30162,
+            "mean_input_tokens": 2513.5,
+            "mean_latency_ms": 4944.666666666667,
+            "mean_output_tokens": 35.166666666666664,
+            "output_tokens": 422
+          }
+        }
+      },
+      "by_domain_family": {
+        "medical_scheduling": {
+          "aligned_decisive_coverage": 0.16666666666666666,
+          "aligned_decisive_risk": 0.0,
+          "aligned_state_accuracy": 0.5833333333333334,
+          "both_recall": 0.6666666666666666,
+          "cases": 12,
+          "confusion": {
+            "both": {
+              "both": 2,
+              "neither": 0,
+              "operational_error": 0,
+              "refute_only": 0,
+              "semantic_unaligned": 1,
+              "support_only": 0
+            },
+            "neither": {
+              "both": 0,
+              "neither": 3,
+              "operational_error": 0,
+              "refute_only": 0,
+              "semantic_unaligned": 0,
+              "support_only": 0
+            },
+            "refute_only": {
+              "both": 0,
+              "neither": 0,
+              "operational_error": 0,
+              "refute_only": 1,
+              "semantic_unaligned": 2,
+              "support_only": 0
+            },
+            "support_only": {
+              "both": 0,
+              "neither": 0,
+              "operational_error": 0,
+              "refute_only": 0,
+              "semantic_unaligned": 2,
+              "support_only": 1
+            }
+          },
+          "decisive_gold_recall": 0.3333333333333333,
+          "exact_evidence_set_accuracy": 0.5833333333333334,
+          "exact_membership_given_contract_rate": 1.0,
+          "fully_mechanically_valid_rate": 1.0,
+          "macro_f1": 0.7,
+          "neither_recall": 1.0,
+          "operational_error_rate": 0.0,
+          "operational_errors": {},
+          "per_state": {
+            "both": {
+              "f1": 0.8,
+              "false_negative": 1,
+              "false_positive": 0,
+              "precision": 1.0,
+              "recall": 0.6666666666666666,
+              "true_positive": 2
+            },
+            "neither": {
+              "f1": 1.0,
+              "false_negative": 0,
+              "false_positive": 0,
+              "precision": 1.0,
+              "recall": 1.0,
+              "true_positive": 3
+            },
+            "refute_only": {
+              "f1": 0.5,
+              "false_negative": 2,
+              "false_positive": 0,
+              "precision": 1.0,
+              "recall": 0.3333333333333333,
+              "true_positive": 1
+            },
+            "support_only": {
+              "f1": 0.5,
+              "false_negative": 2,
+              "false_positive": 0,
+              "precision": 1.0,
+              "recall": 0.3333333333333333,
+              "true_positive": 1
+            }
+          },
+          "raw_presence_state": {
+            "confusion": {
+              "both": {
+                "both": 3,
+                "neither": 0,
+                "operational_error": 0,
+                "refute_only": 0,
+                "support_only": 0
+              },
+              "neither": {
+                "both": 0,
+                "neither": 3,
+                "operational_error": 0,
+                "refute_only": 0,
+                "support_only": 0
+              },
+              "refute_only": {
+                "both": 0,
+                "neither": 0,
+                "operational_error": 0,
+                "refute_only": 3,
+                "support_only": 0
+              },
+              "support_only": {
+                "both": 0,
+                "neither": 0,
+                "operational_error": 0,
+                "refute_only": 0,
+                "support_only": 3
+              }
+            },
+            "decisive_coverage": 0.5,
+            "decisive_risk": 0.0,
+            "exact_state_accuracy": 1.0,
+            "macro_f1": 1.0,
+            "per_state": {
+              "both": {
+                "f1": 1.0,
+                "false_negative": 0,
+                "false_positive": 0,
+                "precision": 1.0,
+                "recall": 1.0,
+                "true_positive": 3
+              },
+              "neither": {
+                "f1": 1.0,
+                "false_negative": 0,
+                "false_positive": 0,
+                "precision": 1.0,
+                "recall": 1.0,
+                "true_positive": 3
+              },
+              "refute_only": {
+                "f1": 1.0,
+                "false_negative": 0,
+                "false_positive": 0,
+                "precision": 1.0,
+                "recall": 1.0,
+                "true_positive": 3
+              },
+              "support_only": {
+                "f1": 1.0,
+                "false_negative": 0,
+                "false_positive": 0,
+                "precision": 1.0,
+                "recall": 1.0,
+                "true_positive": 3
+              }
+            },
+            "refutation_presence": {
+              "f1": 1.0,
+              "false_negative": 0,
+              "false_positive": 0,
+              "precision": 1.0,
+              "recall": 1.0,
+              "true_positive": 6
+            },
+            "support_presence": {
+              "f1": 1.0,
+              "false_negative": 0,
+              "false_positive": 0,
+              "precision": 1.0,
+              "recall": 1.0,
+              "true_positive": 6
+            }
+          },
+          "refutation_presence": {
+            "f1": 0.6666666666666666,
+            "false_negative": 3,
+            "false_positive": 0,
+            "precision": 1.0,
+            "recall": 0.5,
+            "true_positive": 3
+          },
+          "refutation_span_alignment": {
+            "f1": 0.7692307692307692,
+            "false_negative": 1,
+            "false_positive": 2,
+            "precision": 0.7142857142857143,
+            "recall": 0.8333333333333334,
+            "true_positive": 5
+          },
+          "response_contract_rate": 1.0,
+          "support_presence": {
+            "f1": 0.6666666666666666,
+            "false_negative": 3,
+            "false_positive": 0,
+            "precision": 1.0,
+            "recall": 0.5,
+            "true_positive": 3
+          },
+          "support_span_alignment": {
+            "f1": 0.6153846153846153,
+            "false_negative": 2,
+            "false_positive": 3,
+            "precision": 0.5714285714285714,
+            "recall": 0.6666666666666666,
+            "true_positive": 4
+          },
+          "usage": {
+            "cached_input_tokens": 23040,
+            "calls_with_usage": 12,
+            "input_tokens": 30170,
+            "mean_input_tokens": 2514.1666666666665,
+            "mean_latency_ms": 4091.8333333333335,
+            "mean_output_tokens": 33.583333333333336,
+            "output_tokens": 403
+          }
+        },
+        "open_source_governance": {
+          "aligned_decisive_coverage": 0.4166666666666667,
+          "aligned_decisive_risk": 0.0,
+          "aligned_state_accuracy": 0.9166666666666666,
+          "both_recall": 1.0,
+          "cases": 12,
+          "confusion": {
+            "both": {
+              "both": 3,
+              "neither": 0,
+              "operational_error": 0,
+              "refute_only": 0,
+              "semantic_unaligned": 0,
+              "support_only": 0
+            },
+            "neither": {
+              "both": 0,
+              "neither": 3,
+              "operational_error": 0,
+              "refute_only": 0,
+              "semantic_unaligned": 0,
+              "support_only": 0
+            },
+            "refute_only": {
+              "both": 0,
+              "neither": 0,
+              "operational_error": 0,
+              "refute_only": 2,
+              "semantic_unaligned": 1,
+              "support_only": 0
+            },
+            "support_only": {
+              "both": 0,
+              "neither": 0,
+              "operational_error": 0,
+              "refute_only": 0,
+              "semantic_unaligned": 0,
+              "support_only": 3
+            }
+          },
+          "decisive_gold_recall": 0.8333333333333334,
+          "exact_evidence_set_accuracy": 0.9166666666666666,
+          "exact_membership_given_contract_rate": 1.0,
+          "fully_mechanically_valid_rate": 1.0,
+          "macro_f1": 0.95,
+          "neither_recall": 1.0,
+          "operational_error_rate": 0.0,
+          "operational_errors": {},
+          "per_state": {
+            "both": {
+              "f1": 1.0,
+              "false_negative": 0,
+              "false_positive": 0,
+              "precision": 1.0,
+              "recall": 1.0,
+              "true_positive": 3
+            },
+            "neither": {
+              "f1": 1.0,
+              "false_negative": 0,
+              "false_positive": 0,
+              "precision": 1.0,
+              "recall": 1.0,
+              "true_positive": 3
+            },
+            "refute_only": {
+              "f1": 0.8,
+              "false_negative": 1,
+              "false_positive": 0,
+              "precision": 1.0,
+              "recall": 0.6666666666666666,
+              "true_positive": 2
+            },
+            "support_only": {
+              "f1": 1.0,
+              "false_negative": 0,
+              "false_positive": 0,
+              "precision": 1.0,
+              "recall": 1.0,
+              "true_positive": 3
+            }
+          },
+          "raw_presence_state": {
+            "confusion": {
+              "both": {
+                "both": 3,
+                "neither": 0,
+                "operational_error": 0,
+                "refute_only": 0,
+                "support_only": 0
+              },
+              "neither": {
+                "both": 0,
+                "neither": 3,
+                "operational_error": 0,
+                "refute_only": 0,
+                "support_only": 0
+              },
+              "refute_only": {
+                "both": 0,
+                "neither": 0,
+                "operational_error": 0,
+                "refute_only": 3,
+                "support_only": 0
+              },
+              "support_only": {
+                "both": 0,
+                "neither": 0,
+                "operational_error": 0,
+                "refute_only": 0,
+                "support_only": 3
+              }
+            },
+            "decisive_coverage": 0.5,
+            "decisive_risk": 0.0,
+            "exact_state_accuracy": 1.0,
+            "macro_f1": 1.0,
+            "per_state": {
+              "both": {
+                "f1": 1.0,
+                "false_negative": 0,
+                "false_positive": 0,
+                "precision": 1.0,
+                "recall": 1.0,
+                "true_positive": 3
+              },
+              "neither": {
+                "f1": 1.0,
+                "false_negative": 0,
+                "false_positive": 0,
+                "precision": 1.0,
+                "recall": 1.0,
+                "true_positive": 3
+              },
+              "refute_only": {
+                "f1": 1.0,
+                "false_negative": 0,
+                "false_positive": 0,
+                "precision": 1.0,
+                "recall": 1.0,
+                "true_positive": 3
+              },
+              "support_only": {
+                "f1": 1.0,
+                "false_negative": 0,
+                "false_positive": 0,
+                "precision": 1.0,
+                "recall": 1.0,
+                "true_positive": 3
+              }
+            },
+            "refutation_presence": {
+              "f1": 1.0,
+              "false_negative": 0,
+              "false_positive": 0,
+              "precision": 1.0,
+              "recall": 1.0,
+              "true_positive": 6
+            },
+            "support_presence": {
+              "f1": 1.0,
+              "false_negative": 0,
+              "false_positive": 0,
+              "precision": 1.0,
+              "recall": 1.0,
+              "true_positive": 6
+            }
+          },
+          "refutation_presence": {
+            "f1": 0.9090909090909091,
+            "false_negative": 1,
+            "false_positive": 0,
+            "precision": 1.0,
+            "recall": 0.8333333333333334,
+            "true_positive": 5
+          },
+          "refutation_span_alignment": {
+            "f1": 0.923076923076923,
+            "false_negative": 0,
+            "false_positive": 1,
+            "precision": 0.8571428571428571,
+            "recall": 1.0,
+            "true_positive": 6
+          },
+          "response_contract_rate": 1.0,
+          "support_presence": {
+            "f1": 1.0,
+            "false_negative": 0,
+            "false_positive": 0,
+            "precision": 1.0,
+            "recall": 1.0,
+            "true_positive": 6
+          },
+          "support_span_alignment": {
+            "f1": 1.0,
+            "false_negative": 0,
+            "false_positive": 0,
+            "precision": 1.0,
+            "recall": 1.0,
+            "true_positive": 6
+          },
+          "usage": {
+            "cached_input_tokens": 20736,
+            "calls_with_usage": 12,
+            "input_tokens": 30157,
+            "mean_input_tokens": 2513.0833333333335,
+            "mean_latency_ms": 3916.4166666666665,
+            "mean_output_tokens": 33.166666666666664,
+            "output_tokens": 398
+          }
+        }
+      },
+      "overall": {
+        "aligned_decisive_coverage": 0.2916666666666667,
+        "aligned_decisive_risk": 0.0,
+        "aligned_state_accuracy": 0.75,
+        "both_recall": 0.8333333333333334,
+        "cases": 24,
+        "confusion": {
+          "both": {
+            "both": 5,
+            "neither": 0,
+            "operational_error": 0,
+            "refute_only": 0,
+            "semantic_unaligned": 1,
+            "support_only": 0
+          },
+          "neither": {
+            "both": 0,
+            "neither": 6,
+            "operational_error": 0,
+            "refute_only": 0,
+            "semantic_unaligned": 0,
+            "support_only": 0
+          },
+          "refute_only": {
+            "both": 0,
+            "neither": 0,
+            "operational_error": 0,
+            "refute_only": 3,
+            "semantic_unaligned": 3,
+            "support_only": 0
+          },
+          "support_only": {
+            "both": 0,
+            "neither": 0,
+            "operational_error": 0,
+            "refute_only": 0,
+            "semantic_unaligned": 2,
+            "support_only": 4
+          }
+        },
+        "decisive_gold_recall": 0.5833333333333334,
+        "exact_evidence_set_accuracy": 0.75,
+        "exact_membership_given_contract_rate": 1.0,
+        "fully_mechanically_valid_rate": 1.0,
+        "macro_f1": 0.843939393939394,
+        "neither_recall": 1.0,
+        "operational_error_rate": 0.0,
+        "operational_errors": {},
+        "per_state": {
+          "both": {
+            "f1": 0.9090909090909091,
+            "false_negative": 1,
+            "false_positive": 0,
+            "precision": 1.0,
+            "recall": 0.8333333333333334,
+            "true_positive": 5
+          },
+          "neither": {
+            "f1": 1.0,
+            "false_negative": 0,
+            "false_positive": 0,
+            "precision": 1.0,
+            "recall": 1.0,
+            "true_positive": 6
+          },
+          "refute_only": {
+            "f1": 0.6666666666666666,
+            "false_negative": 3,
+            "false_positive": 0,
+            "precision": 1.0,
+            "recall": 0.5,
+            "true_positive": 3
+          },
+          "support_only": {
+            "f1": 0.8,
+            "false_negative": 2,
+            "false_positive": 0,
+            "precision": 1.0,
+            "recall": 0.6666666666666666,
+            "true_positive": 4
+          }
+        },
+        "raw_presence_state": {
+          "confusion": {
+            "both": {
+              "both": 6,
+              "neither": 0,
+              "operational_error": 0,
+              "refute_only": 0,
+              "support_only": 0
+            },
+            "neither": {
+              "both": 0,
+              "neither": 6,
+              "operational_error": 0,
+              "refute_only": 0,
+              "support_only": 0
+            },
+            "refute_only": {
+              "both": 0,
+              "neither": 0,
+              "operational_error": 0,
+              "refute_only": 6,
+              "support_only": 0
+            },
+            "support_only": {
+              "both": 0,
+              "neither": 0,
+              "operational_error": 0,
+              "refute_only": 0,
+              "support_only": 6
+            }
+          },
+          "decisive_coverage": 0.5,
+          "decisive_risk": 0.0,
+          "exact_state_accuracy": 1.0,
+          "macro_f1": 1.0,
+          "per_state": {
+            "both": {
+              "f1": 1.0,
+              "false_negative": 0,
+              "false_positive": 0,
+              "precision": 1.0,
+              "recall": 1.0,
+              "true_positive": 6
+            },
+            "neither": {
+              "f1": 1.0,
+              "false_negative": 0,
+              "false_positive": 0,
+              "precision": 1.0,
+              "recall": 1.0,
+              "true_positive": 6
+            },
+            "refute_only": {
+              "f1": 1.0,
+              "false_negative": 0,
+              "false_positive": 0,
+              "precision": 1.0,
+              "recall": 1.0,
+              "true_positive": 6
+            },
+            "support_only": {
+              "f1": 1.0,
+              "false_negative": 0,
+              "false_positive": 0,
+              "precision": 1.0,
+              "recall": 1.0,
+              "true_positive": 6
+            }
+          },
+          "refutation_presence": {
+            "f1": 1.0,
+            "false_negative": 0,
+            "false_positive": 0,
+            "precision": 1.0,
+            "recall": 1.0,
+            "true_positive": 12
+          },
+          "support_presence": {
+            "f1": 1.0,
+            "false_negative": 0,
+            "false_positive": 0,
+            "precision": 1.0,
+            "recall": 1.0,
+            "true_positive": 12
+          }
+        },
+        "refutation_presence": {
+          "f1": 0.8,
+          "false_negative": 4,
+          "false_positive": 0,
+          "precision": 1.0,
+          "recall": 0.6666666666666666,
+          "true_positive": 8
+        },
+        "refutation_span_alignment": {
+          "f1": 0.8461538461538461,
+          "false_negative": 1,
+          "false_positive": 3,
+          "precision": 0.7857142857142857,
+          "recall": 0.9166666666666666,
+          "true_positive": 11
+        },
+        "response_contract_rate": 1.0,
+        "support_presence": {
+          "f1": 0.8571428571428571,
+          "false_negative": 3,
+          "false_positive": 0,
+          "precision": 1.0,
+          "recall": 0.75,
+          "true_positive": 9
+        },
+        "support_span_alignment": {
+          "f1": 0.8,
+          "false_negative": 2,
+          "false_positive": 3,
+          "precision": 0.7692307692307693,
+          "recall": 0.8333333333333334,
+          "true_positive": 10
+        },
+        "usage": {
+          "cached_input_tokens": 43776,
+          "calls_with_usage": 24,
+          "input_tokens": 60327,
+          "mean_input_tokens": 2513.625,
+          "mean_latency_ms": 4004.125,
+          "mean_output_tokens": 33.375,
+          "output_tokens": 801
+        }
+      },
+      "prompt_sha256": "713d3e36a56d73f5584394f728b6539b6dc7800655935c9fd1f7f29524865eea"
+    }
+  },
+  "version": 1
+}

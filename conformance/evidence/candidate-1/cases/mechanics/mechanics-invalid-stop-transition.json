@@ -1,0 +1,13 @@
+{
+  "revision": "selta.evidence.conformance-case/s2-1",
+  "id": "mechanics-invalid-stop-transition",
+  "operation": {
+    "kind": "assess",
+    "context": "mechanics-candidate-1",
+    "package_source": "sha256:6e9b1a84df2a42e8eb9e181447d708ea634c2526bf54ae375cca79a9496c921e",
+    "expected_basis": {
+      "$ref": "sha256:e4bc05c54d0fad272a7ab76bba4309c459bfe67f59374ebef2b054f535c3ad92",
+      "contract": "sha256:938e5e124cb9648bb532949ff8588edeef0570eee18f6c7bfaf579af17a352a0"
+    }
+  }
+}

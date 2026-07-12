@@ -1,0 +1,13 @@
+{
+  "revision": "selta.evidence.conformance-case/s2-1",
+  "id": "resource-relation-static-exact",
+  "operation": {
+    "kind": "assess",
+    "context": "positive-controls-candidate-1",
+    "package_source": "sha256:2ab4ea54e4ade97608370d92c202a470129108e4cad4be7f183d90cd87d80811",
+    "expected_basis": {
+      "$ref": "sha256:5d7a14d97ed6fb33f7e36e898d9bf36e5579478ae073d9a7b9aee53cecd0f082",
+      "contract": "sha256:938e5e124cb9648bb532949ff8588edeef0570eee18f6c7bfaf579af17a352a0"
+    }
+  }
+}

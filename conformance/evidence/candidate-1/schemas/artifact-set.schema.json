@@ -1,0 +1,26 @@
+{
+  "type": "object",
+  "fields": {
+    "revision": {
+      "type": "str",
+      "verify": [{ "ext": "one_of", "config": { "values": ["selta.evidence.conformance-artifact-set/s2-1"] } }]
+    },
+    "artifacts": {
+      "type": "array",
+      "len": { "min": 1 },
+      "item": {
+        "type": "object",
+        "fields": {
+          "path": {
+            "type": "str",
+            "verify": [
+              { "ext": "regex", "config": { "pattern": "\\A(?:[A-Za-z0-9_-][A-Za-z0-9._-]*/)*[A-Za-z0-9_-][A-Za-z0-9._-]*\\z" } },
+              { "ext": "len", "config": { "max": 1024 } }
+            ]
+          },
+          "bytes_sha256": { "type": "str", "verify": [{ "ext": "regex", "config": { "pattern": "\\Asha256:[0-9a-f]{64}\\z" } }] }
+        }
+      }
+    }
+  }
+}

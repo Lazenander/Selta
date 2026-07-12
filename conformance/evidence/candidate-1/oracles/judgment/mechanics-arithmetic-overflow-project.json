@@ -1,0 +1,9 @@
+{
+  "revision": "selta.evidence.conformance-oracle/s2-1",
+  "case": "mechanics-arithmetic-overflow-project",
+  "expected": {
+    "kind": "returned",
+    "package": "sha256:005871c2e3e3990cf85816d6974eaecd6998739b1ebd7fb0e06bab57019dd760",
+    "compare": "conformance_projection"
+  }
+}

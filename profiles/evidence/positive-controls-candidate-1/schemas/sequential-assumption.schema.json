@@ -1,0 +1,49 @@
+{
+  "type": "union",
+  "variants": [
+    {
+      "type": "object",
+      "fields": {
+        "revision": {
+          "type": "str",
+          "verify": [{ "ext": "one_of", "config": { "values": ["selta.evidence.sequential-assumption/candidate-1"] } }]
+        },
+        "role": {
+          "type": "str",
+          "verify": [{
+            "ext": "one_of",
+            "config": { "values": ["population", "frame", "dependence", "calibration", "history", "statistic"] }
+          }]
+        },
+        "declaration": {
+          "type": "object",
+          "fields": {
+            "$ref": { "type": "str", "verify": [{ "ext": "regex", "config": { "pattern": "\\Asha256:[0-9a-f]{64}\\z" } }] },
+            "contract": { "type": "str", "verify": [{ "ext": "regex", "config": { "pattern": "\\Asha256:[0-9a-f]{64}\\z" } }] }
+          }
+        }
+      }
+    },
+    {
+      "type": "object",
+      "fields": {
+        "revision": {
+          "type": "str",
+          "verify": [{ "ext": "one_of", "config": { "values": ["selta.evidence.sequential-assumption/candidate-1"] } }]
+        },
+        "role": { "type": "str", "verify": [{ "ext": "one_of", "config": { "values": ["stopping"] } }] },
+        "regime": {
+          "type": "str",
+          "verify": [{ "ext": "one_of", "config": { "values": ["fixed_horizon", "anytime_valid"] } }]
+        },
+        "declaration": {
+          "type": "object",
+          "fields": {
+            "$ref": { "type": "str", "verify": [{ "ext": "regex", "config": { "pattern": "\\Asha256:[0-9a-f]{64}\\z" } }] },
+            "contract": { "type": "str", "verify": [{ "ext": "regex", "config": { "pattern": "\\Asha256:[0-9a-f]{64}\\z" } }] }
+          }
+        }
+      }
+    }
+  ]
+}

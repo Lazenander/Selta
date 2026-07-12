@@ -1,0 +1,9 @@
+{
+  "revision": "selta.evidence.conformance-oracle/s2-1",
+  "case": "presence-wrong-assumption",
+  "expected": {
+    "kind": "returned",
+    "package": "sha256:72e5ff963e023ab5e1508e2b6b8942e7e6ef57e669718e5830233d5ae78c054c",
+    "compare": "conformance_projection"
+  }
+}

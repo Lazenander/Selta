@@ -1,0 +1,9 @@
+{
+  "revision": "selta.evidence.conformance-oracle/s2-1",
+  "case": "mechanics-unavailable-censor",
+  "expected": {
+    "kind": "returned",
+    "package": "sha256:311f4d4cf1650bf982a92d6446d9c1e3bc7fcfc0762d6d9e55f9ef1a15b97165",
+    "compare": "conformance_projection"
+  }
+}

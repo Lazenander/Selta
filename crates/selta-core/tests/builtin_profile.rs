@@ -5,10 +5,8 @@ mod common;
 use std::collections::HashMap;
 use std::sync::Arc;
 
+use selta_core::{CmdTemplate, CmdTemplates, EffectClass, InputKind, Options, Registry, Verdict};
 use serde_json::{json, Value};
-use selta_core::{
-    CmdTemplate, CmdTemplates, EffectClass, InputKind, Options, Registry, Verdict,
-};
 
 use common::schema;
 
@@ -48,11 +46,7 @@ fn builtin_declarations_publish_exact_input_domains() {
         &[InputKind::Str, InputKind::Array]
     );
     assert_eq!(
-        registry
-            .decl("non_empty")
-            .unwrap()
-            .accepted_input
-            .kinds(),
+        registry.decl("non_empty").unwrap().accepted_input.kinds(),
         &[InputKind::Str, InputKind::Object, InputKind::Array]
     );
     assert_eq!(
@@ -78,7 +72,9 @@ fn meta_rejects_builtin_node_input_domain_mismatches() {
         let node = schema(raw);
         let errors = selta_core::meta::validate(&node, &registry);
         assert!(
-            errors.iter().any(|error| error.contains("does not accept node type")),
+            errors
+                .iter()
+                .any(|error| error.contains("does not accept node type")),
             "{errors:?}"
         );
     }

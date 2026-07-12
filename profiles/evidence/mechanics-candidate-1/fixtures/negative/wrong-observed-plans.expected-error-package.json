@@ -1,0 +1,41 @@
+{
+  "language": "selta.evidence.package/candidate-1",
+  "environment": "sha256:3cc649a47f2ff7f57d1f55ea8a22623bbe8affc9bd551eb1106212ce84473d18",
+  "documents": [
+    {
+      "contract": "sha256:86ed6b6f38c1b1a1d6bc5f09e2997a0df9e0f1e8554624372031034f17ebf7fb",
+      "digest": "sha256:f3a13822aaa32197bae87693540621dcf09e1514168c27f40c6f8ec077faec86",
+      "value": {
+        "revision": "selta.evidence.outcome/candidate-1",
+        "status": "error",
+        "environment": "sha256:3cc649a47f2ff7f57d1f55ea8a22623bbe8affc9bd551eb1106212ce84473d18",
+        "errors": [
+          {
+            "phase": "relation",
+            "code": "relation.invalid_trace",
+            "path": "/input/documents/3/value/trace",
+            "message": "acquisition trace is causally or relationally invalid"
+          }
+        ],
+        "executions": [],
+        "resources": {
+          "documents": 30,
+          "total_document_bytes": 23274,
+          "attempts_total": 1,
+          "graph_nodes": 1,
+          "graph_edges": 1,
+          "max_fan_in_observed": 1,
+          "graph_depth": 1,
+          "semantic_calls": 0,
+          "semantic_fuel": 0,
+          "state_bytes": 0,
+          "conclusion_labels_total": 0
+        }
+      }
+    }
+  ],
+  "root": {
+    "$ref": "sha256:f3a13822aaa32197bae87693540621dcf09e1514168c27f40c6f8ec077faec86",
+    "contract": "sha256:86ed6b6f38c1b1a1d6bc5f09e2997a0df9e0f1e8554624372031034f17ebf7fb"
+  }
+}

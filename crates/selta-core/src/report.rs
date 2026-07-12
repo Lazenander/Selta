@@ -3,7 +3,7 @@
 use indexmap::IndexMap;
 use serde::{Deserialize, Serialize};
 
-use crate::verdict::{CheckError, Delta, Notice, Verdict, VoteTally};
+use crate::verdict::{CheckError, Delta, EvidenceState, Notice, Verdict, VoteTally};
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct Report {
@@ -81,6 +81,8 @@ pub struct CheckResult {
     pub variant: Option<usize>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub error: Option<String>,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub evidence: Option<EvidenceSummary>,
 }
 
 impl CheckResult {
@@ -93,6 +95,7 @@ impl CheckResult {
             skipped: false,
             variant: None,
             error: None,
+            evidence: None,
         }
     }
 
@@ -112,12 +115,146 @@ impl CheckResult {
         }
     }
 
+    /// A semantic non-conclusion, distinct from an operational error and from
+    /// a check skipped by the recursion budget.
+    pub fn inconclusive(source: &str) -> Self {
+        CheckResult {
+            verdict: Verdict::Inconclusive,
+            ..CheckResult::passing(source)
+        }
+    }
+
     pub fn skipped(source: &str) -> Self {
         CheckResult {
             verdict: Verdict::Inconclusive,
             skipped: true,
             ..CheckResult::passing(source)
         }
+    }
+
+    pub fn with_evidence(mut self, evidence: EvidenceSummary) -> Self {
+        self.evidence = Some(evidence);
+        self
+    }
+}
+
+/// Evidence observations retained by an evidence-mode check. `state` is absent
+/// when no semantic assessment completed; operational unavailability is
+/// counted separately and never manufactures semantic `Neither`.
+#[derive(Debug, Clone, Default, PartialEq, Serialize, Deserialize)]
+pub struct EvidenceSummary {
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub state: Option<EvidenceState>,
+    pub neither: u32,
+    pub support_only: u32,
+    pub refute_only: u32,
+    pub both: u32,
+    pub unavailable: u32,
+    #[serde(default, skip_serializing_if = "Vec::is_empty")]
+    pub refutations: Vec<Delta>,
+}
+
+impl EvidenceSummary {
+    pub fn record(
+        &mut self,
+        observation: EvidenceState,
+        refutation: Option<Delta>,
+    ) -> Result<(), &'static str> {
+        if observation.refutes() != refutation.is_some() {
+            return Err(if observation.refutes() {
+                "refuting evidence requires a refutation delta"
+            } else {
+                "non-refuting evidence must not carry a refutation delta"
+            });
+        }
+        if let Some(delta) = &refutation {
+            if delta.kind != crate::verdict::DeltaKind::Semantic {
+                return Err("evidence refutations must be semantic deltas");
+            }
+            if delta.message.trim().is_empty() {
+                return Err("evidence refutation message must not be empty");
+            }
+        }
+
+        let count = match observation {
+            EvidenceState::Neither => &mut self.neither,
+            EvidenceState::SupportOnly => &mut self.support_only,
+            EvidenceState::RefuteOnly => &mut self.refute_only,
+            EvidenceState::Both => &mut self.both,
+        };
+        let next_count = count
+            .checked_add(1)
+            .ok_or("evidence observation counter overflow")?;
+        let next_state = Some(
+            self.state
+                .map_or(observation, |current| current.join(observation)),
+        );
+
+        *count = next_count;
+        self.state = next_state;
+        if let Some(delta) = refutation {
+            if !self.refutations.contains(&delta) {
+                self.refutations.push(delta);
+            }
+        }
+        Ok(())
+    }
+
+    pub fn record_unavailable(&mut self) -> Result<(), &'static str> {
+        self.record_unavailable_n(1)
+    }
+
+    pub fn record_unavailable_n(&mut self, count: u32) -> Result<(), &'static str> {
+        self.unavailable = self
+            .unavailable
+            .checked_add(count)
+            .ok_or("evidence unavailable counter overflow")?;
+        Ok(())
+    }
+
+    /// Knowledge-join another summary while retaining raw observation counts
+    /// and the first stable occurrence of each normalized refutation.
+    pub fn checked_join(&mut self, other: &Self) -> Result<(), &'static str> {
+        let neither = self
+            .neither
+            .checked_add(other.neither)
+            .ok_or("evidence neither counter overflow")?;
+        let support_only = self
+            .support_only
+            .checked_add(other.support_only)
+            .ok_or("evidence support-only counter overflow")?;
+        let refute_only = self
+            .refute_only
+            .checked_add(other.refute_only)
+            .ok_or("evidence refute-only counter overflow")?;
+        let both = self
+            .both
+            .checked_add(other.both)
+            .ok_or("evidence both counter overflow")?;
+        let unavailable = self
+            .unavailable
+            .checked_add(other.unavailable)
+            .ok_or("evidence unavailable counter overflow")?;
+        let state = match (self.state, other.state) {
+            (Some(left), Some(right)) => Some(left.join(right)),
+            (Some(state), None) | (None, Some(state)) => Some(state),
+            (None, None) => None,
+        };
+        let mut refutations = self.refutations.clone();
+        for delta in &other.refutations {
+            if !refutations.contains(delta) {
+                refutations.push(delta.clone());
+            }
+        }
+
+        self.neither = neither;
+        self.support_only = support_only;
+        self.refute_only = refute_only;
+        self.both = both;
+        self.unavailable = unavailable;
+        self.state = state;
+        self.refutations = refutations;
+        Ok(())
     }
 }
 

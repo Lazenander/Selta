@@ -1,0 +1,27 @@
+{
+  "revision": "selta.evidence.conformance-case/s2-1",
+  "id": "control-input-identity-collision",
+  "operation": {
+    "kind": "assess",
+    "context": "boundary-candidate-1",
+    "package_source": "sha256:5b77c0188d799ec8ce45b3a8b34464459f37cac78124f95efdbdc9790fa8f11d",
+    "expected_basis": {
+      "$ref": "sha256:8362b21c1aa7bcbe120b6c17bbcbd21b9e4a34b8d13f396ef9fc4de9bd963adb",
+      "contract": "sha256:938e5e124cb9648bb532949ff8588edeef0570eee18f6c7bfaf579af17a352a0"
+    },
+    "controls": {
+      "identity_results": [
+        {
+          "boundary": "input",
+          "preimage_base64": "c2VsdGEuZXZpZGVuY2UuZG9jdW1lbnQvY2FuZGlkYXRlLTEAeyJjb250cmFjdCI6InNoYTI1NjpjODI1OGEzNTg4YmViMzJlNWFjZWNlYTQxNGMyZjhjYmUwODZjMTNmZGMwNDcxNTIzNmRhNjA4NmI2MDE3Yjg5IiwidmFsdWUiOnt9fQ==",
+          "returned_digest": "sha256:34ee1a3ecd7ca7643fd26f10481f03c44c4d75966d66ce8f3cff68577db74fa6"
+        }
+      ],
+      "semantic_outputs": [],
+      "semantic_output_bytes": [],
+      "verification_faults": [],
+      "semantic_reads": [],
+      "forbidden_reads": []
+    }
+  }
+}

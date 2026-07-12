@@ -2,8 +2,8 @@
 
 mod common;
 
-use serde_json::json;
 use selta_core::{DeltaKind, Options, Registry, Verdict};
+use serde_json::json;
 
 fn bugfix_schema() -> selta_core::Node {
     common::schema(json!({

@@ -1,0 +1,9 @@
+{
+  "revision": "selta.evidence.conformance-oracle/s2-1",
+  "case": "identity-wrong-revision",
+  "expected": {
+    "kind": "returned",
+    "package": "sha256:ce0dd1320d23c858fd0b4e4105b8a691e20de1912fa0c9a6089f642f3545d549",
+    "compare": "conformance_projection"
+  }
+}

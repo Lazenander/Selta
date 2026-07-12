@@ -1,0 +1,58 @@
+{
+  "type": "object",
+  "fields": {
+    "parameters": {
+      "type": "object",
+      "fields": {
+        "claim": {
+          "type": "object",
+          "fields": {
+            "$ref": { "type": "str", "verify": [{ "ext": "regex", "config": { "pattern": "\\Asha256:[0-9a-f]{64}\\z" } }] },
+            "contract": { "type": "str", "verify": [{ "ext": "regex", "config": { "pattern": "\\Asha256:[0-9a-f]{64}\\z" } }] }
+          }
+        },
+        "stance": { "type": "str", "verify": [{ "ext": "one_of", "config": { "values": ["support", "refute"] } }] },
+        "modality": {
+          "type": "object",
+          "fields": {
+            "$ref": { "type": "str", "verify": [{ "ext": "regex", "config": { "pattern": "\\Asha256:[0-9a-f]{64}\\z" } }] },
+            "contract": { "type": "str", "verify": [{ "ext": "regex", "config": { "pattern": "\\Asha256:[0-9a-f]{64}\\z" } }] }
+          }
+        },
+        "payload": {
+          "type": "object",
+          "fields": {
+            "$ref": { "type": "str", "verify": [{ "ext": "regex", "config": { "pattern": "\\Asha256:[0-9a-f]{64}\\z" } }] },
+            "contract": { "type": "str", "verify": [{ "ext": "regex", "config": { "pattern": "\\Asha256:[0-9a-f]{64}\\z" } }] }
+          }
+        }
+      }
+    },
+    "attempt": {
+      "type": "object",
+      "fields": {
+        "acquisition": {
+          "type": "object",
+          "fields": {
+            "$ref": { "type": "str", "verify": [{ "ext": "regex", "config": { "pattern": "\\Asha256:[0-9a-f]{64}\\z" } }] },
+            "contract": { "type": "str", "verify": [{ "ext": "regex", "config": { "pattern": "\\Asha256:[0-9a-f]{64}\\z" } }] }
+          }
+        },
+        "attempt": { "type": "str", "verify": [{ "ext": "regex", "config": { "pattern": "\\Asha256:[0-9a-f]{64}\\z" } }] }
+      }
+    },
+    "response": {
+      "type": "object",
+      "fields": {
+        "reference": {
+          "type": "object",
+          "fields": {
+            "$ref": { "type": "str", "verify": [{ "ext": "regex", "config": { "pattern": "\\Asha256:[0-9a-f]{64}\\z" } }] },
+            "contract": { "type": "str", "verify": [{ "ext": "regex", "config": { "pattern": "\\Asha256:[0-9a-f]{64}\\z" } }] }
+          }
+        },
+        "value": { "type": "str", "verify": [{ "ext": "non_empty" }] }
+      }
+    }
+  }
+}

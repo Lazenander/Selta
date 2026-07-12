@@ -1,0 +1,8 @@
+{
+  "revision": "selta.evidence.conformance-oracle/s2-1",
+  "case": "optional-stop",
+  "expected": {
+    "kind": "finite_result",
+    "result": "sha256:fc9147e9436e1095263ae7a4d90a4b808db73d6d1961c13ef35b5c5839ead780"
+  }
+}

@@ -1,0 +1,29 @@
+{
+  "revision": "selta.evidence.finite-result/s2-1",
+  "results": [
+    {
+      "name": "depth-1",
+      "value": {
+        "kind": "rational",
+        "numerator": "1",
+        "denominator": "10"
+      }
+    },
+    {
+      "name": "depth-2",
+      "value": {
+        "kind": "rational",
+        "numerator": "19",
+        "denominator": "100"
+      }
+    },
+    {
+      "name": "depth-4",
+      "value": {
+        "kind": "rational",
+        "numerator": "3439",
+        "denominator": "10000"
+      }
+    }
+  ]
+}

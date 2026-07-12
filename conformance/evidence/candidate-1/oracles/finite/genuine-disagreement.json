@@ -1,0 +1,8 @@
+{
+  "revision": "selta.evidence.conformance-oracle/s2-1",
+  "case": "genuine-disagreement",
+  "expected": {
+    "kind": "finite_result",
+    "result": "sha256:a16485f4fecced4da227f36fa79e4fa357ef74560c737172de510ff806bf356e"
+  }
+}

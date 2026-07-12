@@ -1,0 +1,78 @@
+{
+  "version": 1,
+  "runner_version": "0.1.0",
+  "runner_executable": {
+    "path": "/Volumes/Coniunctio/work/selta-epistemic-0/libraries/Selta/experiments/real-codex-vague-v1/runner/target/debug/selta-codex-eval",
+    "sha256": "f518b9d268d14ed3381ef0aeaf4127adb8f584b5aa4049653b6de273de23cddc"
+  },
+  "dry_run": false,
+  "attempt_policy": "exactly one scored first attempt per prompt-case pair; no automatic retries",
+  "inputs": {
+    "path": "artifacts/inputs.jsonl",
+    "sha256": "fcd8df5ebda0ba96ee21596cde90ad757ac6041cb5b4ee805ff49fd853ad5c29",
+    "records": 1
+  },
+  "response_schema": {
+    "path": "artifacts/response.schema.json",
+    "sha256": "dbc54011037a89adc2f002e9cf55763a88007c307a51c0f455c0f27d468fd78f"
+  },
+  "selta_response_schema": {
+    "path": "artifacts/response.selta.json",
+    "sha256": "039afc818f9fbe40490c127115b82d51996b51b6ac05a8aab100751ab538c120"
+  },
+  "prompts": [
+    {
+      "id": "p0",
+      "path": "artifacts/prompts/p0.txt",
+      "sha256": "2b5d15fee7e4bf8b8a9eb0912e26a5af14b051f4904fd346d3134a92673607cd",
+      "words": 89
+    }
+  ],
+  "codex": {
+    "program": "/Users/haoranyang/.nvm/versions/node/v22.18.0/lib/node_modules/@openai/codex/bin/codex.js",
+    "program_sha256": "d3be844c45c4fd89392536e56e1010963f94785592596b50cd0c45bb8a341406",
+    "version": "codex-cli 0.142.5",
+    "model": "gpt-5.6-terra",
+    "reasoning": "low",
+    "timeout_seconds": 180,
+    "command_template": [
+      "exec",
+      "--ephemeral",
+      "--ignore-user-config",
+      "--ignore-rules",
+      "--strict-config",
+      "--skip-git-repo-check",
+      "--sandbox",
+      "read-only",
+      "--color",
+      "never",
+      "-C",
+      "<fresh-empty-directory>",
+      "--output-schema",
+      "<response-schema>",
+      "--json",
+      "--model",
+      "<model>",
+      "--config",
+      "model_reasoning_effort=\"low\"",
+      "--output-last-message",
+      "<raw-response-path>",
+      "-"
+    ]
+  },
+  "ordering": {
+    "algorithm": "ascending sha256(seed_le || 0x00 || prompt_id || 0x00 || case_id)",
+    "seed": 2026071200,
+    "concurrency": 1,
+    "job_count": 1
+  },
+  "jobs": {
+    "path": "jobs.jsonl",
+    "sha256": "51db4772555d40c10cf4ea4f8bf79b2ba7bb813e081ef5a14484eba499d8c719",
+    "records": 1
+  },
+  "mode": "engineering_smoke",
+  "mode_contract": "call-shape enforcement only; no corpus-validity or annotation claim",
+  "instruction_isolation": "fresh CODEX_HOME containing only a private 0600 auth.json copy; fresh empty working directory; inherited CODEX_*/OPENAI_*/CHATGPT_* removed; --ignore-user-config --ignore-rules --strict-config",
+  "oracle_boundary": "run cannot receive an oracle; score later with validate --run --oracle"
+}

@@ -1,0 +1,8 @@
+{
+  "revision": "selta.evidence.conformance-case/s2-1",
+  "id": "recursive-fixed-point",
+  "operation": {
+    "kind": "finite_world",
+    "program": "sha256:168cdb25eac205238b76db970179b3786d894104364a0035c20b8ce6447e2f62"
+  }
+}

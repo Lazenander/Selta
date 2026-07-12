@@ -1,0 +1,7 @@
+{
+  "revision": "selta.evidence.conformance-oracle/s2-1",
+  "case": "presence-conflict-vs-absence",
+  "expected": {
+    "kind": "comparison_pass"
+  }
+}

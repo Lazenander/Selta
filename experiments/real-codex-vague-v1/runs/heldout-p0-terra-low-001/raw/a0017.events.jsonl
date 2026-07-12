@@ -1,0 +1,4 @@
+{"type":"thread.started","thread_id":"019f5859-2bcd-7ed2-a95c-47c5316252e0"}
+{"type":"turn.started"}
+{"type":"item.completed","item":{"id":"item_0","type":"agent_message","text":"{\"support\":[\"Maintainers serve one-year terms.\"],\"refute\":[\"The current appointments will remain in force for eighteen months before the first regular election.\"]}"}}
+{"type":"turn.completed","usage":{"input_tokens":2512,"cached_input_tokens":2304,"output_tokens":42,"reasoning_output_tokens":0}}

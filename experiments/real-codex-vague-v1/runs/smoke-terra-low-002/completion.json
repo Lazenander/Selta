@@ -1,0 +1,23 @@
+{
+  "version": 1,
+  "status": "complete",
+  "scored_first_attempts": 1,
+  "predictions": {
+    "path": "predictions.jsonl",
+    "sha256": "da1552a3f0fcee5ca509e42b3b320d2be223f488ad2606f49faadb77ed0c840e",
+    "records": 1
+  },
+  "manifest": {
+    "path": "manifest.json",
+    "sha256": "4eb0fbb5ac9eb1f5020a6fda8b2005f49a8fa3750d3ae78cc4dad1d6cbf38559"
+  },
+  "jobs": {
+    "path": "jobs.jsonl",
+    "sha256": "51db4772555d40c10cf4ea4f8bf79b2ba7bb813e081ef5a14484eba499d8c719",
+    "records": 1
+  },
+  "raw_index": {
+    "path": "raw-index.json",
+    "sha256": "f948434a960116ba022c41f5f45cdbcb2fc354c2084af5df86a5fbbbb7a0d4ff"
+  }
+}

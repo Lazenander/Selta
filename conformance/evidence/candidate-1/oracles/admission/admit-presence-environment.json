@@ -1,0 +1,8 @@
+{
+  "revision": "selta.evidence.conformance-oracle/s2-1",
+  "case": "admit-presence-environment",
+  "expected": {
+    "kind": "admitted",
+    "environment": "sha256:0c153635b88d6dee3f1301f1a46b20d1a4439d5f7b755fe276e8d93a8ccdf8a3"
+  }
+}

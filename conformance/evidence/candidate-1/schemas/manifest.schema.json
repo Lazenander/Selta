@@ -1,0 +1,235 @@
+{
+  "type": "object",
+  "fields": {
+    "revision": {
+      "type": "str",
+      "verify": [{ "ext": "one_of", "config": { "values": ["selta.evidence.conformance-manifest/s2-1"] } }]
+    },
+    "artifacts": {
+      "type": "array",
+      "len": { "min": 1 },
+      "item": {
+        "type": "object",
+        "fields": {
+          "bytes_sha256": { "type": "str", "verify": [{ "ext": "regex", "config": { "pattern": "\\Asha256:[0-9a-f]{64}\\z" } }] },
+          "path": {
+            "type": "str",
+            "verify": [
+              { "ext": "regex", "config": { "pattern": "\\A(?:[A-Za-z0-9_-][A-Za-z0-9._-]*/)*[A-Za-z0-9_-][A-Za-z0-9._-]*\\z" } },
+              { "ext": "len", "config": { "max": 1024 } }
+            ]
+          },
+          "admissions": {
+            "type": "array",
+            "item": {
+              "type": "union",
+              "variants": [
+                {
+                  "type": "object",
+                  "fields": {
+                    "kind": { "type": "str", "verify": [{ "ext": "one_of", "config": { "values": ["selta_schema"] } }] }
+                  }
+                },
+                {
+                  "type": "object",
+                  "fields": {
+                    "kind": { "type": "str", "verify": [{ "ext": "one_of", "config": { "values": ["selta_value"] } }] },
+                    "schema_source": { "type": "str", "verify": [{ "ext": "regex", "config": { "pattern": "\\Asha256:[0-9a-f]{64}\\z" } }] }
+                  }
+                }
+              ]
+            }
+          }
+        }
+      }
+    },
+    "contexts": {
+      "type": "array",
+      "len": { "min": 1 },
+      "item": {
+        "type": "object",
+        "fields": {
+          "id": {
+            "type": "str",
+            "verify": [
+              { "ext": "regex", "config": { "pattern": "\\A[a-z0-9]+(?:-[a-z0-9]+)*\\z" } },
+              { "ext": "len", "config": { "max": 128 } }
+            ]
+          },
+          "environment_source": { "type": "str", "verify": [{ "ext": "regex", "config": { "pattern": "\\Asha256:[0-9a-f]{64}\\z" } }] },
+          "resolver": {
+            "type": "array",
+            "len": { "min": 1 },
+            "item": {
+              "type": "object",
+              "fields": {
+                "digest": { "type": "str", "verify": [{ "ext": "regex", "config": { "pattern": "\\Asha256:[0-9a-f]{64}\\z" } }] },
+                "domain": {
+                  "type": "str",
+                  "verify": [
+                    { "ext": "regex", "config": { "pattern": "\\A[A-Za-z0-9][A-Za-z0-9._/-]*\\z" } },
+                    { "ext": "len", "config": { "max": 256 } }
+                  ]
+                },
+                "source": { "type": "str", "verify": [{ "ext": "regex", "config": { "pattern": "\\Asha256:[0-9a-f]{64}\\z" } }] }
+              }
+            }
+          }
+        }
+      }
+    },
+    "cases": {
+      "type": "array",
+      "len": { "min": 1 },
+      "item": {
+        "type": "object",
+        "fields": {
+          "id": {
+            "type": "str",
+            "verify": [
+              { "ext": "regex", "config": { "pattern": "\\A[a-z0-9]+(?:-[a-z0-9]+)*\\z" } },
+              { "ext": "len", "config": { "max": 128 } }
+            ]
+          },
+          "record": { "type": "str", "verify": [{ "ext": "regex", "config": { "pattern": "\\Asha256:[0-9a-f]{64}\\z" } }] },
+          "oracle": { "type": "str", "verify": [{ "ext": "regex", "config": { "pattern": "\\Asha256:[0-9a-f]{64}\\z" } }] }
+        }
+      }
+    },
+    "laws": {
+      "type": "array",
+      "len": { "min": 15, "max": 15 },
+      "item": {
+        "type": "object",
+        "fields": {
+          "number": { "type": "int", "verify": [{ "ext": "range", "config": { "min": 1, "max": 15 } }] },
+          "positive": {
+            "type": "array",
+            "len": { "min": 1 },
+            "item": {
+              "type": "str",
+              "verify": [
+                { "ext": "regex", "config": { "pattern": "\\A[a-z0-9]+(?:-[a-z0-9]+)*\\z" } },
+                { "ext": "len", "config": { "max": 128 } }
+              ]
+            }
+          },
+          "falsifiers": {
+            "type": "array",
+            "len": { "min": 1 },
+            "item": {
+              "type": "str",
+              "verify": [
+                { "ext": "regex", "config": { "pattern": "\\A[a-z0-9]+(?:-[a-z0-9]+)*\\z" } },
+                { "ext": "len", "config": { "max": 128 } }
+              ]
+            }
+          }
+        }
+      }
+    },
+    "named": {
+      "type": "array",
+      "len": { "min": 16, "max": 16 },
+      "item": {
+        "type": "object",
+        "fields": {
+          "name": {
+            "type": "str",
+            "verify": [{
+              "ext": "one_of",
+              "config": {
+                "values": [
+                  "CASCADE-FALSE-REJECT",
+                  "CORRELATED-MAJORITY",
+                  "CORRELATED-UNANIMITY",
+                  "INCOMPETENT-INDEPENDENT",
+                  "RECURSIVE-FIXED-POINT",
+                  "OPTIONAL-STOP",
+                  "POST-SELECTION",
+                  "ALIASED-VOTES",
+                  "CONFLICT-VS-ABSENCE",
+                  "BEST-OF-N-PROXY",
+                  "GENUINE-DISAGREEMENT",
+                  "OPERATIONAL-COERCION",
+                  "VALID-LOG-OMISSION",
+                  "ADAPTIVE-HOLDOUT",
+                  "CHECKED-WITNESS",
+                  "CALIBRATED-SEQUENTIAL-EVIDENCE"
+                ]
+              }
+            }]
+          },
+          "witnesses": {
+            "type": "array",
+            "len": { "min": 1 },
+            "item": {
+              "type": "str",
+              "verify": [
+                { "ext": "regex", "config": { "pattern": "\\A[a-z0-9]+(?:-[a-z0-9]+)*\\z" } },
+                { "ext": "len", "config": { "max": 128 } }
+              ]
+            }
+          }
+        }
+      }
+    },
+    "errors": {
+      "type": "array",
+      "len": { "min": 1 },
+      "item": {
+        "type": "union",
+        "variants": [
+          {
+            "type": "object",
+            "fields": {
+              "phase": { "type": "str", "verify": [{ "ext": "one_of", "config": { "values": ["parse", "schema", "identity", "relation", "interpret", "project", "output"] } }] },
+              "code": { "type": "str", "verify": [{ "ext": "regex", "config": { "pattern": "\\A[a-z][a-z0-9_.]*\\z" } }] },
+              "reachability": { "type": "str", "verify": [{ "ext": "one_of", "config": { "values": ["wire"] } }] },
+              "cases": {
+                "type": "array",
+                "len": { "min": 1 },
+                "item": {
+                  "type": "str",
+                  "verify": [
+                    { "ext": "regex", "config": { "pattern": "\\A[a-z0-9]+(?:-[a-z0-9]+)*\\z" } },
+                    { "ext": "len", "config": { "max": 128 } }
+                  ]
+                }
+              }
+            }
+          },
+          {
+            "type": "object",
+            "fields": {
+              "phase": { "type": "str", "verify": [{ "ext": "one_of", "config": { "values": ["parse", "schema", "identity", "relation", "interpret", "project", "output"] } }] },
+              "code": { "type": "str", "verify": [{ "ext": "regex", "config": { "pattern": "\\A[a-z][a-z0-9_.]*\\z" } }] },
+              "reachability": { "type": "str", "verify": [{ "ext": "one_of", "config": { "values": ["control"] } }] },
+              "control": { "type": "str", "verify": [{ "ext": "one_of", "config": { "values": ["identity_result", "semantic_output", "semantic_output_bytes", "verification_fault"] } }] },
+              "cases": {
+                "type": "array",
+                "len": { "min": 1 },
+                "item": {
+                  "type": "str",
+                  "verify": [
+                    { "ext": "regex", "config": { "pattern": "\\A[a-z0-9]+(?:-[a-z0-9]+)*\\z" } },
+                    { "ext": "len", "config": { "max": 128 } }
+                  ]
+                }
+              }
+            }
+          },
+          {
+            "type": "object",
+            "fields": {
+              "phase": { "type": "str", "verify": [{ "ext": "one_of", "config": { "values": ["parse", "schema", "identity", "relation", "interpret", "project", "output"] } }] },
+              "code": { "type": "str", "verify": [{ "ext": "regex", "config": { "pattern": "\\A[a-z][a-z0-9_.]*\\z" } }] },
+              "reachability": { "type": "str", "verify": [{ "ext": "one_of", "config": { "values": ["unreachable"] } }] },
+              "proof": { "type": "str", "verify": [{ "ext": "regex", "config": { "pattern": "\\Asha256:[0-9a-f]{64}\\z" } }] }
+            }
+          }
+        ]
+      }
+    }
+  }
+}

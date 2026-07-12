@@ -1,0 +1,32 @@
+{
+  "conclusions": [
+    {
+      "claim": {
+        "$ref": "sha256:a5a1c3a96875a6bba100c852faa6ae7f8bf9c5283a234fd64eff6ce4cb700ee9",
+        "contract": "sha256:751cc09329f4a485fce9683a29ea5432786cf22b43df9cfd4b3900a326594239"
+      },
+      "labels": [
+        {
+          "$ref": "sha256:38fee66602b90c9a829a5d3b297f67c5d31cfd2f31ccc9477bbbd2ca7deac062",
+          "contract": "sha256:45a97f98cb6fe6d8e07bf2d0e9d820e604c428170b279199b99b1f0563586322"
+        },
+        {
+          "$ref": "sha256:f19ef6e631f3223e8c4d99e714773c3da4ba814d991cdbd4ff2c77a6d1c1b026",
+          "contract": "sha256:45a97f98cb6fe6d8e07bf2d0e9d820e604c428170b279199b99b1f0563586322"
+        }
+      ]
+    },
+    {
+      "claim": {
+        "$ref": "sha256:c1c8c9aa007a0e209066293c1a45460b401a34a730c930f559a5886681ccc33c",
+        "contract": "sha256:751cc09329f4a485fce9683a29ea5432786cf22b43df9cfd4b3900a326594239"
+      },
+      "labels": [
+        {
+          "$ref": "sha256:38fee66602b90c9a829a5d3b297f67c5d31cfd2f31ccc9477bbbd2ca7deac062",
+          "contract": "sha256:45a97f98cb6fe6d8e07bf2d0e9d820e604c428170b279199b99b1f0563586322"
+        }
+      ]
+    }
+  ]
+}

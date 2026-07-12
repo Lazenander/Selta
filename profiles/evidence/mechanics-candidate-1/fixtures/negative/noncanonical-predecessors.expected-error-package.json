@@ -1,0 +1,41 @@
+{
+  "language": "selta.evidence.package/candidate-1",
+  "environment": "sha256:3cc649a47f2ff7f57d1f55ea8a22623bbe8affc9bd551eb1106212ce84473d18",
+  "documents": [
+    {
+      "contract": "sha256:86ed6b6f38c1b1a1d6bc5f09e2997a0df9e0f1e8554624372031034f17ebf7fb",
+      "digest": "sha256:06397dd34a34db93f591aaa0fe0d87c7afd0544c84142ef99c1cbf9ec6455855",
+      "value": {
+        "revision": "selta.evidence.outcome/candidate-1",
+        "status": "error",
+        "environment": "sha256:3cc649a47f2ff7f57d1f55ea8a22623bbe8affc9bd551eb1106212ce84473d18",
+        "errors": [
+          {
+            "phase": "identity",
+            "code": "identity.noncanonical",
+            "path": "/input/documents/28/value/trace/attempts/2/predecessors",
+            "message": "value is not in canonical candidate form"
+          }
+        ],
+        "executions": [],
+        "resources": {
+          "documents": 38,
+          "total_document_bytes": 40179,
+          "attempts_total": 0,
+          "graph_nodes": 0,
+          "graph_edges": 0,
+          "max_fan_in_observed": 0,
+          "graph_depth": 0,
+          "semantic_calls": 0,
+          "semantic_fuel": 0,
+          "state_bytes": 0,
+          "conclusion_labels_total": 0
+        }
+      }
+    }
+  ],
+  "root": {
+    "$ref": "sha256:06397dd34a34db93f591aaa0fe0d87c7afd0544c84142ef99c1cbf9ec6455855",
+    "contract": "sha256:86ed6b6f38c1b1a1d6bc5f09e2997a0df9e0f1e8554624372031034f17ebf7fb"
+  }
+}

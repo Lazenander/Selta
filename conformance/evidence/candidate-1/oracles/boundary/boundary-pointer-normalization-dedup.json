@@ -1,0 +1,9 @@
+{
+  "revision": "selta.evidence.conformance-oracle/s2-1",
+  "case": "boundary-pointer-normalization-dedup",
+  "expected": {
+    "kind": "returned",
+    "package": "sha256:16d85348e6098be6da27f04949b2a2fd930268220b76ff0d54bca59cdc647835",
+    "compare": "conformance_projection"
+  }
+}

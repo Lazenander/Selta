@@ -1,0 +1,739 @@
+{
+  "language": "selta.evidence.package/candidate-1",
+  "environment": "sha256:97a2795354041b74443f8686d75be998eebf563275b479d9d23a055adf92eba4",
+  "documents": [
+    {
+      "contract": "sha256:88cb8666ce356c31c9820788eb44a26c3fc059f416e62ef66ce77177ceb61f2c",
+      "digest": "sha256:0605d9f7de53ff70af58c8fb8ce68a9f29a71b8605222d21c74ddeda4eb0d8b7",
+      "value": {
+        "revision": "selta.evidence.sequential-assumption/candidate-1",
+        "role": "statistic",
+        "declaration": {
+          "$ref": "sha256:34ede1adcc9d850ef7f0393aaa47fc32cce2fade53f1fd1c835e2667afdf3807",
+          "contract": "sha256:a587092a0074c9b57a2a22225b99fb20cb6fd0ba69ea27156cab7b8b1ca6ed21"
+        }
+      }
+    },
+    {
+      "contract": "sha256:88cb8666ce356c31c9820788eb44a26c3fc059f416e62ef66ce77177ceb61f2c",
+      "digest": "sha256:074951f1c1a1cc9bc450d30ce93640e5bef12517d37547e4dddab83e9b9f0186",
+      "value": {
+        "revision": "selta.evidence.sequential-assumption/candidate-1",
+        "role": "dependence",
+        "declaration": {
+          "$ref": "sha256:1f17a905636c7529df32305ada8df7e75d96af0004e43422df0c473c9702daa7",
+          "contract": "sha256:a587092a0074c9b57a2a22225b99fb20cb6fd0ba69ea27156cab7b8b1ca6ed21"
+        }
+      }
+    },
+    {
+      "contract": "sha256:d521883b7a6a07fba996b6ff4dca34ea498428c0710e0fd7636d176d530afbd6",
+      "digest": "sha256:0eb208134aadda212f5d231946e7b2a9cf50abcdf2e2460b0c6a287123262daa",
+      "value": {
+        "revision": "selta.evidence.sequential-basis/candidate-1",
+        "scope": {
+          "$ref": "sha256:345a4dbf6af27c9d8b5d760ada2ca3a2095d0587961107e2b9aeab30164554f3",
+          "contract": "sha256:a587092a0074c9b57a2a22225b99fb20cb6fd0ba69ea27156cab7b8b1ca6ed21"
+        },
+        "population": "sha256:6105402bad819c345ec60b02b831d08aa7ec0eebfcbd2568f01987008e06451f",
+        "frame": "sha256:fd14ecd863998a97eaeb30dd7b5366fde4483048c15e72017f5a7eb1f03bf350",
+        "dependence": "sha256:7003c42b8e6d160ae63b76f1e0ceb8510ea8f8842cf4bf5afd98d2ea86eb36f7",
+        "calibration": "sha256:82eada1cb1fbbb9e8617c5ee4a66ed31883b47947a8aa90a04f04cabf5289082",
+        "history": "sha256:e579c45c038b0f512d1913dc79663deabfee81b050de911799b6ca1af5d997c7",
+        "statistic": "sha256:bfed8417e641f82e34ca6c1ed67ddc3967c42503eeedfae106dc2ecbb1b7eb13",
+        "stopping": "sha256:4daa50d11f537fdc42b026d4fa88099c3abc4963aabb30cf4458e1bde493440d"
+      }
+    },
+    {
+      "contract": "sha256:a587092a0074c9b57a2a22225b99fb20cb6fd0ba69ea27156cab7b8b1ca6ed21",
+      "digest": "sha256:0fd416c8e15d2de6f1c4d11f006f1bd09efa0de673c2a8791205a3b5cd9fcc80",
+      "value": "sequential-unavailable-assumption:acquisition-channel"
+    },
+    {
+      "contract": "sha256:a587092a0074c9b57a2a22225b99fb20cb6fd0ba69ea27156cab7b8b1ca6ed21",
+      "digest": "sha256:1f17a905636c7529df32305ada8df7e75d96af0004e43422df0c473c9702daa7",
+      "value": "sequential-unavailable-assumption:dependence:declaration"
+    },
+    {
+      "contract": "sha256:a587092a0074c9b57a2a22225b99fb20cb6fd0ba69ea27156cab7b8b1ca6ed21",
+      "digest": "sha256:23ba64789d3543f432f0c2ebc9b4a09ae806acded55c715517b50496db2ff03c",
+      "value": "sequential-unavailable-assumption:stopping:declaration"
+    },
+    {
+      "contract": "sha256:a587092a0074c9b57a2a22225b99fb20cb6fd0ba69ea27156cab7b8b1ca6ed21",
+      "digest": "sha256:29a1da9557ab3061f09184bed1e6f9fd3ece0500976e5c485200234e5653ee4b",
+      "value": "sequential-unavailable-assumption:recorder"
+    },
+    {
+      "contract": "sha256:a587092a0074c9b57a2a22225b99fb20cb6fd0ba69ea27156cab7b8b1ca6ed21",
+      "digest": "sha256:345a4dbf6af27c9d8b5d760ada2ca3a2095d0587961107e2b9aeab30164554f3",
+      "value": "sequential-unavailable-assumption:independent-sequential-scope"
+    },
+    {
+      "contract": "sha256:a587092a0074c9b57a2a22225b99fb20cb6fd0ba69ea27156cab7b8b1ca6ed21",
+      "digest": "sha256:34ede1adcc9d850ef7f0393aaa47fc32cce2fade53f1fd1c835e2667afdf3807",
+      "value": "sequential-unavailable-assumption:statistic:declaration"
+    },
+    {
+      "contract": "sha256:45a97f98cb6fe6d8e07bf2d0e9d820e604c428170b279199b99b1f0563586322",
+      "digest": "sha256:38fee66602b90c9a829a5d3b297f67c5d31cfd2f31ccc9477bbbd2ca7deac062",
+      "value": {
+        "revision": "selta.evidence.presence-label/candidate-1",
+        "label": "affirm"
+      }
+    },
+    {
+      "contract": "sha256:a587092a0074c9b57a2a22225b99fb20cb6fd0ba69ea27156cab7b8b1ca6ed21",
+      "digest": "sha256:3b666833dbac5f45121f3f21fc82ef13c7cbf9ec56b80c96a5974ad8089d8cdc",
+      "value": "sequential-unavailable-assumption:substantive-statistical-proposition"
+    },
+    {
+      "contract": "sha256:88cb8666ce356c31c9820788eb44a26c3fc059f416e62ef66ce77177ceb61f2c",
+      "digest": "sha256:3d0f372131104cd26f1bbf6c412ddebf83a6cfbf2b165394a6b7b2b103270a0f",
+      "value": {
+        "revision": "selta.evidence.sequential-assumption/candidate-1",
+        "role": "stopping",
+        "regime": "fixed_horizon",
+        "declaration": {
+          "$ref": "sha256:23ba64789d3543f432f0c2ebc9b4a09ae806acded55c715517b50496db2ff03c",
+          "contract": "sha256:a587092a0074c9b57a2a22225b99fb20cb6fd0ba69ea27156cab7b8b1ca6ed21"
+        }
+      }
+    },
+    {
+      "contract": "sha256:060a69f7418ea07c1cf8b003b2d97b823cac675463855dc5c6bbaf3ea5f42971",
+      "digest": "sha256:48e0046f1fe08c6d3fc47144847dcead041a85ed45c9ca0b7ec4f720fe08a603",
+      "value": {}
+    },
+    {
+      "contract": "sha256:a587092a0074c9b57a2a22225b99fb20cb6fd0ba69ea27156cab7b8b1ca6ed21",
+      "digest": "sha256:5833d24403cdd7475ee9dd0a114a1785b46d2ecadf05805c4e6e5226c438b341",
+      "value": "sequential-unavailable-assumption:acquisition-source"
+    },
+    {
+      "contract": "sha256:a587092a0074c9b57a2a22225b99fb20cb6fd0ba69ea27156cab7b8b1ca6ed21",
+      "digest": "sha256:6fe663c08840eaf8c6225a0a5f1dad6ee834e11034d584f94017b80477d7c8cd",
+      "value": "sequential-unavailable-assumption:frame:declaration"
+    },
+    {
+      "contract": "sha256:a587092a0074c9b57a2a22225b99fb20cb6fd0ba69ea27156cab7b8b1ca6ed21",
+      "digest": "sha256:76ab88de04678a6deab553a7fea12ca1f4ec55e264d2e0ad936c6991393c38f1",
+      "value": "sequential-unavailable-assumption:declared-exception"
+    },
+    {
+      "contract": "sha256:a587092a0074c9b57a2a22225b99fb20cb6fd0ba69ea27156cab7b8b1ca6ed21",
+      "digest": "sha256:804c1b492c12fce55b90b78f3c9347db160a6f412c9d8466921440abfded7641",
+      "value": "sequential-unavailable-assumption:expected-checkpoint"
+    },
+    {
+      "contract": "sha256:751cc09329f4a485fce9683a29ea5432786cf22b43df9cfd4b3900a326594239",
+      "digest": "sha256:8195efa89c2f58ed8f7c89b7b6d9f607c2ea8b298a6d0f5c26706db4da2d514a",
+      "value": {
+        "revision": "selta.evidence.claim/candidate-1",
+        "theory": {
+          "semantics": "sha256:e229afb0f7788286165dc081f68fe1e7e2d82d4f2b6eed88b4fe8041f62143f3",
+          "parameters": {
+            "$ref": "sha256:48e0046f1fe08c6d3fc47144847dcead041a85ed45c9ca0b7ec4f720fe08a603",
+            "contract": "sha256:060a69f7418ea07c1cf8b003b2d97b823cac675463855dc5c6bbaf3ea5f42971"
+          }
+        },
+        "subject": {
+          "$ref": "sha256:d60fb15d5002627079c2415b88ddcfeb90345ab041f6cfec7331a44f47fd29a1",
+          "contract": "sha256:a587092a0074c9b57a2a22225b99fb20cb6fd0ba69ea27156cab7b8b1ca6ed21"
+        },
+        "proposition": {
+          "$ref": "sha256:3b666833dbac5f45121f3f21fc82ef13c7cbf9ec56b80c96a5974ad8089d8cdc",
+          "contract": "sha256:a587092a0074c9b57a2a22225b99fb20cb6fd0ba69ea27156cab7b8b1ca6ed21"
+        },
+        "boundary": {
+          "$ref": "sha256:9a0123043d6466663fd390846849e1e88dc45562835f35114a7678030595d733",
+          "contract": "sha256:a587092a0074c9b57a2a22225b99fb20cb6fd0ba69ea27156cab7b8b1ca6ed21"
+        }
+      }
+    },
+    {
+      "contract": "sha256:88cb8666ce356c31c9820788eb44a26c3fc059f416e62ef66ce77177ceb61f2c",
+      "digest": "sha256:89648f70f1fc5e3b9d738dc4c05c9ddcd6a9d0edd18e4dc5fa060b98d2e90666",
+      "value": {
+        "revision": "selta.evidence.sequential-assumption/candidate-1",
+        "role": "calibration",
+        "declaration": {
+          "$ref": "sha256:dcaededc49b7bab1c012530882520ecbc9009c92a8d364e591240c0a4b2215a2",
+          "contract": "sha256:a587092a0074c9b57a2a22225b99fb20cb6fd0ba69ea27156cab7b8b1ca6ed21"
+        }
+      }
+    },
+    {
+      "contract": "sha256:a587092a0074c9b57a2a22225b99fb20cb6fd0ba69ea27156cab7b8b1ca6ed21",
+      "digest": "sha256:9305b8ec9f53d2d0177d64bc57f0d1e4e23d0f5d6af4842ffddae034622912e2",
+      "value": "sequential-unavailable-assumption:acquisition-budget"
+    },
+    {
+      "contract": "sha256:938e5e124cb9648bb532949ff8588edeef0570eee18f6c7bfaf579af17a352a0",
+      "digest": "sha256:96836626dde1687cbe0f7fdc7dc3aaba158f0b38275afea1495af953b13bbb85",
+      "value": {
+        "revision": "selta.evidence.basis/candidate-1",
+        "targets": [
+          {
+            "$ref": "sha256:8195efa89c2f58ed8f7c89b7b6d9f607c2ea8b298a6d0f5c26706db4da2d514a",
+            "contract": "sha256:751cc09329f4a485fce9683a29ea5432786cf22b43df9cfd4b3900a326594239"
+          },
+          {
+            "$ref": "sha256:f29f89b63882207478977abdebb45200b1f6cd852d286f784638ecf777efff2f",
+            "contract": "sha256:751cc09329f4a485fce9683a29ea5432786cf22b43df9cfd4b3900a326594239"
+          }
+        ],
+        "graph": {
+          "$ref": "sha256:ab819aed94b4085df509d5c89edcbe123c4f77d0684c9b25890019cd2173062b",
+          "contract": "sha256:563110eb157d8aae350362c6529fec57bb18907834e3c28f6e0d068477ca177c"
+        },
+        "trust": {
+          "id": "sha256:6186f1beb4ccdf8a65dd90b892f12dd6c0df43472b64f0132df5c6273931cdc9",
+          "grants": [
+            {
+              "role": "semantic",
+              "semantics": "sha256:0207e530315247b35e2593faf0ec8a2bdc8b20e406732f71cfe4882380ff8a1c",
+              "id": "sha256:23d0d62640e73d2c514f2a52bd7354c197d15b58ff65f27cfed75177dcbddf48"
+            },
+            {
+              "role": "recorder",
+              "recorder": {
+                "$ref": "sha256:29a1da9557ab3061f09184bed1e6f9fd3ece0500976e5c485200234e5653ee4b",
+                "contract": "sha256:a587092a0074c9b57a2a22225b99fb20cb6fd0ba69ea27156cab7b8b1ca6ed21"
+              },
+              "scope": {
+                "$ref": "sha256:345a4dbf6af27c9d8b5d760ada2ca3a2095d0587961107e2b9aeab30164554f3",
+                "contract": "sha256:a587092a0074c9b57a2a22225b99fb20cb6fd0ba69ea27156cab7b8b1ca6ed21"
+              },
+              "id": "sha256:2d32f14ccaa65bc7217e460b3793b97f2caa4b8cd22c2a42dffe14f4c26eb315"
+            },
+            {
+              "role": "semantic",
+              "semantics": "sha256:58a3a75167730c518e95c79fd2fce88b8d529a79d311ee0b98e997752d502802",
+              "id": "sha256:4cece303c0c4030efff62e1c290b8d553c0165aaf0a908d49a9482501f7e72ea"
+            },
+            {
+              "role": "semantic",
+              "semantics": "sha256:075dad81f7a6a53797c8cf98c7f264f3cac9b5c6606dec080703860d3e636e6f",
+              "id": "sha256:8528ffb39f6e661c40b336706727467f911d9b620f4ecb6f702efcc737ac875c"
+            },
+            {
+              "role": "semantic",
+              "semantics": "sha256:1a6482bcdcf21c0acb6b239ff67787f0d5a13c8059643a5575cc4cc0792244c5",
+              "id": "sha256:93c26e4b03348ee10c75753d52c20ab7df0c37b8495d4304e2b626ba064a95a5"
+            },
+            {
+              "role": "semantic",
+              "semantics": "sha256:e409e51e75d345e931f9024f904600e0ccea7cf676738686dde9b054345ae546",
+              "id": "sha256:b8d091f31f9fed4ef9e902b741fcdf7b3511a9ba913cdc0f30c68f7514d3252f"
+            },
+            {
+              "role": "semantic",
+              "semantics": "sha256:fefa98044617743883bae9f14ce957c0cc0ef4abb11f016b7ad2b2d8645bafda",
+              "id": "sha256:d3da21bee27ca5ce080cbd397a89cd36d4fc86cae7890c9b68f124ff6194a8b1"
+            },
+            {
+              "role": "semantic",
+              "semantics": "sha256:e229afb0f7788286165dc081f68fe1e7e2d82d4f2b6eed88b4fe8041f62143f3",
+              "id": "sha256:d501346316d52d99ca6b96cb8524fc1e1011cdea1d952587e8e304750305239f"
+            },
+            {
+              "role": "semantic",
+              "semantics": "sha256:f2283b93d06a083888e6faa02a4b48ebf91104b0faa77022bf2b37ca69121113",
+              "id": "sha256:e8ca4d058628a08e5bbeb3bf3110729e23556d607face64b948a60ef4766e35c"
+            }
+          ]
+        },
+        "assumptions": [
+          {
+            "id": "sha256:4daa50d11f537fdc42b026d4fa88099c3abc4963aabb30cf4458e1bde493440d",
+            "statement": {
+              "$ref": "sha256:3d0f372131104cd26f1bbf6c412ddebf83a6cfbf2b165394a6b7b2b103270a0f",
+              "contract": "sha256:88cb8666ce356c31c9820788eb44a26c3fc059f416e62ef66ce77177ceb61f2c"
+            },
+            "scope": {
+              "$ref": "sha256:345a4dbf6af27c9d8b5d760ada2ca3a2095d0587961107e2b9aeab30164554f3",
+              "contract": "sha256:a587092a0074c9b57a2a22225b99fb20cb6fd0ba69ea27156cab7b8b1ca6ed21"
+            }
+          },
+          {
+            "id": "sha256:7003c42b8e6d160ae63b76f1e0ceb8510ea8f8842cf4bf5afd98d2ea86eb36f7",
+            "statement": {
+              "$ref": "sha256:074951f1c1a1cc9bc450d30ce93640e5bef12517d37547e4dddab83e9b9f0186",
+              "contract": "sha256:88cb8666ce356c31c9820788eb44a26c3fc059f416e62ef66ce77177ceb61f2c"
+            },
+            "scope": {
+              "$ref": "sha256:345a4dbf6af27c9d8b5d760ada2ca3a2095d0587961107e2b9aeab30164554f3",
+              "contract": "sha256:a587092a0074c9b57a2a22225b99fb20cb6fd0ba69ea27156cab7b8b1ca6ed21"
+            }
+          },
+          {
+            "id": "sha256:82eada1cb1fbbb9e8617c5ee4a66ed31883b47947a8aa90a04f04cabf5289082",
+            "statement": {
+              "$ref": "sha256:89648f70f1fc5e3b9d738dc4c05c9ddcd6a9d0edd18e4dc5fa060b98d2e90666",
+              "contract": "sha256:88cb8666ce356c31c9820788eb44a26c3fc059f416e62ef66ce77177ceb61f2c"
+            },
+            "scope": {
+              "$ref": "sha256:345a4dbf6af27c9d8b5d760ada2ca3a2095d0587961107e2b9aeab30164554f3",
+              "contract": "sha256:a587092a0074c9b57a2a22225b99fb20cb6fd0ba69ea27156cab7b8b1ca6ed21"
+            }
+          },
+          {
+            "id": "sha256:bfed8417e641f82e34ca6c1ed67ddc3967c42503eeedfae106dc2ecbb1b7eb13",
+            "statement": {
+              "$ref": "sha256:0605d9f7de53ff70af58c8fb8ce68a9f29a71b8605222d21c74ddeda4eb0d8b7",
+              "contract": "sha256:88cb8666ce356c31c9820788eb44a26c3fc059f416e62ef66ce77177ceb61f2c"
+            },
+            "scope": {
+              "$ref": "sha256:345a4dbf6af27c9d8b5d760ada2ca3a2095d0587961107e2b9aeab30164554f3",
+              "contract": "sha256:a587092a0074c9b57a2a22225b99fb20cb6fd0ba69ea27156cab7b8b1ca6ed21"
+            }
+          },
+          {
+            "id": "sha256:e579c45c038b0f512d1913dc79663deabfee81b050de911799b6ca1af5d997c7",
+            "statement": {
+              "$ref": "sha256:e34278cec9afc76b2a9e2eefcaaaa8da961c7db65d9e6cc94dadbf4be7e5c3de",
+              "contract": "sha256:88cb8666ce356c31c9820788eb44a26c3fc059f416e62ef66ce77177ceb61f2c"
+            },
+            "scope": {
+              "$ref": "sha256:345a4dbf6af27c9d8b5d760ada2ca3a2095d0587961107e2b9aeab30164554f3",
+              "contract": "sha256:a587092a0074c9b57a2a22225b99fb20cb6fd0ba69ea27156cab7b8b1ca6ed21"
+            }
+          },
+          {
+            "id": "sha256:fd14ecd863998a97eaeb30dd7b5366fde4483048c15e72017f5a7eb1f03bf350",
+            "statement": {
+              "$ref": "sha256:ab546b97ad14aae19bf2fb1efe879e6759a01e7158e22eaf14b2f8db43c6a1cc",
+              "contract": "sha256:88cb8666ce356c31c9820788eb44a26c3fc059f416e62ef66ce77177ceb61f2c"
+            },
+            "scope": {
+              "$ref": "sha256:345a4dbf6af27c9d8b5d760ada2ca3a2095d0587961107e2b9aeab30164554f3",
+              "contract": "sha256:a587092a0074c9b57a2a22225b99fb20cb6fd0ba69ea27156cab7b8b1ca6ed21"
+            }
+          }
+        ],
+        "interpreter": {
+          "semantics": "sha256:0207e530315247b35e2593faf0ec8a2bdc8b20e406732f71cfe4882380ff8a1c",
+          "parameters": {
+            "$ref": "sha256:48e0046f1fe08c6d3fc47144847dcead041a85ed45c9ca0b7ec4f720fe08a603",
+            "contract": "sha256:060a69f7418ea07c1cf8b003b2d97b823cac675463855dc5c6bbaf3ea5f42971"
+          }
+        },
+        "projection": {
+          "semantics": "sha256:e409e51e75d345e931f9024f904600e0ccea7cf676738686dde9b054345ae546",
+          "parameters": {
+            "$ref": "sha256:bc072af9146a3713021aa14cc056425dce40fc57a78cbc00ac8ce2476a4cbbb2",
+            "contract": "sha256:a7d852fbeb1af4bf3c86ca82311dd7b1ee47470f44e72c0296e5735bd449f337"
+          }
+        },
+        "limits": {
+          "max_documents": 512,
+          "max_total_document_bytes": 50000000,
+          "max_attempts_total": 16,
+          "max_graph_nodes": 16,
+          "max_graph_edges": 16,
+          "max_fan_in": 4,
+          "max_graph_depth": 8,
+          "max_semantic_calls": 128,
+          "max_semantic_fuel": 50000000,
+          "max_state_bytes": 1000000,
+          "max_conclusion_labels_total": 16
+        }
+      }
+    },
+    {
+      "contract": "sha256:febf5ad5f7f06e0a014163c97de740272ce0229c8df949a4c553a84ce849cf91",
+      "digest": "sha256:9697e3610e611bee557d6b4422931706e0b8cd925e6f424ed195229fe2c88c72",
+      "value": {
+        "revision": "selta.evidence.acquisition/candidate-1",
+        "manifest": {
+          "frame": {
+            "$ref": "sha256:97f6469a7f8c696618e5f70eb5c0d99a3b0c409c54f4df03b0d9a5a61ae34688",
+            "contract": "sha256:a587092a0074c9b57a2a22225b99fb20cb6fd0ba69ea27156cab7b8b1ca6ed21"
+          },
+          "channel": {
+            "$ref": "sha256:0fd416c8e15d2de6f1c4d11f006f1bd09efa0de673c2a8791205a3b5cd9fcc80",
+            "contract": "sha256:a587092a0074c9b57a2a22225b99fb20cb6fd0ba69ea27156cab7b8b1ca6ed21"
+          },
+          "context": {
+            "$ref": "sha256:9a274f18b0a51fa620bd6f219285351facdeac985416934e9fab7cc1a3a4bcc5",
+            "contract": "sha256:a587092a0074c9b57a2a22225b99fb20cb6fd0ba69ea27156cab7b8b1ca6ed21"
+          },
+          "sources": [
+            {
+              "$ref": "sha256:5833d24403cdd7475ee9dd0a114a1785b46d2ecadf05805c4e6e5226c438b341",
+              "contract": "sha256:a587092a0074c9b57a2a22225b99fb20cb6fd0ba69ea27156cab7b8b1ca6ed21"
+            }
+          ],
+          "schedule": {
+            "semantics": "sha256:075dad81f7a6a53797c8cf98c7f264f3cac9b5c6606dec080703860d3e636e6f",
+            "parameters": {
+              "$ref": "sha256:48e0046f1fe08c6d3fc47144847dcead041a85ed45c9ca0b7ec4f720fe08a603",
+              "contract": "sha256:060a69f7418ea07c1cf8b003b2d97b823cac675463855dc5c6bbaf3ea5f42971"
+            }
+          },
+          "selection": {
+            "semantics": "sha256:fefa98044617743883bae9f14ce957c0cc0ef4abb11f016b7ad2b2d8645bafda",
+            "parameters": {
+              "$ref": "sha256:48e0046f1fe08c6d3fc47144847dcead041a85ed45c9ca0b7ec4f720fe08a603",
+              "contract": "sha256:060a69f7418ea07c1cf8b003b2d97b823cac675463855dc5c6bbaf3ea5f42971"
+            }
+          },
+          "stopping": {
+            "semantics": "sha256:1a6482bcdcf21c0acb6b239ff67787f0d5a13c8059643a5575cc4cc0792244c5",
+            "parameters": {
+              "$ref": "sha256:48e0046f1fe08c6d3fc47144847dcead041a85ed45c9ca0b7ec4f720fe08a603",
+              "contract": "sha256:060a69f7418ea07c1cf8b003b2d97b823cac675463855dc5c6bbaf3ea5f42971"
+            }
+          },
+          "budget": {
+            "$ref": "sha256:9305b8ec9f53d2d0177d64bc57f0d1e4e23d0f5d6af4842ffddae034622912e2",
+            "contract": "sha256:a587092a0074c9b57a2a22225b99fb20cb6fd0ba69ea27156cab7b8b1ca6ed21"
+          }
+        },
+        "trace": {
+          "decisions": [
+            {
+              "manifest": "sha256:f495a6016429a628f200ab96c7daf8abf98ff5ec2e4b601eb8d55b867d255bdc",
+              "kind": "stop",
+              "policy": {
+                "semantics": "sha256:1a6482bcdcf21c0acb6b239ff67787f0d5a13c8059643a5575cc4cc0792244c5",
+                "parameters": {
+                  "$ref": "sha256:48e0046f1fe08c6d3fc47144847dcead041a85ed45c9ca0b7ec4f720fe08a603",
+                  "contract": "sha256:060a69f7418ea07c1cf8b003b2d97b823cac675463855dc5c6bbaf3ea5f42971"
+                }
+              },
+              "observed_plans": [],
+              "input": {
+                "$ref": "sha256:fd22950e7e169e08d6c98eef3a353c1dd64980a08b974bbe74c3ce84a3a2e6c7",
+                "contract": "sha256:2a414245b0717d0321687dc7397c6bc2a533555d18d46fade0dd5044ae6b5413"
+              },
+              "output": {
+                "$ref": "sha256:9d7bb250cc28b1370717f906e5ff87744d9bebcabb44197c87988db0f81de1cc",
+                "contract": "sha256:f78ce2264d1d6fb86e0aabd1a474d29c9eada0b8f255c2c7f38ea5d150a725ba"
+              },
+              "id": "sha256:c13c06adb52a3d3c05bcb2ef579f35e131b3ff8007a0518bba6c83885d3e69f8"
+            }
+          ],
+          "attempts": [],
+          "stop": "sha256:c13c06adb52a3d3c05bcb2ef579f35e131b3ff8007a0518bba6c83885d3e69f8",
+          "accounting": {
+            "kind": "scoped",
+            "recorder": {
+              "$ref": "sha256:29a1da9557ab3061f09184bed1e6f9fd3ece0500976e5c485200234e5653ee4b",
+              "contract": "sha256:a587092a0074c9b57a2a22225b99fb20cb6fd0ba69ea27156cab7b8b1ca6ed21"
+            },
+            "scope": {
+              "$ref": "sha256:345a4dbf6af27c9d8b5d760ada2ca3a2095d0587961107e2b9aeab30164554f3",
+              "contract": "sha256:a587092a0074c9b57a2a22225b99fb20cb6fd0ba69ea27156cab7b8b1ca6ed21"
+            },
+            "checkpoint": {
+              "$ref": "sha256:804c1b492c12fce55b90b78f3c9347db160a6f412c9d8466921440abfded7641",
+              "contract": "sha256:a587092a0074c9b57a2a22225b99fb20cb6fd0ba69ea27156cab7b8b1ca6ed21"
+            },
+            "exceptions": [
+              {
+                "$ref": "sha256:76ab88de04678a6deab553a7fea12ca1f4ec55e264d2e0ad936c6991393c38f1",
+                "contract": "sha256:a587092a0074c9b57a2a22225b99fb20cb6fd0ba69ea27156cab7b8b1ca6ed21"
+              }
+            ],
+            "attestation": {
+              "$ref": "sha256:0eb208134aadda212f5d231946e7b2a9cf50abcdf2e2460b0c6a287123262daa",
+              "contract": "sha256:d521883b7a6a07fba996b6ff4dca34ea498428c0710e0fd7636d176d530afbd6"
+            },
+            "verifier": {
+              "semantics": "sha256:f2283b93d06a083888e6faa02a4b48ebf91104b0faa77022bf2b37ca69121113",
+              "parameters": {
+                "$ref": "sha256:a705452c26c08cbd42e93eb6b83e0b0dfbc81aede94a69f6779345ca16532269",
+                "contract": "sha256:f0e46d4e4804450e0ea8268eac977b59b76758952ea80a9d430a1205e88b7644"
+              }
+            }
+          }
+        }
+      }
+    },
+    {
+      "contract": "sha256:a587092a0074c9b57a2a22225b99fb20cb6fd0ba69ea27156cab7b8b1ca6ed21",
+      "digest": "sha256:97f6469a7f8c696618e5f70eb5c0d99a3b0c409c54f4df03b0d9a5a61ae34688",
+      "value": "sequential-unavailable-assumption:acquisition-frame"
+    },
+    {
+      "contract": "sha256:a587092a0074c9b57a2a22225b99fb20cb6fd0ba69ea27156cab7b8b1ca6ed21",
+      "digest": "sha256:9a0123043d6466663fd390846849e1e88dc45562835f35114a7678030595d733",
+      "value": "positive-controls-candidate-1"
+    },
+    {
+      "contract": "sha256:a587092a0074c9b57a2a22225b99fb20cb6fd0ba69ea27156cab7b8b1ca6ed21",
+      "digest": "sha256:9a274f18b0a51fa620bd6f219285351facdeac985416934e9fab7cc1a3a4bcc5",
+      "value": "sequential-unavailable-assumption:acquisition-context"
+    },
+    {
+      "contract": "sha256:f78ce2264d1d6fb86e0aabd1a474d29c9eada0b8f255c2c7f38ea5d150a725ba",
+      "digest": "sha256:9d7bb250cc28b1370717f906e5ff87744d9bebcabb44197c87988db0f81de1cc",
+      "value": {
+        "stop": true
+      }
+    },
+    {
+      "contract": "sha256:f0e46d4e4804450e0ea8268eac977b59b76758952ea80a9d430a1205e88b7644",
+      "digest": "sha256:a705452c26c08cbd42e93eb6b83e0b0dfbc81aede94a69f6779345ca16532269",
+      "value": {
+        "revision": "selta.evidence.sequential-accounting-expectation/candidate-1",
+        "result": {
+          "status": "accepted"
+        },
+        "recorder": {
+          "$ref": "sha256:29a1da9557ab3061f09184bed1e6f9fd3ece0500976e5c485200234e5653ee4b",
+          "contract": "sha256:a587092a0074c9b57a2a22225b99fb20cb6fd0ba69ea27156cab7b8b1ca6ed21"
+        },
+        "scope": {
+          "$ref": "sha256:345a4dbf6af27c9d8b5d760ada2ca3a2095d0587961107e2b9aeab30164554f3",
+          "contract": "sha256:a587092a0074c9b57a2a22225b99fb20cb6fd0ba69ea27156cab7b8b1ca6ed21"
+        },
+        "checkpoint": {
+          "$ref": "sha256:804c1b492c12fce55b90b78f3c9347db160a6f412c9d8466921440abfded7641",
+          "contract": "sha256:a587092a0074c9b57a2a22225b99fb20cb6fd0ba69ea27156cab7b8b1ca6ed21"
+        },
+        "exceptions": [
+          {
+            "$ref": "sha256:76ab88de04678a6deab553a7fea12ca1f4ec55e264d2e0ad936c6991393c38f1",
+            "contract": "sha256:a587092a0074c9b57a2a22225b99fb20cb6fd0ba69ea27156cab7b8b1ca6ed21"
+          }
+        ],
+        "assertion": {
+          "$ref": "sha256:0eb208134aadda212f5d231946e7b2a9cf50abcdf2e2460b0c6a287123262daa",
+          "contract": "sha256:d521883b7a6a07fba996b6ff4dca34ea498428c0710e0fd7636d176d530afbd6"
+        }
+      }
+    },
+    {
+      "contract": "sha256:88cb8666ce356c31c9820788eb44a26c3fc059f416e62ef66ce77177ceb61f2c",
+      "digest": "sha256:ab546b97ad14aae19bf2fb1efe879e6759a01e7158e22eaf14b2f8db43c6a1cc",
+      "value": {
+        "revision": "selta.evidence.sequential-assumption/candidate-1",
+        "role": "frame",
+        "declaration": {
+          "$ref": "sha256:6fe663c08840eaf8c6225a0a5f1dad6ee834e11034d584f94017b80477d7c8cd",
+          "contract": "sha256:a587092a0074c9b57a2a22225b99fb20cb6fd0ba69ea27156cab7b8b1ca6ed21"
+        }
+      }
+    },
+    {
+      "contract": "sha256:563110eb157d8aae350362c6529fec57bb18907834e3c28f6e0d068477ca177c",
+      "digest": "sha256:ab819aed94b4085df509d5c89edcbe123c4f77d0684c9b25890019cd2173062b",
+      "value": {
+        "revision": "selta.evidence.graph/candidate-1",
+        "acquisitions": [
+          {
+            "$ref": "sha256:9697e3610e611bee557d6b4422931706e0b8cd925e6f424ed195229fe2c88c72",
+            "contract": "sha256:febf5ad5f7f06e0a014163c97de740272ce0229c8df949a4c553a84ce849cf91"
+          }
+        ],
+        "claims": [
+          {
+            "$ref": "sha256:8195efa89c2f58ed8f7c89b7b6d9f607c2ea8b298a6d0f5c26706db4da2d514a",
+            "contract": "sha256:751cc09329f4a485fce9683a29ea5432786cf22b43df9cfd4b3900a326594239"
+          },
+          {
+            "$ref": "sha256:f29f89b63882207478977abdebb45200b1f6cd852d286f784638ecf777efff2f",
+            "contract": "sha256:751cc09329f4a485fce9683a29ea5432786cf22b43df9cfd4b3900a326594239"
+          }
+        ],
+        "nodes": [
+          {
+            "kind": "derive",
+            "claim": {
+              "$ref": "sha256:f29f89b63882207478977abdebb45200b1f6cd852d286f784638ecf777efff2f",
+              "contract": "sha256:751cc09329f4a485fce9683a29ea5432786cf22b43df9cfd4b3900a326594239"
+            },
+            "stance": "support",
+            "rule": {
+              "semantics": "sha256:58a3a75167730c518e95c79fd2fce88b8d529a79d311ee0b98e997752d502802",
+              "parameters": {
+                "$ref": "sha256:efab55aa8c8eff9f9393a9e7581f6fce5b89d9d894094a817eaaef14a80b159d",
+                "contract": "sha256:8062ecad27e59838239b04878e2ee9fcbfad53479484334b9b49f1e1d4bfa8b3"
+              }
+            },
+            "premises": [
+              {
+                "accounting": {
+                  "$ref": "sha256:9697e3610e611bee557d6b4422931706e0b8cd925e6f424ed195229fe2c88c72",
+                  "contract": "sha256:febf5ad5f7f06e0a014163c97de740272ce0229c8df949a4c553a84ce849cf91"
+                }
+              }
+            ],
+            "assumptions": [
+              "sha256:4daa50d11f537fdc42b026d4fa88099c3abc4963aabb30cf4458e1bde493440d",
+              "sha256:6105402bad819c345ec60b02b831d08aa7ec0eebfcbd2568f01987008e06451f",
+              "sha256:7003c42b8e6d160ae63b76f1e0ceb8510ea8f8842cf4bf5afd98d2ea86eb36f7",
+              "sha256:82eada1cb1fbbb9e8617c5ee4a66ed31883b47947a8aa90a04f04cabf5289082",
+              "sha256:bfed8417e641f82e34ca6c1ed67ddc3967c42503eeedfae106dc2ecbb1b7eb13",
+              "sha256:e579c45c038b0f512d1913dc79663deabfee81b050de911799b6ca1af5d997c7",
+              "sha256:fd14ecd863998a97eaeb30dd7b5366fde4483048c15e72017f5a7eb1f03bf350"
+            ],
+            "modality": {
+              "$ref": "sha256:fce16273e29dbe4c53195c6e54005b98e9323414518dfa7a740f36c1f925c07e",
+              "contract": "sha256:a587092a0074c9b57a2a22225b99fb20cb6fd0ba69ea27156cab7b8b1ca6ed21"
+            },
+            "payload": {
+              "$ref": "sha256:0eb208134aadda212f5d231946e7b2a9cf50abcdf2e2460b0c6a287123262daa",
+              "contract": "sha256:d521883b7a6a07fba996b6ff4dca34ea498428c0710e0fd7636d176d530afbd6"
+            },
+            "arguments": {
+              "$ref": "sha256:0eb208134aadda212f5d231946e7b2a9cf50abcdf2e2460b0c6a287123262daa",
+              "contract": "sha256:d521883b7a6a07fba996b6ff4dca34ea498428c0710e0fd7636d176d530afbd6"
+            },
+            "id": "sha256:abbc6a34db96fb25281ee5c8f37bb0f8f8b1eb0d63939ff79dc9bc365ddaa7ef"
+          }
+        ]
+      }
+    },
+    {
+      "contract": "sha256:a587092a0074c9b57a2a22225b99fb20cb6fd0ba69ea27156cab7b8b1ca6ed21",
+      "digest": "sha256:b23055e1aaeb70b5473ca3484d4549ffeb2a1e48015b778a381a6c42ac81f64e",
+      "value": "sequential-unavailable-assumption:history:declaration"
+    },
+    {
+      "contract": "sha256:a7d852fbeb1af4bf3c86ca82311dd7b1ee47470f44e72c0296e5735bd449f337",
+      "digest": "sha256:bc072af9146a3713021aa14cc056425dce40fc57a78cbc00ac8ce2476a4cbbb2",
+      "value": {
+        "affirm": {
+          "$ref": "sha256:38fee66602b90c9a829a5d3b297f67c5d31cfd2f31ccc9477bbbd2ca7deac062",
+          "contract": "sha256:45a97f98cb6fe6d8e07bf2d0e9d820e604c428170b279199b99b1f0563586322"
+        },
+        "deny": {
+          "$ref": "sha256:f19ef6e631f3223e8c4d99e714773c3da4ba814d991cdbd4ff2c77a6d1c1b026",
+          "contract": "sha256:45a97f98cb6fe6d8e07bf2d0e9d820e604c428170b279199b99b1f0563586322"
+        }
+      }
+    },
+    {
+      "contract": "sha256:a587092a0074c9b57a2a22225b99fb20cb6fd0ba69ea27156cab7b8b1ca6ed21",
+      "digest": "sha256:c770c7bf57c0877c99532caafcfbc40b995273ee3993ec53c3d7fdfc621f335a",
+      "value": "sequential-unavailable-assumption:recoverability-target:subject"
+    },
+    {
+      "contract": "sha256:a587092a0074c9b57a2a22225b99fb20cb6fd0ba69ea27156cab7b8b1ca6ed21",
+      "digest": "sha256:d60fb15d5002627079c2415b88ddcfeb90345ab041f6cfec7331a44f47fd29a1",
+      "value": "sequential-unavailable-assumption:substantive-target:subject"
+    },
+    {
+      "contract": "sha256:a587092a0074c9b57a2a22225b99fb20cb6fd0ba69ea27156cab7b8b1ca6ed21",
+      "digest": "sha256:dcaededc49b7bab1c012530882520ecbc9009c92a8d364e591240c0a4b2215a2",
+      "value": "sequential-unavailable-assumption:calibration:declaration"
+    },
+    {
+      "contract": "sha256:88cb8666ce356c31c9820788eb44a26c3fc059f416e62ef66ce77177ceb61f2c",
+      "digest": "sha256:e34278cec9afc76b2a9e2eefcaaaa8da961c7db65d9e6cc94dadbf4be7e5c3de",
+      "value": {
+        "revision": "selta.evidence.sequential-assumption/candidate-1",
+        "role": "history",
+        "declaration": {
+          "$ref": "sha256:b23055e1aaeb70b5473ca3484d4549ffeb2a1e48015b778a381a6c42ac81f64e",
+          "contract": "sha256:a587092a0074c9b57a2a22225b99fb20cb6fd0ba69ea27156cab7b8b1ca6ed21"
+        }
+      }
+    },
+    {
+      "contract": "sha256:8062ecad27e59838239b04878e2ee9fcbfad53479484334b9b49f1e1d4bfa8b3",
+      "digest": "sha256:efab55aa8c8eff9f9393a9e7581f6fce5b89d9d894094a817eaaef14a80b159d",
+      "value": {
+        "claim": {
+          "$ref": "sha256:f29f89b63882207478977abdebb45200b1f6cd852d286f784638ecf777efff2f",
+          "contract": "sha256:751cc09329f4a485fce9683a29ea5432786cf22b43df9cfd4b3900a326594239"
+        },
+        "stance": "support",
+        "modality": {
+          "$ref": "sha256:fce16273e29dbe4c53195c6e54005b98e9323414518dfa7a740f36c1f925c07e",
+          "contract": "sha256:a587092a0074c9b57a2a22225b99fb20cb6fd0ba69ea27156cab7b8b1ca6ed21"
+        },
+        "payload": {
+          "$ref": "sha256:0eb208134aadda212f5d231946e7b2a9cf50abcdf2e2460b0c6a287123262daa",
+          "contract": "sha256:d521883b7a6a07fba996b6ff4dca34ea498428c0710e0fd7636d176d530afbd6"
+        }
+      }
+    },
+    {
+      "contract": "sha256:45a97f98cb6fe6d8e07bf2d0e9d820e604c428170b279199b99b1f0563586322",
+      "digest": "sha256:f19ef6e631f3223e8c4d99e714773c3da4ba814d991cdbd4ff2c77a6d1c1b026",
+      "value": {
+        "revision": "selta.evidence.presence-label/candidate-1",
+        "label": "deny"
+      }
+    },
+    {
+      "contract": "sha256:751cc09329f4a485fce9683a29ea5432786cf22b43df9cfd4b3900a326594239",
+      "digest": "sha256:f29f89b63882207478977abdebb45200b1f6cd852d286f784638ecf777efff2f",
+      "value": {
+        "revision": "selta.evidence.claim/candidate-1",
+        "theory": {
+          "semantics": "sha256:e229afb0f7788286165dc081f68fe1e7e2d82d4f2b6eed88b4fe8041f62143f3",
+          "parameters": {
+            "$ref": "sha256:48e0046f1fe08c6d3fc47144847dcead041a85ed45c9ca0b7ec4f720fe08a603",
+            "contract": "sha256:060a69f7418ea07c1cf8b003b2d97b823cac675463855dc5c6bbaf3ea5f42971"
+          }
+        },
+        "subject": {
+          "$ref": "sha256:c770c7bf57c0877c99532caafcfbc40b995273ee3993ec53c3d7fdfc621f335a",
+          "contract": "sha256:a587092a0074c9b57a2a22225b99fb20cb6fd0ba69ea27156cab7b8b1ca6ed21"
+        },
+        "proposition": {
+          "$ref": "sha256:0eb208134aadda212f5d231946e7b2a9cf50abcdf2e2460b0c6a287123262daa",
+          "contract": "sha256:d521883b7a6a07fba996b6ff4dca34ea498428c0710e0fd7636d176d530afbd6"
+        },
+        "boundary": {
+          "$ref": "sha256:9a0123043d6466663fd390846849e1e88dc45562835f35114a7678030595d733",
+          "contract": "sha256:a587092a0074c9b57a2a22225b99fb20cb6fd0ba69ea27156cab7b8b1ca6ed21"
+        }
+      }
+    },
+    {
+      "contract": "sha256:a587092a0074c9b57a2a22225b99fb20cb6fd0ba69ea27156cab7b8b1ca6ed21",
+      "digest": "sha256:fce16273e29dbe4c53195c6e54005b98e9323414518dfa7a740f36c1f925c07e",
+      "value": "sequential-basis-recoverability"
+    },
+    {
+      "contract": "sha256:2a414245b0717d0321687dc7397c6bc2a533555d18d46fade0dd5044ae6b5413",
+      "digest": "sha256:fd22950e7e169e08d6c98eef3a353c1dd64980a08b974bbe74c3ce84a3a2e6c7",
+      "value": {
+        "operation": "stop",
+        "parameters": {},
+        "manifest": "sha256:f495a6016429a628f200ab96c7daf8abf98ff5ec2e4b601eb8d55b867d255bdc",
+        "observed_plans": [],
+        "manifest_view": {
+          "frame": {
+            "$ref": "sha256:97f6469a7f8c696618e5f70eb5c0d99a3b0c409c54f4df03b0d9a5a61ae34688",
+            "contract": "sha256:a587092a0074c9b57a2a22225b99fb20cb6fd0ba69ea27156cab7b8b1ca6ed21"
+          },
+          "channel": {
+            "$ref": "sha256:0fd416c8e15d2de6f1c4d11f006f1bd09efa0de673c2a8791205a3b5cd9fcc80",
+            "contract": "sha256:a587092a0074c9b57a2a22225b99fb20cb6fd0ba69ea27156cab7b8b1ca6ed21"
+          },
+          "context": {
+            "$ref": "sha256:9a274f18b0a51fa620bd6f219285351facdeac985416934e9fab7cc1a3a4bcc5",
+            "contract": "sha256:a587092a0074c9b57a2a22225b99fb20cb6fd0ba69ea27156cab7b8b1ca6ed21"
+          },
+          "sources": [
+            {
+              "$ref": "sha256:5833d24403cdd7475ee9dd0a114a1785b46d2ecadf05805c4e6e5226c438b341",
+              "contract": "sha256:a587092a0074c9b57a2a22225b99fb20cb6fd0ba69ea27156cab7b8b1ca6ed21"
+            }
+          ],
+          "budget": {
+            "$ref": "sha256:9305b8ec9f53d2d0177d64bc57f0d1e4e23d0f5d6af4842ffddae034622912e2",
+            "contract": "sha256:a587092a0074c9b57a2a22225b99fb20cb6fd0ba69ea27156cab7b8b1ca6ed21"
+          }
+        },
+        "snapshot": {
+          "transition": {
+            "stop": true
+          }
+        }
+      }
+    }
+  ],
+  "root": {
+    "$ref": "sha256:96836626dde1687cbe0f7fdc7dc3aaba158f0b38275afea1495af953b13bbb85",
+    "contract": "sha256:938e5e124cb9648bb532949ff8588edeef0570eee18f6c7bfaf579af17a352a0"
+  }
+}

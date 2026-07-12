@@ -1,0 +1,4 @@
+{"type":"thread.started","thread_id":"019f584d-874a-7570-864d-120705fd2ea0"}
+{"type":"turn.started"}
+{"type":"item.completed","item":{"id":"item_0","type":"agent_message","text":"{\"support\":[\"The clerk asked for £100 directly and promised to move me to Friday.\"],\"refute\":[\"the clerk directing the learner to the official card terminal and making no private request.\"]}"}}
+{"type":"turn.completed","usage":{"input_tokens":2537,"cached_input_tokens":1792,"output_tokens":50,"reasoning_output_tokens":0}}

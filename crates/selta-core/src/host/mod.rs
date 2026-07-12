@@ -9,6 +9,7 @@ use serde::{Deserialize, Serialize};
 use serde_json::Value;
 
 use crate::schema::{Node, Type};
+use crate::verdict::EvidenceState;
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize, Deserialize)]
 #[serde(rename_all = "lowercase")]
@@ -226,6 +227,77 @@ impl Envelope {
     }
 }
 
+/// One evidence-preserving assessment. Support and refutation are independent:
+/// the four combinations represent neither, support only, refutation only, and
+/// conflict. Operational failure remains the outer `Result::Err`.
+#[derive(Debug, Clone, Serialize, Deserialize)]
+#[serde(deny_unknown_fields)]
+pub struct AssessmentEnvelope {
+    pub support: bool,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub refute: Option<WireDelta>,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub usage: Option<WireUsage>,
+}
+
+impl AssessmentEnvelope {
+    pub fn neither() -> Self {
+        Self {
+            support: false,
+            refute: None,
+            usage: None,
+        }
+    }
+
+    pub fn support() -> Self {
+        Self {
+            support: true,
+            ..Self::neither()
+        }
+    }
+
+    pub fn refute(delta: WireDelta) -> Self {
+        Self {
+            refute: Some(delta),
+            ..Self::neither()
+        }
+    }
+
+    pub fn both(delta: WireDelta) -> Self {
+        Self {
+            support: true,
+            refute: Some(delta),
+            usage: None,
+        }
+    }
+
+    pub fn state(&self) -> EvidenceState {
+        EvidenceState::from_presence(self.support, self.refute.is_some())
+    }
+
+    /// Preserve the exact legacy host statement without widening the legacy
+    /// envelope. A malformed fail remains operationally unavailable.
+    pub fn from_legacy(envelope: Envelope) -> Result<Self, String> {
+        match envelope.verdict {
+            PassFail::Pass => Ok(Self {
+                support: true,
+                refute: None,
+                usage: envelope.usage,
+            }),
+            PassFail::Fail => {
+                let delta = envelope
+                    .delta
+                    .ok_or_else(|| "fail verdict without a delta".to_string())?;
+                Ok(Self {
+                    support: false,
+                    refute: Some(delta),
+                    usage: envelope.usage,
+                })
+            }
+        }
+    }
+}
+
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize, Deserialize)]
 #[serde(rename_all = "lowercase")]
 pub enum PassFail {
@@ -272,4 +344,109 @@ pub struct WireUsage {
 #[async_trait]
 pub trait ExtensionHost: Send + Sync {
     async fn verify(&self, call: HostCall<'_>) -> Result<Envelope, String>;
+
+    /// Evidence-preserving execution is additive. Existing hosts inherit an
+    /// exact embedding of their binary result; native assessors override this
+    /// method to express semantic abstention or conflict directly.
+    async fn assess(&self, call: HostCall<'_>) -> Result<AssessmentEnvelope, String> {
+        AssessmentEnvelope::from_legacy(self.verify(call).await?)
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    struct LegacyFailHost;
+
+    #[async_trait]
+    impl ExtensionHost for LegacyFailHost {
+        async fn verify(&self, _call: HostCall<'_>) -> Result<Envelope, String> {
+            Ok(Envelope::fail(WireDelta::message("legacy refutation")))
+        }
+    }
+
+    fn call<'a>(value: &'a Value, empty: &'a Value) -> HostCall<'a> {
+        HostCall {
+            ext: "judge",
+            config: empty,
+            settings: empty,
+            value,
+            path: "$",
+            root: None,
+            env: None,
+            depth: 1,
+            deadline_ms: None,
+        }
+    }
+
+    #[test]
+    fn assessment_constructors_cover_the_four_presence_states() {
+        assert_eq!(
+            AssessmentEnvelope::neither().state(),
+            EvidenceState::Neither
+        );
+        assert_eq!(
+            AssessmentEnvelope::support().state(),
+            EvidenceState::SupportOnly
+        );
+        assert_eq!(
+            AssessmentEnvelope::refute(WireDelta::message("no")).state(),
+            EvidenceState::RefuteOnly
+        );
+        assert_eq!(
+            AssessmentEnvelope::both(WireDelta::message("conflict")).state(),
+            EvidenceState::Both
+        );
+    }
+
+    #[test]
+    fn assessment_wire_requires_support_and_rejects_unknown_fields() {
+        assert!(serde_json::from_str::<AssessmentEnvelope>(r#"{}"#).is_err());
+        assert!(
+            serde_json::from_str::<AssessmentEnvelope>(r#"{"support":false,"surprise":true}"#)
+                .is_err()
+        );
+        let neither: AssessmentEnvelope =
+            serde_json::from_str(r#"{"support":false}"#).expect("minimal assessment");
+        assert_eq!(neither.state(), EvidenceState::Neither);
+    }
+
+    #[test]
+    fn legacy_embedding_preserves_usage_and_rejects_delta_less_failures() {
+        let mut pass = Envelope::pass();
+        pass.usage = Some(WireUsage {
+            input_tokens: 4,
+            output_tokens: 2,
+            cost_usd: 0.25,
+        });
+        let assessment = AssessmentEnvelope::from_legacy(pass).expect("pass embeds");
+        assert_eq!(assessment.state(), EvidenceState::SupportOnly);
+        assert_eq!(assessment.usage.expect("usage").input_tokens, 4);
+
+        let malformed = Envelope {
+            verdict: PassFail::Fail,
+            delta: None,
+            usage: None,
+        };
+        assert_eq!(
+            AssessmentEnvelope::from_legacy(malformed).expect_err("delta is required"),
+            "fail verdict without a delta"
+        );
+    }
+
+    #[tokio::test]
+    async fn default_assess_calls_and_embeds_the_legacy_verifier() {
+        let value = Value::String("answer".to_string());
+        let empty = serde_json::json!({});
+        let assessment = LegacyFailHost
+            .assess(call(&value, &empty))
+            .await
+            .expect("legacy assess");
+        assert_eq!(assessment.state(), EvidenceState::RefuteOnly);
+        assert_eq!(
+            assessment.refute.expect("refutation").message,
+            "legacy refutation"
+        );
+    }
 }

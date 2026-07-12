@@ -1,0 +1,4 @@
+{"type":"thread.started","thread_id":"019f5859-0d6b-7b73-b0a5-92767893a030"}
+{"type":"turn.started"}
+{"type":"item.completed","item":{"id":"item_0","type":"agent_message","text":"{\"support\":[\"Changes produced with code-generation tools are to be identified in the pull request description before review.\"],\"refute\":[]}"}}
+{"type":"turn.completed","usage":{"input_tokens":2517,"cached_input_tokens":2304,"output_tokens":36,"reasoning_output_tokens":0}}

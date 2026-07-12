@@ -1,0 +1,9 @@
+{
+  "revision": "selta.evidence.conformance-oracle/s2-1",
+  "case": "identity-unreachable-document",
+  "expected": {
+    "kind": "returned",
+    "package": "sha256:93ad11a08e1aa066a3d401496dc369b32b30a3ce312b5fd7d586d09136f5cb33",
+    "compare": "conformance_projection"
+  }
+}

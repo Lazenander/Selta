@@ -1,0 +1,8 @@
+{
+  "revision": "selta.evidence.conformance-oracle/s2-1",
+  "case": "recursive-fixed-point",
+  "expected": {
+    "kind": "finite_result",
+    "result": "sha256:880d0af5671a7e6c22c581c0dea3ddb3df4a58f4c8e4e7fb220d52ec90c8ba19"
+  }
+}

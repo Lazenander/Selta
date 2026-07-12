@@ -1,0 +1,32 @@
+{
+  "revision": "selta.evidence.conformance-case/s2-1",
+  "id": "control-document-reference-cycle",
+  "operation": {
+    "kind": "assess",
+    "context": "boundary-candidate-1",
+    "package_source": "sha256:67016e5fb00986c52e34b559800d737220741a7e46db7000bb5bd1a7f071671b",
+    "expected_basis": {
+      "$ref": "sha256:c2e8203e4bf8c5e030871d5e55b6c435620efd5ff50713009f327538a9ac75c2",
+      "contract": "sha256:938e5e124cb9648bb532949ff8588edeef0570eee18f6c7bfaf579af17a352a0"
+    },
+    "controls": {
+      "identity_results": [
+        {
+          "boundary": "input",
+          "preimage_base64": "c2VsdGEuZXZpZGVuY2UuZG9jdW1lbnQvY2FuZGlkYXRlLTEAeyJjb250cmFjdCI6InNoYTI1NjpjODI1OGEzNTg4YmViMzJlNWFjZWNlYTQxNGMyZjhjYmUwODZjMTNmZGMwNDcxNTIzNmRhNjA4NmI2MDE3Yjg5IiwidmFsdWUiOnsibmV4dCI6eyIkcmVmIjoic2hhMjU2OjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIiLCJjb250cmFjdCI6InNoYTI1NjpjODI1OGEzNTg4YmViMzJlNWFjZWNlYTQxNGMyZjhjYmUwODZjMTNmZGMwNDcxNTIzNmRhNjA4NmI2MDE3Yjg5In19fQ==",
+          "returned_digest": "sha256:1111111111111111111111111111111111111111111111111111111111111111"
+        },
+        {
+          "boundary": "input",
+          "preimage_base64": "c2VsdGEuZXZpZGVuY2UuZG9jdW1lbnQvY2FuZGlkYXRlLTEAeyJjb250cmFjdCI6InNoYTI1NjpjODI1OGEzNTg4YmViMzJlNWFjZWNlYTQxNGMyZjhjYmUwODZjMTNmZGMwNDcxNTIzNmRhNjA4NmI2MDE3Yjg5IiwidmFsdWUiOnsibmV4dCI6eyIkcmVmIjoic2hhMjU2OjExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTEiLCJjb250cmFjdCI6InNoYTI1NjpjODI1OGEzNTg4YmViMzJlNWFjZWNlYTQxNGMyZjhjYmUwODZjMTNmZGMwNDcxNTIzNmRhNjA4NmI2MDE3Yjg5In19fQ==",
+          "returned_digest": "sha256:2222222222222222222222222222222222222222222222222222222222222222"
+        }
+      ],
+      "semantic_outputs": [],
+      "semantic_output_bytes": [],
+      "verification_faults": [],
+      "semantic_reads": [],
+      "forbidden_reads": []
+    }
+  }
+}

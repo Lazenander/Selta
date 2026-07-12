@@ -1,0 +1,201 @@
+{
+  "type": "object",
+  "fields": {
+    "revision": {
+      "type": "str",
+      "verify": [{ "ext": "one_of", "config": { "values": ["selta.evidence.graph/candidate-1"] } }]
+    },
+    "acquisitions": {
+      "type": "array",
+      "item": {
+        "type": "object",
+        "fields": {
+          "$ref": { "type": "str", "verify": [{ "ext": "regex", "config": { "pattern": "\\Asha256:[0-9a-f]{64}\\z" } }] },
+          "contract": { "type": "str", "verify": [{ "ext": "regex", "config": { "pattern": "\\Asha256:[0-9a-f]{64}\\z" } }] }
+        }
+      }
+    },
+    "claims": {
+      "type": "array",
+      "item": {
+        "type": "object",
+        "fields": {
+          "$ref": { "type": "str", "verify": [{ "ext": "regex", "config": { "pattern": "\\Asha256:[0-9a-f]{64}\\z" } }] },
+          "contract": { "type": "str", "verify": [{ "ext": "regex", "config": { "pattern": "\\Asha256:[0-9a-f]{64}\\z" } }] }
+        }
+      }
+    },
+    "nodes": {
+      "type": "array",
+      "item": {
+        "type": "union",
+        "variants": [
+          {
+            "type": "object",
+            "fields": {
+              "kind": { "type": "str", "verify": [{ "ext": "one_of", "config": { "values": ["atom"] } }] },
+              "id": { "type": "str", "verify": [{ "ext": "regex", "config": { "pattern": "\\Asha256:[0-9a-f]{64}\\z" } }] },
+              "claim": {
+                "type": "object",
+                "fields": {
+                  "$ref": { "type": "str", "verify": [{ "ext": "regex", "config": { "pattern": "\\Asha256:[0-9a-f]{64}\\z" } }] },
+                  "contract": { "type": "str", "verify": [{ "ext": "regex", "config": { "pattern": "\\Asha256:[0-9a-f]{64}\\z" } }] }
+                }
+              },
+              "stance": { "type": "str", "verify": [{ "ext": "one_of", "config": { "values": ["support", "refute"] } }] },
+              "attempt": {
+                "type": "object",
+                "fields": {
+                  "acquisition": {
+                    "type": "object",
+                    "fields": {
+                      "$ref": { "type": "str", "verify": [{ "ext": "regex", "config": { "pattern": "\\Asha256:[0-9a-f]{64}\\z" } }] },
+                      "contract": { "type": "str", "verify": [{ "ext": "regex", "config": { "pattern": "\\Asha256:[0-9a-f]{64}\\z" } }] }
+                    }
+                  },
+                  "attempt": { "type": "str", "verify": [{ "ext": "regex", "config": { "pattern": "\\Asha256:[0-9a-f]{64}\\z" } }] }
+                }
+              },
+              "extractor": {
+                "type": "object",
+                "fields": {
+                  "semantics": { "type": "str", "verify": [{ "ext": "regex", "config": { "pattern": "\\Asha256:[0-9a-f]{64}\\z" } }] },
+                  "parameters": {
+                    "type": "object",
+                    "fields": {
+                      "$ref": { "type": "str", "verify": [{ "ext": "regex", "config": { "pattern": "\\Asha256:[0-9a-f]{64}\\z" } }] },
+                      "contract": { "type": "str", "verify": [{ "ext": "regex", "config": { "pattern": "\\Asha256:[0-9a-f]{64}\\z" } }] }
+                    }
+                  }
+                }
+              },
+              "modality": {
+                "type": "object",
+                "fields": {
+                  "$ref": { "type": "str", "verify": [{ "ext": "regex", "config": { "pattern": "\\Asha256:[0-9a-f]{64}\\z" } }] },
+                  "contract": { "type": "str", "verify": [{ "ext": "regex", "config": { "pattern": "\\Asha256:[0-9a-f]{64}\\z" } }] }
+                }
+              },
+              "payload": {
+                "type": "object",
+                "fields": {
+                  "$ref": { "type": "str", "verify": [{ "ext": "regex", "config": { "pattern": "\\Asha256:[0-9a-f]{64}\\z" } }] },
+                  "contract": { "type": "str", "verify": [{ "ext": "regex", "config": { "pattern": "\\Asha256:[0-9a-f]{64}\\z" } }] }
+                }
+              }
+            }
+          },
+          {
+            "type": "object",
+            "fields": {
+              "kind": { "type": "str", "verify": [{ "ext": "one_of", "config": { "values": ["derive"] } }] },
+              "id": { "type": "str", "verify": [{ "ext": "regex", "config": { "pattern": "\\Asha256:[0-9a-f]{64}\\z" } }] },
+              "claim": {
+                "type": "object",
+                "fields": {
+                  "$ref": { "type": "str", "verify": [{ "ext": "regex", "config": { "pattern": "\\Asha256:[0-9a-f]{64}\\z" } }] },
+                  "contract": { "type": "str", "verify": [{ "ext": "regex", "config": { "pattern": "\\Asha256:[0-9a-f]{64}\\z" } }] }
+                }
+              },
+              "stance": { "type": "str", "verify": [{ "ext": "one_of", "config": { "values": ["support", "refute"] } }] },
+              "rule": {
+                "type": "object",
+                "fields": {
+                  "semantics": { "type": "str", "verify": [{ "ext": "regex", "config": { "pattern": "\\Asha256:[0-9a-f]{64}\\z" } }] },
+                  "parameters": {
+                    "type": "object",
+                    "fields": {
+                      "$ref": { "type": "str", "verify": [{ "ext": "regex", "config": { "pattern": "\\Asha256:[0-9a-f]{64}\\z" } }] },
+                      "contract": { "type": "str", "verify": [{ "ext": "regex", "config": { "pattern": "\\Asha256:[0-9a-f]{64}\\z" } }] }
+                    }
+                  }
+                }
+              },
+              "premises": {
+                "type": "array",
+                "item": {
+                  "type": "union",
+                  "variants": [
+                    {
+                      "type": "object",
+                      "fields": {
+                        "evidence": { "type": "str", "verify": [{ "ext": "regex", "config": { "pattern": "\\Asha256:[0-9a-f]{64}\\z" } }] }
+                      }
+                    },
+                    {
+                      "type": "object",
+                      "fields": {
+                        "attempt": {
+                          "type": "object",
+                          "fields": {
+                            "acquisition": {
+                              "type": "object",
+                              "fields": {
+                                "$ref": { "type": "str", "verify": [{ "ext": "regex", "config": { "pattern": "\\Asha256:[0-9a-f]{64}\\z" } }] },
+                                "contract": { "type": "str", "verify": [{ "ext": "regex", "config": { "pattern": "\\Asha256:[0-9a-f]{64}\\z" } }] }
+                              }
+                            },
+                            "attempt": { "type": "str", "verify": [{ "ext": "regex", "config": { "pattern": "\\Asha256:[0-9a-f]{64}\\z" } }] }
+                          }
+                        }
+                      }
+                    },
+                    {
+                      "type": "object",
+                      "fields": {
+                        "trace": {
+                          "type": "object",
+                          "fields": {
+                            "$ref": { "type": "str", "verify": [{ "ext": "regex", "config": { "pattern": "\\Asha256:[0-9a-f]{64}\\z" } }] },
+                            "contract": { "type": "str", "verify": [{ "ext": "regex", "config": { "pattern": "\\Asha256:[0-9a-f]{64}\\z" } }] }
+                          }
+                        }
+                      }
+                    },
+                    {
+                      "type": "object",
+                      "fields": {
+                        "accounting": {
+                          "type": "object",
+                          "fields": {
+                            "$ref": { "type": "str", "verify": [{ "ext": "regex", "config": { "pattern": "\\Asha256:[0-9a-f]{64}\\z" } }] },
+                            "contract": { "type": "str", "verify": [{ "ext": "regex", "config": { "pattern": "\\Asha256:[0-9a-f]{64}\\z" } }] }
+                          }
+                        }
+                      }
+                    }
+                  ]
+                }
+              },
+              "assumptions": {
+                "type": "array",
+                "item": { "type": "str", "verify": [{ "ext": "regex", "config": { "pattern": "\\Asha256:[0-9a-f]{64}\\z" } }] }
+              },
+              "modality": {
+                "type": "object",
+                "fields": {
+                  "$ref": { "type": "str", "verify": [{ "ext": "regex", "config": { "pattern": "\\Asha256:[0-9a-f]{64}\\z" } }] },
+                  "contract": { "type": "str", "verify": [{ "ext": "regex", "config": { "pattern": "\\Asha256:[0-9a-f]{64}\\z" } }] }
+                }
+              },
+              "payload": {
+                "type": "object",
+                "fields": {
+                  "$ref": { "type": "str", "verify": [{ "ext": "regex", "config": { "pattern": "\\Asha256:[0-9a-f]{64}\\z" } }] },
+                  "contract": { "type": "str", "verify": [{ "ext": "regex", "config": { "pattern": "\\Asha256:[0-9a-f]{64}\\z" } }] }
+                }
+              },
+              "arguments": {
+                "type": "object",
+                "fields": {
+                  "$ref": { "type": "str", "verify": [{ "ext": "regex", "config": { "pattern": "\\Asha256:[0-9a-f]{64}\\z" } }] },
+                  "contract": { "type": "str", "verify": [{ "ext": "regex", "config": { "pattern": "\\Asha256:[0-9a-f]{64}\\z" } }] }
+                }
+              }
+            }
+          }
+        ]
+      }
+    }
+  }
+}

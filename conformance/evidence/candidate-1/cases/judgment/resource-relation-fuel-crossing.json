@@ -1,0 +1,13 @@
+{
+  "revision": "selta.evidence.conformance-case/s2-1",
+  "id": "resource-relation-fuel-crossing",
+  "operation": {
+    "kind": "assess",
+    "context": "positive-controls-candidate-1",
+    "package_source": "sha256:2675b8be72d61b2df0f035673a8e8b713f615e345b161d96c9f9dd427320637b",
+    "expected_basis": {
+      "$ref": "sha256:6d20a5ea68226ad43fbb14c1350aad029c1ba1881568ceeaaa1c26203cdab967",
+      "contract": "sha256:938e5e124cb9648bb532949ff8588edeef0570eee18f6c7bfaf579af17a352a0"
+    }
+  }
+}

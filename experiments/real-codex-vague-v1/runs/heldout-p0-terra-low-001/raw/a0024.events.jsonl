@@ -1,0 +1,4 @@
+{"type":"thread.started","thread_id":"019f5859-4ad9-7442-be95-5325c6dfd188"}
+{"type":"turn.started"}
+{"type":"item.completed","item":{"id":"item_0","type":"agent_message","text":"{\"support\":[\"I can hold 8:40 a.m. for Noor until noon today\"],\"refute\":[]}"}}
+{"type":"turn.completed","usage":{"input_tokens":2521,"cached_input_tokens":2304,"output_tokens":34,"reasoning_output_tokens":0}}

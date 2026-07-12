@@ -1,0 +1,9 @@
+{
+  "revision": "selta.evidence.conformance-oracle/s2-1",
+  "case": "presence-wrong-target",
+  "expected": {
+    "kind": "returned",
+    "package": "sha256:27a322e5cbd00f5568a098d3585be6f285b316722cfe85ec055c0fb8af4203c8",
+    "compare": "conformance_projection"
+  }
+}

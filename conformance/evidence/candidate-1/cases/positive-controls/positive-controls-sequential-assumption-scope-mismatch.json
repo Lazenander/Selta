@@ -1,0 +1,13 @@
+{
+  "revision": "selta.evidence.conformance-case/s2-1",
+  "id": "positive-controls-sequential-assumption-scope-mismatch",
+  "operation": {
+    "kind": "assess",
+    "context": "positive-controls-candidate-1",
+    "package_source": "sha256:8c4d64223a919306c42c7cdfb99382d7293606255a2edaa4bb7e2cc6364400e9",
+    "expected_basis": {
+      "$ref": "sha256:621bdb1bff24cdb234daafc14646a101654ca9b96559730946118d621ea409ec",
+      "contract": "sha256:938e5e124cb9648bb532949ff8588edeef0570eee18f6c7bfaf579af17a352a0"
+    }
+  }
+}

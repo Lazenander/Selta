@@ -1,0 +1,13 @@
+{
+  "revision": "selta.evidence.finite-result/s2-1",
+  "results": [
+    {
+      "name": "accuracy-given-unanimity",
+      "value": {
+        "kind": "rational",
+        "numerator": "4",
+        "denominator": "5"
+      }
+    }
+  ]
+}

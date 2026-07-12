@@ -1,0 +1,4 @@
+{"type":"thread.started","thread_id":"019f584d-c750-7643-9c7b-75c7fa455571"}
+{"type":"turn.started"}
+{"type":"item.completed","item":{"id":"item_0","type":"agent_message","text":"{\"support\":[\"Pay me privately tonight and I can put you ahead of the waiting list.\",\"The message gives a personal bank account.\"],\"refute\":[]}"}}
+{"type":"turn.completed","usage":{"input_tokens":2519,"cached_input_tokens":2304,"output_tokens":41,"reasoning_output_tokens":0}}

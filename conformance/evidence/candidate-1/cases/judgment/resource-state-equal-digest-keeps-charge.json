@@ -1,0 +1,13 @@
+{
+  "revision": "selta.evidence.conformance-case/s2-1",
+  "id": "resource-state-equal-digest-keeps-charge",
+  "operation": {
+    "kind": "assess",
+    "context": "positive-controls-candidate-1",
+    "package_source": "sha256:e127337e8ee34260f77e53cbc59bdb9c6ca99dd69d704d2fd3334e4246e61f58",
+    "expected_basis": {
+      "$ref": "sha256:c39c34f1883927d98a557c407ed9718b6f025e3d9ce08901d55fef0a4af5508c",
+      "contract": "sha256:938e5e124cb9648bb532949ff8588edeef0570eee18f6c7bfaf579af17a352a0"
+    }
+  }
+}

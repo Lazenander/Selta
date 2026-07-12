@@ -1,0 +1,8 @@
+{
+  "revision": "selta.evidence.conformance-oracle/s2-1",
+  "case": "adaptive-holdout",
+  "expected": {
+    "kind": "finite_result",
+    "result": "sha256:8210b763159e6fa34c151c88bd48edf7d97d28a84055cb0561db34ee9d146ea1"
+  }
+}

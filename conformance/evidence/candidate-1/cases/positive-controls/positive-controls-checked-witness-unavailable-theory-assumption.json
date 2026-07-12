@@ -1,0 +1,13 @@
+{
+  "revision": "selta.evidence.conformance-case/s2-1",
+  "id": "positive-controls-checked-witness-unavailable-theory-assumption",
+  "operation": {
+    "kind": "assess",
+    "context": "positive-controls-candidate-1",
+    "package_source": "sha256:5b2e9df2b64a1b61768cf2618f305f289aecc8c758bbe788c53a7ff55654ad49",
+    "expected_basis": {
+      "$ref": "sha256:2caa3381bfceb3bb7b816c03919050ceef67951e5f40c493c9bd19556dc4741d",
+      "contract": "sha256:938e5e124cb9648bb532949ff8588edeef0570eee18f6c7bfaf579af17a352a0"
+    }
+  }
+}

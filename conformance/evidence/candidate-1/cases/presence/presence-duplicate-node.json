@@ -1,0 +1,13 @@
+{
+  "revision": "selta.evidence.conformance-case/s2-1",
+  "id": "presence-duplicate-node",
+  "operation": {
+    "kind": "assess",
+    "context": "presence-candidate-1",
+    "package_source": "sha256:4dc3ef25f13d923afba59cc4775fcb1318cbe3960df86d0941fc46eaabe9c592",
+    "expected_basis": {
+      "$ref": "sha256:456419537d5ef7a1497baa53324846b18b616e14b3f999c48b334d32ef876aea",
+      "contract": "sha256:938e5e124cb9648bb532949ff8588edeef0570eee18f6c7bfaf579af17a352a0"
+    }
+  }
+}

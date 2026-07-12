@@ -1,0 +1,9 @@
+{
+  "revision": "selta.evidence.conformance-oracle/s2-1",
+  "case": "positive-controls-sequential-role-mismatch",
+  "expected": {
+    "kind": "returned",
+    "package": "sha256:01be5ce3fd2d3327f1a27ebbbb75918cf1b77cdb3a01762ec9396df91c67d804",
+    "compare": "conformance_projection"
+  }
+}

@@ -1,0 +1,13 @@
+{
+  "revision": "selta.evidence.conformance-case/s2-1",
+  "id": "mechanics-missing-source-grant",
+  "operation": {
+    "kind": "assess",
+    "context": "mechanics-candidate-1",
+    "package_source": "sha256:15d88442005eabbc382362ff3563ed99e81f12a4607e5cb1827d8125fb82cd55",
+    "expected_basis": {
+      "$ref": "sha256:5630ba09de8792c724514293f4ef14845d29d7b26a0e4d7501549051e87d365f",
+      "contract": "sha256:938e5e124cb9648bb532949ff8588edeef0570eee18f6c7bfaf579af17a352a0"
+    }
+  }
+}

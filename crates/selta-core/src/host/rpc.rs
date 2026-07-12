@@ -5,6 +5,7 @@
 //! connection, seltad is the JSON-RPC client.
 
 use std::collections::HashMap;
+use std::fmt;
 use std::sync::atomic::{AtomicU64, Ordering};
 use std::sync::{Arc, Mutex};
 use std::time::Duration;
@@ -20,15 +21,43 @@ use tokio::sync::{mpsc, oneshot};
 use selta_protocol as proto;
 
 use super::{
-    Determinism, EffectClass, Envelope, ExtensionDecl, ExtensionHost, HostCall, InputDomain,
-    InputKind, Needs,
+    AssessmentEnvelope, Determinism, EffectClass, Envelope, ExtensionDecl, ExtensionHost, HostCall,
+    InputDomain, InputKind, Needs,
 };
 use crate::{AdmittedNode, MetaIssue, Node};
 
 const DEFAULT_CALL_TIMEOUT_MS: u64 = 30_000;
 const INITIALIZE_TIMEOUT_MS: u64 = 10_000;
 
-type Pending = Mutex<HashMap<u64, oneshot::Sender<Result<Box<RawValue>, String>>>>;
+type Pending = Mutex<HashMap<u64, oneshot::Sender<Result<Box<RawValue>, RpcCallError>>>>;
+
+#[derive(Debug)]
+enum RpcCallError {
+    Remote { code: i64, message: String },
+    Local(String),
+}
+
+impl RpcCallError {
+    fn local(message: impl Into<String>) -> Self {
+        Self::Local(message.into())
+    }
+
+    fn remote_code(&self) -> Option<i64> {
+        match self {
+            Self::Remote { code, .. } => Some(*code),
+            Self::Local(_) => None,
+        }
+    }
+}
+
+impl fmt::Display for RpcCallError {
+    fn fmt(&self, formatter: &mut fmt::Formatter<'_>) -> fmt::Result {
+        match self {
+            Self::Remote { code, message } => write!(formatter, "host error {code}: {message}"),
+            Self::Local(message) => formatter.write_str(message),
+        }
+    }
+}
 
 #[derive(Deserialize)]
 #[serde(deny_unknown_fields)]
@@ -98,9 +127,16 @@ impl RpcPeer {
         if let Some(sender) = sender {
             let outcome = match (response.result, response.error) {
                 (Some(result), None) => Ok(result),
-                (None, Some(error)) => Err(format!("host error {}: {}", error.code, error.message)),
-                (Some(_), Some(_)) => Err("host response had both result and error".to_string()),
-                (None, None) => Err("host response had neither result nor error".to_string()),
+                (None, Some(error)) => Err(RpcCallError::Remote {
+                    code: error.code,
+                    message: error.message,
+                }),
+                (Some(_), Some(_)) => Err(RpcCallError::local(
+                    "host response had both result and error",
+                )),
+                (None, None) => Err(RpcCallError::local(
+                    "host response had neither result nor error",
+                )),
             };
             let _ = sender.send(outcome);
         }
@@ -110,7 +146,7 @@ impl RpcPeer {
     pub fn fail_all(&self, reason: &str) {
         let mut map = self.pending.lock().unwrap();
         for (_, sender) in map.drain() {
-            let _ = sender.send(Err(reason.to_string()));
+            let _ = sender.send(Err(RpcCallError::local(reason)));
         }
     }
 
@@ -120,10 +156,9 @@ impl RpcPeer {
         params: Value,
         timeout_ms: u64,
     ) -> Result<Value, String> {
-        let raw = self.call_raw(method, params, timeout_ms).await?;
-        serde_json::from_str(raw.get()).map_err(|error| {
-            format!("host result for method '{method}' is not valid JSON: {error}")
-        })
+        self.call_value(method, params, timeout_ms)
+            .await
+            .map_err(|error| error.to_string())
     }
 
     async fn call_raw(
@@ -132,22 +167,47 @@ impl RpcPeer {
         params: Value,
         timeout_ms: u64,
     ) -> Result<Box<RawValue>, String> {
+        self.call_raw_typed(method, params, timeout_ms)
+            .await
+            .map_err(|error| error.to_string())
+    }
+
+    async fn call_value(
+        &self,
+        method: &str,
+        params: Value,
+        timeout_ms: u64,
+    ) -> Result<Value, RpcCallError> {
+        let raw = self.call_raw_typed(method, params, timeout_ms).await?;
+        serde_json::from_str(raw.get()).map_err(|error| {
+            RpcCallError::local(format!(
+                "host result for method '{method}' is not valid JSON: {error}"
+            ))
+        })
+    }
+
+    async fn call_raw_typed(
+        &self,
+        method: &str,
+        params: Value,
+        timeout_ms: u64,
+    ) -> Result<Box<RawValue>, RpcCallError> {
         let id = self.next_id.fetch_add(1, Ordering::Relaxed);
         let (tx, rx) = oneshot::channel();
         let line = serde_json::to_string(&proto::Request::new(id, method, params))
-            .map_err(|e| e.to_string())?;
+            .map_err(|error| RpcCallError::local(error.to_string()))?;
         self.pending.lock().unwrap().insert(id, tx);
         if self.outgoing.send(line).is_err() {
             self.pending.lock().unwrap().remove(&id);
-            return Err("host is gone".to_string());
+            return Err(RpcCallError::local("host is gone"));
         }
         let _pending_call = PendingCall { peer: self, id };
         match tokio::time::timeout(Duration::from_millis(timeout_ms.max(1)), rx).await {
             Ok(Ok(outcome)) => outcome,
-            Ok(Err(_)) => Err("host dropped the call".to_string()),
-            Err(_) => Err(format!(
+            Ok(Err(_)) => Err(RpcCallError::local("host dropped the call")),
+            Err(_) => Err(RpcCallError::local(format!(
                 "host call '{method}' timed out after {timeout_ms} ms"
-            )),
+            ))),
         }
     }
 
@@ -186,6 +246,30 @@ pub async fn initialize_over_peer(
 
 /// One `verify` round-trip over a peer — identical on every transport.
 pub async fn verify_over_peer(peer: &RpcPeer, call: HostCall<'_>) -> Result<Envelope, String> {
+    let (params, timeout_ms) = encode_host_call(call)?;
+    verify_with_params(peer, params, timeout_ms).await
+}
+
+/// One evidence-preserving round-trip. A peer that explicitly reports method
+/// not found has not run an assessor, so and only so may the legacy verifier be
+/// called and embedded without duplicating ambiguous work.
+pub async fn assess_over_peer(
+    peer: &RpcPeer,
+    call: HostCall<'_>,
+) -> Result<AssessmentEnvelope, String> {
+    let (params, timeout_ms) = encode_host_call(call)?;
+    match peer.call_value("assess", params.clone(), timeout_ms).await {
+        Ok(result) => serde_json::from_value(result)
+            .map_err(|error| format!("malformed assessment envelope: {error}")),
+        Err(error) if error.remote_code() == Some(proto::CODE_UNKNOWN) => {
+            let envelope = verify_with_params(peer, params, timeout_ms).await?;
+            AssessmentEnvelope::from_legacy(envelope)
+        }
+        Err(error) => Err(error.to_string()),
+    }
+}
+
+fn encode_host_call(call: HostCall<'_>) -> Result<(Value, u64), String> {
     let timeout_ms = call.deadline_ms.unwrap_or(DEFAULT_CALL_TIMEOUT_MS);
     let params = serde_json::to_value(proto::VerifyParams {
         ext: call.ext.to_string(),
@@ -201,6 +285,14 @@ pub async fn verify_over_peer(peer: &RpcPeer, call: HostCall<'_>) -> Result<Enve
         },
     })
     .map_err(|e| e.to_string())?;
+    Ok((params, timeout_ms))
+}
+
+async fn verify_with_params(
+    peer: &RpcPeer,
+    params: Value,
+    timeout_ms: u64,
+) -> Result<Envelope, String> {
     let result = peer.call("verify", params, timeout_ms).await?;
     serde_json::from_value(result).map_err(|e| format!("malformed result envelope: {e}"))
 }
@@ -384,5 +476,9 @@ impl RpcHost {
 impl ExtensionHost for RpcHost {
     async fn verify(&self, call: HostCall<'_>) -> Result<Envelope, String> {
         verify_over_peer(&self.peer, call).await
+    }
+
+    async fn assess(&self, call: HostCall<'_>) -> Result<AssessmentEnvelope, String> {
+        assess_over_peer(&self.peer, call).await
     }
 }

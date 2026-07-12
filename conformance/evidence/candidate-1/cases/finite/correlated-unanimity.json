@@ -1,0 +1,8 @@
+{
+  "revision": "selta.evidence.conformance-case/s2-1",
+  "id": "correlated-unanimity",
+  "operation": {
+    "kind": "finite_world",
+    "program": "sha256:ba72ec8c2c09bd7718bbf9a5c8ef16ec306d411bdc75fd1835b5240f1aa06279"
+  }
+}

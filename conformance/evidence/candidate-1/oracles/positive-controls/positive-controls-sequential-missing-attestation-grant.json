@@ -1,0 +1,9 @@
+{
+  "revision": "selta.evidence.conformance-oracle/s2-1",
+  "case": "positive-controls-sequential-missing-attestation-grant",
+  "expected": {
+    "kind": "returned",
+    "package": "sha256:693007fb43e4b57a9aaf05cdd2588a1ec75a6c1ab25821e70fb021c816c90893",
+    "compare": "conformance_projection"
+  }
+}

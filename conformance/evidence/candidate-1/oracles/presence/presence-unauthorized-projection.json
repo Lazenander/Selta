@@ -1,0 +1,9 @@
+{
+  "revision": "selta.evidence.conformance-oracle/s2-1",
+  "case": "presence-unauthorized-projection",
+  "expected": {
+    "kind": "returned",
+    "package": "sha256:fa66c33c6a903e33436163930ff2615532182173e448282411dcd8570982a771",
+    "compare": "conformance_projection"
+  }
+}

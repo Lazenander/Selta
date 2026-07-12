@@ -1,0 +1,4 @@
+{"type":"thread.started","thread_id":"019f584d-a027-7ee3-ae0f-7d7c0b6e123b"}
+{"type":"turn.started"}
+{"type":"item.completed","item":{"id":"item_0","type":"agent_message","text":"{\"support\":[\"There are quicker arrangements if you can thank me personally.\",\"No official alternative was described.\"],\"refute\":[]}"}}
+{"type":"turn.completed","usage":{"input_tokens":2519,"cached_input_tokens":0,"output_tokens":35,"reasoning_output_tokens":0}}

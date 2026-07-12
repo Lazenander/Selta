@@ -1,11 +1,13 @@
 # 08 — Theoretic model
 
-Selta is a proof-relevant, three-valued refinement type system over the algebra of JSON
-values, where failure evidence lives in a change structure, non-deterministic predicates
-are Markov kernels decided by threshold voting, the judge-the-judges circularity is
-broken by step-indexing on depth, and the engine is a handler for the free monad of
-verifier effects. This document unpacks that sentence one layer at a time; each layer
-pins a rule the other documents already commit to.
+Selta's legacy path is a proof-relevant, three-valued refinement type system over the
+algebra of JSON values, where failure evidence lives in a change structure,
+non-deterministic predicates may be modeled as Markov kernels decided by threshold
+voting, the judge-the-judges circularity is broken by step-indexing on depth, and the
+engine is a handler for verifier effects. The revision-2 cautious path adds a
+four-valued semantic layer and projects it back to the same report verdicts. This
+document unpacks those models; probabilistic statements apply only under the explicit
+assumptions stated below.
 
 ## Values — the initial algebra of JSON
 
@@ -42,8 +44,17 @@ Verdicts live in K3 with the order `fail < inconclusive < pass`:
 
 Associativity, commutativity, and De Morgan duality hold, so the report's verdict — one
 big K3 conjunction over the tree — is independent of evaluation order. These laws are
-property tests in `selta-core`. "Errors never vote" is the discipline that
-`inconclusive` is *absence* of information, and K3's unknown is exactly that.
+property tests in `selta-core`. On the legacy path, "errors never vote" preserves K3
+unknown as operational absence of a conclusion. The cautious projection also uses K3
+unknown for semantic conflict; its evidence summary keeps those meanings distinct.
+
+An opted-in cautious subtree first uses the four presence states `(support, refute)`:
+`neither`, `support_only`, `refute_only`, and `both`. Repetition takes knowledge join;
+`not` swaps polarity; `all_of` and `any_of` use the truth operations specified in
+[24-presence-assessment.md](24-presence-assessment.md). Only after composition does Selta
+project `support_only` to pass, `refute_only` to fail, and conflict or absence to
+inconclusive. This preserves distinctions that K3 alone cannot represent without
+changing the legacy report algebra.
 
 ## Deltas — change structures
 
@@ -61,22 +72,29 @@ mathematically), and union best-match selects the witness minimal in the closene
 preorder on `Δ(v)` — verification quietly estimates a distance to acceptability, and
 pass means distance zero.
 
-## Sampling and voting — Markov kernels
+## Sampling and voting — a conditional kernel model
 
-A non-deterministic verifier is a kernel `k : V ⇝ Verdict × Δ`. Its ideal meaning is a
-threshold predicate: "P(pass | valid) ≥ θ", with θ = ½ for `majority`, θ = f for
-`ratio(f)`, and the obvious counts for `at_least` and `unanimous`. Three engine rules
-are standard probability under this reading:
+A non-deterministic verifier can be modeled as a kernel
+`k : V ⇝ Verdict × Δ` when its environment is stable enough to define such a
+distribution. Under that model, threshold voting estimates "P(pass | valid) ≥ θ", with
+θ = ½ for `majority`, θ = f for `ratio(f)`, and the obvious counts for `at_least` and
+`unanimous`. Three engine rules have a probabilistic reading:
 
 - verifying each sample's delta against `delta_schema` is **conditioning** the kernel on
   well-typed evidence;
 - resampling malformed replies is **rejection sampling** from that conditional;
 - `min_valid` guards against conditioning on a near-null event.
 
-Soundness: as the sample count grows, the engine's verdict converges almost surely to
-the ideal predicate whenever the true pass-probability is not exactly on the threshold.
-A deterministic verifier is the degenerate case — a Dirac kernel — and that degeneracy
-is what licenses run-once and caching.
+Convergence is conditional, not an engine guarantee. If valid executions are independent
+and identically distributed from one stationary kernel, rejection does not introduce an
+unmodeled selection bias, and the conditional pass probability is separated from the
+threshold, then the empirical frequency converges almost surely to that probability.
+Selta does not establish those premises: separate calls can be correlated, drift over
+time, or share upstream state. Even under the premises, convergence is to the configured
+verifier's behavior, not to objective correctness. A deterministic verifier is the
+declared degenerate case — a Dirac kernel — which licenses run-once execution; caching
+additionally requires the separate purity and cacheability claims in
+[05-extensions.md](05-extensions.md).
 
 ## Depth — step-indexing
 

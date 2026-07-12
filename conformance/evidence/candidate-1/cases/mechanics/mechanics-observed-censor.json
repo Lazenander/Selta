@@ -1,0 +1,13 @@
+{
+  "revision": "selta.evidence.conformance-case/s2-1",
+  "id": "mechanics-observed-censor",
+  "operation": {
+    "kind": "assess",
+    "context": "mechanics-candidate-1",
+    "package_source": "sha256:bde4090362942a94cd9b5f11d920f9905bbbd3554e5d6bab54398b2a0f2fdfce",
+    "expected_basis": {
+      "$ref": "sha256:144bb3bd9171ac1adca8799c514a438c5154226a26837f4536850efd3171a47c",
+      "contract": "sha256:938e5e124cb9648bb532949ff8588edeef0570eee18f6c7bfaf579af17a352a0"
+    }
+  }
+}

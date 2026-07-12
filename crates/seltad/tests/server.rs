@@ -8,7 +8,7 @@ use std::time::Duration;
 use serde_json::{json, Value};
 use tokio::sync::RwLock;
 
-use selta_core::{MemoryCache, Registry, RpcHost};
+use selta_core::{EvidenceState, HostCall, MemoryCache, Registry, RpcHost};
 use seltad::api;
 use seltad::state::AppState;
 use seltad::stats::Stats;
@@ -328,7 +328,7 @@ async fn pool_scope_settings_reconfigure_the_judge_without_touching_the_schema()
 async fn pool_host_dials_in_serves_verifies_and_disconnect_is_inconclusive() {
     let dir = tempfile::tempdir().expect("tempdir");
     let state = app_state(Registry::with_builtins(None), HashMap::new(), &dir);
-    let base = serve(state).await;
+    let base = serve(state.clone()).await;
 
     let (status, _) = http(
         "POST",
@@ -398,6 +398,54 @@ async fn pool_host_dials_in_serves_verifies_and_disconnect_is_inconclusive() {
     .await;
     assert_eq!(report["verdict"], "pass", "{report}");
 
+    // The same real WebSocket peer carries all four native assessment states.
+    // A declaration without a native assessor returns structured -32601 and
+    // falls back to its legacy verifier over that same transport.
+    let registry = state.effective_registry("wspool").await;
+    let (_, native_host) = registry.get("parity").expect("native pool host");
+    let empty = json!({});
+    for (value, expected) in [
+        (json!("neither"), EvidenceState::Neither),
+        (json!(4), EvidenceState::SupportOnly),
+        (json!(3), EvidenceState::RefuteOnly),
+        (json!("both"), EvidenceState::Both),
+    ] {
+        let assessment = native_host
+            .assess(HostCall {
+                ext: "parity",
+                config: &empty,
+                settings: &empty,
+                value: &value,
+                path: "$",
+                root: None,
+                env: None,
+                depth: 1,
+                deadline_ms: Some(2_000),
+            })
+            .await
+            .expect("native WebSocket assessment");
+        assert_eq!(assessment.state(), expected);
+    }
+    let (_, legacy_host) = registry
+        .get("legacy_parity")
+        .expect("legacy pool host declaration");
+    let legacy_value = json!(4);
+    let embedded = legacy_host
+        .assess(HostCall {
+            ext: "legacy_parity",
+            config: &empty,
+            settings: &empty,
+            value: &legacy_value,
+            path: "$",
+            root: None,
+            env: None,
+            depth: 1,
+            deadline_ms: Some(2_000),
+        })
+        .await
+        .expect("WebSocket method-not-found fallback");
+    assert_eq!(embedded.state(), EvidenceState::SupportOnly);
+
     child.kill().await.expect("kill pool host");
     let mut gone = false;
     for _ in 0..100 {
@@ -421,5 +469,25 @@ async fn pool_host_dials_in_serves_verifies_and_disconnect_is_inconclusive() {
         report["deltas"],
         json!([]),
         "disconnection is never a delta"
+    );
+
+    let disconnected_value = json!(4);
+    let error = native_host
+        .assess(HostCall {
+            ext: "parity",
+            config: &empty,
+            settings: &empty,
+            value: &disconnected_value,
+            path: "$",
+            root: None,
+            env: None,
+            depth: 1,
+            deadline_ms: Some(200),
+        })
+        .await
+        .expect_err("a disconnected host cannot manufacture evidence");
+    assert!(
+        error.contains("host is gone") || error.contains("disconnected"),
+        "{error}"
     );
 }

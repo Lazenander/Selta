@@ -1,0 +1,41 @@
+{
+  "language": "selta.evidence.package/candidate-1",
+  "environment": "sha256:0c153635b88d6dee3f1301f1a46b20d1a4439d5f7b755fe276e8d93a8ccdf8a3",
+  "documents": [
+    {
+      "contract": "sha256:86ed6b6f38c1b1a1d6bc5f09e2997a0df9e0f1e8554624372031034f17ebf7fb",
+      "digest": "sha256:20dc3e2e6c26975261c2a5e6874e8ba1d06774d3a8adddc27e9faa6fbe534d5b",
+      "value": {
+        "revision": "selta.evidence.outcome/candidate-1",
+        "status": "error",
+        "environment": "sha256:0c153635b88d6dee3f1301f1a46b20d1a4439d5f7b755fe276e8d93a8ccdf8a3",
+        "errors": [
+          {
+            "phase": "relation",
+            "code": "relation.invalid_binding",
+            "path": "/input/documents/5/value/projection",
+            "message": "semantic binding is invalid at this call site"
+          }
+        ],
+        "executions": [],
+        "resources": {
+          "documents": 9,
+          "total_document_bytes": 5148,
+          "attempts_total": 0,
+          "graph_nodes": 0,
+          "graph_edges": 0,
+          "max_fan_in_observed": 0,
+          "graph_depth": 0,
+          "semantic_calls": 0,
+          "semantic_fuel": 0,
+          "state_bytes": 0,
+          "conclusion_labels_total": 0
+        }
+      }
+    }
+  ],
+  "root": {
+    "$ref": "sha256:20dc3e2e6c26975261c2a5e6874e8ba1d06774d3a8adddc27e9faa6fbe534d5b",
+    "contract": "sha256:86ed6b6f38c1b1a1d6bc5f09e2997a0df9e0f1e8554624372031034f17ebf7fb"
+  }
+}

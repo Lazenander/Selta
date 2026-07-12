@@ -1,0 +1,7 @@
+{
+  "kind": "include",
+  "reason": {
+    "$ref": "sha256:d10da361b548db406c8c934ce21b4b541a698b2a3f9be80dbfa61e89e4325fae",
+    "contract": "sha256:a587092a0074c9b57a2a22225b99fb20cb6fd0ba69ea27156cab7b8b1ca6ed21"
+  }
+}

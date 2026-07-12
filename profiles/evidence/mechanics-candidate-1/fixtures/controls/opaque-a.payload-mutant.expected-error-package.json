@@ -1,0 +1,62 @@
+{
+  "language": "selta.evidence.package/candidate-1",
+  "environment": "sha256:3cc649a47f2ff7f57d1f55ea8a22623bbe8affc9bd551eb1106212ce84473d18",
+  "documents": [
+    {
+      "contract": "sha256:86ed6b6f38c1b1a1d6bc5f09e2997a0df9e0f1e8554624372031034f17ebf7fb",
+      "digest": "sha256:bb2e53ca8b003a670fe54231a2793bc6e3357a14378afe871accf2a553ccd3e7",
+      "value": {
+        "revision": "selta.evidence.outcome/candidate-1",
+        "status": "error",
+        "environment": "sha256:3cc649a47f2ff7f57d1f55ea8a22623bbe8affc9bd551eb1106212ce84473d18",
+        "errors": [
+          {
+            "phase": "relation",
+            "code": "relation.semantic_mismatch",
+            "path": "/input/documents/13/value/nodes/0",
+            "message": "semantic output differs from required output"
+          }
+        ],
+        "executions": [
+          {
+            "semantics": "sha256:075dad81f7a6a53797c8cf98c7f264f3cac9b5c6606dec080703860d3e636e6f",
+            "implementation": "sha256:1138187cc0080e4074313f08eda11096c8164ac13387802e230b2ae968ec69ff"
+          },
+          {
+            "semantics": "sha256:1a6482bcdcf21c0acb6b239ff67787f0d5a13c8059643a5575cc4cc0792244c5",
+            "implementation": "sha256:1138187cc0080e4074313f08eda11096c8164ac13387802e230b2ae968ec69ff"
+          },
+          {
+            "semantics": "sha256:a65164fc8aa89fffccb627fda5b5de126a9e0c6bbfe4d41f3b93f1b71f763076",
+            "implementation": "sha256:1138187cc0080e4074313f08eda11096c8164ac13387802e230b2ae968ec69ff"
+          },
+          {
+            "semantics": "sha256:e229afb0f7788286165dc081f68fe1e7e2d82d4f2b6eed88b4fe8041f62143f3",
+            "implementation": "sha256:bc899c6733c11b1c452e811ef662cb7bc808e792c3c18af64fd4e6f763283ea0"
+          },
+          {
+            "semantics": "sha256:fefa98044617743883bae9f14ce957c0cc0ef4abb11f016b7ad2b2d8645bafda",
+            "implementation": "sha256:1138187cc0080e4074313f08eda11096c8164ac13387802e230b2ae968ec69ff"
+          }
+        ],
+        "resources": {
+          "documents": 30,
+          "total_document_bytes": 23276,
+          "attempts_total": 1,
+          "graph_nodes": 1,
+          "graph_edges": 1,
+          "max_fan_in_observed": 1,
+          "graph_depth": 1,
+          "semantic_calls": 5,
+          "semantic_fuel": 10767,
+          "state_bytes": 0,
+          "conclusion_labels_total": 0
+        }
+      }
+    }
+  ],
+  "root": {
+    "$ref": "sha256:bb2e53ca8b003a670fe54231a2793bc6e3357a14378afe871accf2a553ccd3e7",
+    "contract": "sha256:86ed6b6f38c1b1a1d6bc5f09e2997a0df9e0f1e8554624372031034f17ebf7fb"
+  }
+}

@@ -1,0 +1,13 @@
+{
+  "revision": "selta.evidence.conformance-case/s2-1",
+  "id": "positive-controls-sequential-rejected-result",
+  "operation": {
+    "kind": "assess",
+    "context": "positive-controls-candidate-1",
+    "package_source": "sha256:bc29dafb05db1a74de9e443bd7e806ed3b09149735927190b1c051173262cf44",
+    "expected_basis": {
+      "$ref": "sha256:6d011a68acab91a23780d62a33c38cb076cbe6d57a4d4d99cecfcbcc6af2a46d",
+      "contract": "sha256:938e5e124cb9648bb532949ff8588edeef0570eee18f6c7bfaf579af17a352a0"
+    }
+  }
+}

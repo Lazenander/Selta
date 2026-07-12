@@ -1,0 +1,13 @@
+{
+  "revision": "selta.evidence.conformance-case/s2-1",
+  "id": "mechanics-scoped-rejected",
+  "operation": {
+    "kind": "assess",
+    "context": "mechanics-candidate-1",
+    "package_source": "sha256:04ef7f9e4b846fe2a8209d0eb9df15cbb4f5510aed166638d24a3dece7acb581",
+    "expected_basis": {
+      "$ref": "sha256:4ba2b7fb255c35ab28e0b98d54d86684018af35f3a68c71a342b26f8c62f5578",
+      "contract": "sha256:938e5e124cb9648bb532949ff8588edeef0570eee18f6c7bfaf579af17a352a0"
+    }
+  }
+}

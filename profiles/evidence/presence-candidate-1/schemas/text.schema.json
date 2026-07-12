@@ -1,0 +1,4 @@
+{
+  "type": "str",
+  "verify": [{ "ext": "non_empty" }]
+}

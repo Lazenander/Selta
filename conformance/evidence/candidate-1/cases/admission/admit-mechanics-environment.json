@@ -1,0 +1,8 @@
+{
+  "revision": "selta.evidence.conformance-case/s2-1",
+  "id": "admit-mechanics-environment",
+  "operation": {
+    "kind": "admit_environment",
+    "context": "mechanics-candidate-1"
+  }
+}

@@ -1,0 +1,13 @@
+{
+  "revision": "selta.evidence.conformance-case/s2-1",
+  "id": "positive-controls-sequential-checkpoint-mismatch",
+  "operation": {
+    "kind": "assess",
+    "context": "positive-controls-candidate-1",
+    "package_source": "sha256:d4a366a596dc104c376ddee4f7ad4c33cfe2560c4f9f6e53af64131564beb8b2",
+    "expected_basis": {
+      "$ref": "sha256:3268b3c79e68d773a5ed1fbf583429ebd1d01c107b081120e1f5f8d023b9da63",
+      "contract": "sha256:938e5e124cb9648bb532949ff8588edeef0570eee18f6c7bfaf579af17a352a0"
+    }
+  }
+}

@@ -1,0 +1,9 @@
+{
+  "revision": "selta.evidence.conformance-oracle/s2-1",
+  "case": "positive-controls-sequential-fixed-horizon",
+  "expected": {
+    "kind": "returned",
+    "package": "sha256:1f8443f80eedcd5fa33d33d29058ccdc0d933e888e56af9c3a5fc4a6c4916010",
+    "compare": "conformance_projection"
+  }
+}

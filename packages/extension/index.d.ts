@@ -17,6 +17,12 @@ export interface VerifyResult {
   usage?: Usage;
 }
 
+export interface AssessmentResult {
+  support: boolean;
+  refute?: Delta;
+  usage?: Usage;
+}
+
 export interface Context {
   config: unknown;
   /** Resolved server ⊕ pool settings, secrets already injected (docs/05). */
@@ -28,6 +34,8 @@ export interface Context {
 }
 
 export type Handler = (value: unknown, ctx: Context) => VerifyResult | Promise<VerifyResult>;
+export type Assessor =
+  (value: unknown, ctx: Context) => AssessmentResult | Promise<AssessmentResult>;
 
 export interface VerifierOptions {
   determinism?: "deterministic" | "nondeterministic";
@@ -47,8 +55,13 @@ export interface VerifierOptions {
 
 export function pass(): VerifyResult;
 export function fail(delta: Delta | string): VerifyResult;
+export function support(): AssessmentResult;
+export function refute(delta: Delta | string): AssessmentResult;
+export function both(delta: Delta | string): AssessmentResult;
+export function neither(): AssessmentResult;
 
 export declare const host: {
   verifier(name: string, options: VerifierOptions, handler: Handler): void;
+  assessor(name: string, handler: Assessor): void;
   run(info?: { name: string; version: string }): void;
 };

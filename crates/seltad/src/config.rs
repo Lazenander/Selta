@@ -5,8 +5,8 @@ use std::collections::HashMap;
 use std::path::{Path, PathBuf};
 
 use anyhow::{Context, Result};
-use serde::Deserialize;
 use selta_core::CmdTemplate;
+use serde::Deserialize;
 
 use crate::storage::StorageBackend;
 

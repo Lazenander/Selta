@@ -1,0 +1,9 @@
+{
+  "revision": "selta.evidence.conformance-oracle/s2-1",
+  "case": "boundary-error-truncation",
+  "expected": {
+    "kind": "returned",
+    "package": "sha256:eb1b60ff06c908072e97c4639205a15bb28d128b6c541852d7040e2736930c12",
+    "compare": "conformance_projection"
+  }
+}

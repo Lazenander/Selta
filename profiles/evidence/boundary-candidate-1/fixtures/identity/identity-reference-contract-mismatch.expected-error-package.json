@@ -1,0 +1,41 @@
+{
+  "language": "selta.evidence.package/candidate-1",
+  "environment": "sha256:5059697608b5bb6669cf93122a7c360ac18b68cc2e8612236e51a0634387b566",
+  "documents": [
+    {
+      "contract": "sha256:86ed6b6f38c1b1a1d6bc5f09e2997a0df9e0f1e8554624372031034f17ebf7fb",
+      "digest": "sha256:908a5400a1db2a9b3641536883ef5120519d89081d75c6924d58eee19f43e93b",
+      "value": {
+        "revision": "selta.evidence.outcome/candidate-1",
+        "status": "error",
+        "environment": "sha256:5059697608b5bb6669cf93122a7c360ac18b68cc2e8612236e51a0634387b566",
+        "errors": [
+          {
+            "phase": "identity",
+            "code": "package.contract_mismatch",
+            "path": "/input/documents/2/value/graph",
+            "message": "tagged document reference has the wrong target contract"
+          }
+        ],
+        "executions": [],
+        "resources": {
+          "documents": 10,
+          "total_document_bytes": 5397,
+          "attempts_total": 0,
+          "graph_nodes": 0,
+          "graph_edges": 0,
+          "max_fan_in_observed": 0,
+          "graph_depth": 0,
+          "semantic_calls": 0,
+          "semantic_fuel": 0,
+          "state_bytes": 0,
+          "conclusion_labels_total": 0
+        }
+      }
+    }
+  ],
+  "root": {
+    "$ref": "sha256:908a5400a1db2a9b3641536883ef5120519d89081d75c6924d58eee19f43e93b",
+    "contract": "sha256:86ed6b6f38c1b1a1d6bc5f09e2997a0df9e0f1e8554624372031034f17ebf7fb"
+  }
+}

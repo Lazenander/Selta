@@ -1,0 +1,22 @@
+{
+  "revision": "selta.evidence.conformance-case/s2-1",
+  "id": "output-error-skips-o1",
+  "operation": {
+    "kind": "assess",
+    "context": "positive-controls-candidate-1",
+    "package_source": "sha256:eb93b400eb8bb9ab2a03beb07ca65acfa4217fa5fbb9c97f8f2f4c6894caed0d",
+    "expected_basis": {
+      "$ref": "sha256:0000000000000000000000000000000000000000000000000000000000000000",
+      "contract": "sha256:938e5e124cb9648bb532949ff8588edeef0570eee18f6c7bfaf579af17a352a0"
+    },
+    "controls": {
+      "identity_results": [],
+      "semantic_outputs": [],
+      "semantic_output_bytes": [],
+      "verification_faults": [],
+      "semantic_reads": [],
+      "forbidden_reads": [],
+      "forbidden_boundary": "concluded_outcome_insertion"
+    }
+  }
+}

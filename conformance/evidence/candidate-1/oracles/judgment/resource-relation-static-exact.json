@@ -1,0 +1,9 @@
+{
+  "revision": "selta.evidence.conformance-oracle/s2-1",
+  "case": "resource-relation-static-exact",
+  "expected": {
+    "kind": "returned",
+    "package": "sha256:9f85b273f4432b5fda319a22524866aae6c23c98b44f1f9d10c03fdf5223b5ee",
+    "compare": "conformance_projection"
+  }
+}

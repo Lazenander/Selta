@@ -1,0 +1,13 @@
+{
+  "revision": "selta.evidence.conformance-case/s2-1",
+  "id": "positive-controls-checked-witness-invalid-submitted",
+  "operation": {
+    "kind": "assess",
+    "context": "positive-controls-candidate-1",
+    "package_source": "sha256:da907178750e9840f97100a34bb76bb7578fd8c8cbcd191fc5030fe42c07557b",
+    "expected_basis": {
+      "$ref": "sha256:938aabeff013fc387bdabd421a3fa90f6b25c97743d2646fe429c36fe96a1f11",
+      "contract": "sha256:938e5e124cb9648bb532949ff8588edeef0570eee18f6c7bfaf579af17a352a0"
+    }
+  }
+}

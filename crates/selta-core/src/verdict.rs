@@ -14,6 +14,75 @@ pub enum Verdict {
     Inconclusive,
 }
 
+/// Presence of support and refutation for one semantic proposition. This is
+/// FOUR, not a confidence scale: `Both` and `Neither` remain distinct even
+/// though the cautious legacy projection maps both to `Inconclusive`.
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Hash, Serialize, Deserialize)]
+#[serde(rename_all = "snake_case")]
+pub enum EvidenceState {
+    Neither,
+    SupportOnly,
+    RefuteOnly,
+    Both,
+}
+
+impl EvidenceState {
+    pub const fn from_presence(support: bool, refute: bool) -> Self {
+        match (support, refute) {
+            (false, false) => Self::Neither,
+            (true, false) => Self::SupportOnly,
+            (false, true) => Self::RefuteOnly,
+            (true, true) => Self::Both,
+        }
+    }
+
+    pub const fn supports(self) -> bool {
+        matches!(self, Self::SupportOnly | Self::Both)
+    }
+
+    pub const fn refutes(self) -> bool {
+        matches!(self, Self::RefuteOnly | Self::Both)
+    }
+
+    /// Knowledge join for repeated assessments of the same proposition.
+    pub const fn join(self, other: Self) -> Self {
+        Self::from_presence(
+            self.supports() || other.supports(),
+            self.refutes() || other.refutes(),
+        )
+    }
+
+    /// Four-valued conjunction: support requires both operands; either
+    /// refutation refutes the conjunction.
+    pub const fn conjoin(self, other: Self) -> Self {
+        Self::from_presence(
+            self.supports() && other.supports(),
+            self.refutes() || other.refutes(),
+        )
+    }
+
+    /// Four-valued disjunction: either support supports the disjunction;
+    /// refutation requires both operands.
+    pub const fn disjoin(self, other: Self) -> Self {
+        Self::from_presence(
+            self.supports() || other.supports(),
+            self.refutes() && other.refutes(),
+        )
+    }
+
+    pub const fn negate(self) -> Self {
+        Self::from_presence(self.refutes(), self.supports())
+    }
+
+    pub const fn project(self) -> Verdict {
+        match self {
+            Self::SupportOnly => Verdict::Pass,
+            Self::RefuteOnly => Verdict::Fail,
+            Self::Neither | Self::Both => Verdict::Inconclusive,
+        }
+    }
+}
+
 impl Verdict {
     fn rank(self) -> u8 {
         match self {

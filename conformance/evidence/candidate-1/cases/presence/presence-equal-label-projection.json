@@ -1,0 +1,13 @@
+{
+  "revision": "selta.evidence.conformance-case/s2-1",
+  "id": "presence-equal-label-projection",
+  "operation": {
+    "kind": "assess",
+    "context": "presence-candidate-1",
+    "package_source": "sha256:0827233c7a22b7d6c307a0a7f0383134585ae3de1d0d8ddb8b06dc40a952711f",
+    "expected_basis": {
+      "$ref": "sha256:9394b9f3b68e0bafa2bdb7475f6f4717b2884a6d8d722833d01515883dc51609",
+      "contract": "sha256:938e5e124cb9648bb532949ff8588edeef0570eee18f6c7bfaf579af17a352a0"
+    }
+  }
+}

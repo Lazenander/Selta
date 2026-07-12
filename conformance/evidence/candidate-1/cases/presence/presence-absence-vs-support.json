@@ -1,0 +1,40 @@
+{
+  "revision": "selta.evidence.conformance-case/s2-1",
+  "id": "presence-absence-vs-support",
+  "operation": {
+    "kind": "compare",
+    "scope": "per_model",
+    "assertions": [
+      {
+        "relation": "not_equal",
+        "left": {
+          "producer": "current",
+          "case": "presence-neither",
+          "view": "conformance_projection",
+          "pointer": "/conclusions/0/labels"
+        },
+        "right": {
+          "producer": "current",
+          "case": "presence-support-only",
+          "view": "conformance_projection",
+          "pointer": "/conclusions/0/labels"
+        }
+      },
+      {
+        "relation": "not_equal",
+        "left": {
+          "producer": "current",
+          "case": "presence-neither",
+          "view": "conformance_projection",
+          "pointer": "/state/value/targets/0/state"
+        },
+        "right": {
+          "producer": "current",
+          "case": "presence-support-only",
+          "view": "conformance_projection",
+          "pointer": "/state/value/targets/0/state"
+        }
+      }
+    ]
+  }
+}

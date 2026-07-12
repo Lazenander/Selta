@@ -1,0 +1,74 @@
+{
+  "type": "object",
+  "fields": {
+    "revision": {
+      "type": "str",
+      "verify": [{ "ext": "one_of", "config": { "values": ["selta.evidence.conformance-oracle/s2-1"] } }]
+    },
+    "case": {
+      "type": "str",
+      "verify": [
+        { "ext": "regex", "config": { "pattern": "\\A[a-z0-9]+(?:-[a-z0-9]+)*\\z" } },
+        { "ext": "len", "config": { "max": 128 } }
+      ]
+    },
+    "expected": {
+      "type": "union",
+      "variants": [
+        {
+          "type": "object",
+          "fields": {
+            "kind": { "type": "str", "verify": [{ "ext": "one_of", "config": { "values": ["admitted"] } }] },
+            "environment": { "type": "str", "verify": [{ "ext": "regex", "config": { "pattern": "\\Asha256:[0-9a-f]{64}\\z" } }] }
+          }
+        },
+        {
+          "type": "object",
+          "fields": {
+            "kind": { "type": "str", "verify": [{ "ext": "one_of", "config": { "values": ["rejected"] } }] }
+          }
+        },
+        {
+          "type": "object",
+          "fields": {
+            "kind": { "type": "str", "verify": [{ "ext": "one_of", "config": { "values": ["returned"] } }] },
+            "package": { "type": "str", "verify": [{ "ext": "regex", "config": { "pattern": "\\Asha256:[0-9a-f]{64}\\z" } }] },
+            "compare": { "type": "str", "verify": [{ "ext": "one_of", "config": { "values": ["package_jcs", "conformance_projection"] } }] }
+          }
+        },
+        {
+          "type": "object",
+          "fields": {
+            "kind": { "type": "str", "verify": [{ "ext": "one_of", "config": { "values": ["trap"] } }] },
+            "trap": {
+              "type": "object",
+              "fields": {
+                "kind": { "type": "str", "verify": [{ "ext": "one_of", "config": { "values": ["forbidden_read"] } }] },
+                "reference": {
+                  "type": "object",
+                  "fields": {
+                    "$ref": { "type": "str", "verify": [{ "ext": "regex", "config": { "pattern": "\\Asha256:[0-9a-f]{64}\\z" } }] },
+                    "contract": { "type": "str", "verify": [{ "ext": "regex", "config": { "pattern": "\\Asha256:[0-9a-f]{64}\\z" } }] }
+                  }
+                }
+              }
+            }
+          }
+        },
+        {
+          "type": "object",
+          "fields": {
+            "kind": { "type": "str", "verify": [{ "ext": "one_of", "config": { "values": ["finite_result"] } }] },
+            "result": { "type": "str", "verify": [{ "ext": "regex", "config": { "pattern": "\\Asha256:[0-9a-f]{64}\\z" } }] }
+          }
+        },
+        {
+          "type": "object",
+          "fields": {
+            "kind": { "type": "str", "verify": [{ "ext": "one_of", "config": { "values": ["comparison_pass"] } }] }
+          }
+        }
+      ]
+    }
+  }
+}

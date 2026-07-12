@@ -1,0 +1,4 @@
+{"type":"thread.started","thread_id":"019f5842-9e12-7be2-b24a-7314bec3f2f2"}
+{"type":"turn.started"}
+{"type":"item.completed","item":{"id":"item_0","type":"agent_message","text":"{\"support\":[\"\\\"The overnight rain gauge recorded twelve millimetres\\\"\",\"\\\"the caretaker said no sprinklers had run\\\"\"],\"refute\":[]}"}}
+{"type":"turn.completed","usage":{"input_tokens":2506,"cached_input_tokens":0,"output_tokens":41,"reasoning_output_tokens":0}}

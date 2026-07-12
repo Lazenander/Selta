@@ -48,10 +48,12 @@ the user's value. Eligible results may be cached by content hash (below).
 
 **Non-deterministic** — executed as a sampling round:
 
-1. The engine requests `samples` independent executions from the host. It materializes
+1. The engine requests `samples` separate executions from the host. It materializes
    them in windows of at most `MAX_SAMPLE_IN_FLIGHT_PER_JOB` (currently 64); this bounds
    per-job futures and host-call concurrency without changing the requested vote count,
-   retry allowance, or shared request budget.
+   retry allowance, or shared request budget. Selta does not establish statistical
+   independence between those executions; the sample count is an orchestration count,
+   not a confidence claim.
 2. Each execution returns a result envelope or an error. The envelope is verified before
    it may count as a vote:
    - always: structurally, against the built-in vote schema
@@ -64,6 +66,15 @@ the user's value. Eligible results may be cached by content hash (below).
 3. An envelope that fails its verification is an **error, not a vote**. The engine
    resamples while the sample budget allows; otherwise the slot stays an error.
 4. Votes are folded by the policy (next section).
+
+**Cautious evidence (revision 2, opt-in)** — a leaf with
+`"evidence": "cautious"` calls the host's assessment lane instead. A successful
+assessment records support presence, refutation presence, both, or neither. Repeated
+assessments combine by presence rather than binary vote, and `min_valid` is only an
+operational completion gate. Its exact acquisition, FOUR composition, report summary,
+and cautious K3 projection are specified in
+[24-presence-assessment.md](24-presence-assessment.md). Omitting `evidence` retains every
+legacy rule in this document.
 
 **At `depth == 0`** non-deterministic verifiers do not run at all: any such check is
 skipped and recorded as a notice (`skipped: depth exhausted`). A skipped check contributes
@@ -84,12 +95,16 @@ Three values, because errors are not differences:
 |---|---|---|
 | `pass` | The value is acceptable at this node | — |
 | `fail` | The value differs from acceptable | one or more deltas |
-| `inconclusive` | Selta could not determine the answer | error details |
+| `inconclusive` | Selta has no single cautious conclusion | evidence summary and/or error details |
 
 A verifier crash, a timeout, an unreachable model API — none of these mean the value is
 wrong, and none of them may ever be reported as a delta or counted as a failing vote.
-Callers can distinguish "regenerate the answer" (`fail`) from "re-run the verification"
-(`inconclusive`); what they do about it is out of scope.
+On the legacy path, callers can distinguish "regenerate the answer" (`fail`) from
+"re-run the verification" (`inconclusive` with an error). On the cautious path,
+semantic conflict (`both`) and abstention (`neither`) also project to `inconclusive`
+without an operational error. Consumers must inspect the check's `evidence` and `error`
+rather than treating every inconclusive result as retryable; what they do next is out of
+scope.
 
 **Fold rule** (node verdict from its own checks and its children):
 
@@ -142,6 +157,12 @@ first pass. A combinator's determinism is derived — non-deterministic iff any 
 is — and `sampling` attaches only to leaves, so voting always happens at the level of a
 single extension.
 
+The table above is the legacy K3 path. A homogeneous cautious subtree evaluates every
+child needed to preserve both polarities and composes its four-state evidence before
+projecting once to K3; it does not reuse the short-circuiting vote fold. Mixed
+legacy/cautious leaves inside one combinator subtree are rejected at revision-2
+admission.
+
 ## Budgets
 
 A budget rides in the context and only ever shrinks:
@@ -181,7 +202,8 @@ re-judging unchanged fields is the caller's concern, not the engine's). The cach
 a trait and `NoCache` is the explicit no-op implementation. `MemoryCache::default()` is a
 deterministic least-recently-used cache bounded to 16,384 entries and 128 MiB of
 approximate serialized-envelope weight. `MemoryCache::with_limits` selects smaller or
-larger bounds; either zero limit disables caching. A durable store is a server concern.
+larger bounds; either zero limit disables caching. Assessment envelopes bypass this
+legacy cache in Selta 0.2. A durable store is a server concern.
 
 ## Cancellation and timeouts
 

@@ -1,0 +1,13 @@
+{
+  "revision": "selta.evidence.conformance-case/s2-1",
+  "id": "positive-controls-sequential-omitted-assumption",
+  "operation": {
+    "kind": "assess",
+    "context": "positive-controls-candidate-1",
+    "package_source": "sha256:b04988e3aec505a8fa11b3e844e9e6e99f7d7b86605fac0ff1abddfe377a4d86",
+    "expected_basis": {
+      "$ref": "sha256:7c5d633889279e0f87c7254d4c2401ba97bfd2e7da72ea4423909787943587d2",
+      "contract": "sha256:938e5e124cb9648bb532949ff8588edeef0570eee18f6c7bfaf579af17a352a0"
+    }
+  }
+}

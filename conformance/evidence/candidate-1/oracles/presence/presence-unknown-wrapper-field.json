@@ -1,0 +1,9 @@
+{
+  "revision": "selta.evidence.conformance-oracle/s2-1",
+  "case": "presence-unknown-wrapper-field",
+  "expected": {
+    "kind": "returned",
+    "package": "sha256:89b5692b136ced30715c417a5253e703c7ac29f46e37255f0484e3ce814c4ec5",
+    "compare": "conformance_projection"
+  }
+}

@@ -1,0 +1,9 @@
+{
+  "revision": "selta.evidence.conformance-oracle/s2-1",
+  "case": "precedence-identity-duplicate-before-unknown",
+  "expected": {
+    "kind": "returned",
+    "package": "sha256:7929173c069a9168bd13d37018e273bd79510364f6de6c97be6556701e93b023",
+    "compare": "conformance_projection"
+  }
+}

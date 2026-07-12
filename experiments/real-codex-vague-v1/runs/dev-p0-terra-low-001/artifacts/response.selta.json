@@ -1,0 +1,43 @@
+{
+  "type": "object",
+  "fields": {
+    "support": {
+      "type": "array",
+      "required": true,
+      "len": {
+        "max": 3
+      },
+      "item": {
+        "type": "str",
+        "verify": [
+          {
+            "ext": "len",
+            "config": {
+              "min": 1,
+              "max": 160
+            }
+          }
+        ]
+      }
+    },
+    "refute": {
+      "type": "array",
+      "required": true,
+      "len": {
+        "max": 3
+      },
+      "item": {
+        "type": "str",
+        "verify": [
+          {
+            "ext": "len",
+            "config": {
+              "min": 1,
+              "max": 160
+            }
+          }
+        ]
+      }
+    }
+  }
+}

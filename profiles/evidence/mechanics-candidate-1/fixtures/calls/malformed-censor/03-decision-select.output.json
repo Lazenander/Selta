@@ -1,0 +1,7 @@
+{
+  "kind": "censor",
+  "reason": {
+    "$ref": "sha256:b486de74148f16ae37d5422533a197045cf896d61a3d928fc98e6b5bfdabad8e",
+    "contract": "sha256:a587092a0074c9b57a2a22225b99fb20cb6fd0ba69ea27156cab7b8b1ca6ed21"
+  }
+}

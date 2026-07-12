@@ -1,0 +1,4 @@
+{"type":"thread.started","thread_id":"019f584d-a12d-7551-a3bf-65f061c4c127"}
+{"type":"turn.started"}
+{"type":"item.completed","item":{"id":"item_0","type":"agent_message","text":"{\"support\":[],\"refute\":[\"The instructor ended the payment discussion and copied the compliance address on her reply.\",\"No appointment was moved.\"]}"}}
+{"type":"turn.completed","usage":{"input_tokens":2520,"cached_input_tokens":0,"output_tokens":39,"reasoning_output_tokens":0}}

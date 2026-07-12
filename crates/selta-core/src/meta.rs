@@ -16,7 +16,7 @@ pub fn validate(schema: &Node, registry: &Registry) -> Vec<String> {
 
 fn walk_node(node: &Node, path: &Path, registry: &Registry, errors: &mut Vec<String>) {
     for spec in &node.verify {
-        walk_spec(spec, &node.ty, path, registry, errors);
+        let _ = walk_spec(spec, &node.ty, path, registry, errors);
     }
     match &node.ty {
         Type::Object { fields, .. } => {
@@ -44,29 +44,40 @@ fn walk_node(node: &Node, path: &Path, registry: &Registry, errors: &mut Vec<Str
     }
 }
 
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+enum EvidenceUse {
+    Legacy,
+    Cautious,
+    Invalid,
+}
+
 fn walk_spec(
     spec: &VerifierSpec,
     node_type: &Type,
     path: &Path,
     registry: &Registry,
     errors: &mut Vec<String>,
-) {
+) -> EvidenceUse {
     match spec {
         VerifierSpec::AllOf { all_of } => {
             if all_of.is_empty() {
                 errors.push(format!("{path}: all_of must not be empty"));
             }
-            for child in all_of {
-                walk_spec(child, node_type, path, registry, errors);
-            }
+            let modes = all_of
+                .iter()
+                .map(|child| walk_spec(child, node_type, path, registry, errors))
+                .collect::<Vec<_>>();
+            combine_evidence_modes(&modes, path, errors)
         }
         VerifierSpec::AnyOf { any_of } => {
             if any_of.is_empty() {
                 errors.push(format!("{path}: any_of must not be empty"));
             }
-            for child in any_of {
-                walk_spec(child, node_type, path, registry, errors);
-            }
+            let modes = any_of
+                .iter()
+                .map(|child| walk_spec(child, node_type, path, registry, errors))
+                .collect::<Vec<_>>();
+            combine_evidence_modes(&modes, path, errors)
         }
         VerifierSpec::Not { not, message } => {
             if message.trim().is_empty() {
@@ -75,12 +86,17 @@ fn walk_spec(
                      produces no delta to negate"
                 ));
             }
-            walk_spec(not, node_type, path, registry, errors);
+            walk_spec(not, node_type, path, registry, errors)
         }
         VerifierSpec::Leaf(leaf) => {
+            let evidence = if leaf.evidence.is_some() {
+                EvidenceUse::Cautious
+            } else {
+                EvidenceUse::Legacy
+            };
             let Some(decl) = registry.decl(&leaf.ext) else {
                 errors.push(format!("{path}: unknown extension '{}'", leaf.ext));
-                return;
+                return evidence;
             };
             if !decl.accepted_input.accepts_type(node_type) {
                 errors.push(format!(
@@ -99,20 +115,22 @@ fn walk_spec(
                 if sampling.samples == 0 {
                     errors.push(format!("{path}: sampling.samples must be at least 1"));
                 }
-                if let VotePolicy::AtLeast { at_least } = sampling.vote {
-                    if at_least == 0 {
-                        errors.push(format!("{path}: at_least must be at least 1"));
+                if leaf.evidence.is_none() {
+                    if let VotePolicy::AtLeast { at_least } = sampling.vote {
+                        if at_least == 0 {
+                            errors.push(format!("{path}: at_least must be at least 1"));
+                        }
+                        if at_least > sampling.samples {
+                            errors.push(format!(
+                                "{path}: at_least ({at_least}) exceeds samples ({})",
+                                sampling.samples
+                            ));
+                        }
                     }
-                    if at_least > sampling.samples {
-                        errors.push(format!(
-                            "{path}: at_least ({at_least}) exceeds samples ({})",
-                            sampling.samples
-                        ));
-                    }
-                }
-                if let VotePolicy::Ratio { ratio } = sampling.vote {
-                    if !(ratio > 0.0 && ratio <= 1.0) {
-                        errors.push(format!("{path}: ratio must be in (0, 1], got {ratio}"));
+                    if let VotePolicy::Ratio { ratio } = sampling.vote {
+                        if !(ratio > 0.0 && ratio <= 1.0) {
+                            errors.push(format!("{path}: ratio must be in (0, 1], got {ratio}"));
+                        }
                     }
                 }
                 if let Some(min_valid) = sampling.min_valid {
@@ -144,7 +162,29 @@ fn walk_spec(
                     ));
                 }
             }
+            evidence
         }
+    }
+}
+
+fn combine_evidence_modes(
+    modes: &[EvidenceUse],
+    path: &Path,
+    errors: &mut Vec<String>,
+) -> EvidenceUse {
+    let legacy = modes.contains(&EvidenceUse::Legacy);
+    let cautious = modes.contains(&EvidenceUse::Cautious);
+    if legacy && cautious {
+        errors.push(format!(
+            "{path}: a verifier combinator subtree must be wholly legacy or wholly cautious"
+        ));
+        EvidenceUse::Invalid
+    } else if modes.contains(&EvidenceUse::Invalid) {
+        EvidenceUse::Invalid
+    } else if cautious {
+        EvidenceUse::Cautious
+    } else {
+        EvidenceUse::Legacy
     }
 }
 

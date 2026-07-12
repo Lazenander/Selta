@@ -1,0 +1,20 @@
+{
+  "state": {
+    "revision": "selta.evidence.presence-state/candidate-1",
+    "targets": [
+      {
+        "claim": {
+          "$ref": "sha256:7bfb4ef573349711620effe363c9d4881eb1df277c92764fae8fc6625e723e32",
+          "contract": "sha256:751cc09329f4a485fce9683a29ea5432786cf22b43df9cfd4b3900a326594239"
+        },
+        "support_basis": [
+          "sha256:5e0f37f4b5393a297dc142dcbf0111efdc800781bf5b992e6bc31671f168a922"
+        ],
+        "refute_basis": [
+          "sha256:1ad69f0f1f7b240d4f5cf32fe2d539852ae9396387fea68b9457f7c244fad614"
+        ],
+        "state": "both"
+      }
+    ]
+  }
+}

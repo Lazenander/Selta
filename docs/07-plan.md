@@ -32,13 +32,13 @@ selta-core/src/
 ├── meta.rs            # meta-validation (the Selta schema for Selta schemas)
 ├── intake.rs          # fence stripping, JSON repair, notices
 ├── engine.rs          # pipeline, fold rules, sampling, voting, depth, budgets
-├── verdict.rs         # Verdict, Delta, Notice, CheckError
-├── report.rs          # Report, NodeResult, ordering
+├── verdict.rs         # K3 Verdict plus four-state evidence presence, Delta, Notice, CheckError
+├── report.rs          # Report, NodeResult, optional evidence summaries, ordering
 ├── registry.rs        # name -> host + extension; ExtensionHost trait
 ├── cache.rs           # content-hash cache trait, no-op default
 └── host/
     ├── builtin.rs     # one_of, range, regex, len, non_empty, cmd
-    └── rpc.rs         # RpcHost: ndjson JSON-RPC client over child stdio
+    └── rpc.rs         # RpcHost: ndjson JSON-RPC verify plus optional assess
 ```
 
 Key crate choices: `serde`/`serde_json` (values are `serde_json::Value`), `indexmap`

@@ -1,0 +1,13 @@
+{
+  "revision": "selta.evidence.conformance-case/s2-1",
+  "id": "presence-unauthorized-projection",
+  "operation": {
+    "kind": "assess",
+    "context": "presence-candidate-1",
+    "package_source": "sha256:022c2e88b7f85aa5bbed31bc0ceb6337bb8278201dd44889c5e9bc7b1111e5b1",
+    "expected_basis": {
+      "$ref": "sha256:21a8fb62556843a946f7b8e7a4d9d52e5f1cf26d5ba74d45ca568ed8148f3553",
+      "contract": "sha256:938e5e124cb9648bb532949ff8588edeef0570eee18f6c7bfaf579af17a352a0"
+    }
+  }
+}

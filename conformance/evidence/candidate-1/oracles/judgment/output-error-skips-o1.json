@@ -1,0 +1,9 @@
+{
+  "revision": "selta.evidence.conformance-oracle/s2-1",
+  "case": "output-error-skips-o1",
+  "expected": {
+    "kind": "returned",
+    "package": "sha256:13616080c28228b6304f997f0992d2a552d06d3917e7001479442b923cc37e80",
+    "compare": "conformance_projection"
+  }
+}

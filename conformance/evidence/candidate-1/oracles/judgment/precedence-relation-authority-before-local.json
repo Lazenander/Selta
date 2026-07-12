@@ -1,0 +1,9 @@
+{
+  "revision": "selta.evidence.conformance-oracle/s2-1",
+  "case": "precedence-relation-authority-before-local",
+  "expected": {
+    "kind": "returned",
+    "package": "sha256:0f3eb872bda1eab81cddb5ee16f52121cbf5646b2cb3771acdb6392be7e5b050",
+    "compare": "conformance_projection"
+  }
+}

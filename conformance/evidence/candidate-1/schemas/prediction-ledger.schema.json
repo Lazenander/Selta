@@ -1,0 +1,31 @@
+{
+  "type": "object",
+  "fields": {
+    "revision": {
+      "type": "str",
+      "verify": [{ "ext": "one_of", "config": { "values": ["selta.evidence.conformance-prediction-ledger/s2-1"] } }]
+    },
+    "producer": { "type": "str", "verify": [{ "ext": "one_of", "config": { "values": ["model_a", "model_b"] } }] },
+    "runs": {
+      "type": "array",
+      "len": { "min": 1 },
+      "item": {
+        "type": "object",
+        "fields": {
+          "ordinal": { "type": "int", "verify": [{ "ext": "range", "config": { "min": 0, "max": 9007199254740991 } }] },
+          "case": {
+            "type": "str",
+            "verify": [
+              { "ext": "regex", "config": { "pattern": "\\A[a-z0-9]+(?:-[a-z0-9]+)*\\z" } },
+              { "ext": "len", "config": { "max": 128 } }
+            ]
+          },
+          "request_bytes_sha256": { "type": "str", "verify": [{ "ext": "regex", "config": { "pattern": "\\Asha256:[0-9a-f]{64}\\z" } }] },
+          "response_bytes_sha256": { "type": "str", "verify": [{ "ext": "regex", "config": { "pattern": "\\Asha256:[0-9a-f]{64}\\z" } }] },
+          "stderr_bytes_sha256": { "type": "str", "verify": [{ "ext": "regex", "config": { "pattern": "\\Asha256:[0-9a-f]{64}\\z" } }] },
+          "exit_code": { "type": "int", "verify": [{ "ext": "range", "config": { "min": 0, "max": 0 } }] }
+        }
+      }
+    }
+  }
+}

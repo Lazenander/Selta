@@ -1,0 +1,13 @@
+{
+  "revision": "selta.evidence.conformance-case/s2-1",
+  "id": "mechanics-two-attempt-predecessor",
+  "operation": {
+    "kind": "assess",
+    "context": "mechanics-candidate-1",
+    "package_source": "sha256:a3251bd3e8bb4e20a36ffe8ef0f7616c33e9f0ad3c622fe36e17478ff3e6082c",
+    "expected_basis": {
+      "$ref": "sha256:4a051adf767786257769f5999cf4b2f33bdd60f078ec110802aae3a9b4ce1e12",
+      "contract": "sha256:938e5e124cb9648bb532949ff8588edeef0570eee18f6c7bfaf579af17a352a0"
+    }
+  }
+}

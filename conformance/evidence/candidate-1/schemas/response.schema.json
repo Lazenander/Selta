@@ -1,0 +1,44 @@
+{
+  "type": "union",
+  "variants": [
+    {
+      "type": "object",
+      "fields": {
+        "status": { "type": "str", "verify": [{ "ext": "one_of", "config": { "values": ["admitted"] } }] },
+        "environment": { "type": "str", "verify": [{ "ext": "regex", "config": { "pattern": "\\Asha256:[0-9a-f]{64}\\z" } }] }
+      }
+    },
+    {
+      "type": "object",
+      "fields": {
+        "status": { "type": "str", "verify": [{ "ext": "one_of", "config": { "values": ["rejected"] } }] }
+      }
+    },
+    {
+      "type": "object",
+      "fields": {
+        "status": { "type": "str", "verify": [{ "ext": "one_of", "config": { "values": ["returned"] } }] },
+        "package": { "type": "any" }
+      }
+    },
+    {
+      "type": "object",
+      "fields": {
+        "status": { "type": "str", "verify": [{ "ext": "one_of", "config": { "values": ["trap"] } }] },
+        "trap": {
+          "type": "object",
+          "fields": {
+            "kind": { "type": "str", "verify": [{ "ext": "one_of", "config": { "values": ["forbidden_read"] } }] },
+            "reference": {
+              "type": "object",
+              "fields": {
+                "$ref": { "type": "str", "verify": [{ "ext": "regex", "config": { "pattern": "\\Asha256:[0-9a-f]{64}\\z" } }] },
+                "contract": { "type": "str", "verify": [{ "ext": "regex", "config": { "pattern": "\\Asha256:[0-9a-f]{64}\\z" } }] }
+              }
+            }
+          }
+        }
+      }
+    }
+  ]
+}

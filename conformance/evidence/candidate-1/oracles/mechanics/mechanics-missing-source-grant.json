@@ -1,0 +1,9 @@
+{
+  "revision": "selta.evidence.conformance-oracle/s2-1",
+  "case": "mechanics-missing-source-grant",
+  "expected": {
+    "kind": "returned",
+    "package": "sha256:401bedff30d41f50f188fa690cfb2a224e0d785f56277d0ba8eb923040043034",
+    "compare": "conformance_projection"
+  }
+}

@@ -1,0 +1,9 @@
+{
+  "revision": "selta.evidence.conformance-oracle/s2-1",
+  "case": "mechanics-observed-include-atom",
+  "expected": {
+    "kind": "returned",
+    "package": "sha256:169768734e0a9dd4e88021353e0eda85e211d1871443e2316ed8999e3e412812",
+    "compare": "conformance_projection"
+  }
+}

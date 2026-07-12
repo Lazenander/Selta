@@ -1,0 +1,9 @@
+{
+  "revision": "selta.evidence.conformance-oracle/s2-1",
+  "case": "presence-duplicate-node",
+  "expected": {
+    "kind": "returned",
+    "package": "sha256:49e52b998ee69b563df29f38fcebf253f84875890c6fe9e2a06b1f4a8168ba8b",
+    "compare": "conformance_projection"
+  }
+}

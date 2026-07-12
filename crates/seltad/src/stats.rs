@@ -81,8 +81,7 @@ impl ExtStats {
 impl Stats {
     pub fn pool_json(&self, pool: &str) -> Value {
         let inner = self.inner.lock().unwrap();
-        let mut keys: Vec<&(String, String)> =
-            inner.keys().filter(|(p, _)| p == pool).collect();
+        let mut keys: Vec<&(String, String)> = inner.keys().filter(|(p, _)| p == pool).collect();
         keys.sort();
         let mut out = Map::new();
         for key in keys {

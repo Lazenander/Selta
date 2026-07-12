@@ -1,0 +1,35 @@
+{
+  "revision": "selta.evidence.conformance-case/s2-1",
+  "id": "mechanics-operational-forbidden-read",
+  "operation": {
+    "kind": "assess",
+    "context": "mechanics-candidate-1",
+    "package_source": "sha256:8bf6494cc28b5d74ba6e7128238dbd96f4fa215576c25c8a39294b5c0220169d",
+    "expected_basis": {
+      "$ref": "sha256:98df5417d732d43f5c7eba0a626d5f8963715539abb766ab4b9a0c9005e53f26",
+      "contract": "sha256:938e5e124cb9648bb532949ff8588edeef0570eee18f6c7bfaf579af17a352a0"
+    },
+    "controls": {
+      "identity_results": [],
+      "semantic_outputs": [],
+      "semantic_output_bytes": [],
+      "semantic_reads": [
+        {
+          "call_ordinal": 4,
+          "semantics": "sha256:a65164fc8aa89fffccb627fda5b5de126a9e0c6bbfe4d41f3b93f1b71f763076",
+          "reference": {
+            "$ref": "sha256:446cf29c7eab4ea38edf1e77d04f8cbe20a187cb676bae5590a59682b65543a6",
+            "contract": "sha256:a587092a0074c9b57a2a22225b99fb20cb6fd0ba69ea27156cab7b8b1ca6ed21"
+          }
+        }
+      ],
+      "verification_faults": [],
+      "forbidden_reads": [
+        {
+          "$ref": "sha256:446cf29c7eab4ea38edf1e77d04f8cbe20a187cb676bae5590a59682b65543a6",
+          "contract": "sha256:a587092a0074c9b57a2a22225b99fb20cb6fd0ba69ea27156cab7b8b1ca6ed21"
+        }
+      ]
+    }
+  }
+}

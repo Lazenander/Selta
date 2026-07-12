@@ -15,10 +15,38 @@ use crate::schema::{Node, Type};
 
 const DUPLICATE_MARKER: &str = "__SELTA_DUPLICATE_HEX__";
 
-/// Revision of the closed raw schema grammar implemented by this module.
-pub const SELTA_SCHEMA_LANGUAGE_REVISION: &str = "selta.schema-language/1";
-/// Revision of the typed strict-admission issue semantics.
-pub const SELTA_META_VALIDATOR_REVISION: &str = "selta.meta-validator/1";
+pub const SELTA_SCHEMA_LANGUAGE_REVISION_V1: &str = "selta.schema-language/1";
+pub const SELTA_SCHEMA_LANGUAGE_REVISION_V2: &str = "selta.schema-language/2";
+pub const SELTA_META_VALIDATOR_REVISION_V1: &str = "selta.meta-validator/1";
+pub const SELTA_META_VALIDATOR_REVISION_V2: &str = "selta.meta-validator/2";
+
+/// Compatibility aliases remain permanently bound to Selta 0.1. Callers must
+/// select revision 2 explicitly with [`AdmissionProfile::Selta2`].
+pub const SELTA_SCHEMA_LANGUAGE_REVISION: &str = SELTA_SCHEMA_LANGUAGE_REVISION_V1;
+pub const SELTA_META_VALIDATOR_REVISION: &str = SELTA_META_VALIDATOR_REVISION_V1;
+
+/// A closed schema-language and meta-validator pair. Revisions cannot be mixed.
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Hash)]
+pub enum AdmissionProfile {
+    Selta1,
+    Selta2,
+}
+
+impl AdmissionProfile {
+    pub const fn schema_language_revision(self) -> &'static str {
+        match self {
+            Self::Selta1 => SELTA_SCHEMA_LANGUAGE_REVISION_V1,
+            Self::Selta2 => SELTA_SCHEMA_LANGUAGE_REVISION_V2,
+        }
+    }
+
+    pub const fn meta_validator_revision(self) -> &'static str {
+        match self {
+            Self::Selta1 => SELTA_META_VALIDATOR_REVISION_V1,
+            Self::Selta2 => SELTA_META_VALIDATOR_REVISION_V2,
+        }
+    }
+}
 
 /// Stable machine-readable classes emitted by strict schema admission.
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Hash, Serialize, Deserialize)]
@@ -38,6 +66,7 @@ pub enum MetaIssueCode {
     EmptyCollection,
     InvalidBounds,
     InvalidSampling,
+    InvalidEvidence,
     InvalidEnvRef,
     ConfigStructure,
     UnknownExtension,
@@ -65,6 +94,7 @@ impl MetaIssueCode {
             Self::EmptyCollection => "EMPTY_COLLECTION",
             Self::InvalidBounds => "INVALID_BOUNDS",
             Self::InvalidSampling => "INVALID_SAMPLING",
+            Self::InvalidEvidence => "INVALID_EVIDENCE",
             Self::InvalidEnvRef => "INVALID_ENV_REF",
             Self::ConfigStructure => "CONFIG_STRUCTURE",
             Self::UnknownExtension => "UNKNOWN_EXTENSION",
@@ -109,13 +139,21 @@ impl MetaIssue {
 #[derive(Debug, Clone)]
 pub struct AdmittedNode {
     node: Node,
+    profile: AdmissionProfile,
 }
 
 impl AdmittedNode {
     /// Admit an untrusted raw JSON schema without extension-specific config
     /// policy. Exact `$env` syntax is still checked recursively.
     pub fn admit_source(source: &[u8]) -> Result<Self, Vec<MetaIssue>> {
-        admit_source(source, None)
+        Self::admit_source_at(source, AdmissionProfile::Selta1)
+    }
+
+    pub fn admit_source_at(
+        source: &[u8],
+        profile: AdmissionProfile,
+    ) -> Result<Self, Vec<MetaIssue>> {
+        admit_source(source, None, profile)
     }
 
     /// Admit an untrusted schema and let an owning registry/domain add pure
@@ -124,7 +162,15 @@ impl AdmittedNode {
         source: &[u8],
         validator: &dyn ConfigStructureValidator,
     ) -> Result<Self, Vec<MetaIssue>> {
-        admit_source(source, Some(validator))
+        Self::admit_source_with_config_validator_at(source, validator, AdmissionProfile::Selta1)
+    }
+
+    pub fn admit_source_with_config_validator_at(
+        source: &[u8],
+        validator: &dyn ConfigStructureValidator,
+        profile: AdmissionProfile,
+    ) -> Result<Self, Vec<MetaIssue>> {
+        admit_source(source, Some(validator), profile)
     }
 
     pub fn as_node(&self) -> &Node {
@@ -133,6 +179,10 @@ impl AdmittedNode {
 
     pub fn into_node(self) -> Node {
         self.node
+    }
+
+    pub const fn profile(&self) -> AdmissionProfile {
+        self.profile
     }
 }
 
@@ -170,17 +220,18 @@ pub fn validate_config_structure_with_env_holes(
 fn admit_source(
     source: &[u8],
     validator: Option<&dyn ConfigStructureValidator>,
+    profile: AdmissionProfile,
 ) -> Result<AdmittedNode, Vec<MetaIssue>> {
     let value = parse_unique_json(source)?;
     let mut issues = Vec::new();
-    validate_node(&value, "", false, validator, &mut issues);
+    validate_node(&value, "", false, validator, profile, &mut issues);
     let mut seen = HashSet::with_capacity(issues.len());
     issues.retain(|issue| seen.insert(issue.clone()));
     if !issues.is_empty() {
         return Err(issues);
     }
     match Node::from_value(value) {
-        Ok(node) => Ok(AdmittedNode { node }),
+        Ok(node) => Ok(AdmittedNode { node, profile }),
         Err(error) => Err(vec![MetaIssue::new(
             MetaIssueCode::ProjectionMismatch,
             "",
@@ -194,6 +245,7 @@ fn validate_node(
     pointer: &str,
     field_position: bool,
     validator: Option<&dyn ConfigStructureValidator>,
+    profile: AdmissionProfile,
     issues: &mut Vec<MetaIssue>,
 ) {
     let Some(map) = value.as_object() else {
@@ -222,10 +274,11 @@ fn validate_node(
         match verify.as_array() {
             Some(specs) => {
                 for (index, spec) in specs.iter().enumerate() {
-                    validate_verifier(
+                    let _ = validate_verifier(
                         spec,
                         &child_pointer(&verify_pointer, &index.to_string()),
                         validator,
+                        profile,
                         issues,
                     );
                 }
@@ -266,6 +319,7 @@ fn validate_node(
                                 &child_pointer(&fields_pointer, name),
                                 true,
                                 validator,
+                                profile,
                                 issues,
                             );
                         }
@@ -278,7 +332,7 @@ fn validate_node(
             allowed.extend(["item", "len"]);
             let item_pointer = child_pointer(pointer, "item");
             match map.get("item") {
-                Some(item) => validate_node(item, &item_pointer, false, validator, issues),
+                Some(item) => validate_node(item, &item_pointer, false, validator, profile, issues),
                 None => issues.push(MetaIssue::new(
                     MetaIssueCode::MissingProperty,
                     item_pointer,
@@ -307,6 +361,7 @@ fn validate_node(
                             &child_pointer(&variants_pointer, &index.to_string()),
                             false,
                             validator,
+                            profile,
                             issues,
                         );
                     }
@@ -335,19 +390,27 @@ fn common_node_keys(_field_position: bool) -> Vec<&'static str> {
     vec!["type", "verify", "description", "required"]
 }
 
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+enum EvidenceUse {
+    Legacy,
+    Cautious,
+    Invalid,
+}
+
 fn validate_verifier(
     value: &Value,
     pointer: &str,
     validator: Option<&dyn ConfigStructureValidator>,
+    profile: AdmissionProfile,
     issues: &mut Vec<MetaIssue>,
-) {
+) -> EvidenceUse {
     let Some(map) = value.as_object() else {
         issues.push(MetaIssue::new(
             MetaIssueCode::ExpectedObject,
             pointer,
             "a verifier spec must be an object",
         ));
-        return;
+        return EvidenceUse::Invalid;
     };
     let discriminants = ["ext", "all_of", "any_of", "not"]
         .into_iter()
@@ -359,20 +422,25 @@ fn validate_verifier(
             pointer,
             "a verifier spec must contain exactly one of ext/all_of/any_of/not",
         ));
-        reject_unknown_keys(
-            map,
-            pointer,
-            &[
+        let allowed = match profile {
+            AdmissionProfile::Selta1 => &[
                 "ext", "config", "sampling", "all_of", "any_of", "not", "message",
-            ],
-            issues,
-        );
-        return;
+            ][..],
+            AdmissionProfile::Selta2 => &[
+                "ext", "config", "evidence", "sampling", "all_of", "any_of", "not", "message",
+            ][..],
+        };
+        reject_unknown_keys(map, pointer, allowed, issues);
+        return EvidenceUse::Invalid;
     }
 
     match discriminants[0] {
         "ext" => {
-            reject_unknown_keys(map, pointer, &["ext", "config", "sampling"], issues);
+            let allowed = match profile {
+                AdmissionProfile::Selta1 => &["ext", "config", "sampling"][..],
+                AdmissionProfile::Selta2 => &["ext", "config", "evidence", "sampling"][..],
+            };
+            reject_unknown_keys(map, pointer, allowed, issues);
             let ext_pointer = child_pointer(pointer, "ext");
             let extension = match map.get("ext").and_then(Value::as_str) {
                 Some(extension) if !extension.trim().is_empty() => Some(extension),
@@ -396,9 +464,25 @@ fn validate_verifier(
             if let (Some(extension), Some(validator)) = (extension, validator) {
                 issues.extend(validator.validate_config(extension, config, &config_pointer));
             }
+            let evidence = match profile {
+                AdmissionProfile::Selta1 => EvidenceUse::Legacy,
+                AdmissionProfile::Selta2 => validate_evidence(map.get("evidence"), pointer, issues),
+            };
             if let Some(sampling) = map.get("sampling") {
                 validate_sampling(sampling, &child_pointer(pointer, "sampling"), issues);
+                if evidence == EvidenceUse::Cautious
+                    && sampling
+                        .as_object()
+                        .is_some_and(|sampling| sampling.contains_key("vote"))
+                {
+                    issues.push(MetaIssue::new(
+                        MetaIssueCode::InvalidEvidence,
+                        child_pointer(&child_pointer(pointer, "sampling"), "vote"),
+                        "sampling.vote must be omitted when evidence is cautious",
+                    ));
+                }
             }
+            evidence
         }
         "all_of" | "any_of" => {
             let key = discriminants[0];
@@ -413,25 +497,32 @@ fn validate_verifier(
                             format!("{key} must not be empty"),
                         ));
                     }
+                    let mut modes = Vec::with_capacity(children.len());
                     for (index, child) in children.iter().enumerate() {
-                        validate_verifier(
+                        modes.push(validate_verifier(
                             child,
                             &child_pointer(&children_pointer, &index.to_string()),
                             validator,
+                            profile,
                             issues,
-                        );
+                        ));
                     }
+                    combine_evidence_modes(&modes, pointer, issues)
                 }
-                Some(_) => issues.push(type_issue(&children_pointer, "array")),
+                Some(_) => {
+                    issues.push(type_issue(&children_pointer, "array"));
+                    EvidenceUse::Invalid
+                }
                 None => unreachable!("discriminant was selected from an existing key"),
             }
         }
         "not" => {
             reject_unknown_keys(map, pointer, &["not", "message"], issues);
-            validate_verifier(
+            let evidence = validate_verifier(
                 &map["not"],
                 &child_pointer(pointer, "not"),
                 validator,
+                profile,
                 issues,
             );
             let message_pointer = child_pointer(pointer, "message");
@@ -451,8 +542,52 @@ fn validate_verifier(
                     "not.message is required",
                 )),
             }
+            evidence
         }
         _ => unreachable!("discriminant is from the closed list"),
+    }
+}
+
+fn validate_evidence(
+    value: Option<&Value>,
+    pointer: &str,
+    issues: &mut Vec<MetaIssue>,
+) -> EvidenceUse {
+    let Some(value) = value else {
+        return EvidenceUse::Legacy;
+    };
+    if value.as_str() == Some("cautious") {
+        return EvidenceUse::Cautious;
+    }
+    issues.push(MetaIssue::new(
+        MetaIssueCode::InvalidEvidence,
+        child_pointer(pointer, "evidence"),
+        "evidence must be the string \"cautious\"",
+    ));
+    EvidenceUse::Invalid
+}
+
+fn combine_evidence_modes(
+    modes: &[EvidenceUse],
+    pointer: &str,
+    issues: &mut Vec<MetaIssue>,
+) -> EvidenceUse {
+    let legacy = modes.contains(&EvidenceUse::Legacy);
+    let cautious = modes.contains(&EvidenceUse::Cautious);
+    if legacy && cautious {
+        issues.push(MetaIssue::new(
+            MetaIssueCode::InvalidEvidence,
+            pointer,
+            "a verifier combinator subtree must be wholly legacy or wholly cautious",
+        ));
+        return EvidenceUse::Invalid;
+    }
+    if modes.contains(&EvidenceUse::Invalid) {
+        EvidenceUse::Invalid
+    } else if cautious {
+        EvidenceUse::Cautious
+    } else {
+        EvidenceUse::Legacy
     }
 }
 

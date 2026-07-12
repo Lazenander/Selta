@@ -1,0 +1,9 @@
+{
+  "revision": "selta.evidence.conformance-oracle/s2-1",
+  "case": "mechanics-malformed-censor",
+  "expected": {
+    "kind": "returned",
+    "package": "sha256:6dba491aff4dad477be12ca54efbe7946d155a50e965d1ddcf41a1b815764604",
+    "compare": "conformance_projection"
+  }
+}

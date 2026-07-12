@@ -1,0 +1,14 @@
+{
+  "revision": "selta.evidence.conformance-oracle/s2-1",
+  "case": "mechanics-operational-forbidden-read",
+  "expected": {
+    "kind": "trap",
+    "trap": {
+      "kind": "forbidden_read",
+      "reference": {
+        "$ref": "sha256:446cf29c7eab4ea38edf1e77d04f8cbe20a187cb676bae5590a59682b65543a6",
+        "contract": "sha256:a587092a0074c9b57a2a22225b99fb20cb6fd0ba69ea27156cab7b8b1ca6ed21"
+      }
+    }
+  }
+}

@@ -1,0 +1,9 @@
+{
+  "revision": "selta.evidence.conformance-oracle/s2-1",
+  "case": "positive-controls-sequential-rejected-result",
+  "expected": {
+    "kind": "returned",
+    "package": "sha256:3b6416e46fc22c3bdc59f31c3f7e406a6b70894936fae704cf6552c6743d4e1d",
+    "compare": "conformance_projection"
+  }
+}

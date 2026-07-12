@@ -1,0 +1,75 @@
+{
+  "parameters": {
+    "claim": {
+      "$ref": "sha256:ff6d14119a69c6b004c55062dfe4a57ff1493a19e79b9ba472415997b8116315",
+      "contract": "sha256:751cc09329f4a485fce9683a29ea5432786cf22b43df9cfd4b3900a326594239"
+    },
+    "stance": "support",
+    "modality": {
+      "$ref": "sha256:dcce0fcb56872fced202caf0aef3a72beb47dd45c6cdaa20ddb636c5d3eb47be",
+      "contract": "sha256:a587092a0074c9b57a2a22225b99fb20cb6fd0ba69ea27156cab7b8b1ca6ed21"
+    },
+    "payload": {
+      "$ref": "sha256:5106f0159bb813ecd9ea207afa0f7ed087c9076b01c62b9eb928c6dce57e076f",
+      "contract": "sha256:a587092a0074c9b57a2a22225b99fb20cb6fd0ba69ea27156cab7b8b1ca6ed21"
+    }
+  },
+  "premises": [
+    {
+      "fact": {
+        "attempt": {
+          "acquisition": {
+            "$ref": "sha256:40976a532b6354d1480c7e13c56e07851ccb76e4c35e250e6269d8cab7f545ee",
+            "contract": "sha256:febf5ad5f7f06e0a014163c97de740272ce0229c8df949a4c553a84ce849cf91"
+          },
+          "attempt": "sha256:2cf5e06e62c93e15ae06f68526748aab4b311468aa4f2d3714fa439e0839fb16"
+        }
+      },
+      "resolved": {
+        "attempt": {
+          "plan_id": "sha256:0590a12f9629bd1540311686a95b0de30ffb4c1ea1539223c23f5bb3597d7959",
+          "id": "sha256:2cf5e06e62c93e15ae06f68526748aab4b311468aa4f2d3714fa439e0839fb16",
+          "ordinal": 0,
+          "predecessors": [],
+          "scheduled_by": "sha256:253f865ebff5cd6809aab99a3f0301a60817f4d62b01c728743e8cdad0cd631d",
+          "source": {
+            "$ref": "sha256:d3694c46ccb74d217fc828ab397a37aa6ba2077eed8c7d5be0ab91240e834505",
+            "contract": "sha256:a587092a0074c9b57a2a22225b99fb20cb6fd0ba69ea27156cab7b8b1ca6ed21"
+          },
+          "request": {
+            "$ref": "sha256:a0db0b991fd5d6a6f5083c3c725a857758f31cba715d4cc6a8c57721bcce13c1",
+            "contract": "sha256:a587092a0074c9b57a2a22225b99fb20cb6fd0ba69ea27156cab7b8b1ca6ed21"
+          },
+          "context_view": {
+            "$ref": "sha256:0d7cd1e0dfdfbdae81b83927cf1d5cadc98fada1a00da89d971cf70a2fd9eb3f",
+            "contract": "sha256:a587092a0074c9b57a2a22225b99fb20cb6fd0ba69ea27156cab7b8b1ca6ed21"
+          },
+          "outcome": {
+            "kind": "malformed",
+            "raw": {
+              "$ref": "sha256:38299e80f8c348e4e90d75728dd6c8ffba6efedfc159ea6857df787976ef3936",
+              "contract": "sha256:a587092a0074c9b57a2a22225b99fb20cb6fd0ba69ea27156cab7b8b1ca6ed21"
+            },
+            "error": {
+              "$ref": "sha256:5324d913bd695ee966dd2e9e723813a8d628e497ff3a298a6a6513c92e932526",
+              "contract": "sha256:a587092a0074c9b57a2a22225b99fb20cb6fd0ba69ea27156cab7b8b1ca6ed21"
+            }
+          },
+          "disposition": {
+            "kind": "censor",
+            "decided_by": "sha256:eb14b7e51d2d2d31965307c820930c956f514bfdf851a0b2868208393f9c488a",
+            "reason": {
+              "$ref": "sha256:b486de74148f16ae37d5422533a197045cf896d61a3d928fc98e6b5bfdabad8e",
+              "contract": "sha256:a587092a0074c9b57a2a22225b99fb20cb6fd0ba69ea27156cab7b8b1ca6ed21"
+            }
+          }
+        }
+      }
+    }
+  ],
+  "assumptions": [],
+  "arguments": {
+    "$ref": "sha256:a875f5235351ccd608b52adc18d71d77fe67da68efbb63b7c32765c02d3bd00e",
+    "contract": "sha256:a587092a0074c9b57a2a22225b99fb20cb6fd0ba69ea27156cab7b8b1ca6ed21"
+  }
+}

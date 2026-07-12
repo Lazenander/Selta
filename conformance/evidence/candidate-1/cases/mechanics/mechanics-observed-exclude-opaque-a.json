@@ -1,0 +1,13 @@
+{
+  "revision": "selta.evidence.conformance-case/s2-1",
+  "id": "mechanics-observed-exclude-opaque-a",
+  "operation": {
+    "kind": "assess",
+    "context": "mechanics-candidate-1",
+    "package_source": "sha256:8bf6494cc28b5d74ba6e7128238dbd96f4fa215576c25c8a39294b5c0220169d",
+    "expected_basis": {
+      "$ref": "sha256:98df5417d732d43f5c7eba0a626d5f8963715539abb766ab4b9a0c9005e53f26",
+      "contract": "sha256:938e5e124cb9648bb532949ff8588edeef0570eee18f6c7bfaf579af17a352a0"
+    }
+  }
+}

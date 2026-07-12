@@ -1,0 +1,48 @@
+{
+  "operation": "schedule",
+  "parameters": {},
+  "manifest": "sha256:cb6a677c721ca807e2ffc42a4c6c2a0b5cc23e58851e6d96443cc84fd1ad407b",
+  "observed_plans": [],
+  "manifest_view": {
+    "frame": {
+      "$ref": "sha256:4de730a081fcf7646abcec70f477e6753937ebedddc35d4e5233a82171d40a68",
+      "contract": "sha256:a587092a0074c9b57a2a22225b99fb20cb6fd0ba69ea27156cab7b8b1ca6ed21"
+    },
+    "channel": {
+      "$ref": "sha256:eb90737729286da25e20e5387363763b6f3ff99d0e897d35015975c45abfbf6a",
+      "contract": "sha256:a587092a0074c9b57a2a22225b99fb20cb6fd0ba69ea27156cab7b8b1ca6ed21"
+    },
+    "context": {
+      "$ref": "sha256:791e20ab1164ee24ec178f72d74a020fded303e7e1c0ed73aa5855dabcac6696",
+      "contract": "sha256:a587092a0074c9b57a2a22225b99fb20cb6fd0ba69ea27156cab7b8b1ca6ed21"
+    },
+    "sources": [
+      {
+        "$ref": "sha256:4e1caa7743ccfcfe98f8415838fed6170341c6af3a1d44fc3c89a7e1ef29394e",
+        "contract": "sha256:a587092a0074c9b57a2a22225b99fb20cb6fd0ba69ea27156cab7b8b1ca6ed21"
+      }
+    ],
+    "budget": {
+      "$ref": "sha256:d315d4678aabc87b2ae984bc6e42f08a58efb85fc4fafe3cf3cedacc850c9114",
+      "contract": "sha256:a587092a0074c9b57a2a22225b99fb20cb6fd0ba69ea27156cab7b8b1ca6ed21"
+    }
+  },
+  "snapshot": {
+    "proposal": {
+      "ordinal": 0,
+      "predecessors": [],
+      "source": {
+        "$ref": "sha256:4e1caa7743ccfcfe98f8415838fed6170341c6af3a1d44fc3c89a7e1ef29394e",
+        "contract": "sha256:a587092a0074c9b57a2a22225b99fb20cb6fd0ba69ea27156cab7b8b1ca6ed21"
+      },
+      "request": {
+        "$ref": "sha256:a9f947fd98a7c030b81f9d9907d0524c3e119e22586f843e499d377a339fc15b",
+        "contract": "sha256:a587092a0074c9b57a2a22225b99fb20cb6fd0ba69ea27156cab7b8b1ca6ed21"
+      },
+      "context_view": {
+        "$ref": "sha256:9127df685e55161c6cd29100ad5185c60d0f98422662f73a860e8e226e7fcd33",
+        "contract": "sha256:a587092a0074c9b57a2a22225b99fb20cb6fd0ba69ea27156cab7b8b1ca6ed21"
+      }
+    }
+  }
+}

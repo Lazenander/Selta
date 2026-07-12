@@ -1,0 +1,13 @@
+{
+  "revision": "selta.evidence.finite-result/s2-1",
+  "results": [
+    {
+      "name": "distinct-exposed-logs",
+      "value": { "kind": "safe_int", "value": 1 }
+    },
+    {
+      "name": "distinct-hidden-values",
+      "value": { "kind": "safe_int", "value": 2 }
+    }
+  ]
+}

@@ -1,0 +1,4 @@
+{"type":"thread.started","thread_id":"019f5849-ba99-71e0-a9b5-4d83746859f5"}
+{"type":"turn.started"}
+{"type":"item.completed","item":{"id":"item_0","type":"agent_message","text":"{\"support\":[\"At dawn the path was wet.\",\"The overnight rain gauge recorded twelve millimetres, and the caretaker said no sprinklers had run.\"],\"refute\":[]}"}}
+{"type":"turn.completed","usage":{"input_tokens":2511,"cached_input_tokens":0,"output_tokens":45,"reasoning_output_tokens":0}}

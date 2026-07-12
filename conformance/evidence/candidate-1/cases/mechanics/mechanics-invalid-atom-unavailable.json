@@ -1,0 +1,13 @@
+{
+  "revision": "selta.evidence.conformance-case/s2-1",
+  "id": "mechanics-invalid-atom-unavailable",
+  "operation": {
+    "kind": "assess",
+    "context": "mechanics-candidate-1",
+    "package_source": "sha256:19ebfe1e3ab073dfb1759e2dd33363a35b46a7ee2c94a620587eb4445ce52724",
+    "expected_basis": {
+      "$ref": "sha256:460a0b62c6f704dfbdfde8c2c7f80f5931c44a24dce5929033d2bb4425ae1702",
+      "contract": "sha256:938e5e124cb9648bb532949ff8588edeef0570eee18f6c7bfaf579af17a352a0"
+    }
+  }
+}

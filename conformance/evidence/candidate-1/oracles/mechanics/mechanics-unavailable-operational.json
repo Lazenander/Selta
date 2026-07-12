@@ -1,0 +1,9 @@
+{
+  "revision": "selta.evidence.conformance-oracle/s2-1",
+  "case": "mechanics-unavailable-operational",
+  "expected": {
+    "kind": "returned",
+    "package": "sha256:e9efedeb633ad6e307813cba447cc7e5c9f76b1d12429a0a86547c31c1a799dc",
+    "compare": "conformance_projection"
+  }
+}

@@ -1,0 +1,9 @@
+{
+  "revision": "selta.evidence.conformance-oracle/s2-1",
+  "case": "mechanics-invalid-atom-unavailable",
+  "expected": {
+    "kind": "returned",
+    "package": "sha256:8b055bf59e9ab9a7260bd0e4db06ab9e920ad2e1ed9e65bb4c1f60ec98e5e71d",
+    "compare": "conformance_projection"
+  }
+}

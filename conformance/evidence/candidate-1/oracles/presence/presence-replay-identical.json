@@ -1,0 +1,9 @@
+{
+  "revision": "selta.evidence.conformance-oracle/s2-1",
+  "case": "presence-replay-identical",
+  "expected": {
+    "kind": "returned",
+    "package": "sha256:8ac48db7bc93291843cc11f553124743d49b5c4ef5ea75389085bc8d11b366ad",
+    "compare": "conformance_projection"
+  }
+}

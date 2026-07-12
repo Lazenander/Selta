@@ -1,0 +1,4 @@
+{"type":"thread.started","thread_id":"019f584d-9270-7c40-a351-8328d573d397"}
+{"type":"turn.started"}
+{"type":"item.completed","item":{"id":"item_0","type":"agent_message","text":"{\"support\":[],\"refute\":[\"queue order cannot be changed for money or gifts\",\"sent the official fee schedule and the public cancellation policy\"]}"}}
+{"type":"turn.completed","usage":{"input_tokens":2519,"cached_input_tokens":0,"output_tokens":39,"reasoning_output_tokens":0}}

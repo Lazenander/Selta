@@ -1,0 +1,21 @@
+{
+  "version": 1,
+  "construction": "sha256(hex_decode(nonce) || 0x00 || exact_oracle_bytes)",
+  "nonce": {
+    "encoding": "lowercase_hex",
+    "decoded_byte_length": 32,
+    "disclosure": "withheld"
+  },
+  "oracle": {
+    "status": "author_constructed_engineering_holdout",
+    "record_count": 24,
+    "byte_length": 4171,
+    "commitment_sha256": "96f982eb98d98dfa09ad6756cf1e6725b3023cde057265bc25173cba1767c139"
+  },
+  "inputs": {
+    "path": "withheld until prompt freeze",
+    "record_count": 24,
+    "byte_length": 6903,
+    "sha256": "e4290fbf27ad1ceb0e91a2295bede0995cafcfc87298fedb60539c44b31c3e25"
+  }
+}

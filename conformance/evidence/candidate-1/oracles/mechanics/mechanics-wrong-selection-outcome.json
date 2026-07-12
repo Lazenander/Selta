@@ -1,0 +1,9 @@
+{
+  "revision": "selta.evidence.conformance-oracle/s2-1",
+  "case": "mechanics-wrong-selection-outcome",
+  "expected": {
+    "kind": "returned",
+    "package": "sha256:c15c04a42a7c86b616f30137b8a220b1083429d97a50cef22bb900795b2a4b82",
+    "compare": "conformance_projection"
+  }
+}

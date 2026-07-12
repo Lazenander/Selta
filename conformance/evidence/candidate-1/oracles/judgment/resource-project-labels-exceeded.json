@@ -1,0 +1,9 @@
+{
+  "revision": "selta.evidence.conformance-oracle/s2-1",
+  "case": "resource-project-labels-exceeded",
+  "expected": {
+    "kind": "returned",
+    "package": "sha256:991735ffd0934b04d4b962589a14ebbaa8252dcb374146f2a1196023a276cfe9",
+    "compare": "conformance_projection"
+  }
+}

@@ -1,0 +1,32 @@
+{
+  "type": "object",
+  "fields": {
+    "conclusions": {
+      "type": "array",
+      "len": { "min": 1 },
+      "item": {
+        "type": "object",
+        "fields": {
+          "claim": {
+            "type": "object",
+            "fields": {
+              "$ref": { "type": "str", "verify": [{ "ext": "regex", "config": { "pattern": "\\Asha256:[0-9a-f]{64}\\z" } }] },
+              "contract": { "type": "str", "verify": [{ "ext": "regex", "config": { "pattern": "\\Asha256:[0-9a-f]{64}\\z" } }] }
+            }
+          },
+          "labels": {
+            "type": "array",
+            "len": { "min": 1 },
+            "item": {
+              "type": "object",
+              "fields": {
+                "$ref": { "type": "str", "verify": [{ "ext": "regex", "config": { "pattern": "\\Asha256:[0-9a-f]{64}\\z" } }] },
+                "contract": { "type": "str", "verify": [{ "ext": "regex", "config": { "pattern": "\\Asha256:[0-9a-f]{64}\\z" } }] }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}

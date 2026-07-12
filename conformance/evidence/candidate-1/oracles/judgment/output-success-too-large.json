@@ -1,0 +1,9 @@
+{
+  "revision": "selta.evidence.conformance-oracle/s2-1",
+  "case": "output-success-too-large",
+  "expected": {
+    "kind": "returned",
+    "package": "sha256:296f0fdd7da8c6a5bc749b1ba2f0ee33d1a556415e80ec3d9fd1dc9b6423944f",
+    "compare": "conformance_projection"
+  }
+}

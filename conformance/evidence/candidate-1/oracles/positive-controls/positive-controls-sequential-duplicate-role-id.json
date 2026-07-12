@@ -1,0 +1,9 @@
+{
+  "revision": "selta.evidence.conformance-oracle/s2-1",
+  "case": "positive-controls-sequential-duplicate-role-id",
+  "expected": {
+    "kind": "returned",
+    "package": "sha256:ff934b96f53a441cb77d9f0e15af333017d4fde29fe18413d050ccca16fbf655",
+    "compare": "conformance_projection"
+  }
+}

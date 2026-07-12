@@ -1,0 +1,13 @@
+{
+  "revision": "selta.evidence.conformance-case/s2-1",
+  "id": "precedence-identity-unknown-before-reference",
+  "operation": {
+    "kind": "assess",
+    "context": "boundary-candidate-1",
+    "package_source": "sha256:d78baaabfcdb656b198f52cca257f41a4258cd569d892df053a7122bade86a7c",
+    "expected_basis": {
+      "$ref": "sha256:90e48593c4cf5bdb7ae89add8aab8fab19d190eb6dfbf1fc0d0748cea22fbd34",
+      "contract": "sha256:938e5e124cb9648bb532949ff8588edeef0570eee18f6c7bfaf579af17a352a0"
+    }
+  }
+}

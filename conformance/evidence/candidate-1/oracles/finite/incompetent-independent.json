@@ -1,0 +1,8 @@
+{
+  "revision": "selta.evidence.conformance-oracle/s2-1",
+  "case": "incompetent-independent",
+  "expected": {
+    "kind": "finite_result",
+    "result": "sha256:bf3750580165ece3d39f66b48e6dbf27d2ba795aee9345f83c524ccbf4549576"
+  }
+}

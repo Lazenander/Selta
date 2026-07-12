@@ -1,0 +1,13 @@
+{
+  "revision": "selta.evidence.conformance-case/s2-1",
+  "id": "mechanics-unavailable-operational",
+  "operation": {
+    "kind": "assess",
+    "context": "mechanics-candidate-1",
+    "package_source": "sha256:0dc3fc0ba85cecf3399411f54bf4d2fdc646b1c0aa5b92232be0c06b6856df59",
+    "expected_basis": {
+      "$ref": "sha256:86b4b150d8d0dc1dee010e84d98db88d8b175405a7580faba5e5637835c591d1",
+      "contract": "sha256:938e5e124cb9648bb532949ff8588edeef0570eee18f6c7bfaf579af17a352a0"
+    }
+  }
+}

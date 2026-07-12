@@ -1,0 +1,13 @@
+{
+  "revision": "selta.evidence.finite-result/s2-1",
+  "results": [
+    {
+      "name": "best-of-1-truth",
+      "value": { "kind": "boolean", "value": true }
+    },
+    {
+      "name": "best-of-2-truth",
+      "value": { "kind": "boolean", "value": false }
+    }
+  ]
+}

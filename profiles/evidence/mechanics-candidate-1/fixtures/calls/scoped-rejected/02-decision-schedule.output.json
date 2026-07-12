@@ -1,0 +1,16 @@
+{
+  "ordinal": 0,
+  "predecessors": [],
+  "source": {
+    "$ref": "sha256:b5900c6429a63512a33a3ad9799b19675363f90fd4901258d0700c3733e896bb",
+    "contract": "sha256:a587092a0074c9b57a2a22225b99fb20cb6fd0ba69ea27156cab7b8b1ca6ed21"
+  },
+  "request": {
+    "$ref": "sha256:6adbfa77b90342f1d98b819ffad3f5823fd9cd8bb43f1b3deeedf4677944f8b0",
+    "contract": "sha256:a587092a0074c9b57a2a22225b99fb20cb6fd0ba69ea27156cab7b8b1ca6ed21"
+  },
+  "context_view": {
+    "$ref": "sha256:46d99238fd8fd84ce3ce5416a71d1aa03c411437c7901a269c43a8f2d4b9d3bd",
+    "contract": "sha256:a587092a0074c9b57a2a22225b99fb20cb6fd0ba69ea27156cab7b8b1ca6ed21"
+  }
+}

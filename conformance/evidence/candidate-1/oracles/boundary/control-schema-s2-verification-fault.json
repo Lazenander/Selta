@@ -1,0 +1,9 @@
+{
+  "revision": "selta.evidence.conformance-oracle/s2-1",
+  "case": "control-schema-s2-verification-fault",
+  "expected": {
+    "kind": "returned",
+    "package": "sha256:dc4f4d66f265260d1d367e6f0a402bf54914773dc1ffc098b927838be9b7e04b",
+    "compare": "conformance_projection"
+  }
+}

@@ -1,0 +1,7 @@
+2026-07-12T20:46:29.746672Z  WARN codex_models_manager::model_info: Unknown model gpt-5.6-terra is used. This will use fallback model metadata.
+2026-07-12T20:46:29.746733Z  WARN codex_protocol::openai_models: Model personality requested but model_messages is missing, falling back to base instructions. model=gpt-5.6-terra personality=pragmatic
+2026-07-12T20:46:29.761907Z  WARN codex_models_manager::model_info: Unknown model gpt-5.6-terra is used. This will use fallback model metadata.
+2026-07-12T20:46:29.766266Z  WARN codex_models_manager::model_info: Unknown model gpt-5.6-terra is used. This will use fallback model metadata.
+2026-07-12T20:46:30.807118Z  WARN codex_core::session_startup_prewarm: startup websocket prewarm setup failed: {"type":"error","status":400,"error":{"type":"invalid_request_error","message":"The 'gpt-5.6-terra' model requires a newer version of Codex. Please upgrade to the latest app or CLI and try again."}}
+2026-07-12T20:46:32.090686Z  WARN codex_core_plugins::manifest: ignoring interface.defaultPrompt[0]: prompt must be at most 128 characters path=/private/var/folders/yv/5d2hf9mx5cl3hvq21x8z3n_00000gn/T/selta-codex-home-STXlh4/.tmp/plugins/plugins/ngs-analysis/.codex-plugin/plugin.json
+2026-07-12T20:46:32.091778Z  WARN codex_core_plugins::manifest: ignoring interface.defaultPrompt[0]: prompt must be at most 128 characters path=/private/var/folders/yv/5d2hf9mx5cl3hvq21x8z3n_00000gn/T/selta-codex-home-STXlh4/.tmp/plugins/plugins/ngs-analysis/.codex-plugin/plugin.json

@@ -1,0 +1,9 @@
+{
+  "revision": "selta.evidence.conformance-oracle/s2-1",
+  "case": "positive-controls-checked-witness-missing-checker-grant",
+  "expected": {
+    "kind": "returned",
+    "package": "sha256:9de89f44f58be795dcb2c6c77290427b12a4897c098b027c1971b3a9fd90f9af",
+    "compare": "conformance_projection"
+  }
+}

@@ -1,0 +1,17 @@
+{
+  "revision": "selta.evidence.finite-result/s2-1",
+  "results": [
+    {
+      "name": "depth-000",
+      "value": { "kind": "token", "value": "wrong-acceptance" }
+    },
+    {
+      "name": "depth-001",
+      "value": { "kind": "token", "value": "wrong-acceptance" }
+    },
+    {
+      "name": "depth-016",
+      "value": { "kind": "token", "value": "wrong-acceptance" }
+    }
+  ]
+}

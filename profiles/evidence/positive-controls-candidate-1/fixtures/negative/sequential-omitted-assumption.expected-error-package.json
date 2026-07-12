@@ -1,0 +1,41 @@
+{
+  "language": "selta.evidence.package/candidate-1",
+  "environment": "sha256:97a2795354041b74443f8686d75be998eebf563275b479d9d23a055adf92eba4",
+  "documents": [
+    {
+      "contract": "sha256:86ed6b6f38c1b1a1d6bc5f09e2997a0df9e0f1e8554624372031034f17ebf7fb",
+      "digest": "sha256:d5be7e1c4af92d1b6b5f58e8688282ecad64c457a5fa3c633fcbb330dd9ecc69",
+      "value": {
+        "revision": "selta.evidence.outcome/candidate-1",
+        "status": "error",
+        "environment": "sha256:97a2795354041b74443f8686d75be998eebf563275b479d9d23a055adf92eba4",
+        "errors": [
+          {
+            "phase": "relation",
+            "code": "relation.invalid_derivation",
+            "path": "/input/documents/36/value/nodes/0",
+            "message": "evidence derivation is invalid"
+          }
+        ],
+        "executions": [],
+        "resources": {
+          "documents": 42,
+          "total_document_bytes": 28969,
+          "attempts_total": 0,
+          "graph_nodes": 1,
+          "graph_edges": 1,
+          "max_fan_in_observed": 1,
+          "graph_depth": 1,
+          "semantic_calls": 0,
+          "semantic_fuel": 0,
+          "state_bytes": 0,
+          "conclusion_labels_total": 0
+        }
+      }
+    }
+  ],
+  "root": {
+    "$ref": "sha256:d5be7e1c4af92d1b6b5f58e8688282ecad64c457a5fa3c633fcbb330dd9ecc69",
+    "contract": "sha256:86ed6b6f38c1b1a1d6bc5f09e2997a0df9e0f1e8554624372031034f17ebf7fb"
+  }
+}

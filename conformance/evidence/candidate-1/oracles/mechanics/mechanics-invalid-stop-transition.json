@@ -1,0 +1,9 @@
+{
+  "revision": "selta.evidence.conformance-oracle/s2-1",
+  "case": "mechanics-invalid-stop-transition",
+  "expected": {
+    "kind": "returned",
+    "package": "sha256:ee48e074bd3c9c108f76458d67815e3c62cbc11488fb3f2577e6607927941e11",
+    "compare": "conformance_projection"
+  }
+}

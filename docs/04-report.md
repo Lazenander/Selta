@@ -15,7 +15,7 @@ does with it (retry, rank, log, ignore) is explicitly not Selta's concern.
   "verdict": "fail",                // fold at $ — "pass" | "fail" | "inconclusive"
   "deltas": [ Delta ],              // flattened, ordered (see Ordering)
   "notices": [ Notice ],            // informational, never affect the verdict
-  "errors": [ CheckError ],         // what made checks inconclusive, if anything
+  "errors": [ CheckError ],         // operational failures observed during the report
   "root": NodeResult,               // full verdict tree for consumers that want structure
   "usage": {                        // aggregated from extension responses
     "samples": 5,
@@ -27,8 +27,9 @@ does with it (retry, rank, log, ignore) is explicitly not Selta's concern.
 }
 ```
 
-`deltas` and `root` carry the same information in two shapes: the flat list is what most
-consumers want; the tree preserves where in the schema each result came from.
+`deltas` is the flat list of promoted failures most consumers want; `root` preserves the
+same promoted deltas where they arose and, for cautious checks, additional evidence that
+did not project to failure. The flat list is therefore not an evidence-summary mirror.
 `extensions` makes every verdict attributable: together with the pinned schema version,
 the settings fingerprints identify the exact configuration — model, endpoint — that
 produced it ([05-extensions.md](05-extensions.md)).
@@ -51,6 +52,24 @@ produced it ([05-extensions.md](05-extensions.md)).
   "children": { "fields": { ... } } // objects: by field name; arrays: "items": [ ... ]
 }
 ```
+
+### Evidence-mode check addition
+
+A revision-2 leaf with `"evidence": "cautious"` adds an `evidence` object to its
+`CheckResult`. The object records the derived four-state presence result, counts of
+`neither`, `support_only`, `refute_only`, and `both`, unavailable acquisitions, and any
+inspectable refutations. `state` is omitted if no semantic assessment completed.
+
+This field is absent, rather than `null` or empty, on every legacy check, so revision-1
+report JSON is unchanged. A `both` or `neither` state by itself projects to
+`inconclusive` without a `CheckError`; a separately failed completion gate remains
+error-bearing on that check even when raw semantic observations exist. A parent whose
+FOUR result is decisive has no local `CheckResult.error`, while the report-wide error
+stream still records the child failure. Refutations from an inconclusive state stay
+inside the evidence summary and do not enter the flat `deltas` array. The normative
+shape and promotion rules are in
+[24-presence-assessment.md](24-presence-assessment.md); source and wire compatibility are
+in [25-assessment-compatibility.md](25-assessment-compatibility.md).
 
 ## Delta
 
@@ -102,8 +121,11 @@ a repaired value is never mistaken for a clean one, and they never affect any ve
 { "path": "$.code", "source": "llm_judge", "error": "host timeout after 30000 ms", "samples_lost": 2 }
 ```
 
-Errors explain `inconclusive`. They are disjoint from deltas by design: a delta says "the
-value is wrong like this", an error says "Selta could not find out".
+A check-local `error` explains that check's `inconclusive` verdict. The report-wide
+`errors` collection retains operational failures even when cautious FOUR composition is
+decisive, so a top-level `pass` or `fail` may coexist with report errors. Errors remain
+disjoint from deltas by design: a delta says "the value is wrong like this", an error
+says "this execution did not produce a usable conclusion".
 
 ## Path syntax
 
@@ -123,5 +145,7 @@ in the check entry (`"variant": 1`), not in the path.
 
 `deltas` is ordered by: `structure` first, then `constraint`, then `semantic`; ties broken
 by document order of the path. The ordering, field names, and enum values on this page are
-a stable contract — additive changes only. Anything a consumer might parse lives in this
-document, and nothing here implies how a consumer should react to it.
+a stable base contract — additive changes only. The only Selta 0.2 addition is the
+opt-in evidence summary normatively specified in
+[24-presence-assessment.md](24-presence-assessment.md). Nothing here implies how a
+consumer should react to either surface.

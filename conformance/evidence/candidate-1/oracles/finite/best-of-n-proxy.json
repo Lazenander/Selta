@@ -1,0 +1,8 @@
+{
+  "revision": "selta.evidence.conformance-oracle/s2-1",
+  "case": "best-of-n-proxy",
+  "expected": {
+    "kind": "finite_result",
+    "result": "sha256:2ac09220e60abb41e95c1c3b69e8584e478052d6f7dec6dc7eaec27d878be3f1"
+  }
+}

@@ -1,0 +1,9 @@
+{
+  "revision": "selta.evidence.conformance-oracle/s2-1",
+  "case": "control-relation-invalid-output",
+  "expected": {
+    "kind": "returned",
+    "package": "sha256:30bb60902dc727fa2e21aa3818cbf15d0dacd62ef843a8fad70e98088b584643",
+    "compare": "conformance_projection"
+  }
+}

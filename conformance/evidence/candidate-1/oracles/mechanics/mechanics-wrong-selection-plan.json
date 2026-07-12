@@ -1,0 +1,9 @@
+{
+  "revision": "selta.evidence.conformance-oracle/s2-1",
+  "case": "mechanics-wrong-selection-plan",
+  "expected": {
+    "kind": "returned",
+    "package": "sha256:6ae51085f7942430dcc06289f3e3114321ad5f996a0c3b3913a139d78c9ea2e8",
+    "compare": "conformance_projection"
+  }
+}

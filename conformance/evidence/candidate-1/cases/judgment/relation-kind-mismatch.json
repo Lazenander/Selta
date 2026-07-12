@@ -1,0 +1,13 @@
+{
+  "revision": "selta.evidence.conformance-case/s2-1",
+  "id": "relation-kind-mismatch",
+  "operation": {
+    "kind": "assess",
+    "context": "positive-controls-candidate-1",
+    "package_source": "sha256:0ba87ba0393a0d5e3f180939e041b28fbf216c11aa7354f8633ba15471338c27",
+    "expected_basis": {
+      "$ref": "sha256:2cf807f361593a67ce58229bd7182e44fd8ed87067a52e439c7157eadaaacce8",
+      "contract": "sha256:938e5e124cb9648bb532949ff8588edeef0570eee18f6c7bfaf579af17a352a0"
+    }
+  }
+}

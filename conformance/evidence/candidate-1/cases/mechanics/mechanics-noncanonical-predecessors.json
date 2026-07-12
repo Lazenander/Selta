@@ -1,0 +1,13 @@
+{
+  "revision": "selta.evidence.conformance-case/s2-1",
+  "id": "mechanics-noncanonical-predecessors",
+  "operation": {
+    "kind": "assess",
+    "context": "mechanics-candidate-1",
+    "package_source": "sha256:77f75ecc04a7da22eb7b796cde5c53e24d142dfd9c10b9392fa0ff049c303f49",
+    "expected_basis": {
+      "$ref": "sha256:f8af76a5bf215b4e924ed4a7f35a2c6cdf42981f9181794283d75ac5305a881a",
+      "contract": "sha256:938e5e124cb9648bb532949ff8588edeef0570eee18f6c7bfaf579af17a352a0"
+    }
+  }
+}

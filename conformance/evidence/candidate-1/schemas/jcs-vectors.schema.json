@@ -1,0 +1,35 @@
+{
+  "type": "object",
+  "fields": {
+    "revision": {
+      "type": "str",
+      "verify": [{ "ext": "one_of", "config": { "values": ["selta.evidence.jcs-vectors/s2-1"] } }]
+    },
+    "source": {
+      "type": "str",
+      "verify": [{ "ext": "one_of", "config": { "values": ["https://www.rfc-editor.org/rfc/rfc8785.html"] } }]
+    },
+    "vectors": {
+      "type": "array",
+      "len": { "min": 3, "max": 3 },
+      "item": {
+        "type": "object",
+        "fields": {
+          "name": {
+            "type": "str",
+            "verify": [{ "ext": "one_of", "config": { "values": ["recursive-objects", "rfc-primitive-serialization", "rfc-utf16-property-sort"] } }]
+          },
+          "input": { "type": "any" },
+          "expected_utf8_hex": {
+            "type": "str",
+            "verify": [
+              { "ext": "non_empty" },
+              { "ext": "regex", "config": { "pattern": "\\A(?:[0-9a-f]{2})+\\z" } },
+              { "ext": "len", "config": { "max": 2097152 } }
+            ]
+          }
+        }
+      }
+    }
+  }
+}

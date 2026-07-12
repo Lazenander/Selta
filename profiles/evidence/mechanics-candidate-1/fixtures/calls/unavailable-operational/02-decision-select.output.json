@@ -1,0 +1,7 @@
+{
+  "kind": "exclude",
+  "reason": {
+    "$ref": "sha256:46975df6ad326a4223ed8dfbbf92231b4596f13c75c0ee4bdf3b5ac50bf6bf5f",
+    "contract": "sha256:a587092a0074c9b57a2a22225b99fb20cb6fd0ba69ea27156cab7b8b1ca6ed21"
+  }
+}

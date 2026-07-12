@@ -1,0 +1,237 @@
+{
+  "type": "union",
+  "variants": [
+    {
+      "type": "object",
+      "fields": {
+        "revision": { "type": "str", "verify": [{ "ext": "one_of", "config": { "values": ["selta.evidence.outcome/candidate-1"] } }] },
+        "status": { "type": "str", "verify": [{ "ext": "one_of", "config": { "values": ["concluded"] } }] },
+        "basis": {
+          "type": "object",
+          "fields": {
+            "$ref": { "type": "str", "verify": [{ "ext": "regex", "config": { "pattern": "\\Asha256:[0-9a-f]{64}\\z" } }] },
+            "contract": { "type": "str", "verify": [{ "ext": "regex", "config": { "pattern": "\\Asha256:[0-9a-f]{64}\\z" } }] }
+          }
+        },
+        "environment": { "type": "str", "verify": [{ "ext": "regex", "config": { "pattern": "\\Asha256:[0-9a-f]{64}\\z" } }] },
+        "state": {
+          "type": "object",
+          "fields": {
+            "$ref": { "type": "str", "verify": [{ "ext": "regex", "config": { "pattern": "\\Asha256:[0-9a-f]{64}\\z" } }] },
+            "contract": { "type": "str", "verify": [{ "ext": "regex", "config": { "pattern": "\\Asha256:[0-9a-f]{64}\\z" } }] }
+          }
+        },
+        "closures": {
+          "type": "array",
+          "len": { "min": 1 },
+          "item": {
+            "type": "object",
+            "fields": {
+              "target": {
+                "type": "object",
+                "fields": {
+                  "root": { "type": "str", "verify": [{ "ext": "one_of", "config": { "values": ["state", "conclusion"] } }] },
+                  "component": { "type": "str", "verify": [{ "ext": "regex", "config": { "pattern": "\\A(?:/(?:[^~/]|~[01])*)*\\z" } }] }
+                }
+              },
+              "premises": {
+                "type": "array",
+                "item": {
+                  "type": "union",
+                  "variants": [
+                    {
+                      "type": "object",
+                      "fields": {
+                        "evidence": { "type": "str", "verify": [{ "ext": "regex", "config": { "pattern": "\\Asha256:[0-9a-f]{64}\\z" } }] }
+                      }
+                    },
+                    {
+                      "type": "object",
+                      "fields": {
+                        "attempt": {
+                          "type": "object",
+                          "fields": {
+                            "acquisition": {
+                              "type": "object",
+                              "fields": {
+                                "$ref": { "type": "str", "verify": [{ "ext": "regex", "config": { "pattern": "\\Asha256:[0-9a-f]{64}\\z" } }] },
+                                "contract": { "type": "str", "verify": [{ "ext": "regex", "config": { "pattern": "\\Asha256:[0-9a-f]{64}\\z" } }] }
+                              }
+                            },
+                            "attempt": { "type": "str", "verify": [{ "ext": "regex", "config": { "pattern": "\\Asha256:[0-9a-f]{64}\\z" } }] }
+                          }
+                        }
+                      }
+                    },
+                    {
+                      "type": "object",
+                      "fields": {
+                        "trace": {
+                          "type": "object",
+                          "fields": {
+                            "$ref": { "type": "str", "verify": [{ "ext": "regex", "config": { "pattern": "\\Asha256:[0-9a-f]{64}\\z" } }] },
+                            "contract": { "type": "str", "verify": [{ "ext": "regex", "config": { "pattern": "\\Asha256:[0-9a-f]{64}\\z" } }] }
+                          }
+                        }
+                      }
+                    },
+                    {
+                      "type": "object",
+                      "fields": {
+                        "accounting": {
+                          "type": "object",
+                          "fields": {
+                            "$ref": { "type": "str", "verify": [{ "ext": "regex", "config": { "pattern": "\\Asha256:[0-9a-f]{64}\\z" } }] },
+                            "contract": { "type": "str", "verify": [{ "ext": "regex", "config": { "pattern": "\\Asha256:[0-9a-f]{64}\\z" } }] }
+                          }
+                        }
+                      }
+                    }
+                  ]
+                }
+              },
+              "assumptions": {
+                "type": "array",
+                "item": { "type": "str", "verify": [{ "ext": "regex", "config": { "pattern": "\\Asha256:[0-9a-f]{64}\\z" } }] }
+              },
+              "grants": {
+                "type": "array",
+                "item": { "type": "str", "verify": [{ "ext": "regex", "config": { "pattern": "\\Asha256:[0-9a-f]{64}\\z" } }] }
+              },
+              "bindings": {
+                "type": "array",
+                "item": {
+                  "type": "object",
+                  "fields": {
+                    "semantics": { "type": "str", "verify": [{ "ext": "regex", "config": { "pattern": "\\Asha256:[0-9a-f]{64}\\z" } }] },
+                    "parameters": {
+                      "type": "object",
+                      "fields": {
+                        "$ref": { "type": "str", "verify": [{ "ext": "regex", "config": { "pattern": "\\Asha256:[0-9a-f]{64}\\z" } }] },
+                        "contract": { "type": "str", "verify": [{ "ext": "regex", "config": { "pattern": "\\Asha256:[0-9a-f]{64}\\z" } }] }
+                      }
+                    }
+                  }
+                }
+              },
+              "direct_inputs": {
+                "type": "array",
+                "item": {
+                  "type": "object",
+                  "fields": {
+                    "$ref": { "type": "str", "verify": [{ "ext": "regex", "config": { "pattern": "\\Asha256:[0-9a-f]{64}\\z" } }] },
+                    "contract": { "type": "str", "verify": [{ "ext": "regex", "config": { "pattern": "\\Asha256:[0-9a-f]{64}\\z" } }] }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "conclusions": {
+          "type": "array",
+          "len": { "min": 1 },
+          "item": {
+            "type": "object",
+            "fields": {
+              "claim": {
+                "type": "object",
+                "fields": {
+                  "$ref": { "type": "str", "verify": [{ "ext": "regex", "config": { "pattern": "\\Asha256:[0-9a-f]{64}\\z" } }] },
+                  "contract": { "type": "str", "verify": [{ "ext": "regex", "config": { "pattern": "\\Asha256:[0-9a-f]{64}\\z" } }] }
+                }
+              },
+              "labels": {
+                "type": "array",
+                "len": { "min": 1 },
+                "item": {
+                  "type": "object",
+                  "fields": {
+                    "$ref": { "type": "str", "verify": [{ "ext": "regex", "config": { "pattern": "\\Asha256:[0-9a-f]{64}\\z" } }] },
+                    "contract": { "type": "str", "verify": [{ "ext": "regex", "config": { "pattern": "\\Asha256:[0-9a-f]{64}\\z" } }] }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "executions": {
+          "type": "array",
+          "len": { "min": 1 },
+          "item": {
+            "type": "object",
+            "fields": {
+              "semantics": { "type": "str", "verify": [{ "ext": "regex", "config": { "pattern": "\\Asha256:[0-9a-f]{64}\\z" } }] },
+              "implementation": { "type": "str", "verify": [{ "ext": "regex", "config": { "pattern": "\\Asha256:[0-9a-f]{64}\\z" } }] }
+            }
+          }
+        },
+        "resources": {
+          "type": "object",
+          "fields": {
+            "documents": { "type": "int", "verify": [{ "ext": "range", "config": { "min": 0, "max": 9007199254740991 } }] },
+            "total_document_bytes": { "type": "int", "verify": [{ "ext": "range", "config": { "min": 0, "max": 9007199254740991 } }] },
+            "attempts_total": { "type": "int", "verify": [{ "ext": "range", "config": { "min": 0, "max": 9007199254740991 } }] },
+            "graph_nodes": { "type": "int", "verify": [{ "ext": "range", "config": { "min": 0, "max": 9007199254740991 } }] },
+            "graph_edges": { "type": "int", "verify": [{ "ext": "range", "config": { "min": 0, "max": 9007199254740991 } }] },
+            "max_fan_in_observed": { "type": "int", "verify": [{ "ext": "range", "config": { "min": 0, "max": 9007199254740991 } }] },
+            "graph_depth": { "type": "int", "verify": [{ "ext": "range", "config": { "min": 0, "max": 9007199254740991 } }] },
+            "semantic_calls": { "type": "int", "verify": [{ "ext": "range", "config": { "min": 0, "max": 9007199254740991 } }] },
+            "semantic_fuel": { "type": "int", "verify": [{ "ext": "range", "config": { "min": 0, "max": 9007199254740991 } }] },
+            "state_bytes": { "type": "int", "verify": [{ "ext": "range", "config": { "min": 0, "max": 9007199254740991 } }] },
+            "conclusion_labels_total": { "type": "int", "verify": [{ "ext": "range", "config": { "min": 0, "max": 9007199254740991 } }] }
+          }
+        }
+      }
+    },
+    {
+      "type": "object",
+      "fields": {
+        "revision": { "type": "str", "verify": [{ "ext": "one_of", "config": { "values": ["selta.evidence.outcome/candidate-1"] } }] },
+        "status": { "type": "str", "verify": [{ "ext": "one_of", "config": { "values": ["error"] } }] },
+        "environment": { "type": "str", "verify": [{ "ext": "regex", "config": { "pattern": "\\Asha256:[0-9a-f]{64}\\z" } }] },
+        "errors": {
+          "type": "array",
+          "len": { "min": 1, "max": 256 },
+          "item": {
+            "type": "object",
+            "fields": {
+              "phase": {
+                "type": "str",
+                "verify": [{ "ext": "one_of", "config": { "values": ["parse", "schema", "identity", "relation", "interpret", "project", "output"] } }]
+              },
+              "code": { "type": "str", "verify": [{ "ext": "regex", "config": { "pattern": "\\A[a-z][a-z0-9_.]*\\z" } }] },
+              "path": { "type": "str", "verify": [{ "ext": "regex", "config": { "pattern": "\\A(?:/(?:[^~/]|~[01])*)*\\z" } }] },
+              "message": { "type": "str", "verify": [{ "ext": "non_empty" }] }
+            }
+          }
+        },
+        "executions": {
+          "type": "array",
+          "item": {
+            "type": "object",
+            "fields": {
+              "semantics": { "type": "str", "verify": [{ "ext": "regex", "config": { "pattern": "\\Asha256:[0-9a-f]{64}\\z" } }] },
+              "implementation": { "type": "str", "verify": [{ "ext": "regex", "config": { "pattern": "\\Asha256:[0-9a-f]{64}\\z" } }] }
+            }
+          }
+        },
+        "resources": {
+          "type": "object",
+          "fields": {
+            "documents": { "type": "int", "verify": [{ "ext": "range", "config": { "min": 0, "max": 9007199254740991 } }] },
+            "total_document_bytes": { "type": "int", "verify": [{ "ext": "range", "config": { "min": 0, "max": 9007199254740991 } }] },
+            "attempts_total": { "type": "int", "verify": [{ "ext": "range", "config": { "min": 0, "max": 9007199254740991 } }] },
+            "graph_nodes": { "type": "int", "verify": [{ "ext": "range", "config": { "min": 0, "max": 9007199254740991 } }] },
+            "graph_edges": { "type": "int", "verify": [{ "ext": "range", "config": { "min": 0, "max": 9007199254740991 } }] },
+            "max_fan_in_observed": { "type": "int", "verify": [{ "ext": "range", "config": { "min": 0, "max": 9007199254740991 } }] },
+            "graph_depth": { "type": "int", "verify": [{ "ext": "range", "config": { "min": 0, "max": 9007199254740991 } }] },
+            "semantic_calls": { "type": "int", "verify": [{ "ext": "range", "config": { "min": 0, "max": 9007199254740991 } }] },
+            "semantic_fuel": { "type": "int", "verify": [{ "ext": "range", "config": { "min": 0, "max": 9007199254740991 } }] },
+            "state_bytes": { "type": "int", "verify": [{ "ext": "range", "config": { "min": 0, "max": 9007199254740991 } }] },
+            "conclusion_labels_total": { "type": "int", "verify": [{ "ext": "range", "config": { "min": 0, "max": 9007199254740991 } }] }
+          }
+        }
+      }
+    }
+  ]
+}

@@ -1,0 +1,180 @@
+{
+  "type": "object",
+  "fields": {
+    "revision": {
+      "type": "str",
+      "verify": [{ "ext": "one_of", "config": { "values": ["selta.evidence.conformance-manifest-input/s2-1"] } }]
+    },
+    "discovery": {
+      "type": "object",
+      "fields": {
+        "case_root": { "type": "str", "verify": [{ "ext": "regex", "config": { "pattern": "\\A(?:[A-Za-z0-9_-][A-Za-z0-9._-]*/)*[A-Za-z0-9_-][A-Za-z0-9._-]*\\z" } }, { "ext": "len", "config": { "max": 1024 } }] },
+        "oracle_root": { "type": "str", "verify": [{ "ext": "regex", "config": { "pattern": "\\A(?:[A-Za-z0-9_-][A-Za-z0-9._-]*/)*[A-Za-z0-9_-][A-Za-z0-9._-]*\\z" } }, { "ext": "len", "config": { "max": 1024 } }] },
+        "conformance_schema_root": { "type": "str", "verify": [{ "ext": "regex", "config": { "pattern": "\\A(?:[A-Za-z0-9_-][A-Za-z0-9._-]*/)*[A-Za-z0-9_-][A-Za-z0-9._-]*\\z" } }, { "ext": "len", "config": { "max": 1024 } }] },
+        "artifact_roots": {
+          "type": "array",
+          "len": { "min": 1 },
+          "item": { "type": "str", "verify": [{ "ext": "regex", "config": { "pattern": "\\A(?:[A-Za-z0-9_-][A-Za-z0-9._-]*/)*[A-Za-z0-9_-][A-Za-z0-9._-]*\\z" } }, { "ext": "len", "config": { "max": 1024 } }] }
+        }
+      }
+    },
+    "contexts": {
+      "type": "array",
+      "len": { "min": 4, "max": 4 },
+      "item": {
+        "type": "object",
+        "fields": {
+          "id": { "type": "str", "verify": [{ "ext": "regex", "config": { "pattern": "\\A[a-z0-9]+(?:-[a-z0-9]+)*\\z" } }, { "ext": "len", "config": { "max": 128 } }] },
+          "environment_path": { "type": "str", "verify": [{ "ext": "regex", "config": { "pattern": "\\A(?:[A-Za-z0-9_-][A-Za-z0-9._-]*/)*[A-Za-z0-9_-][A-Za-z0-9._-]*\\z" } }, { "ext": "len", "config": { "max": 1024 } }] }
+        }
+      }
+    },
+    "resolver_sources": {
+      "type": "array",
+      "len": { "min": 1 },
+      "item": {
+        "type": "object",
+        "fields": {
+          "domain": { "type": "str", "verify": [{ "ext": "regex", "config": { "pattern": "\\A[A-Za-z0-9][A-Za-z0-9._/-]*\\z" } }, { "ext": "len", "config": { "max": 256 } }] },
+          "path": { "type": "str", "verify": [{ "ext": "regex", "config": { "pattern": "\\A(?:[A-Za-z0-9_-][A-Za-z0-9._-]*/)*[A-Za-z0-9_-][A-Za-z0-9._-]*\\z" } }, { "ext": "len", "config": { "max": 1024 } }] }
+        }
+      }
+    },
+    "raw_only": {
+      "type": "array",
+      "item": { "type": "str", "verify": [{ "ext": "regex", "config": { "pattern": "\\A(?:[A-Za-z0-9_-][A-Za-z0-9._-]*/)*[A-Za-z0-9_-][A-Za-z0-9._-]*\\z" } }, { "ext": "len", "config": { "max": 1024 } }] }
+    },
+    "public_inputs": {
+      "type": "object",
+      "fields": {
+        "include": {
+          "type": "array",
+          "item": { "type": "str", "verify": [{ "ext": "one_of", "config": { "values": ["context_environments", "context_resolvers", "model_case_records", "model_case_sources"] } }] }
+        },
+        "files": {
+          "type": "array",
+          "item": { "type": "str", "verify": [{ "ext": "regex", "config": { "pattern": "\\A(?:[A-Za-z0-9_-][A-Za-z0-9._-]*/)*[A-Za-z0-9_-][A-Za-z0-9._-]*\\z" } }, { "ext": "len", "config": { "max": 1024 } }] }
+        },
+        "model_a_additions": {
+          "type": "object",
+          "fields": {
+            "files": {
+              "type": "array",
+              "item": { "type": "str", "verify": [{ "ext": "regex", "config": { "pattern": "\\A(?:[A-Za-z0-9_-][A-Za-z0-9._-]*/)*[A-Za-z0-9_-][A-Za-z0-9._-]*\\z" } }, { "ext": "len", "config": { "max": 1024 } }] }
+            },
+            "rust_source_roots": {
+              "type": "array",
+              "item": { "type": "str", "verify": [{ "ext": "regex", "config": { "pattern": "\\A(?:[A-Za-z0-9_-][A-Za-z0-9._-]*/)*[A-Za-z0-9_-][A-Za-z0-9._-]*\\z" } }, { "ext": "len", "config": { "max": 1024 } }] }
+            }
+          }
+        },
+        "model_b_additions": {
+          "type": "object",
+          "fields": {
+            "runtime_profile": {
+              "type": "str",
+              "verify": [{ "ext": "one_of", "config": { "values": ["selta.evidence.conformance-runtime/cpython-3.9-stdlib-1"] } }]
+            },
+            "runtime_root": {
+              "type": "str",
+              "verify": [
+                { "ext": "regex", "config": { "pattern": "\\A(?:[A-Za-z0-9_-][A-Za-z0-9._-]*/)*[A-Za-z0-9_-][A-Za-z0-9._-]*\\z" } },
+                { "ext": "len", "config": { "max": 1024 } }
+              ]
+            },
+            "runtime_artifact_set_path": {
+              "type": "str",
+              "verify": [
+                { "ext": "regex", "config": { "pattern": "\\A(?:[A-Za-z0-9_-][A-Za-z0-9._-]*/)*[A-Za-z0-9_-][A-Za-z0-9._-]*\\z" } },
+                { "ext": "len", "config": { "max": 1024 } }
+              ]
+            }
+          }
+        }
+      }
+    },
+    "laws": {
+      "type": "array",
+      "len": { "min": 15, "max": 15 },
+      "item": {
+        "type": "object",
+        "fields": {
+          "number": { "type": "int", "verify": [{ "ext": "range", "config": { "min": 1, "max": 15 } }] },
+          "positive": {
+            "type": "array",
+            "len": { "min": 1 },
+            "item": { "type": "str", "verify": [{ "ext": "regex", "config": { "pattern": "\\A[a-z0-9]+(?:-[a-z0-9]+)*\\z" } }, { "ext": "len", "config": { "max": 128 } }] }
+          },
+          "falsifiers": {
+            "type": "array",
+            "len": { "min": 1 },
+            "item": { "type": "str", "verify": [{ "ext": "regex", "config": { "pattern": "\\A[a-z0-9]+(?:-[a-z0-9]+)*\\z" } }, { "ext": "len", "config": { "max": 128 } }] }
+          }
+        }
+      }
+    },
+    "named": {
+      "type": "array",
+      "len": { "min": 16, "max": 16 },
+      "item": {
+        "type": "object",
+        "fields": {
+          "name": {
+            "type": "str",
+            "verify": [{
+              "ext": "one_of",
+              "config": { "values": [
+                "CASCADE-FALSE-REJECT", "CORRELATED-MAJORITY", "CORRELATED-UNANIMITY",
+                "INCOMPETENT-INDEPENDENT", "RECURSIVE-FIXED-POINT", "OPTIONAL-STOP",
+                "POST-SELECTION", "ALIASED-VOTES", "CONFLICT-VS-ABSENCE",
+                "BEST-OF-N-PROXY", "GENUINE-DISAGREEMENT", "OPERATIONAL-COERCION",
+                "VALID-LOG-OMISSION", "ADAPTIVE-HOLDOUT", "CHECKED-WITNESS",
+                "CALIBRATED-SEQUENTIAL-EVIDENCE"
+              ] }
+            }]
+          },
+          "witnesses": {
+            "type": "array",
+            "len": { "min": 1 },
+            "item": { "type": "str", "verify": [{ "ext": "regex", "config": { "pattern": "\\A[a-z0-9]+(?:-[a-z0-9]+)*\\z" } }, { "ext": "len", "config": { "max": 128 } }] }
+          }
+        }
+      }
+    },
+    "errors": {
+      "type": "array",
+      "len": { "min": 48, "max": 48 },
+      "item": {
+        "type": "union",
+        "variants": [
+          {
+            "type": "object",
+            "fields": {
+              "phase": { "type": "str", "verify": [{ "ext": "one_of", "config": { "values": ["parse", "schema", "identity", "relation", "interpret", "project", "output"] } }] },
+              "code": { "type": "str", "verify": [{ "ext": "regex", "config": { "pattern": "\\A[a-z][a-z0-9_.]*\\z" } }] },
+              "reachability": { "type": "str", "verify": [{ "ext": "one_of", "config": { "values": ["wire"] } }] }
+            }
+          },
+          {
+            "type": "object",
+            "fields": {
+              "phase": { "type": "str", "verify": [{ "ext": "one_of", "config": { "values": ["parse", "schema", "identity", "relation", "interpret", "project", "output"] } }] },
+              "code": { "type": "str", "verify": [{ "ext": "regex", "config": { "pattern": "\\A[a-z][a-z0-9_.]*\\z" } }] },
+              "reachability": { "type": "str", "verify": [{ "ext": "one_of", "config": { "values": ["control"] } }] },
+              "control": { "type": "str", "verify": [{ "ext": "one_of", "config": { "values": ["identity_result", "semantic_output", "semantic_output_bytes", "verification_fault"] } }] }
+            }
+          },
+          {
+            "type": "object",
+            "fields": {
+              "phase": { "type": "str", "verify": [{ "ext": "one_of", "config": { "values": ["parse", "schema", "identity", "relation", "interpret", "project", "output"] } }] },
+              "code": { "type": "str", "verify": [{ "ext": "regex", "config": { "pattern": "\\A[a-z][a-z0-9_.]*\\z" } }] },
+              "reachability": { "type": "str", "verify": [{ "ext": "one_of", "config": { "values": ["unreachable"] } }] },
+              "proof_path": { "type": "str", "verify": [{ "ext": "regex", "config": { "pattern": "\\A(?:[A-Za-z0-9_-][A-Za-z0-9._-]*/)*[A-Za-z0-9_-][A-Za-z0-9._-]*\\z" } }, { "ext": "len", "config": { "max": 1024 } }] }
+            }
+          }
+        ]
+      }
+    }
+  }
+}

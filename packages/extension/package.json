@@ -1,6 +1,6 @@
 {
   "name": "@selta/extension",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "Selta extension host SDK: write a verifier, speak the protocol for free",
   "type": "module",
   "main": "index.js",

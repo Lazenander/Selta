@@ -1,0 +1,6 @@
+{
+  "type": "object",
+  "fields": {
+    "values": { "type": "array", "item": { "type": "any" } }
+  }
+}

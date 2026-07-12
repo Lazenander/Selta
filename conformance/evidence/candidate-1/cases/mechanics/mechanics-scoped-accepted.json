@@ -1,0 +1,13 @@
+{
+  "revision": "selta.evidence.conformance-case/s2-1",
+  "id": "mechanics-scoped-accepted",
+  "operation": {
+    "kind": "assess",
+    "context": "mechanics-candidate-1",
+    "package_source": "sha256:74cf6220464cf8cad63b98feecee56e6581d7d44f1197d3369f003cf5f2ba223",
+    "expected_basis": {
+      "$ref": "sha256:28ee25365d99c06072938217d923b8827179e7c8670be52c3152bd517f7b787a",
+      "contract": "sha256:938e5e124cb9648bb532949ff8588edeef0570eee18f6c7bfaf579af17a352a0"
+    }
+  }
+}

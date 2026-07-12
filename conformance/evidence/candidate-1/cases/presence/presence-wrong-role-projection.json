@@ -1,0 +1,13 @@
+{
+  "revision": "selta.evidence.conformance-case/s2-1",
+  "id": "presence-wrong-role-projection",
+  "operation": {
+    "kind": "assess",
+    "context": "presence-candidate-1",
+    "package_source": "sha256:9821075111ccbcd49390cefbd8c041b40826ee7091bcb755ab9ea6d9346d3067",
+    "expected_basis": {
+      "$ref": "sha256:42a0f6754727187dc5d88cae58f7aa86a70ac76afcf957878d6f540de95666e5",
+      "contract": "sha256:938e5e124cb9648bb532949ff8588edeef0570eee18f6c7bfaf579af17a352a0"
+    }
+  }
+}

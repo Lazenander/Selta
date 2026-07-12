@@ -1,0 +1,13 @@
+{
+  "revision": "selta.evidence.conformance-case/s2-1",
+  "id": "positive-controls-sequential-fixed-horizon",
+  "operation": {
+    "kind": "assess",
+    "context": "positive-controls-candidate-1",
+    "package_source": "sha256:84fcbf8d0645d24d27ff294e45b50508d8e33eab217d4abb0f53e9c977b835a0",
+    "expected_basis": {
+      "$ref": "sha256:cab9ca02058f949e822fbd395838ae212e96aedfa48236262d276ac7a9ea06f3",
+      "contract": "sha256:938e5e124cb9648bb532949ff8588edeef0570eee18f6c7bfaf579af17a352a0"
+    }
+  }
+}

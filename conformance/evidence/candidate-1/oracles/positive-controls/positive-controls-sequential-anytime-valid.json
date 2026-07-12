@@ -1,0 +1,9 @@
+{
+  "revision": "selta.evidence.conformance-oracle/s2-1",
+  "case": "positive-controls-sequential-anytime-valid",
+  "expected": {
+    "kind": "returned",
+    "package": "sha256:03d15866a5c83700d0915861024f15426e28f3e52a6b322a3ab2c80544175c52",
+    "compare": "conformance_projection"
+  }
+}

@@ -1,0 +1,13 @@
+{
+  "revision": "selta.evidence.conformance-case/s2-1",
+  "id": "positive-controls-sequential-expectation-scope-mismatch",
+  "operation": {
+    "kind": "assess",
+    "context": "positive-controls-candidate-1",
+    "package_source": "sha256:736a42886b6722154f9bd76e6dadb023f669bfa68247108ad9f19601966b3895",
+    "expected_basis": {
+      "$ref": "sha256:78970fd039dab714e8151de975c06766c3d360033c93b3178da15aaf70989f05",
+      "contract": "sha256:938e5e124cb9648bb532949ff8588edeef0570eee18f6c7bfaf579af17a352a0"
+    }
+  }
+}

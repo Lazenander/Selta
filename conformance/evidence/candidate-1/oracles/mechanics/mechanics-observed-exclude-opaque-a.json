@@ -1,0 +1,9 @@
+{
+  "revision": "selta.evidence.conformance-oracle/s2-1",
+  "case": "mechanics-observed-exclude-opaque-a",
+  "expected": {
+    "kind": "returned",
+    "package": "sha256:edd2953cf2291ad691646440201df4055eb0b91c133c9b593de321a04dc5151e",
+    "compare": "conformance_projection"
+  }
+}

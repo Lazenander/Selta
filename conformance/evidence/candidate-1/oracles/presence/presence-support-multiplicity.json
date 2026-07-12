@@ -1,0 +1,7 @@
+{
+  "revision": "selta.evidence.conformance-oracle/s2-1",
+  "case": "presence-support-multiplicity",
+  "expected": {
+    "kind": "comparison_pass"
+  }
+}

@@ -1,0 +1,9 @@
+{
+  "revision": "selta.evidence.conformance-oracle/s2-1",
+  "case": "mechanics-wrong-observed-plans",
+  "expected": {
+    "kind": "returned",
+    "package": "sha256:e1be32b2ae10e8b47a1becd09e64092239420d83049a6ea20cc3107625b9d362",
+    "compare": "conformance_projection"
+  }
+}

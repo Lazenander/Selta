@@ -1,0 +1,62 @@
+{
+  "parameters": {
+    "claim": {
+      "$ref": "sha256:b3b44db5c73cc6511ae0d363d804dd067d91e39537935ef265761ad26579a6a6",
+      "contract": "sha256:751cc09329f4a485fce9683a29ea5432786cf22b43df9cfd4b3900a326594239"
+    },
+    "stance": "support",
+    "modality": {
+      "$ref": "sha256:9b488f043ff65b86971daa1baafda0983f2237fc80edc8fbdbe44927825cece1",
+      "contract": "sha256:a587092a0074c9b57a2a22225b99fb20cb6fd0ba69ea27156cab7b8b1ca6ed21"
+    },
+    "payload": {
+      "$ref": "sha256:577e0dff255a5464abb618d6e4443c20c21a3fd18345776015cc63e1da4aa70d",
+      "contract": "sha256:a587092a0074c9b57a2a22225b99fb20cb6fd0ba69ea27156cab7b8b1ca6ed21"
+    }
+  },
+  "premises": [
+    {
+      "fact": {
+        "evidence": "sha256:33b43492205fa6ed492138197140a38899d8e39019254d38e7c7664ca4c6cd08"
+      },
+      "resolved": {
+        "evidence": {
+          "kind": "atom",
+          "claim": {
+            "$ref": "sha256:b3b44db5c73cc6511ae0d363d804dd067d91e39537935ef265761ad26579a6a6",
+            "contract": "sha256:751cc09329f4a485fce9683a29ea5432786cf22b43df9cfd4b3900a326594239"
+          },
+          "stance": "support",
+          "attempt": {
+            "acquisition": {
+              "$ref": "sha256:efdccd40a07e54d9d3501991fbbaa4661ccb06393f0d4148bcc2b113dc81c9f8",
+              "contract": "sha256:febf5ad5f7f06e0a014163c97de740272ce0229c8df949a4c553a84ce849cf91"
+            },
+            "attempt": "sha256:927c1f9f532ec6856640292ec9b6d2c8a7ffb29bff73930680ae4cb57f282670"
+          },
+          "extractor": {
+            "semantics": "sha256:6aa2f61f16d40ef2dd513f34d6f01d1e698ef528671e0e149c688348e49239cf",
+            "parameters": {
+              "$ref": "sha256:185071e76c7cc99c3b5ff311a43f844b88d90c9597b540badc4ce4df0dd5a0a1",
+              "contract": "sha256:8062ecad27e59838239b04878e2ee9fcbfad53479484334b9b49f1e1d4bfa8b3"
+            }
+          },
+          "modality": {
+            "$ref": "sha256:9b488f043ff65b86971daa1baafda0983f2237fc80edc8fbdbe44927825cece1",
+            "contract": "sha256:a587092a0074c9b57a2a22225b99fb20cb6fd0ba69ea27156cab7b8b1ca6ed21"
+          },
+          "payload": {
+            "$ref": "sha256:577e0dff255a5464abb618d6e4443c20c21a3fd18345776015cc63e1da4aa70d",
+            "contract": "sha256:a587092a0074c9b57a2a22225b99fb20cb6fd0ba69ea27156cab7b8b1ca6ed21"
+          },
+          "id": "sha256:33b43492205fa6ed492138197140a38899d8e39019254d38e7c7664ca4c6cd08"
+        }
+      }
+    }
+  ],
+  "assumptions": [],
+  "arguments": {
+    "$ref": "sha256:238d75fdb2fa6500a0958562f9633d6da0a653ab5101a2249f03ad853d6f1ed8",
+    "contract": "sha256:a587092a0074c9b57a2a22225b99fb20cb6fd0ba69ea27156cab7b8b1ca6ed21"
+  }
+}

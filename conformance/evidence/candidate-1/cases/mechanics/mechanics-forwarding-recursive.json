@@ -1,0 +1,13 @@
+{
+  "revision": "selta.evidence.conformance-case/s2-1",
+  "id": "mechanics-forwarding-recursive",
+  "operation": {
+    "kind": "assess",
+    "context": "mechanics-candidate-1",
+    "package_source": "sha256:236998588ee78286febb9afb8b776bda98c832bb4737e142926a6fe3728ccb6c",
+    "expected_basis": {
+      "$ref": "sha256:c17374ae70c977453bb5c8dee16347a1a991df2620f64165ecfe4ca8719a26f8",
+      "contract": "sha256:938e5e124cb9648bb532949ff8588edeef0570eee18f6c7bfaf579af17a352a0"
+    }
+  }
+}

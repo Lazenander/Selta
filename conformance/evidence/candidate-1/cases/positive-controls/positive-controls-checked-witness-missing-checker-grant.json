@@ -1,0 +1,13 @@
+{
+  "revision": "selta.evidence.conformance-case/s2-1",
+  "id": "positive-controls-checked-witness-missing-checker-grant",
+  "operation": {
+    "kind": "assess",
+    "context": "positive-controls-candidate-1",
+    "package_source": "sha256:54f9b5a5a10cbbc8f7ea26f3ed3a2e5feca4dc74b8d9adb319666614dc08ac3e",
+    "expected_basis": {
+      "$ref": "sha256:6912808734a4ef6a8e248d16ae7202c44eb7c32f5af5607708f33b508c689aab",
+      "contract": "sha256:938e5e124cb9648bb532949ff8588edeef0570eee18f6c7bfaf579af17a352a0"
+    }
+  }
+}

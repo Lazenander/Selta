@@ -1,0 +1,13 @@
+{
+  "revision": "selta.evidence.conformance-case/s2-1",
+  "id": "positive-controls-sequential-missing-recorder-grant",
+  "operation": {
+    "kind": "assess",
+    "context": "positive-controls-candidate-1",
+    "package_source": "sha256:6185ffa30533d36392cb13c66a2a1f7dd17b43b6dcf51d39bc080c207e85d055",
+    "expected_basis": {
+      "$ref": "sha256:e83d53e26ea2277f6ccb5b95707abd92dff3620130199ab70fd69a36ddfedb17",
+      "contract": "sha256:938e5e124cb9648bb532949ff8588edeef0570eee18f6c7bfaf579af17a352a0"
+    }
+  }
+}

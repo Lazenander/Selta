@@ -1,0 +1,41 @@
+{
+  "language": "selta.evidence.package/candidate-1",
+  "environment": "sha256:0c153635b88d6dee3f1301f1a46b20d1a4439d5f7b755fe276e8d93a8ccdf8a3",
+  "documents": [
+    {
+      "contract": "sha256:86ed6b6f38c1b1a1d6bc5f09e2997a0df9e0f1e8554624372031034f17ebf7fb",
+      "digest": "sha256:3c881d3a69e5a8e8001bf9f4c8992de98a163e807361f77abaac8b42f2dc4c54",
+      "value": {
+        "revision": "selta.evidence.outcome/candidate-1",
+        "status": "error",
+        "environment": "sha256:0c153635b88d6dee3f1301f1a46b20d1a4439d5f7b755fe276e8d93a8ccdf8a3",
+        "errors": [
+          {
+            "phase": "schema",
+            "code": "package.unknown_contract",
+            "path": "/input/documents/8/contract",
+            "message": "typed document names an unknown contract"
+          }
+        ],
+        "executions": [],
+        "resources": {
+          "documents": 10,
+          "total_document_bytes": 5397,
+          "attempts_total": 0,
+          "graph_nodes": 0,
+          "graph_edges": 0,
+          "max_fan_in_observed": 0,
+          "graph_depth": 0,
+          "semantic_calls": 0,
+          "semantic_fuel": 0,
+          "state_bytes": 0,
+          "conclusion_labels_total": 0
+        }
+      }
+    }
+  ],
+  "root": {
+    "$ref": "sha256:3c881d3a69e5a8e8001bf9f4c8992de98a163e807361f77abaac8b42f2dc4c54",
+    "contract": "sha256:86ed6b6f38c1b1a1d6bc5f09e2997a0df9e0f1e8554624372031034f17ebf7fb"
+  }
+}

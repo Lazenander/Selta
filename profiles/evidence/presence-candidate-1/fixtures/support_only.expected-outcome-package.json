@@ -1,6 +1,6 @@
 {
   "language": "selta.evidence.package/candidate-1",
-  "environment": "sha256:8b453875a037adf9353c111d7c39a3fe9f43fa97b27d93d57d324b3e4e0fc867",
+  "environment": "sha256:0c153635b88d6dee3f1301f1a46b20d1a4439d5f7b755fe276e8d93a8ccdf8a3",
   "documents": [
     {
       "contract": "sha256:938e5e124cb9648bb532949ff8588edeef0570eee18f6c7bfaf579af17a352a0",
@@ -213,8 +213,69 @@
       "value": "support_only:support:payload"
     },
     {
+      "contract": "sha256:563110eb157d8aae350362c6529fec57bb18907834e3c28f6e0d068477ca177c",
+      "digest": "sha256:e400eb17067fb56854a81011503f04b72f4a4101f0dc5c91b81ec256b7b0a080",
+      "value": {
+        "revision": "selta.evidence.graph/candidate-1",
+        "acquisitions": [],
+        "claims": [
+          {
+            "$ref": "sha256:7bfb4ef573349711620effe363c9d4881eb1df277c92764fae8fc6625e723e32",
+            "contract": "sha256:751cc09329f4a485fce9683a29ea5432786cf22b43df9cfd4b3900a326594239"
+          }
+        ],
+        "nodes": [
+          {
+            "kind": "derive",
+            "claim": {
+              "$ref": "sha256:7bfb4ef573349711620effe363c9d4881eb1df277c92764fae8fc6625e723e32",
+              "contract": "sha256:751cc09329f4a485fce9683a29ea5432786cf22b43df9cfd4b3900a326594239"
+            },
+            "stance": "support",
+            "rule": {
+              "semantics": "sha256:6cc57951fdeef7d63e359fa59ac7f19edf1bd8fcc034c6c8c7ac85cee9373e59",
+              "parameters": {
+                "$ref": "sha256:777ddc9548396bc7c0f8a14dad627854a154b9e4f724c2b4ad8eb5421112eed8",
+                "contract": "sha256:992ccdc58c7f52f913e18b2ca0aab8c0d8f27bf6d726aa520738dd5e9911c16b"
+              }
+            },
+            "premises": [],
+            "assumptions": [
+              "sha256:e61d8402d58dd1d334509fb980d746a582953196f5fea35e4da88a022b2f9617"
+            ],
+            "modality": {
+              "$ref": "sha256:8e44b8d480af4e5f7ae079439a0864ce9454a25a1484d6e3160dbeafca0b134d",
+              "contract": "sha256:a587092a0074c9b57a2a22225b99fb20cb6fd0ba69ea27156cab7b8b1ca6ed21"
+            },
+            "payload": {
+              "$ref": "sha256:d3f17c6fab9aac76cd7623636c94ce6467c2b5689f8ce3c2fc82030920b37267",
+              "contract": "sha256:a587092a0074c9b57a2a22225b99fb20cb6fd0ba69ea27156cab7b8b1ca6ed21"
+            },
+            "arguments": {
+              "$ref": "sha256:baa8464e6638318e1e42e438c7e03473bcc30dc4ffad13c4f54b32f1075ce3d5",
+              "contract": "sha256:a587092a0074c9b57a2a22225b99fb20cb6fd0ba69ea27156cab7b8b1ca6ed21"
+            },
+            "id": "sha256:8e1581cd043945bf4962fecd1957ef617aa885ed23d595f36fd180752c8550a5"
+          }
+        ]
+      }
+    },
+    {
+      "contract": "sha256:a587092a0074c9b57a2a22225b99fb20cb6fd0ba69ea27156cab7b8b1ca6ed21",
+      "digest": "sha256:ea26a500b4a96a6972a797d5e9063c6a12b08402c60051748fca2684d0371468",
+      "value": "fixture:empty-evidence-graph"
+    },
+    {
+      "contract": "sha256:45a97f98cb6fe6d8e07bf2d0e9d820e604c428170b279199b99b1f0563586322",
+      "digest": "sha256:f19ef6e631f3223e8c4d99e714773c3da4ba814d991cdbd4ff2c77a6d1c1b026",
+      "value": {
+        "revision": "selta.evidence.presence-label/candidate-1",
+        "label": "deny"
+      }
+    },
+    {
       "contract": "sha256:86ed6b6f38c1b1a1d6bc5f09e2997a0df9e0f1e8554624372031034f17ebf7fb",
-      "digest": "sha256:e37470872736bde7981b8143184ac7d67106058158d1fc884de6dfe63e7b0c95",
+      "digest": "sha256:f32b216a91d54cf426625d69d3b1fef37956042bdf6d6e8ba8bba16c97f74f4d",
       "value": {
         "revision": "selta.evidence.outcome/candidate-1",
         "status": "concluded",
@@ -222,7 +283,7 @@
           "$ref": "sha256:0e3f6d6e9ec1b1fe42eaa208e4860eed05562864f7cdf632347c3c379310b735",
           "contract": "sha256:938e5e124cb9648bb532949ff8588edeef0570eee18f6c7bfaf579af17a352a0"
         },
-        "environment": "sha256:8b453875a037adf9353c111d7c39a3fe9f43fa97b27d93d57d324b3e4e0fc867",
+        "environment": "sha256:0c153635b88d6dee3f1301f1a46b20d1a4439d5f7b755fe276e8d93a8ccdf8a3",
         "state": {
           "$ref": "sha256:a1c6319780e8148b02fe1286753562756d9fc765aa62c072b66e119437add9af",
           "contract": "sha256:78295e80afc955a2c6450d677b024e62cb63b7d1eb4759be4af9c05c364b5dc0"
@@ -399,71 +460,10 @@
           "conclusion_labels_total": 1
         }
       }
-    },
-    {
-      "contract": "sha256:563110eb157d8aae350362c6529fec57bb18907834e3c28f6e0d068477ca177c",
-      "digest": "sha256:e400eb17067fb56854a81011503f04b72f4a4101f0dc5c91b81ec256b7b0a080",
-      "value": {
-        "revision": "selta.evidence.graph/candidate-1",
-        "acquisitions": [],
-        "claims": [
-          {
-            "$ref": "sha256:7bfb4ef573349711620effe363c9d4881eb1df277c92764fae8fc6625e723e32",
-            "contract": "sha256:751cc09329f4a485fce9683a29ea5432786cf22b43df9cfd4b3900a326594239"
-          }
-        ],
-        "nodes": [
-          {
-            "kind": "derive",
-            "claim": {
-              "$ref": "sha256:7bfb4ef573349711620effe363c9d4881eb1df277c92764fae8fc6625e723e32",
-              "contract": "sha256:751cc09329f4a485fce9683a29ea5432786cf22b43df9cfd4b3900a326594239"
-            },
-            "stance": "support",
-            "rule": {
-              "semantics": "sha256:6cc57951fdeef7d63e359fa59ac7f19edf1bd8fcc034c6c8c7ac85cee9373e59",
-              "parameters": {
-                "$ref": "sha256:777ddc9548396bc7c0f8a14dad627854a154b9e4f724c2b4ad8eb5421112eed8",
-                "contract": "sha256:992ccdc58c7f52f913e18b2ca0aab8c0d8f27bf6d726aa520738dd5e9911c16b"
-              }
-            },
-            "premises": [],
-            "assumptions": [
-              "sha256:e61d8402d58dd1d334509fb980d746a582953196f5fea35e4da88a022b2f9617"
-            ],
-            "modality": {
-              "$ref": "sha256:8e44b8d480af4e5f7ae079439a0864ce9454a25a1484d6e3160dbeafca0b134d",
-              "contract": "sha256:a587092a0074c9b57a2a22225b99fb20cb6fd0ba69ea27156cab7b8b1ca6ed21"
-            },
-            "payload": {
-              "$ref": "sha256:d3f17c6fab9aac76cd7623636c94ce6467c2b5689f8ce3c2fc82030920b37267",
-              "contract": "sha256:a587092a0074c9b57a2a22225b99fb20cb6fd0ba69ea27156cab7b8b1ca6ed21"
-            },
-            "arguments": {
-              "$ref": "sha256:baa8464e6638318e1e42e438c7e03473bcc30dc4ffad13c4f54b32f1075ce3d5",
-              "contract": "sha256:a587092a0074c9b57a2a22225b99fb20cb6fd0ba69ea27156cab7b8b1ca6ed21"
-            },
-            "id": "sha256:8e1581cd043945bf4962fecd1957ef617aa885ed23d595f36fd180752c8550a5"
-          }
-        ]
-      }
-    },
-    {
-      "contract": "sha256:a587092a0074c9b57a2a22225b99fb20cb6fd0ba69ea27156cab7b8b1ca6ed21",
-      "digest": "sha256:ea26a500b4a96a6972a797d5e9063c6a12b08402c60051748fca2684d0371468",
-      "value": "fixture:empty-evidence-graph"
-    },
-    {
-      "contract": "sha256:45a97f98cb6fe6d8e07bf2d0e9d820e604c428170b279199b99b1f0563586322",
-      "digest": "sha256:f19ef6e631f3223e8c4d99e714773c3da4ba814d991cdbd4ff2c77a6d1c1b026",
-      "value": {
-        "revision": "selta.evidence.presence-label/candidate-1",
-        "label": "deny"
-      }
     }
   ],
   "root": {
-    "$ref": "sha256:e37470872736bde7981b8143184ac7d67106058158d1fc884de6dfe63e7b0c95",
+    "$ref": "sha256:f32b216a91d54cf426625d69d3b1fef37956042bdf6d6e8ba8bba16c97f74f4d",
     "contract": "sha256:86ed6b6f38c1b1a1d6bc5f09e2997a0df9e0f1e8554624372031034f17ebf7fb"
   }
 }

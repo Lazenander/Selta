@@ -1,0 +1,191 @@
+{
+  "type": "object",
+  "fields": {
+    "revision": {
+      "type": "str",
+      "verify": [{ "ext": "one_of", "config": { "values": ["selta.evidence.conformance-case/s2-1"] } }]
+    },
+    "id": {
+      "type": "str",
+      "verify": [
+        { "ext": "regex", "config": { "pattern": "\\A[a-z0-9]+(?:-[a-z0-9]+)*\\z" } },
+        { "ext": "len", "config": { "max": 128 } }
+      ]
+    },
+    "operation": {
+      "type": "union",
+      "variants": [
+        {
+          "type": "object",
+          "fields": {
+            "kind": { "type": "str", "verify": [{ "ext": "one_of", "config": { "values": ["admit_environment"] } }] },
+            "context": {
+              "type": "str",
+              "verify": [
+                { "ext": "regex", "config": { "pattern": "\\A[a-z0-9]+(?:-[a-z0-9]+)*\\z" } },
+                { "ext": "len", "config": { "max": 128 } }
+              ]
+            }
+          }
+        },
+        {
+          "type": "object",
+          "fields": {
+            "kind": { "type": "str", "verify": [{ "ext": "one_of", "config": { "values": ["assess"] } }] },
+            "context": {
+              "type": "str",
+              "verify": [
+                { "ext": "regex", "config": { "pattern": "\\A[a-z0-9]+(?:-[a-z0-9]+)*\\z" } },
+                { "ext": "len", "config": { "max": 128 } }
+              ]
+            },
+            "package_source": { "type": "str", "verify": [{ "ext": "regex", "config": { "pattern": "\\Asha256:[0-9a-f]{64}\\z" } }] },
+            "expected_basis": {
+              "type": "object",
+              "fields": {
+                "$ref": { "type": "str", "verify": [{ "ext": "regex", "config": { "pattern": "\\Asha256:[0-9a-f]{64}\\z" } }] },
+                "contract": { "type": "str", "verify": [{ "ext": "regex", "config": { "pattern": "\\Asha256:[0-9a-f]{64}\\z" } }] }
+              }
+            },
+            "controls": {
+              "type": "object",
+              "required": false,
+              "fields": {
+                "identity_results": {
+                  "type": "array",
+                  "item": {
+                    "type": "object",
+                    "fields": {
+                      "boundary": { "type": "str", "verify": [{ "ext": "one_of", "config": { "values": ["input", "state", "outcome"] } }] },
+                      "preimage_base64": {
+                        "type": "str",
+                        "verify": [
+                          { "ext": "non_empty" },
+                          { "ext": "regex", "config": { "pattern": "\\A(?:[A-Za-z0-9+/]{4})*(?:[A-Za-z0-9+/][AQgw]==|[A-Za-z0-9+/]{2}[AEIMQUYcgkosw048]=)?\\z" } }
+                        ]
+                      },
+                      "returned_digest": { "type": "str", "verify": [{ "ext": "regex", "config": { "pattern": "\\Asha256:[0-9a-f]{64}\\z" } }] }
+                    }
+                  }
+                },
+                "semantic_outputs": {
+                  "type": "array",
+                  "item": {
+                    "type": "object",
+                    "fields": {
+                      "call_ordinal": { "type": "int", "verify": [{ "ext": "range", "config": { "min": 0, "max": 9007199254740991 } }] },
+                      "semantics": { "type": "str", "verify": [{ "ext": "regex", "config": { "pattern": "\\Asha256:[0-9a-f]{64}\\z" } }] },
+                      "output": { "type": "any" }
+                    }
+                  }
+                },
+                "verification_faults": {
+                  "type": "array",
+                  "item": {
+                    "type": "union",
+                    "variants": [
+                      {
+                        "type": "object",
+                        "fields": {
+                          "substage": { "type": "str", "verify": [{ "ext": "one_of", "config": { "values": ["S0"] } }] }
+                        }
+                      },
+                      {
+                        "type": "object",
+                        "fields": {
+                          "substage": { "type": "str", "verify": [{ "ext": "one_of", "config": { "values": ["S2"] } }] },
+                          "document_index": { "type": "int", "verify": [{ "ext": "range", "config": { "min": 0, "max": 9007199254740991 } }] }
+                        }
+                      }
+                    ]
+                  }
+                },
+                "semantic_reads": {
+                  "type": "array",
+                  "item": {
+                    "type": "object",
+                    "fields": {
+                      "call_ordinal": { "type": "int", "verify": [{ "ext": "range", "config": { "min": 0, "max": 9007199254740991 } }] },
+                      "semantics": { "type": "str", "verify": [{ "ext": "regex", "config": { "pattern": "\\Asha256:[0-9a-f]{64}\\z" } }] },
+                      "reference": {
+                        "type": "object",
+                        "fields": {
+                          "$ref": { "type": "str", "verify": [{ "ext": "regex", "config": { "pattern": "\\Asha256:[0-9a-f]{64}\\z" } }] },
+                          "contract": { "type": "str", "verify": [{ "ext": "regex", "config": { "pattern": "\\Asha256:[0-9a-f]{64}\\z" } }] }
+                        }
+                      }
+                    }
+                  }
+                },
+                "forbidden_reads": {
+                  "type": "array",
+                  "item": {
+                    "type": "object",
+                    "fields": {
+                      "$ref": { "type": "str", "verify": [{ "ext": "regex", "config": { "pattern": "\\Asha256:[0-9a-f]{64}\\z" } }] },
+                      "contract": { "type": "str", "verify": [{ "ext": "regex", "config": { "pattern": "\\Asha256:[0-9a-f]{64}\\z" } }] }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        {
+          "type": "object",
+          "fields": {
+            "kind": { "type": "str", "verify": [{ "ext": "one_of", "config": { "values": ["finite_world"] } }] },
+            "program": { "type": "str", "verify": [{ "ext": "regex", "config": { "pattern": "\\Asha256:[0-9a-f]{64}\\z" } }] }
+          }
+        },
+        {
+          "type": "object",
+          "fields": {
+            "kind": { "type": "str", "verify": [{ "ext": "one_of", "config": { "values": ["compare"] } }] },
+            "scope": { "type": "str", "verify": [{ "ext": "one_of", "config": { "values": ["per_model", "cross_model"] } }] },
+            "assertions": {
+              "type": "array",
+              "len": { "min": 1 },
+              "item": {
+                "type": "object",
+                "fields": {
+                  "relation": { "type": "str", "verify": [{ "ext": "one_of", "config": { "values": ["equal", "not_equal"] } }] },
+                  "left": {
+                    "type": "object",
+                    "fields": {
+                      "producer": { "type": "str", "verify": [{ "ext": "one_of", "config": { "values": ["current", "model_a", "model_b", "arbiter"] } }] },
+                      "case": {
+                        "type": "str",
+                        "verify": [
+                          { "ext": "regex", "config": { "pattern": "\\A[a-z0-9]+(?:-[a-z0-9]+)*\\z" } },
+                          { "ext": "len", "config": { "max": 128 } }
+                        ]
+                      },
+                      "view": { "type": "str", "verify": [{ "ext": "one_of", "config": { "values": ["package_jcs", "conformance_projection", "finite_result", "trap"] } }] },
+                      "pointer": { "type": "str", "verify": [{ "ext": "regex", "config": { "pattern": "\\A(?:/(?:[^~/]|~[01])*)*\\z" } }] }
+                    }
+                  },
+                  "right": {
+                    "type": "object",
+                    "fields": {
+                      "producer": { "type": "str", "verify": [{ "ext": "one_of", "config": { "values": ["current", "model_a", "model_b", "arbiter"] } }] },
+                      "case": {
+                        "type": "str",
+                        "verify": [
+                          { "ext": "regex", "config": { "pattern": "\\A[a-z0-9]+(?:-[a-z0-9]+)*\\z" } },
+                          { "ext": "len", "config": { "max": 128 } }
+                        ]
+                      },
+                      "view": { "type": "str", "verify": [{ "ext": "one_of", "config": { "values": ["package_jcs", "conformance_projection", "finite_result", "trap"] } }] },
+                      "pointer": { "type": "str", "verify": [{ "ext": "regex", "config": { "pattern": "\\A(?:/(?:[^~/]|~[01])*)*\\z" } }] }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      ]
+    }
+  }
+}

@@ -124,7 +124,7 @@ Within I0b, two unequal available canonical byte strings under one declared
 digest emit only `identity.collision` at their collection anchor. Every other
 wrong preimage emits `identity.mismatch` at its declared identity field.
 At R2 comparison, a claim canonicalization mismatch uses
-`relation.claim_noncanonical`; every other submitted transition mismatch uses
+`relation.claim_noncanonical`; every other required-output mismatch uses
 `relation.semantic_mismatch`.
 
 R1 code ownership is fixed:
@@ -183,7 +183,8 @@ stable verifier reports a host/runtime fault.
 
 `identity.noncanonical` covers set order, sequence rules fixed by the DSL,
 unsafe integers, and noncanonical embedded identity preimages after structural
-admission has succeeded.
+admission has succeeded. An unsafe integer is anchored at its exact occurrence
+in the conceptual input workspace.
 `identity.collision` has phase `identity` for admitted input, `interpret` for
 generated-state insertion, and `output` for concluded-outcome insertion.
 
@@ -195,7 +196,7 @@ generated-state insertion, and `output` for concluded-outcome insertion.
 | `relation.unauthorized` | `assessment basis does not grant the required exact role` |
 | `relation.invalid_binding` | `semantic binding is invalid at this call site` |
 | `relation.kind_mismatch` | `semantic descriptor kind is invalid at this call site` |
-| `relation.semantic_mismatch` | `recomputed semantic output differs from submitted output` |
+| `relation.semantic_mismatch` | `semantic output differs from required output` |
 | `relation.claim_noncanonical` | `claim theory did not return the submitted canonical claim` |
 | `relation.invalid_assumption` | `derivation or interpretation names an unavailable assumption` |
 | `relation.invalid_decision` | `acquisition decision is invalid` |
@@ -261,6 +262,7 @@ member. The following anchors are exhaustive:
 | unknown document contract | `/input/documents/<i>/contract` |
 | document value fail or verification error | `/input/documents/<i>/value` |
 | noncanonical collection | its `/input/...` array pointer |
+| unsafe integer | its exact `/input/...` integer occurrence |
 | duplicate collection member | its `/input/...` array pointer; one record regardless of duplicate count |
 | typed-document digest mismatch | `/input/documents/<i>/digest` |
 | embedded identity mismatch | its exact `/input/.../id`, `plan_id`, or digest member |
@@ -286,9 +288,9 @@ member. The following anchors are exhaustive:
 | graph premise cycle | `doc(graph)/nodes`; one record regardless of cycle count |
 | noncanonical claim result | `doc(claim)` |
 | submitted decision semantic mismatch | that decision's `/input/.../output` reference |
-| submitted attestation semantic mismatch | the `/input/.../attestation` reference |
+| rejected scoped-attestation verifier result | the `/input/.../attestation` reference |
 | submitted atom or derivation semantic mismatch | the complete `/input/...` node object |
-| contract-invalid submitted semantic output | the same claim, decision, attestation, atom, or derivation anchor used for its semantic mismatch |
+| contract-invalid semantic output | the same claim, decision, attestation, atom, or derivation anchor used for its semantic mismatch |
 | basis resource exceeded | pointer to `doc(basis)/limits/<matching max_* field>` |
 | generated interpreter output invalid | `/generated/state` |
 | generated projection output invalid | `/generated/conclusions` |

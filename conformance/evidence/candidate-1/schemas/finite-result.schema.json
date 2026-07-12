@@ -1,0 +1,98 @@
+{
+  "type": "object",
+  "fields": {
+    "revision": {
+      "type": "str",
+      "verify": [{ "ext": "one_of", "config": { "values": ["selta.evidence.finite-result/s2-1"] } }]
+    },
+    "results": {
+      "type": "array",
+      "len": { "min": 1 },
+      "item": {
+        "type": "object",
+        "fields": {
+          "name": {
+            "type": "str",
+            "verify": [
+              { "ext": "regex", "config": { "pattern": "\\A[A-Za-z0-9][A-Za-z0-9_.:-]*\\z" } },
+              { "ext": "len", "config": { "max": 256 } }
+            ]
+          },
+          "value": {
+            "type": "union",
+            "variants": [
+              {
+                "type": "object",
+                "fields": {
+                  "kind": { "type": "str", "verify": [{ "ext": "one_of", "config": { "values": ["boolean"] } }] },
+                  "value": { "type": "bool" }
+                }
+              },
+              {
+                "type": "object",
+                "fields": {
+                  "kind": { "type": "str", "verify": [{ "ext": "one_of", "config": { "values": ["safe_int"] } }] },
+                  "value": { "type": "int", "verify": [{ "ext": "range", "config": { "min": 0, "max": 9007199254740991 } }] }
+                }
+              },
+              {
+                "type": "object",
+                "fields": {
+                  "kind": { "type": "str", "verify": [{ "ext": "one_of", "config": { "values": ["token"] } }] },
+                  "value": {
+                    "type": "str",
+                    "verify": [
+                      { "ext": "regex", "config": { "pattern": "\\A[A-Za-z0-9][A-Za-z0-9_.:-]*\\z" } },
+                      { "ext": "len", "config": { "max": 256 } }
+                    ]
+                  }
+                }
+              },
+              {
+                "type": "object",
+                "fields": {
+                  "kind": { "type": "str", "verify": [{ "ext": "one_of", "config": { "values": ["rational"] } }] },
+                  "numerator": {
+                    "type": "str",
+                    "verify": [
+                      { "ext": "regex", "config": { "pattern": "\\A(?:0|[1-9][0-9]*)\\z" } },
+                      { "ext": "len", "config": { "max": 4096 } }
+                    ]
+                  },
+                  "denominator": {
+                    "type": "str",
+                    "verify": [
+                      { "ext": "regex", "config": { "pattern": "\\A[1-9][0-9]*\\z" } },
+                      { "ext": "len", "config": { "max": 4096 } }
+                    ]
+                  }
+                }
+              },
+              {
+                "type": "object",
+                "fields": {
+                  "kind": { "type": "str", "verify": [{ "ext": "one_of", "config": { "values": ["one_minus_power"] } }] },
+                  "base_numerator": {
+                    "type": "str",
+                    "verify": [
+                      { "ext": "regex", "config": { "pattern": "\\A(?:0|[1-9][0-9]*)\\z" } },
+                      { "ext": "len", "config": { "max": 4096 } }
+                    ]
+                  },
+                  "base_denominator": {
+                    "type": "str",
+                    "verify": [
+                      { "ext": "regex", "config": { "pattern": "\\A[1-9][0-9]*\\z" } },
+                      { "ext": "len", "config": { "max": 4096 } }
+                    ]
+                  },
+                  "exponent": { "type": "int", "verify": [{ "ext": "range", "config": { "min": 0, "max": 9007199254740991 } }] }
+                }
+              }
+            ]
+          }
+        }
+      }
+    }
+  }
+}

@@ -1,7 +1,7 @@
 # Presence conformance fixtures
 
 All vectors use environment
-`sha256:8b453875a037adf9353c111d7c39a3fe9f43fa97b27d93d57d324b3e4e0fc867`
+`sha256:0c153635b88d6dee3f1301f1a46b20d1a4439d5f7b755fe276e8d93a8ccdf8a3`
 and specification oracle
 `sha256:bc899c6733c11b1c452e811ef662cb7bc808e792c3c18af64fd4e6f763283ea0`.
 For every `assess` case, the caller supplies the input package's complete
@@ -11,10 +11,10 @@ For every `assess` case, the caller supplies the input package's complete
 
 | State | Basis/root digest | Generated state digest | Expected outcome/root digest |
 |---|---|---|---|
-| `neither` | `sha256:8362b21c1aa7bcbe120b6c17bbcbd21b9e4a34b8d13f396ef9fc4de9bd963adb` | `sha256:3dd05b8e0ef127f75acfa8a84ff0679e22e2ad5766925851c4b3d5f284193a68` | `sha256:c47827904831591ba027beccde288ee981f63b7a352abe31e2ecda84f91fae4f` |
-| `support_only` | `sha256:0e3f6d6e9ec1b1fe42eaa208e4860eed05562864f7cdf632347c3c379310b735` | `sha256:a1c6319780e8148b02fe1286753562756d9fc765aa62c072b66e119437add9af` | `sha256:e37470872736bde7981b8143184ac7d67106058158d1fc884de6dfe63e7b0c95` |
-| `refute_only` | `sha256:195ddc0e1f06b937ae0f7e5136830541476d3671ced74a820ef322bb335c3bf4` | `sha256:28d7daa3f5ab4658c72bab64294d19a3eb8e136a3daf618b5e00d7f3cca4fd13` | `sha256:50c6975a3cf2d38bd65427de5c997926f1e85350e610cf4cbb23cc11c15123ec` |
-| `both` | `sha256:42d033778eaf5a38e7a68c0cc1a5f958a6987937d05c18fe497d1cec3b1d989c` | `sha256:cb9e59bd852d4482c59cf80cf1979144cc7d345724ee45fe5f9f5468f8cf5004` | `sha256:dd1349994047b6d7372ceffb74bb0075e95c55cee33b9e327fd0d25c5004db2d` |
+| `neither` | `sha256:8362b21c1aa7bcbe120b6c17bbcbd21b9e4a34b8d13f396ef9fc4de9bd963adb` | `sha256:3dd05b8e0ef127f75acfa8a84ff0679e22e2ad5766925851c4b3d5f284193a68` | `sha256:a8a6eebfaf08c8d55611a05fb3df0b7781a28b2d1e8bb2cd7e12fbcdfeaa014c` |
+| `support_only` | `sha256:0e3f6d6e9ec1b1fe42eaa208e4860eed05562864f7cdf632347c3c379310b735` | `sha256:a1c6319780e8148b02fe1286753562756d9fc765aa62c072b66e119437add9af` | `sha256:f32b216a91d54cf426625d69d3b1fef37956042bdf6d6e8ba8bba16c97f74f4d` |
+| `refute_only` | `sha256:195ddc0e1f06b937ae0f7e5136830541476d3671ced74a820ef322bb335c3bf4` | `sha256:28d7daa3f5ab4658c72bab64294d19a3eb8e136a3daf618b5e00d7f3cca4fd13` | `sha256:c744e104389b07676e4f068df855a381e50314d4e7bee8e2f5f06b7d4b0c10f3` |
+| `both` | `sha256:42d033778eaf5a38e7a68c0cc1a5f958a6987937d05c18fe497d1cec3b1d989c` | `sha256:cb9e59bd852d4482c59cf80cf1979144cc7d345724ee45fe5f9f5468f8cf5004` | `sha256:8a1ca918567bdae36b1eb0550078c333e0722f36aac16e2fcff82c588e7bf8bd` |
 
 The `neither` trust ID is
 `sha256:e6c590f38a19ee7ca079162ee390f12018463cd5849297c3f60ce86013010ee6`.
@@ -42,6 +42,8 @@ input/output. `rule-<n>` uses zero-based evidence-node-ID dispatch order.
   package pairs with exact errors, counters, execution sets, and roots.
 - [forbidden/README.md](forbidden/README.md) indexes schema-invalid and
   schema-valid outputs that an implementation must not confuse with the oracle.
+- [s2/README.md](s2/README.md) indexes replay, duplicate safety, admission,
+  modality, assumption, fuel-boundary, and law-falsifier additions.
 
 Every positive and negative package wrapper and every contained typed value
 passes its real stable Selta schema in strict `Input::Value` mode. Positive

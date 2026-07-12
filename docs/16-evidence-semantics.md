@@ -377,7 +377,10 @@ It performs all of the following:
 6. record the actual implementation and charge the exact call and fuel cost;
 7. verify the output under the descriptor's single output contract; and
 8. compare `JCS(output)` with the submitted output when validating an existing
-   decision, atom, derivation, or attestation.
+   decision, atom, or derivation; when validating a scoped attestation, require
+   the exact accepted result fixed by its bound specification. A contract-valid
+   rejected attestation is `relation.semantic_mismatch` at the attestation
+   reference; no verifier-result document is stored.
 
 Preparation through step 4 is total over admitted values and does not dispatch
 or charge fuel. A parameter-value predicate failure is
@@ -415,7 +418,7 @@ The call sites are:
 | `schedule` | decision `input`, manifest digest, and `observed_plans` | attempt proposal referenced by decision `output` |
 | `selection` | decision `input`, manifest digest, and `observed_plans` | disposition proposal referenced by decision `output` |
 | `stopping` | decision `input`, manifest digest, and `observed_plans` | stop transition referenced by decision `output` |
-| `attestation` | recorder, scope, checkpoint, exceptions, attestation, and parameters | exactly an accepted or rejected attestation result |
+| `attestation` | recorder, scope, checkpoint, exceptions, assertion document, and parameters | the bound accepted/rejected result; accepted is required by a scoped record |
 | `extractor` | qualified completed attempt, resolved observed response, and parameters | claim, stance, modality, and payload in the atom |
 | `rule` | ordered resolved premises, listed assumptions, arguments, and parameters | claim, stance, modality, and payload in the derivation |
 | `interpreter` | admitted basis and graph | state |
@@ -459,9 +462,11 @@ For each scheduled entry, precedence is exact:
    limit; if it does, return `evaluation.fuel_exhausted`;
 5. validate the sole output contract, returning `evaluation.invalid_output` on
    failure; then
-6. for a submitted transition, compare canonical output and return
-   `relation.claim_noncanonical` for a claim-theory inequality or
-   `relation.semantic_mismatch` for every other inequality.
+6. compare canonical output with the submitted output for a claim, decision,
+   atom, or derivation, or with the fixed accepted result required by a scoped
+   attestation; return `relation.claim_noncanonical` for a claim-theory
+   inequality and `relation.semantic_mismatch` for every other required-output
+   inequality.
 
 Any error stops the schedule. Later phases do not run after an earlier-phase
 error. This order makes fuel exhaustion dominate an output mismatch on the

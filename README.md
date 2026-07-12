@@ -62,6 +62,7 @@ Selta is a type-check layer and nothing more.
 | [docs/19-presence-reference-profile.md](docs/19-presence-reference-profile.md) | Exact minimal presence semantics, dependency closure, and profile corpus |
 | [docs/20-evidence-error-catalog.md](docs/20-evidence-error-catalog.md) | Complete candidate error codes, fixed messages, ordering, and pointers |
 | [docs/21-s2-conformance-plan.md](docs/21-s2-conformance-plan.md) | Non-circular S2 fixture, mechanics-profile, and independent-model execution plan |
+| [docs/22-mechanics-conformance-profile.md](docs/22-mechanics-conformance-profile.md) | Minimal acquisition, attestation, extraction, and recursive-provenance test semantics |
 
 ## Glossary
 

@@ -9,10 +9,10 @@ location is replaceable when the resolved content has the same identity.
 
 | Identity | Domain | Repository artifact |
 |---|---|---|
-| `sha256:8b453875a037adf9353c111d7c39a3fe9f43fa97b27d93d57d324b3e4e0fc867` | `selta.evidence.environment/candidate-1` | [environment.json](environment.json) |
-| `sha256:48c45a214e311e6d9dc14bff45c1b8781701b3f675080d6d728759abc32d0d1c` | `selta.evidence.language-specification/candidate-1` | [docs/15-evidence-language.md](../../../docs/15-evidence-language.md) |
-| `sha256:3a7a03c261ebcd376569792c857734b22f859bea7f75232af349708c49314ad7` | `selta.evidence.core-semantics/candidate-1` | [docs/16-evidence-semantics.md](../../../docs/16-evidence-semantics.md) |
-| `sha256:acb1c8b61f2899f31ec4d36f50eb94bca24f3879674ed1b6c527c44964a772c1` | `selta.evidence.error-catalog/candidate-1` | [docs/20-evidence-error-catalog.md](../../../docs/20-evidence-error-catalog.md) |
+| `sha256:0c153635b88d6dee3f1301f1a46b20d1a4439d5f7b755fe276e8d93a8ccdf8a3` | `selta.evidence.environment/candidate-1` | [environment.json](environment.json) |
+| `sha256:71806dd912b31da7bbd8c03365654d28d6823715d3b8ca1c17b87b0c382fe0e5` | `selta.evidence.language-specification/candidate-1` | [docs/15-evidence-language.md](../../../docs/15-evidence-language.md) |
+| `sha256:87c2564bfa13553c9dddb2d3726203239ad1aebec5f12b3cf96a9a52d32536d0` | `selta.evidence.core-semantics/candidate-1` | [docs/16-evidence-semantics.md](../../../docs/16-evidence-semantics.md) |
+| `sha256:923879b5172a4b0f35ce37aeedaece6227716614dba1581e6635943a3e0dd186` | `selta.evidence.error-catalog/candidate-1` | [docs/20-evidence-error-catalog.md](../../../docs/20-evidence-error-catalog.md) |
 | `sha256:f08f66de43aceef481f21bb4b556ab00eee85584885e077c01c44fc09aa36b6c` | `selta.evidence.semantic-specification/candidate-1` | [docs/19-presence-reference-profile.md](../../../docs/19-presence-reference-profile.md) |
 | `sha256:bc899c6733c11b1c452e811ef662cb7bc808e792c3c18af64fd4e6f763283ea0` | `selta.evidence.implementation/candidate-1` | [docs/19-presence-reference-profile.md](../../../docs/19-presence-reference-profile.md) as the specification oracle, not native code |
 

@@ -1,0 +1,393 @@
+{
+  "type": "union",
+  "variants": [
+    {
+      "type": "object",
+      "fields": {
+        "revision": {
+          "type": "str",
+          "verify": [{ "ext": "one_of", "config": { "values": ["selta.evidence.finite-world/s2-1"] } }]
+        },
+        "kind": { "type": "str", "verify": [{ "ext": "one_of", "config": { "values": ["world_table"] } }] },
+        "rows": {
+          "type": "array",
+          "len": { "min": 1 },
+          "item": {
+            "type": "object",
+            "fields": {
+              "id": {
+                "type": "str",
+                "verify": [
+                  { "ext": "regex", "config": { "pattern": "\\A[A-Za-z0-9][A-Za-z0-9_.:-]*\\z" } },
+                  { "ext": "len", "config": { "max": 256 } }
+                ]
+              },
+              "weight": {
+                "type": "str",
+                "verify": [
+                  { "ext": "regex", "config": { "pattern": "\\A[1-9][0-9]*\\z" } },
+                  { "ext": "len", "config": { "max": 4096 } }
+                ]
+              },
+              "facts": {
+                "type": "array",
+                "len": { "min": 1 },
+                "item": {
+                  "type": "object",
+                  "fields": {
+                    "name": {
+                      "type": "str",
+                      "verify": [
+                        { "ext": "regex", "config": { "pattern": "\\A[A-Za-z0-9][A-Za-z0-9_.:-]*\\z" } },
+                        { "ext": "len", "config": { "max": 256 } }
+                      ]
+                    },
+                    "value": {
+                      "type": "union",
+                      "variants": [
+                        { "type": "bool" },
+                        { "type": "int", "verify": [{ "ext": "range", "config": { "min": 0, "max": 9007199254740991 } }] },
+                        {
+                          "type": "str",
+                          "verify": [
+                            { "ext": "regex", "config": { "pattern": "\\A[A-Za-z0-9][A-Za-z0-9_.:-]*\\z" } },
+                            { "ext": "len", "config": { "max": 256 } }
+                          ]
+                        }
+                      ]
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "queries": {
+          "type": "array",
+          "len": { "min": 1 },
+          "item": {
+            "type": "union",
+            "variants": [
+              {
+                "type": "object",
+                "fields": {
+                  "kind": { "type": "str", "verify": [{ "ext": "one_of", "config": { "values": ["weighted_event"] } }] },
+                  "name": {
+                    "type": "str",
+                    "verify": [
+                      { "ext": "regex", "config": { "pattern": "\\A[A-Za-z0-9][A-Za-z0-9_.:-]*\\z" } },
+                      { "ext": "len", "config": { "max": 256 } }
+                    ]
+                  },
+                  "event": {
+                    "type": "object",
+                    "fields": {
+                      "any_of": {
+                        "type": "array",
+                        "item": {
+                          "type": "object",
+                          "fields": {
+                            "all_of": {
+                              "type": "array",
+                              "item": {
+                                "type": "object",
+                                "fields": {
+                                  "fact": {
+                                    "type": "str",
+                                    "verify": [
+                                      { "ext": "regex", "config": { "pattern": "\\A[A-Za-z0-9][A-Za-z0-9_.:-]*\\z" } },
+                                      { "ext": "len", "config": { "max": 256 } }
+                                    ]
+                                  },
+                                  "equals": {
+                                    "type": "union",
+                                    "variants": [
+                                      { "type": "bool" },
+                                      { "type": "int", "verify": [{ "ext": "range", "config": { "min": 0, "max": 9007199254740991 } }] },
+                                      {
+                                        "type": "str",
+                                        "verify": [
+                                          { "ext": "regex", "config": { "pattern": "\\A[A-Za-z0-9][A-Za-z0-9_.:-]*\\z" } },
+                                          { "ext": "len", "config": { "max": 256 } }
+                                        ]
+                                      }
+                                    ]
+                                  }
+                                }
+                              }
+                            }
+                          }
+                        }
+                      }
+                    }
+                  },
+                  "given": {
+                    "type": "object",
+                    "required": false,
+                    "fields": {
+                      "any_of": {
+                        "type": "array",
+                        "item": {
+                          "type": "object",
+                          "fields": {
+                            "all_of": {
+                              "type": "array",
+                              "item": {
+                                "type": "object",
+                                "fields": {
+                                  "fact": {
+                                    "type": "str",
+                                    "verify": [
+                                      { "ext": "regex", "config": { "pattern": "\\A[A-Za-z0-9][A-Za-z0-9_.:-]*\\z" } },
+                                      { "ext": "len", "config": { "max": 256 } }
+                                    ]
+                                  },
+                                  "equals": {
+                                    "type": "union",
+                                    "variants": [
+                                      { "type": "bool" },
+                                      { "type": "int", "verify": [{ "ext": "range", "config": { "min": 0, "max": 9007199254740991 } }] },
+                                      {
+                                        "type": "str",
+                                        "verify": [
+                                          { "ext": "regex", "config": { "pattern": "\\A[A-Za-z0-9][A-Za-z0-9_.:-]*\\z" } },
+                                          { "ext": "len", "config": { "max": 256 } }
+                                        ]
+                                      }
+                                    ]
+                                  }
+                                }
+                              }
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              },
+              {
+                "type": "object",
+                "fields": {
+                  "kind": { "type": "str", "verify": [{ "ext": "one_of", "config": { "values": ["distinct_values"] } }] },
+                  "name": {
+                    "type": "str",
+                    "verify": [
+                      { "ext": "regex", "config": { "pattern": "\\A[A-Za-z0-9][A-Za-z0-9_.:-]*\\z" } },
+                      { "ext": "len", "config": { "max": 256 } }
+                    ]
+                  },
+                  "fields": {
+                    "type": "array",
+                    "len": { "min": 1 },
+                    "item": {
+                      "type": "str",
+                      "verify": [
+                        { "ext": "regex", "config": { "pattern": "\\A[A-Za-z0-9][A-Za-z0-9_.:-]*\\z" } },
+                        { "ext": "len", "config": { "max": 256 } }
+                      ]
+                    }
+                  },
+                  "rows": {
+                    "type": "array",
+                    "required": false,
+                    "item": {
+                      "type": "str",
+                      "verify": [
+                        { "ext": "regex", "config": { "pattern": "\\A[A-Za-z0-9][A-Za-z0-9_.:-]*\\z" } },
+                        { "ext": "len", "config": { "max": 256 } }
+                      ]
+                    }
+                  }
+                }
+              },
+              {
+                "type": "object",
+                "fields": {
+                  "kind": { "type": "str", "verify": [{ "ext": "one_of", "config": { "values": ["argmax"] } }] },
+                  "name": {
+                    "type": "str",
+                    "verify": [
+                      { "ext": "regex", "config": { "pattern": "\\A[A-Za-z0-9][A-Za-z0-9_.:-]*\\z" } },
+                      { "ext": "len", "config": { "max": 256 } }
+                    ]
+                  },
+                  "score_field": {
+                    "type": "str",
+                    "verify": [
+                      { "ext": "regex", "config": { "pattern": "\\A[A-Za-z0-9][A-Za-z0-9_.:-]*\\z" } },
+                      { "ext": "len", "config": { "max": 256 } }
+                    ]
+                  },
+                  "project_field": {
+                    "type": "str",
+                    "verify": [
+                      { "ext": "regex", "config": { "pattern": "\\A[A-Za-z0-9][A-Za-z0-9_.:-]*\\z" } },
+                      { "ext": "len", "config": { "max": 256 } }
+                    ]
+                  },
+                  "rows": {
+                    "type": "array",
+                    "required": false,
+                    "len": { "min": 1 },
+                    "item": {
+                      "type": "str",
+                      "verify": [
+                        { "ext": "regex", "config": { "pattern": "\\A[A-Za-z0-9][A-Za-z0-9_.:-]*\\z" } },
+                        { "ext": "len", "config": { "max": 256 } }
+                      ]
+                    }
+                  },
+                  "tie_break": { "type": "str", "verify": [{ "ext": "one_of", "config": { "values": ["row_id"] } }] }
+                }
+              }
+            ]
+          }
+        }
+      }
+    },
+    {
+      "type": "object",
+      "fields": {
+        "revision": {
+          "type": "str",
+          "verify": [{ "ext": "one_of", "config": { "values": ["selta.evidence.finite-world/s2-1"] } }]
+        },
+        "kind": { "type": "str", "verify": [{ "ext": "one_of", "config": { "values": ["repeat_event"] } }] },
+        "single_event": {
+          "type": "object",
+          "fields": {
+            "numerator": {
+              "type": "str",
+              "verify": [
+                { "ext": "regex", "config": { "pattern": "\\A(?:0|[1-9][0-9]*)\\z" } },
+                { "ext": "len", "config": { "max": 4096 } }
+              ]
+            },
+            "denominator": {
+              "type": "str",
+              "verify": [
+                { "ext": "regex", "config": { "pattern": "\\A[1-9][0-9]*\\z" } },
+                { "ext": "len", "config": { "max": 4096 } }
+              ]
+            }
+          }
+        },
+        "trials": {
+          "type": "array",
+          "len": { "min": 1 },
+          "item": {
+            "type": "object",
+            "fields": {
+              "name": {
+                "type": "str",
+                "verify": [
+                  { "ext": "regex", "config": { "pattern": "\\A[A-Za-z0-9][A-Za-z0-9_.:-]*\\z" } },
+                  { "ext": "len", "config": { "max": 256 } }
+                ]
+              },
+              "count": { "type": "int", "verify": [{ "ext": "range", "config": { "min": 1, "max": 9007199254740991 } }] },
+              "representation": { "type": "str", "verify": [{ "ext": "one_of", "config": { "values": ["reduced", "factored"] } }] }
+            }
+          }
+        }
+      }
+    },
+    {
+      "type": "object",
+      "fields": {
+        "revision": {
+          "type": "str",
+          "verify": [{ "ext": "one_of", "config": { "values": ["selta.evidence.finite-world/s2-1"] } }]
+        },
+        "kind": { "type": "str", "verify": [{ "ext": "one_of", "config": { "values": ["transition"] } }] },
+        "states": {
+          "type": "array",
+          "len": { "min": 1 },
+          "item": {
+            "type": "union",
+            "variants": [
+              { "type": "bool" },
+              { "type": "int", "verify": [{ "ext": "range", "config": { "min": 0, "max": 9007199254740991 } }] },
+              {
+                "type": "str",
+                "verify": [
+                  { "ext": "regex", "config": { "pattern": "\\A[A-Za-z0-9][A-Za-z0-9_.:-]*\\z" } },
+                  { "ext": "len", "config": { "max": 256 } }
+                ]
+              }
+            ]
+          }
+        },
+        "initial": {
+          "type": "union",
+          "variants": [
+            { "type": "bool" },
+            { "type": "int", "verify": [{ "ext": "range", "config": { "min": 0, "max": 9007199254740991 } }] },
+            {
+              "type": "str",
+              "verify": [
+                { "ext": "regex", "config": { "pattern": "\\A[A-Za-z0-9][A-Za-z0-9_.:-]*\\z" } },
+                { "ext": "len", "config": { "max": 256 } }
+              ]
+            }
+          ]
+        },
+        "transitions": {
+          "type": "array",
+          "len": { "min": 1 },
+          "item": {
+            "type": "object",
+            "fields": {
+              "from": {
+                "type": "union",
+                "variants": [
+                  { "type": "bool" },
+                  { "type": "int", "verify": [{ "ext": "range", "config": { "min": 0, "max": 9007199254740991 } }] },
+                  {
+                    "type": "str",
+                    "verify": [
+                      { "ext": "regex", "config": { "pattern": "\\A[A-Za-z0-9][A-Za-z0-9_.:-]*\\z" } },
+                      { "ext": "len", "config": { "max": 256 } }
+                    ]
+                  }
+                ]
+              },
+              "to": {
+                "type": "union",
+                "variants": [
+                  { "type": "bool" },
+                  { "type": "int", "verify": [{ "ext": "range", "config": { "min": 0, "max": 9007199254740991 } }] },
+                  {
+                    "type": "str",
+                    "verify": [
+                      { "ext": "regex", "config": { "pattern": "\\A[A-Za-z0-9][A-Za-z0-9_.:-]*\\z" } },
+                      { "ext": "len", "config": { "max": 256 } }
+                    ]
+                  }
+                ]
+              }
+            }
+          }
+        },
+        "observations": {
+          "type": "array",
+          "len": { "min": 1 },
+          "item": {
+            "type": "object",
+            "fields": {
+              "name": {
+                "type": "str",
+                "verify": [
+                  { "ext": "regex", "config": { "pattern": "\\A[A-Za-z0-9][A-Za-z0-9_.:-]*\\z" } },
+                  { "ext": "len", "config": { "max": 256 } }
+                ]
+              },
+              "steps": { "type": "int", "verify": [{ "ext": "range", "config": { "min": 0, "max": 9007199254740991 } }] }
+            }
+          }
+        }
+      }
+    }
+  ]
+}

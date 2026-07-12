@@ -397,9 +397,13 @@ Scoped {
 ```
 
 A scoped attestation attributes one mechanically bounded statement. Its
-verifier authenticates or otherwise validates the submitted assertion; it does
-not by itself prove that the trace is complete, nor establish world
-completeness, semantic recall, truth, or correct wall time.
+`attestation` document is the submitted assertion, not a stored verifier
+result. The verifier authenticates or otherwise validates that assertion and
+returns the accepted or rejected result fixed by its bound specification. A
+scoped record is valid only for an accepted result; no verifier-result document
+is inserted into the package. Acceptance does not by itself prove that the
+trace is complete, nor establish world completeness, semantic recall, truth,
+or correct wall time.
 
 Zero-attempt traces are legal when the validated stop decision declares the
 empty prefix. Otherwise the stop decision MUST declare the complete recorded

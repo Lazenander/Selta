@@ -56,18 +56,23 @@ unavailable assumption, omitted closure dependency, fuel exhaustion, and
 explicit conflict/absence mutations.
 
 Boundedness cases retain first-failure precision. One R1f case may jointly
-exceed `max_attempts_total`, `max_graph_nodes`, `max_graph_edges`,
-`max_fan_in`, and `max_graph_depth`; one T2 case may jointly exceed
-`max_documents`, `max_total_document_bytes`, and `max_state_bytes`. Call
+exceed initial `max_documents`, initial `max_total_document_bytes`,
+`max_attempts_total`, `max_graph_nodes`, `max_graph_edges`, `max_fan_in`, and
+`max_graph_depth`; one separate T2 case crosses `max_documents`,
+`max_total_document_bytes`, and `max_state_bytes` only when generated state is
+committed. Call
 precheck, fuel crossing, J1 labels, outer bytes, and P1 parser depth, value, and
 decoded-string ceilings remain separate cases because their phases, commits,
 or first-error rules differ.
 
-Cryptographic collision cases use an explicitly declared harness-injected hash
-result at each of the three insertion boundaries. Ordinary package bytes are
-never presented as a real SHA-256 collision. Each injection must preserve the
-two unequal canonical preimages and check the exact `identity`, `interpret`, or
-`output` phase and pointer fixed by document 20.
+Cryptographic collision and fixed-point cases use explicitly declared harness-
+injected hash results at the relevant insertion boundary. Ordinary package
+bytes are never presented as a real SHA-256 collision or preimage fixed point.
+A collision supplies two unequal canonical preimages mapped to the same
+digest. A reference-cycle case may instead bind the exact unequal preimages
+needed to make its otherwise cryptographically unreachable content-addressed
+edges close. Each injection checks the exact phase and pointer fixed by
+document 20.
 
 ## Mechanics conformance profile
 
@@ -76,7 +81,7 @@ exercise the generic language. A separate `mechanics-candidate-1` profile will
 reuse its claim theory, interpreter, and projection and add only total,
 deterministic conformance relations:
 
-- one-attempt scheduling;
+- declared attempt scheduling;
 - deterministic include/exclude selection;
 - deterministic stopping;
 - scoped-attestation checking;
@@ -86,18 +91,21 @@ deterministic conformance relations:
 
 Its smallest complete cases are:
 
-1. an `observed + include` attempt feeding an atom;
-2. the same atom without its source grant;
-3. an `unavailable + exclude` attempt consumed through an `AttemptFact` rule
+1. a zero-attempt trace with its required stop decision;
+2. an `observed + include` attempt feeding an atom;
+3. the same atom without its source grant;
+4. an `unavailable + exclude` attempt consumed through an `AttemptFact` rule
    for a separate service-health target, while the semantic target stays
    `neither`;
-4. an invalid atom over that unavailable attempt;
-5. included support plus excluded refutation, with both attempts retained;
-6. separate missing-recorder and missing-attestation-semantic authority cases;
-7. a derivation over another `EvidenceFact`, proving recursive closure;
-8. complete policy, source, recorder, attestation, atom, and acquisition
+5. an invalid atom over that unavailable attempt;
+6. a two-attempt predecessor trace retaining included support and excluded
+   refutation, plus all legal outcome/disposition combinations,
+   `malformed + include`, and both forbidden unavailable dispositions;
+7. separate missing-recorder and missing-attestation-semantic authority cases;
+8. a derivation over another `EvidenceFact`, proving recursive closure;
+9. complete policy, source, recorder, attestation, atom, and acquisition
    dependency closures; and
-9. an `observed + exclude` or `malformed + exclude` metamorphic pair whose
+10. an `observed + exclude` or `malformed + exclude` metamorphic pair whose
    rule inputs differ only through the induced opaque document, attempt, and
    fact identities while the specified rule output remains equal, plus a
    resolver read trap and forbidden payload-dependent output.
@@ -177,7 +185,8 @@ AssessRequest { protocol, operation: "assess", environment_source_base64,
                 resolver, implementation, package_source_base64,
                 expected_basis, controls }
 AssessResponse { status: "returned", package }
-             | { status: "trap", trap: { kind, reference? } }
+             | { status: "trap",
+                 trap: { kind: "forbidden_read", reference: DocumentRef } }
 ```
 
 `protocol` is `selta.evidence.conformance/1`; `implementation` is the harness-
@@ -192,25 +201,33 @@ for otherwise unobservable boundaries:
 
 ```text
 controls {
-  identity_collisions: [{ boundary: "input | state | outcome",
-                          left_preimage_base64, right_preimage_base64,
-                          returned_digest }],
+  identity_results: [{ boundary: "input | state | outcome",
+                       preimage_base64, returned_digest }],
   semantic_outputs: [{ call_ordinal, semantics, output }],
+  semantic_reads: [{ call_ordinal, semantics, reference: DocumentRef }],
   verification_faults: [{ substage, document_index? }],
   forbidden_reads: [DocumentRef]
 }
 ```
 
-An identity override applies only when both exact canonical preimages and the
-named insertion boundary match. A semantic override applies to exactly one
-scheduled call. A verification fault applies only at its named defensive
-boundary. A forbidden read returns `trap` before exposing the value only when
-the bound semantic relation attempts that dereference through its dispatch-time
-resolver. Package closure, schema verification, identity, and resource
-accounting retain their ordinary assessor access. Every declared control must
-match exactly once; an unused, multiply matched, or out-of-scope control fails
-the conformance case. These controls never enter the candidate package,
-semantics, identities, resources, or product interface.
+An identity override applies only when its exact canonical preimage and named
+insertion boundary match. `preimage_base64` encodes the complete byte string
+passed to SHA-256, including the UTF-8 domain tag and `0x00` separator from
+document 16, not merely its JCS or raw-byte suffix. Repeating a returned digest
+for two unequal preimages creates an injected collision; binding the mutually
+referential preimages creates a fixed-point test without pretending to break
+SHA-256. A semantic override applies to exactly one scheduled call. A
+semantic-read control injects exactly one attempted `DocumentRef` dereference
+through the dispatch-time resolver at its named call; it does not expose the
+value itself.
+A verification fault applies only at its named defensive boundary. A matching
+forbidden read returns the exact `forbidden_read` trap shown in the protocol
+above, with the attempted reference, before exposing the value. Package
+closure, schema verification, identity, and resource accounting retain their
+ordinary assessor access. Every declared control must match exactly once; an
+unused, multiply matched, or out-of-scope control fails the conformance case.
+These controls never enter the candidate package, semantics, identities,
+resources, or product interface.
 
 Any disagreement is first a specification defect. It is resolved in the public
 documents and new held-out cases, never by copying one model or mechanically
@@ -223,7 +240,7 @@ S2 closes only after the repository contains:
 - a machine-readable law-to-case manifest with one positive and one falsifier
   for every numbered law;
 - a machine-readable classification of every error as ordinary wire-reachable,
-  collision/fault-injection-only, or proved unreachable under candidate
+  conformance-control-only, or proved unreachable under candidate
   ceilings, with the matching fixture, injection, or proof;
 - complete precedence, pointer, input/state/outcome collision-injection, and
   resource-commit coverage;

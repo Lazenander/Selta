@@ -1,0 +1,25 @@
+{
+  "revision": "selta.evidence.conformance-case/s2-1",
+  "id": "control-schema-s0-verification-fault",
+  "operation": {
+    "kind": "assess",
+    "context": "boundary-candidate-1",
+    "package_source": "sha256:be4add3750cf657e08910cb419e28139e0abd19b4b982792e2cc7d48f8a5754d",
+    "expected_basis": {
+      "$ref": "sha256:8362b21c1aa7bcbe120b6c17bbcbd21b9e4a34b8d13f396ef9fc4de9bd963adb",
+      "contract": "sha256:938e5e124cb9648bb532949ff8588edeef0570eee18f6c7bfaf579af17a352a0"
+    },
+    "controls": {
+      "identity_results": [],
+      "semantic_outputs": [],
+      "semantic_output_bytes": [],
+      "verification_faults": [
+        {
+          "substage": "S0"
+        }
+      ],
+      "semantic_reads": [],
+      "forbidden_reads": []
+    }
+  }
+}

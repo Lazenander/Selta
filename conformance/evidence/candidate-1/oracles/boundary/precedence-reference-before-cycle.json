@@ -1,0 +1,9 @@
+{
+  "revision": "selta.evidence.conformance-oracle/s2-1",
+  "case": "precedence-reference-before-cycle",
+  "expected": {
+    "kind": "returned",
+    "package": "sha256:b4ab2147b6f6fbd652de5c0bde87e156d07e7d86e1f0aaa0afeab7d44b349bc9",
+    "compare": "conformance_projection"
+  }
+}

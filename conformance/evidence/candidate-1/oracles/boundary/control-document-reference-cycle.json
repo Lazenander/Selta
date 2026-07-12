@@ -1,0 +1,9 @@
+{
+  "revision": "selta.evidence.conformance-oracle/s2-1",
+  "case": "control-document-reference-cycle",
+  "expected": {
+    "kind": "returned",
+    "package": "sha256:f3178e8f5d55486d390c6c5df8e2f7d89f48f8bf042202a6dd903dc5d620574a",
+    "compare": "conformance_projection"
+  }
+}

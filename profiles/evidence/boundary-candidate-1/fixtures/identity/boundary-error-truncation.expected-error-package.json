@@ -1,0 +1,1571 @@
+{
+  "language": "selta.evidence.package/candidate-1",
+  "environment": "sha256:5059697608b5bb6669cf93122a7c360ac18b68cc2e8612236e51a0634387b566",
+  "documents": [
+    {
+      "contract": "sha256:86ed6b6f38c1b1a1d6bc5f09e2997a0df9e0f1e8554624372031034f17ebf7fb",
+      "digest": "sha256:2be29341c80fb64ee4f40edd7547c6ecc4bf61d2e6f5ba9e06dc51b1e578d4d7",
+      "value": {
+        "revision": "selta.evidence.outcome/candidate-1",
+        "status": "error",
+        "environment": "sha256:5059697608b5bb6669cf93122a7c360ac18b68cc2e8612236e51a0634387b566",
+        "errors": [
+          {
+            "phase": "schema",
+            "code": "package.document_shape",
+            "path": "/input/documents/0/value",
+            "message": "typed document value does not match its Selta contract"
+          },
+          {
+            "phase": "schema",
+            "code": "package.document_shape",
+            "path": "/input/documents/1/value",
+            "message": "typed document value does not match its Selta contract"
+          },
+          {
+            "phase": "schema",
+            "code": "package.document_shape",
+            "path": "/input/documents/10/value",
+            "message": "typed document value does not match its Selta contract"
+          },
+          {
+            "phase": "schema",
+            "code": "package.document_shape",
+            "path": "/input/documents/100/value",
+            "message": "typed document value does not match its Selta contract"
+          },
+          {
+            "phase": "schema",
+            "code": "package.document_shape",
+            "path": "/input/documents/101/value",
+            "message": "typed document value does not match its Selta contract"
+          },
+          {
+            "phase": "schema",
+            "code": "package.document_shape",
+            "path": "/input/documents/102/value",
+            "message": "typed document value does not match its Selta contract"
+          },
+          {
+            "phase": "schema",
+            "code": "package.document_shape",
+            "path": "/input/documents/103/value",
+            "message": "typed document value does not match its Selta contract"
+          },
+          {
+            "phase": "schema",
+            "code": "package.document_shape",
+            "path": "/input/documents/104/value",
+            "message": "typed document value does not match its Selta contract"
+          },
+          {
+            "phase": "schema",
+            "code": "package.document_shape",
+            "path": "/input/documents/105/value",
+            "message": "typed document value does not match its Selta contract"
+          },
+          {
+            "phase": "schema",
+            "code": "package.document_shape",
+            "path": "/input/documents/106/value",
+            "message": "typed document value does not match its Selta contract"
+          },
+          {
+            "phase": "schema",
+            "code": "package.document_shape",
+            "path": "/input/documents/107/value",
+            "message": "typed document value does not match its Selta contract"
+          },
+          {
+            "phase": "schema",
+            "code": "package.document_shape",
+            "path": "/input/documents/108/value",
+            "message": "typed document value does not match its Selta contract"
+          },
+          {
+            "phase": "schema",
+            "code": "package.document_shape",
+            "path": "/input/documents/109/value",
+            "message": "typed document value does not match its Selta contract"
+          },
+          {
+            "phase": "schema",
+            "code": "package.document_shape",
+            "path": "/input/documents/11/value",
+            "message": "typed document value does not match its Selta contract"
+          },
+          {
+            "phase": "schema",
+            "code": "package.document_shape",
+            "path": "/input/documents/110/value",
+            "message": "typed document value does not match its Selta contract"
+          },
+          {
+            "phase": "schema",
+            "code": "package.document_shape",
+            "path": "/input/documents/111/value",
+            "message": "typed document value does not match its Selta contract"
+          },
+          {
+            "phase": "schema",
+            "code": "package.document_shape",
+            "path": "/input/documents/112/value",
+            "message": "typed document value does not match its Selta contract"
+          },
+          {
+            "phase": "schema",
+            "code": "package.document_shape",
+            "path": "/input/documents/113/value",
+            "message": "typed document value does not match its Selta contract"
+          },
+          {
+            "phase": "schema",
+            "code": "package.document_shape",
+            "path": "/input/documents/114/value",
+            "message": "typed document value does not match its Selta contract"
+          },
+          {
+            "phase": "schema",
+            "code": "package.document_shape",
+            "path": "/input/documents/115/value",
+            "message": "typed document value does not match its Selta contract"
+          },
+          {
+            "phase": "schema",
+            "code": "package.document_shape",
+            "path": "/input/documents/116/value",
+            "message": "typed document value does not match its Selta contract"
+          },
+          {
+            "phase": "schema",
+            "code": "package.document_shape",
+            "path": "/input/documents/117/value",
+            "message": "typed document value does not match its Selta contract"
+          },
+          {
+            "phase": "schema",
+            "code": "package.document_shape",
+            "path": "/input/documents/118/value",
+            "message": "typed document value does not match its Selta contract"
+          },
+          {
+            "phase": "schema",
+            "code": "package.document_shape",
+            "path": "/input/documents/119/value",
+            "message": "typed document value does not match its Selta contract"
+          },
+          {
+            "phase": "schema",
+            "code": "package.document_shape",
+            "path": "/input/documents/12/value",
+            "message": "typed document value does not match its Selta contract"
+          },
+          {
+            "phase": "schema",
+            "code": "package.document_shape",
+            "path": "/input/documents/120/value",
+            "message": "typed document value does not match its Selta contract"
+          },
+          {
+            "phase": "schema",
+            "code": "package.document_shape",
+            "path": "/input/documents/121/value",
+            "message": "typed document value does not match its Selta contract"
+          },
+          {
+            "phase": "schema",
+            "code": "package.document_shape",
+            "path": "/input/documents/122/value",
+            "message": "typed document value does not match its Selta contract"
+          },
+          {
+            "phase": "schema",
+            "code": "package.document_shape",
+            "path": "/input/documents/123/value",
+            "message": "typed document value does not match its Selta contract"
+          },
+          {
+            "phase": "schema",
+            "code": "package.document_shape",
+            "path": "/input/documents/124/value",
+            "message": "typed document value does not match its Selta contract"
+          },
+          {
+            "phase": "schema",
+            "code": "package.document_shape",
+            "path": "/input/documents/125/value",
+            "message": "typed document value does not match its Selta contract"
+          },
+          {
+            "phase": "schema",
+            "code": "package.document_shape",
+            "path": "/input/documents/126/value",
+            "message": "typed document value does not match its Selta contract"
+          },
+          {
+            "phase": "schema",
+            "code": "package.document_shape",
+            "path": "/input/documents/127/value",
+            "message": "typed document value does not match its Selta contract"
+          },
+          {
+            "phase": "schema",
+            "code": "package.document_shape",
+            "path": "/input/documents/128/value",
+            "message": "typed document value does not match its Selta contract"
+          },
+          {
+            "phase": "schema",
+            "code": "package.document_shape",
+            "path": "/input/documents/129/value",
+            "message": "typed document value does not match its Selta contract"
+          },
+          {
+            "phase": "schema",
+            "code": "package.document_shape",
+            "path": "/input/documents/13/value",
+            "message": "typed document value does not match its Selta contract"
+          },
+          {
+            "phase": "schema",
+            "code": "package.document_shape",
+            "path": "/input/documents/130/value",
+            "message": "typed document value does not match its Selta contract"
+          },
+          {
+            "phase": "schema",
+            "code": "package.document_shape",
+            "path": "/input/documents/131/value",
+            "message": "typed document value does not match its Selta contract"
+          },
+          {
+            "phase": "schema",
+            "code": "package.document_shape",
+            "path": "/input/documents/132/value",
+            "message": "typed document value does not match its Selta contract"
+          },
+          {
+            "phase": "schema",
+            "code": "package.document_shape",
+            "path": "/input/documents/133/value",
+            "message": "typed document value does not match its Selta contract"
+          },
+          {
+            "phase": "schema",
+            "code": "package.document_shape",
+            "path": "/input/documents/134/value",
+            "message": "typed document value does not match its Selta contract"
+          },
+          {
+            "phase": "schema",
+            "code": "package.document_shape",
+            "path": "/input/documents/135/value",
+            "message": "typed document value does not match its Selta contract"
+          },
+          {
+            "phase": "schema",
+            "code": "package.document_shape",
+            "path": "/input/documents/136/value",
+            "message": "typed document value does not match its Selta contract"
+          },
+          {
+            "phase": "schema",
+            "code": "package.document_shape",
+            "path": "/input/documents/137/value",
+            "message": "typed document value does not match its Selta contract"
+          },
+          {
+            "phase": "schema",
+            "code": "package.document_shape",
+            "path": "/input/documents/138/value",
+            "message": "typed document value does not match its Selta contract"
+          },
+          {
+            "phase": "schema",
+            "code": "package.document_shape",
+            "path": "/input/documents/139/value",
+            "message": "typed document value does not match its Selta contract"
+          },
+          {
+            "phase": "schema",
+            "code": "package.document_shape",
+            "path": "/input/documents/14/value",
+            "message": "typed document value does not match its Selta contract"
+          },
+          {
+            "phase": "schema",
+            "code": "package.document_shape",
+            "path": "/input/documents/140/value",
+            "message": "typed document value does not match its Selta contract"
+          },
+          {
+            "phase": "schema",
+            "code": "package.document_shape",
+            "path": "/input/documents/141/value",
+            "message": "typed document value does not match its Selta contract"
+          },
+          {
+            "phase": "schema",
+            "code": "package.document_shape",
+            "path": "/input/documents/142/value",
+            "message": "typed document value does not match its Selta contract"
+          },
+          {
+            "phase": "schema",
+            "code": "package.document_shape",
+            "path": "/input/documents/143/value",
+            "message": "typed document value does not match its Selta contract"
+          },
+          {
+            "phase": "schema",
+            "code": "package.document_shape",
+            "path": "/input/documents/144/value",
+            "message": "typed document value does not match its Selta contract"
+          },
+          {
+            "phase": "schema",
+            "code": "package.document_shape",
+            "path": "/input/documents/145/value",
+            "message": "typed document value does not match its Selta contract"
+          },
+          {
+            "phase": "schema",
+            "code": "package.document_shape",
+            "path": "/input/documents/146/value",
+            "message": "typed document value does not match its Selta contract"
+          },
+          {
+            "phase": "schema",
+            "code": "package.document_shape",
+            "path": "/input/documents/147/value",
+            "message": "typed document value does not match its Selta contract"
+          },
+          {
+            "phase": "schema",
+            "code": "package.document_shape",
+            "path": "/input/documents/148/value",
+            "message": "typed document value does not match its Selta contract"
+          },
+          {
+            "phase": "schema",
+            "code": "package.document_shape",
+            "path": "/input/documents/149/value",
+            "message": "typed document value does not match its Selta contract"
+          },
+          {
+            "phase": "schema",
+            "code": "package.document_shape",
+            "path": "/input/documents/15/value",
+            "message": "typed document value does not match its Selta contract"
+          },
+          {
+            "phase": "schema",
+            "code": "package.document_shape",
+            "path": "/input/documents/150/value",
+            "message": "typed document value does not match its Selta contract"
+          },
+          {
+            "phase": "schema",
+            "code": "package.document_shape",
+            "path": "/input/documents/151/value",
+            "message": "typed document value does not match its Selta contract"
+          },
+          {
+            "phase": "schema",
+            "code": "package.document_shape",
+            "path": "/input/documents/152/value",
+            "message": "typed document value does not match its Selta contract"
+          },
+          {
+            "phase": "schema",
+            "code": "package.document_shape",
+            "path": "/input/documents/153/value",
+            "message": "typed document value does not match its Selta contract"
+          },
+          {
+            "phase": "schema",
+            "code": "package.document_shape",
+            "path": "/input/documents/154/value",
+            "message": "typed document value does not match its Selta contract"
+          },
+          {
+            "phase": "schema",
+            "code": "package.document_shape",
+            "path": "/input/documents/155/value",
+            "message": "typed document value does not match its Selta contract"
+          },
+          {
+            "phase": "schema",
+            "code": "package.document_shape",
+            "path": "/input/documents/156/value",
+            "message": "typed document value does not match its Selta contract"
+          },
+          {
+            "phase": "schema",
+            "code": "package.document_shape",
+            "path": "/input/documents/157/value",
+            "message": "typed document value does not match its Selta contract"
+          },
+          {
+            "phase": "schema",
+            "code": "package.document_shape",
+            "path": "/input/documents/158/value",
+            "message": "typed document value does not match its Selta contract"
+          },
+          {
+            "phase": "schema",
+            "code": "package.document_shape",
+            "path": "/input/documents/159/value",
+            "message": "typed document value does not match its Selta contract"
+          },
+          {
+            "phase": "schema",
+            "code": "package.document_shape",
+            "path": "/input/documents/16/value",
+            "message": "typed document value does not match its Selta contract"
+          },
+          {
+            "phase": "schema",
+            "code": "package.document_shape",
+            "path": "/input/documents/160/value",
+            "message": "typed document value does not match its Selta contract"
+          },
+          {
+            "phase": "schema",
+            "code": "package.document_shape",
+            "path": "/input/documents/161/value",
+            "message": "typed document value does not match its Selta contract"
+          },
+          {
+            "phase": "schema",
+            "code": "package.document_shape",
+            "path": "/input/documents/162/value",
+            "message": "typed document value does not match its Selta contract"
+          },
+          {
+            "phase": "schema",
+            "code": "package.document_shape",
+            "path": "/input/documents/163/value",
+            "message": "typed document value does not match its Selta contract"
+          },
+          {
+            "phase": "schema",
+            "code": "package.document_shape",
+            "path": "/input/documents/164/value",
+            "message": "typed document value does not match its Selta contract"
+          },
+          {
+            "phase": "schema",
+            "code": "package.document_shape",
+            "path": "/input/documents/165/value",
+            "message": "typed document value does not match its Selta contract"
+          },
+          {
+            "phase": "schema",
+            "code": "package.document_shape",
+            "path": "/input/documents/166/value",
+            "message": "typed document value does not match its Selta contract"
+          },
+          {
+            "phase": "schema",
+            "code": "package.document_shape",
+            "path": "/input/documents/167/value",
+            "message": "typed document value does not match its Selta contract"
+          },
+          {
+            "phase": "schema",
+            "code": "package.document_shape",
+            "path": "/input/documents/168/value",
+            "message": "typed document value does not match its Selta contract"
+          },
+          {
+            "phase": "schema",
+            "code": "package.document_shape",
+            "path": "/input/documents/169/value",
+            "message": "typed document value does not match its Selta contract"
+          },
+          {
+            "phase": "schema",
+            "code": "package.document_shape",
+            "path": "/input/documents/17/value",
+            "message": "typed document value does not match its Selta contract"
+          },
+          {
+            "phase": "schema",
+            "code": "package.document_shape",
+            "path": "/input/documents/170/value",
+            "message": "typed document value does not match its Selta contract"
+          },
+          {
+            "phase": "schema",
+            "code": "package.document_shape",
+            "path": "/input/documents/171/value",
+            "message": "typed document value does not match its Selta contract"
+          },
+          {
+            "phase": "schema",
+            "code": "package.document_shape",
+            "path": "/input/documents/172/value",
+            "message": "typed document value does not match its Selta contract"
+          },
+          {
+            "phase": "schema",
+            "code": "package.document_shape",
+            "path": "/input/documents/173/value",
+            "message": "typed document value does not match its Selta contract"
+          },
+          {
+            "phase": "schema",
+            "code": "package.document_shape",
+            "path": "/input/documents/174/value",
+            "message": "typed document value does not match its Selta contract"
+          },
+          {
+            "phase": "schema",
+            "code": "package.document_shape",
+            "path": "/input/documents/175/value",
+            "message": "typed document value does not match its Selta contract"
+          },
+          {
+            "phase": "schema",
+            "code": "package.document_shape",
+            "path": "/input/documents/176/value",
+            "message": "typed document value does not match its Selta contract"
+          },
+          {
+            "phase": "schema",
+            "code": "package.document_shape",
+            "path": "/input/documents/177/value",
+            "message": "typed document value does not match its Selta contract"
+          },
+          {
+            "phase": "schema",
+            "code": "package.document_shape",
+            "path": "/input/documents/178/value",
+            "message": "typed document value does not match its Selta contract"
+          },
+          {
+            "phase": "schema",
+            "code": "package.document_shape",
+            "path": "/input/documents/179/value",
+            "message": "typed document value does not match its Selta contract"
+          },
+          {
+            "phase": "schema",
+            "code": "package.document_shape",
+            "path": "/input/documents/18/value",
+            "message": "typed document value does not match its Selta contract"
+          },
+          {
+            "phase": "schema",
+            "code": "package.document_shape",
+            "path": "/input/documents/180/value",
+            "message": "typed document value does not match its Selta contract"
+          },
+          {
+            "phase": "schema",
+            "code": "package.document_shape",
+            "path": "/input/documents/181/value",
+            "message": "typed document value does not match its Selta contract"
+          },
+          {
+            "phase": "schema",
+            "code": "package.document_shape",
+            "path": "/input/documents/182/value",
+            "message": "typed document value does not match its Selta contract"
+          },
+          {
+            "phase": "schema",
+            "code": "package.document_shape",
+            "path": "/input/documents/183/value",
+            "message": "typed document value does not match its Selta contract"
+          },
+          {
+            "phase": "schema",
+            "code": "package.document_shape",
+            "path": "/input/documents/184/value",
+            "message": "typed document value does not match its Selta contract"
+          },
+          {
+            "phase": "schema",
+            "code": "package.document_shape",
+            "path": "/input/documents/185/value",
+            "message": "typed document value does not match its Selta contract"
+          },
+          {
+            "phase": "schema",
+            "code": "package.document_shape",
+            "path": "/input/documents/186/value",
+            "message": "typed document value does not match its Selta contract"
+          },
+          {
+            "phase": "schema",
+            "code": "package.document_shape",
+            "path": "/input/documents/187/value",
+            "message": "typed document value does not match its Selta contract"
+          },
+          {
+            "phase": "schema",
+            "code": "package.document_shape",
+            "path": "/input/documents/188/value",
+            "message": "typed document value does not match its Selta contract"
+          },
+          {
+            "phase": "schema",
+            "code": "package.document_shape",
+            "path": "/input/documents/189/value",
+            "message": "typed document value does not match its Selta contract"
+          },
+          {
+            "phase": "schema",
+            "code": "package.document_shape",
+            "path": "/input/documents/19/value",
+            "message": "typed document value does not match its Selta contract"
+          },
+          {
+            "phase": "schema",
+            "code": "package.document_shape",
+            "path": "/input/documents/190/value",
+            "message": "typed document value does not match its Selta contract"
+          },
+          {
+            "phase": "schema",
+            "code": "package.document_shape",
+            "path": "/input/documents/191/value",
+            "message": "typed document value does not match its Selta contract"
+          },
+          {
+            "phase": "schema",
+            "code": "package.document_shape",
+            "path": "/input/documents/192/value",
+            "message": "typed document value does not match its Selta contract"
+          },
+          {
+            "phase": "schema",
+            "code": "package.document_shape",
+            "path": "/input/documents/193/value",
+            "message": "typed document value does not match its Selta contract"
+          },
+          {
+            "phase": "schema",
+            "code": "package.document_shape",
+            "path": "/input/documents/194/value",
+            "message": "typed document value does not match its Selta contract"
+          },
+          {
+            "phase": "schema",
+            "code": "package.document_shape",
+            "path": "/input/documents/195/value",
+            "message": "typed document value does not match its Selta contract"
+          },
+          {
+            "phase": "schema",
+            "code": "package.document_shape",
+            "path": "/input/documents/196/value",
+            "message": "typed document value does not match its Selta contract"
+          },
+          {
+            "phase": "schema",
+            "code": "package.document_shape",
+            "path": "/input/documents/197/value",
+            "message": "typed document value does not match its Selta contract"
+          },
+          {
+            "phase": "schema",
+            "code": "package.document_shape",
+            "path": "/input/documents/198/value",
+            "message": "typed document value does not match its Selta contract"
+          },
+          {
+            "phase": "schema",
+            "code": "package.document_shape",
+            "path": "/input/documents/199/value",
+            "message": "typed document value does not match its Selta contract"
+          },
+          {
+            "phase": "schema",
+            "code": "package.document_shape",
+            "path": "/input/documents/2/value",
+            "message": "typed document value does not match its Selta contract"
+          },
+          {
+            "phase": "schema",
+            "code": "package.document_shape",
+            "path": "/input/documents/20/value",
+            "message": "typed document value does not match its Selta contract"
+          },
+          {
+            "phase": "schema",
+            "code": "package.document_shape",
+            "path": "/input/documents/200/value",
+            "message": "typed document value does not match its Selta contract"
+          },
+          {
+            "phase": "schema",
+            "code": "package.document_shape",
+            "path": "/input/documents/201/value",
+            "message": "typed document value does not match its Selta contract"
+          },
+          {
+            "phase": "schema",
+            "code": "package.document_shape",
+            "path": "/input/documents/202/value",
+            "message": "typed document value does not match its Selta contract"
+          },
+          {
+            "phase": "schema",
+            "code": "package.document_shape",
+            "path": "/input/documents/203/value",
+            "message": "typed document value does not match its Selta contract"
+          },
+          {
+            "phase": "schema",
+            "code": "package.document_shape",
+            "path": "/input/documents/204/value",
+            "message": "typed document value does not match its Selta contract"
+          },
+          {
+            "phase": "schema",
+            "code": "package.document_shape",
+            "path": "/input/documents/205/value",
+            "message": "typed document value does not match its Selta contract"
+          },
+          {
+            "phase": "schema",
+            "code": "package.document_shape",
+            "path": "/input/documents/206/value",
+            "message": "typed document value does not match its Selta contract"
+          },
+          {
+            "phase": "schema",
+            "code": "package.document_shape",
+            "path": "/input/documents/207/value",
+            "message": "typed document value does not match its Selta contract"
+          },
+          {
+            "phase": "schema",
+            "code": "package.document_shape",
+            "path": "/input/documents/208/value",
+            "message": "typed document value does not match its Selta contract"
+          },
+          {
+            "phase": "schema",
+            "code": "package.document_shape",
+            "path": "/input/documents/209/value",
+            "message": "typed document value does not match its Selta contract"
+          },
+          {
+            "phase": "schema",
+            "code": "package.document_shape",
+            "path": "/input/documents/21/value",
+            "message": "typed document value does not match its Selta contract"
+          },
+          {
+            "phase": "schema",
+            "code": "package.document_shape",
+            "path": "/input/documents/210/value",
+            "message": "typed document value does not match its Selta contract"
+          },
+          {
+            "phase": "schema",
+            "code": "package.document_shape",
+            "path": "/input/documents/211/value",
+            "message": "typed document value does not match its Selta contract"
+          },
+          {
+            "phase": "schema",
+            "code": "package.document_shape",
+            "path": "/input/documents/212/value",
+            "message": "typed document value does not match its Selta contract"
+          },
+          {
+            "phase": "schema",
+            "code": "package.document_shape",
+            "path": "/input/documents/213/value",
+            "message": "typed document value does not match its Selta contract"
+          },
+          {
+            "phase": "schema",
+            "code": "package.document_shape",
+            "path": "/input/documents/214/value",
+            "message": "typed document value does not match its Selta contract"
+          },
+          {
+            "phase": "schema",
+            "code": "package.document_shape",
+            "path": "/input/documents/215/value",
+            "message": "typed document value does not match its Selta contract"
+          },
+          {
+            "phase": "schema",
+            "code": "package.document_shape",
+            "path": "/input/documents/216/value",
+            "message": "typed document value does not match its Selta contract"
+          },
+          {
+            "phase": "schema",
+            "code": "package.document_shape",
+            "path": "/input/documents/217/value",
+            "message": "typed document value does not match its Selta contract"
+          },
+          {
+            "phase": "schema",
+            "code": "package.document_shape",
+            "path": "/input/documents/218/value",
+            "message": "typed document value does not match its Selta contract"
+          },
+          {
+            "phase": "schema",
+            "code": "package.document_shape",
+            "path": "/input/documents/219/value",
+            "message": "typed document value does not match its Selta contract"
+          },
+          {
+            "phase": "schema",
+            "code": "package.document_shape",
+            "path": "/input/documents/22/value",
+            "message": "typed document value does not match its Selta contract"
+          },
+          {
+            "phase": "schema",
+            "code": "package.document_shape",
+            "path": "/input/documents/220/value",
+            "message": "typed document value does not match its Selta contract"
+          },
+          {
+            "phase": "schema",
+            "code": "package.document_shape",
+            "path": "/input/documents/221/value",
+            "message": "typed document value does not match its Selta contract"
+          },
+          {
+            "phase": "schema",
+            "code": "package.document_shape",
+            "path": "/input/documents/222/value",
+            "message": "typed document value does not match its Selta contract"
+          },
+          {
+            "phase": "schema",
+            "code": "package.document_shape",
+            "path": "/input/documents/223/value",
+            "message": "typed document value does not match its Selta contract"
+          },
+          {
+            "phase": "schema",
+            "code": "package.document_shape",
+            "path": "/input/documents/224/value",
+            "message": "typed document value does not match its Selta contract"
+          },
+          {
+            "phase": "schema",
+            "code": "package.document_shape",
+            "path": "/input/documents/225/value",
+            "message": "typed document value does not match its Selta contract"
+          },
+          {
+            "phase": "schema",
+            "code": "package.document_shape",
+            "path": "/input/documents/226/value",
+            "message": "typed document value does not match its Selta contract"
+          },
+          {
+            "phase": "schema",
+            "code": "package.document_shape",
+            "path": "/input/documents/227/value",
+            "message": "typed document value does not match its Selta contract"
+          },
+          {
+            "phase": "schema",
+            "code": "package.document_shape",
+            "path": "/input/documents/228/value",
+            "message": "typed document value does not match its Selta contract"
+          },
+          {
+            "phase": "schema",
+            "code": "package.document_shape",
+            "path": "/input/documents/229/value",
+            "message": "typed document value does not match its Selta contract"
+          },
+          {
+            "phase": "schema",
+            "code": "package.document_shape",
+            "path": "/input/documents/23/value",
+            "message": "typed document value does not match its Selta contract"
+          },
+          {
+            "phase": "schema",
+            "code": "package.document_shape",
+            "path": "/input/documents/230/value",
+            "message": "typed document value does not match its Selta contract"
+          },
+          {
+            "phase": "schema",
+            "code": "package.document_shape",
+            "path": "/input/documents/231/value",
+            "message": "typed document value does not match its Selta contract"
+          },
+          {
+            "phase": "schema",
+            "code": "package.document_shape",
+            "path": "/input/documents/232/value",
+            "message": "typed document value does not match its Selta contract"
+          },
+          {
+            "phase": "schema",
+            "code": "package.document_shape",
+            "path": "/input/documents/233/value",
+            "message": "typed document value does not match its Selta contract"
+          },
+          {
+            "phase": "schema",
+            "code": "package.document_shape",
+            "path": "/input/documents/234/value",
+            "message": "typed document value does not match its Selta contract"
+          },
+          {
+            "phase": "schema",
+            "code": "package.document_shape",
+            "path": "/input/documents/235/value",
+            "message": "typed document value does not match its Selta contract"
+          },
+          {
+            "phase": "schema",
+            "code": "package.document_shape",
+            "path": "/input/documents/236/value",
+            "message": "typed document value does not match its Selta contract"
+          },
+          {
+            "phase": "schema",
+            "code": "package.document_shape",
+            "path": "/input/documents/237/value",
+            "message": "typed document value does not match its Selta contract"
+          },
+          {
+            "phase": "schema",
+            "code": "package.document_shape",
+            "path": "/input/documents/238/value",
+            "message": "typed document value does not match its Selta contract"
+          },
+          {
+            "phase": "schema",
+            "code": "package.document_shape",
+            "path": "/input/documents/239/value",
+            "message": "typed document value does not match its Selta contract"
+          },
+          {
+            "phase": "schema",
+            "code": "package.document_shape",
+            "path": "/input/documents/24/value",
+            "message": "typed document value does not match its Selta contract"
+          },
+          {
+            "phase": "schema",
+            "code": "package.document_shape",
+            "path": "/input/documents/240/value",
+            "message": "typed document value does not match its Selta contract"
+          },
+          {
+            "phase": "schema",
+            "code": "package.document_shape",
+            "path": "/input/documents/241/value",
+            "message": "typed document value does not match its Selta contract"
+          },
+          {
+            "phase": "schema",
+            "code": "package.document_shape",
+            "path": "/input/documents/242/value",
+            "message": "typed document value does not match its Selta contract"
+          },
+          {
+            "phase": "schema",
+            "code": "package.document_shape",
+            "path": "/input/documents/243/value",
+            "message": "typed document value does not match its Selta contract"
+          },
+          {
+            "phase": "schema",
+            "code": "package.document_shape",
+            "path": "/input/documents/244/value",
+            "message": "typed document value does not match its Selta contract"
+          },
+          {
+            "phase": "schema",
+            "code": "package.document_shape",
+            "path": "/input/documents/245/value",
+            "message": "typed document value does not match its Selta contract"
+          },
+          {
+            "phase": "schema",
+            "code": "package.document_shape",
+            "path": "/input/documents/246/value",
+            "message": "typed document value does not match its Selta contract"
+          },
+          {
+            "phase": "schema",
+            "code": "package.document_shape",
+            "path": "/input/documents/247/value",
+            "message": "typed document value does not match its Selta contract"
+          },
+          {
+            "phase": "schema",
+            "code": "package.document_shape",
+            "path": "/input/documents/248/value",
+            "message": "typed document value does not match its Selta contract"
+          },
+          {
+            "phase": "schema",
+            "code": "package.document_shape",
+            "path": "/input/documents/249/value",
+            "message": "typed document value does not match its Selta contract"
+          },
+          {
+            "phase": "schema",
+            "code": "package.document_shape",
+            "path": "/input/documents/25/value",
+            "message": "typed document value does not match its Selta contract"
+          },
+          {
+            "phase": "schema",
+            "code": "package.document_shape",
+            "path": "/input/documents/250/value",
+            "message": "typed document value does not match its Selta contract"
+          },
+          {
+            "phase": "schema",
+            "code": "package.document_shape",
+            "path": "/input/documents/251/value",
+            "message": "typed document value does not match its Selta contract"
+          },
+          {
+            "phase": "schema",
+            "code": "package.document_shape",
+            "path": "/input/documents/252/value",
+            "message": "typed document value does not match its Selta contract"
+          },
+          {
+            "phase": "schema",
+            "code": "package.document_shape",
+            "path": "/input/documents/253/value",
+            "message": "typed document value does not match its Selta contract"
+          },
+          {
+            "phase": "schema",
+            "code": "package.document_shape",
+            "path": "/input/documents/254/value",
+            "message": "typed document value does not match its Selta contract"
+          },
+          {
+            "phase": "schema",
+            "code": "package.document_shape",
+            "path": "/input/documents/255/value",
+            "message": "typed document value does not match its Selta contract"
+          },
+          {
+            "phase": "schema",
+            "code": "package.document_shape",
+            "path": "/input/documents/256/value",
+            "message": "typed document value does not match its Selta contract"
+          },
+          {
+            "phase": "schema",
+            "code": "package.document_shape",
+            "path": "/input/documents/26/value",
+            "message": "typed document value does not match its Selta contract"
+          },
+          {
+            "phase": "schema",
+            "code": "package.document_shape",
+            "path": "/input/documents/27/value",
+            "message": "typed document value does not match its Selta contract"
+          },
+          {
+            "phase": "schema",
+            "code": "package.document_shape",
+            "path": "/input/documents/28/value",
+            "message": "typed document value does not match its Selta contract"
+          },
+          {
+            "phase": "schema",
+            "code": "package.document_shape",
+            "path": "/input/documents/29/value",
+            "message": "typed document value does not match its Selta contract"
+          },
+          {
+            "phase": "schema",
+            "code": "package.document_shape",
+            "path": "/input/documents/3/value",
+            "message": "typed document value does not match its Selta contract"
+          },
+          {
+            "phase": "schema",
+            "code": "package.document_shape",
+            "path": "/input/documents/30/value",
+            "message": "typed document value does not match its Selta contract"
+          },
+          {
+            "phase": "schema",
+            "code": "package.document_shape",
+            "path": "/input/documents/31/value",
+            "message": "typed document value does not match its Selta contract"
+          },
+          {
+            "phase": "schema",
+            "code": "package.document_shape",
+            "path": "/input/documents/32/value",
+            "message": "typed document value does not match its Selta contract"
+          },
+          {
+            "phase": "schema",
+            "code": "package.document_shape",
+            "path": "/input/documents/33/value",
+            "message": "typed document value does not match its Selta contract"
+          },
+          {
+            "phase": "schema",
+            "code": "package.document_shape",
+            "path": "/input/documents/34/value",
+            "message": "typed document value does not match its Selta contract"
+          },
+          {
+            "phase": "schema",
+            "code": "package.document_shape",
+            "path": "/input/documents/35/value",
+            "message": "typed document value does not match its Selta contract"
+          },
+          {
+            "phase": "schema",
+            "code": "package.document_shape",
+            "path": "/input/documents/36/value",
+            "message": "typed document value does not match its Selta contract"
+          },
+          {
+            "phase": "schema",
+            "code": "package.document_shape",
+            "path": "/input/documents/37/value",
+            "message": "typed document value does not match its Selta contract"
+          },
+          {
+            "phase": "schema",
+            "code": "package.document_shape",
+            "path": "/input/documents/38/value",
+            "message": "typed document value does not match its Selta contract"
+          },
+          {
+            "phase": "schema",
+            "code": "package.document_shape",
+            "path": "/input/documents/39/value",
+            "message": "typed document value does not match its Selta contract"
+          },
+          {
+            "phase": "schema",
+            "code": "package.document_shape",
+            "path": "/input/documents/4/value",
+            "message": "typed document value does not match its Selta contract"
+          },
+          {
+            "phase": "schema",
+            "code": "package.document_shape",
+            "path": "/input/documents/40/value",
+            "message": "typed document value does not match its Selta contract"
+          },
+          {
+            "phase": "schema",
+            "code": "package.document_shape",
+            "path": "/input/documents/41/value",
+            "message": "typed document value does not match its Selta contract"
+          },
+          {
+            "phase": "schema",
+            "code": "package.document_shape",
+            "path": "/input/documents/42/value",
+            "message": "typed document value does not match its Selta contract"
+          },
+          {
+            "phase": "schema",
+            "code": "package.document_shape",
+            "path": "/input/documents/43/value",
+            "message": "typed document value does not match its Selta contract"
+          },
+          {
+            "phase": "schema",
+            "code": "package.document_shape",
+            "path": "/input/documents/44/value",
+            "message": "typed document value does not match its Selta contract"
+          },
+          {
+            "phase": "schema",
+            "code": "package.document_shape",
+            "path": "/input/documents/45/value",
+            "message": "typed document value does not match its Selta contract"
+          },
+          {
+            "phase": "schema",
+            "code": "package.document_shape",
+            "path": "/input/documents/46/value",
+            "message": "typed document value does not match its Selta contract"
+          },
+          {
+            "phase": "schema",
+            "code": "package.document_shape",
+            "path": "/input/documents/47/value",
+            "message": "typed document value does not match its Selta contract"
+          },
+          {
+            "phase": "schema",
+            "code": "package.document_shape",
+            "path": "/input/documents/48/value",
+            "message": "typed document value does not match its Selta contract"
+          },
+          {
+            "phase": "schema",
+            "code": "package.document_shape",
+            "path": "/input/documents/49/value",
+            "message": "typed document value does not match its Selta contract"
+          },
+          {
+            "phase": "schema",
+            "code": "package.document_shape",
+            "path": "/input/documents/5/value",
+            "message": "typed document value does not match its Selta contract"
+          },
+          {
+            "phase": "schema",
+            "code": "package.document_shape",
+            "path": "/input/documents/50/value",
+            "message": "typed document value does not match its Selta contract"
+          },
+          {
+            "phase": "schema",
+            "code": "package.document_shape",
+            "path": "/input/documents/51/value",
+            "message": "typed document value does not match its Selta contract"
+          },
+          {
+            "phase": "schema",
+            "code": "package.document_shape",
+            "path": "/input/documents/52/value",
+            "message": "typed document value does not match its Selta contract"
+          },
+          {
+            "phase": "schema",
+            "code": "package.document_shape",
+            "path": "/input/documents/53/value",
+            "message": "typed document value does not match its Selta contract"
+          },
+          {
+            "phase": "schema",
+            "code": "package.document_shape",
+            "path": "/input/documents/54/value",
+            "message": "typed document value does not match its Selta contract"
+          },
+          {
+            "phase": "schema",
+            "code": "package.document_shape",
+            "path": "/input/documents/55/value",
+            "message": "typed document value does not match its Selta contract"
+          },
+          {
+            "phase": "schema",
+            "code": "package.document_shape",
+            "path": "/input/documents/56/value",
+            "message": "typed document value does not match its Selta contract"
+          },
+          {
+            "phase": "schema",
+            "code": "package.document_shape",
+            "path": "/input/documents/57/value",
+            "message": "typed document value does not match its Selta contract"
+          },
+          {
+            "phase": "schema",
+            "code": "package.document_shape",
+            "path": "/input/documents/58/value",
+            "message": "typed document value does not match its Selta contract"
+          },
+          {
+            "phase": "schema",
+            "code": "package.document_shape",
+            "path": "/input/documents/59/value",
+            "message": "typed document value does not match its Selta contract"
+          },
+          {
+            "phase": "schema",
+            "code": "package.document_shape",
+            "path": "/input/documents/6/value",
+            "message": "typed document value does not match its Selta contract"
+          },
+          {
+            "phase": "schema",
+            "code": "package.document_shape",
+            "path": "/input/documents/60/value",
+            "message": "typed document value does not match its Selta contract"
+          },
+          {
+            "phase": "schema",
+            "code": "package.document_shape",
+            "path": "/input/documents/61/value",
+            "message": "typed document value does not match its Selta contract"
+          },
+          {
+            "phase": "schema",
+            "code": "package.document_shape",
+            "path": "/input/documents/62/value",
+            "message": "typed document value does not match its Selta contract"
+          },
+          {
+            "phase": "schema",
+            "code": "package.document_shape",
+            "path": "/input/documents/63/value",
+            "message": "typed document value does not match its Selta contract"
+          },
+          {
+            "phase": "schema",
+            "code": "package.document_shape",
+            "path": "/input/documents/64/value",
+            "message": "typed document value does not match its Selta contract"
+          },
+          {
+            "phase": "schema",
+            "code": "package.document_shape",
+            "path": "/input/documents/65/value",
+            "message": "typed document value does not match its Selta contract"
+          },
+          {
+            "phase": "schema",
+            "code": "package.document_shape",
+            "path": "/input/documents/66/value",
+            "message": "typed document value does not match its Selta contract"
+          },
+          {
+            "phase": "schema",
+            "code": "package.document_shape",
+            "path": "/input/documents/67/value",
+            "message": "typed document value does not match its Selta contract"
+          },
+          {
+            "phase": "schema",
+            "code": "package.document_shape",
+            "path": "/input/documents/68/value",
+            "message": "typed document value does not match its Selta contract"
+          },
+          {
+            "phase": "schema",
+            "code": "package.document_shape",
+            "path": "/input/documents/69/value",
+            "message": "typed document value does not match its Selta contract"
+          },
+          {
+            "phase": "schema",
+            "code": "package.document_shape",
+            "path": "/input/documents/7/value",
+            "message": "typed document value does not match its Selta contract"
+          },
+          {
+            "phase": "schema",
+            "code": "package.document_shape",
+            "path": "/input/documents/70/value",
+            "message": "typed document value does not match its Selta contract"
+          },
+          {
+            "phase": "schema",
+            "code": "package.document_shape",
+            "path": "/input/documents/71/value",
+            "message": "typed document value does not match its Selta contract"
+          },
+          {
+            "phase": "schema",
+            "code": "package.document_shape",
+            "path": "/input/documents/72/value",
+            "message": "typed document value does not match its Selta contract"
+          },
+          {
+            "phase": "schema",
+            "code": "package.document_shape",
+            "path": "/input/documents/73/value",
+            "message": "typed document value does not match its Selta contract"
+          },
+          {
+            "phase": "schema",
+            "code": "package.document_shape",
+            "path": "/input/documents/74/value",
+            "message": "typed document value does not match its Selta contract"
+          },
+          {
+            "phase": "schema",
+            "code": "package.document_shape",
+            "path": "/input/documents/75/value",
+            "message": "typed document value does not match its Selta contract"
+          },
+          {
+            "phase": "schema",
+            "code": "package.document_shape",
+            "path": "/input/documents/76/value",
+            "message": "typed document value does not match its Selta contract"
+          },
+          {
+            "phase": "schema",
+            "code": "package.document_shape",
+            "path": "/input/documents/77/value",
+            "message": "typed document value does not match its Selta contract"
+          },
+          {
+            "phase": "schema",
+            "code": "package.document_shape",
+            "path": "/input/documents/78/value",
+            "message": "typed document value does not match its Selta contract"
+          },
+          {
+            "phase": "schema",
+            "code": "package.document_shape",
+            "path": "/input/documents/79/value",
+            "message": "typed document value does not match its Selta contract"
+          },
+          {
+            "phase": "schema",
+            "code": "package.document_shape",
+            "path": "/input/documents/8/value",
+            "message": "typed document value does not match its Selta contract"
+          },
+          {
+            "phase": "schema",
+            "code": "package.document_shape",
+            "path": "/input/documents/80/value",
+            "message": "typed document value does not match its Selta contract"
+          },
+          {
+            "phase": "schema",
+            "code": "package.document_shape",
+            "path": "/input/documents/81/value",
+            "message": "typed document value does not match its Selta contract"
+          },
+          {
+            "phase": "schema",
+            "code": "package.document_shape",
+            "path": "/input/documents/82/value",
+            "message": "typed document value does not match its Selta contract"
+          },
+          {
+            "phase": "schema",
+            "code": "package.document_shape",
+            "path": "/input/documents/83/value",
+            "message": "typed document value does not match its Selta contract"
+          },
+          {
+            "phase": "schema",
+            "code": "package.document_shape",
+            "path": "/input/documents/84/value",
+            "message": "typed document value does not match its Selta contract"
+          },
+          {
+            "phase": "schema",
+            "code": "package.document_shape",
+            "path": "/input/documents/85/value",
+            "message": "typed document value does not match its Selta contract"
+          },
+          {
+            "phase": "schema",
+            "code": "package.document_shape",
+            "path": "/input/documents/86/value",
+            "message": "typed document value does not match its Selta contract"
+          },
+          {
+            "phase": "schema",
+            "code": "package.document_shape",
+            "path": "/input/documents/87/value",
+            "message": "typed document value does not match its Selta contract"
+          },
+          {
+            "phase": "schema",
+            "code": "package.document_shape",
+            "path": "/input/documents/88/value",
+            "message": "typed document value does not match its Selta contract"
+          },
+          {
+            "phase": "schema",
+            "code": "package.document_shape",
+            "path": "/input/documents/89/value",
+            "message": "typed document value does not match its Selta contract"
+          },
+          {
+            "phase": "schema",
+            "code": "package.document_shape",
+            "path": "/input/documents/9/value",
+            "message": "typed document value does not match its Selta contract"
+          },
+          {
+            "phase": "schema",
+            "code": "package.document_shape",
+            "path": "/input/documents/90/value",
+            "message": "typed document value does not match its Selta contract"
+          },
+          {
+            "phase": "schema",
+            "code": "package.document_shape",
+            "path": "/input/documents/91/value",
+            "message": "typed document value does not match its Selta contract"
+          },
+          {
+            "phase": "schema",
+            "code": "package.document_shape",
+            "path": "/input/documents/92/value",
+            "message": "typed document value does not match its Selta contract"
+          },
+          {
+            "phase": "schema",
+            "code": "package.document_shape",
+            "path": "/input/documents/93/value",
+            "message": "typed document value does not match its Selta contract"
+          },
+          {
+            "phase": "schema",
+            "code": "package.document_shape",
+            "path": "/input/documents/94/value",
+            "message": "typed document value does not match its Selta contract"
+          },
+          {
+            "phase": "schema",
+            "code": "package.document_shape",
+            "path": "/input/documents/95/value",
+            "message": "typed document value does not match its Selta contract"
+          },
+          {
+            "phase": "schema",
+            "code": "package.document_shape",
+            "path": "/input/documents/96/value",
+            "message": "typed document value does not match its Selta contract"
+          },
+          {
+            "phase": "schema",
+            "code": "package.document_shape",
+            "path": "/input/documents/97/value",
+            "message": "typed document value does not match its Selta contract"
+          },
+          {
+            "phase": "output",
+            "code": "error.truncated",
+            "path": "",
+            "message": "additional errors were omitted"
+          }
+        ],
+        "executions": [],
+        "resources": {
+          "documents": 257,
+          "total_document_bytes": 46260,
+          "attempts_total": 0,
+          "graph_nodes": 0,
+          "graph_edges": 0,
+          "max_fan_in_observed": 0,
+          "graph_depth": 0,
+          "semantic_calls": 0,
+          "semantic_fuel": 0,
+          "state_bytes": 0,
+          "conclusion_labels_total": 0
+        }
+      }
+    }
+  ],
+  "root": {
+    "$ref": "sha256:2be29341c80fb64ee4f40edd7547c6ecc4bf61d2e6f5ba9e06dc51b1e578d4d7",
+    "contract": "sha256:86ed6b6f38c1b1a1d6bc5f09e2997a0df9e0f1e8554624372031034f17ebf7fb"
+  }
+}

@@ -1,0 +1,9 @@
+{
+  "revision": "selta.evidence.conformance-oracle/s2-1",
+  "case": "identity-wrong-domain",
+  "expected": {
+    "kind": "returned",
+    "package": "sha256:67eec68bfa5a9baaaf6b68c2ecf582a57b1da72fa04c14157834f7a65dc2b485",
+    "compare": "conformance_projection"
+  }
+}

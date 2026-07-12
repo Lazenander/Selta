@@ -1,0 +1,9 @@
+{
+  "revision": "selta.evidence.conformance-oracle/s2-1",
+  "case": "boundary-environment-mismatch",
+  "expected": {
+    "kind": "returned",
+    "package": "sha256:10ef5cc5ab7d1e2f7b30adb24fe2461b72e174cc99913c21b059f64d449bb693",
+    "compare": "conformance_projection"
+  }
+}

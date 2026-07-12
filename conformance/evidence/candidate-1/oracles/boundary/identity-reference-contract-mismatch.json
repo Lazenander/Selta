@@ -1,0 +1,9 @@
+{
+  "revision": "selta.evidence.conformance-oracle/s2-1",
+  "case": "identity-reference-contract-mismatch",
+  "expected": {
+    "kind": "returned",
+    "package": "sha256:9ff8eeb359ec4f2d02feb3068401440ba76154e4d400c87235bb30aec2e688b6",
+    "compare": "conformance_projection"
+  }
+}

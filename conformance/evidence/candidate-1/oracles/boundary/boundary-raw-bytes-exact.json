@@ -1,0 +1,9 @@
+{
+  "revision": "selta.evidence.conformance-oracle/s2-1",
+  "case": "boundary-raw-bytes-exact",
+  "expected": {
+    "kind": "returned",
+    "package": "sha256:50309bad336787306659aefec60eb10d9d98cd874663a33445acd65930f2e00c",
+    "compare": "conformance_projection"
+  }
+}

@@ -1,0 +1,9 @@
+{
+  "revision": "selta.evidence.conformance-oracle/s2-1",
+  "case": "precedence-parse-outer-before-duplicate",
+  "expected": {
+    "kind": "returned",
+    "package": "sha256:803a158847b931063e2a4d5ea91cf39ec56e750813aedb24de17c76f9ac94cfc",
+    "compare": "conformance_projection"
+  }
+}

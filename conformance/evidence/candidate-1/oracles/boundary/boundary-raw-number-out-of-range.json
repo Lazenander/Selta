@@ -1,0 +1,9 @@
+{
+  "revision": "selta.evidence.conformance-oracle/s2-1",
+  "case": "boundary-raw-number-out-of-range",
+  "expected": {
+    "kind": "returned",
+    "package": "sha256:68239f86eb17dc3364b313611d52d6d1648911aaace79750ad48a3f992c07b59",
+    "compare": "conformance_projection"
+  }
+}

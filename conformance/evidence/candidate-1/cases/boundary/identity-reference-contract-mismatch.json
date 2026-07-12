@@ -1,0 +1,13 @@
+{
+  "revision": "selta.evidence.conformance-case/s2-1",
+  "id": "identity-reference-contract-mismatch",
+  "operation": {
+    "kind": "assess",
+    "context": "boundary-candidate-1",
+    "package_source": "sha256:1eb89fc9780b071af59abe73cf7dd9f5e7b6dc06b93621fd1f1c8a561642baa2",
+    "expected_basis": {
+      "$ref": "sha256:48a3909d1d0ca2c89da8cb6f123e042b7ec02dbc0c3c349f5cb6fccf422da36f",
+      "contract": "sha256:938e5e124cb9648bb532949ff8588edeef0570eee18f6c7bfaf579af17a352a0"
+    }
+  }
+}

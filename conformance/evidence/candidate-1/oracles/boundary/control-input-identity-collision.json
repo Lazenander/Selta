@@ -1,0 +1,9 @@
+{
+  "revision": "selta.evidence.conformance-oracle/s2-1",
+  "case": "control-input-identity-collision",
+  "expected": {
+    "kind": "returned",
+    "package": "sha256:e1b1c31d12ed69259ae2e696f93a5c5b10fae6499e1c69a522a51121ce1c9704",
+    "compare": "conformance_projection"
+  }
+}

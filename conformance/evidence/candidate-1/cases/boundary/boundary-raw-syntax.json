@@ -1,0 +1,13 @@
+{
+  "revision": "selta.evidence.conformance-case/s2-1",
+  "id": "boundary-raw-syntax",
+  "operation": {
+    "kind": "assess",
+    "context": "boundary-candidate-1",
+    "package_source": "sha256:769b3e90def1f2d9713a343eb85e2f81a76fc8c0dee20ccef702b7c0af6714a2",
+    "expected_basis": {
+      "$ref": "sha256:8362b21c1aa7bcbe120b6c17bbcbd21b9e4a34b8d13f396ef9fc4de9bd963adb",
+      "contract": "sha256:938e5e124cb9648bb532949ff8588edeef0570eee18f6c7bfaf579af17a352a0"
+    }
+  }
+}

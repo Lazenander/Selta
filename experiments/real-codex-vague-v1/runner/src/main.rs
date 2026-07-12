@@ -18,6 +18,43 @@ use std::sync::mpsc;
 use std::time::{Duration, Instant};
 use wait_timeout::ChildExt;
 
+/// Parent Codex capabilities forbidden in a pure text-assessment child.
+///
+/// This source-traced list freezes the smallest direct optional gates needed by
+/// CLI 0.144.1, plus declared multi-agent intent and independent shell-snapshot
+/// isolation. It does not claim that Codex exposes no core/model-selected tool
+/// schemas; strict event auditing remains the no-tool enforcement invariant.
+const PURE_ASSESSMENT_DISABLED_CAPABILITIES: &[&str] = &[
+    "plugins",
+    "apps",
+    "shell_tool",
+    "image_generation",
+    "goals",
+    "hooks",
+    "personality",
+    "multi_agent",
+    "shell_snapshot",
+];
+
+const NEUTRAL_INSTRUCTIONS: &str = "Follow the user instruction exactly.";
+const PURE_ASSESSMENT_STATIC_CONFIG_OVERRIDES: &[&str] = &[
+    "web_search=\"disabled\"",
+    "approval_policy=\"never\"",
+    "skills.include_instructions=false",
+    "skills.bundled.enabled=false",
+    "orchestrator.skills.enabled=false",
+    "include_environment_context=false",
+    "include_permissions_instructions=false",
+    "include_collaboration_mode_instructions=false",
+    "tools.experimental_request_user_input.enabled=false",
+    "notify=[]",
+    "features.multi_agent_v2.root_agent_usage_hint_text=\"\"",
+    "features.multi_agent_v2.multi_agent_mode_hint_text=\"\"",
+    "features.multi_agent_v2.max_concurrent_threads_per_session=1",
+];
+const FORBIDDEN_ISOLATED_HOME_COMPONENTS: &[&str] =
+    &["plugins", "remote_plugin_catalog", "shell_snapshots"];
+
 #[derive(Parser)]
 #[command(name = "selta-codex-eval")]
 #[command(about = "Reproducible real-Codex evidence-assessor runner")]
@@ -155,7 +192,17 @@ struct CodexManifest {
     model: String,
     reasoning: String,
     timeout_seconds: u64,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    capability_policy: Option<CodexCapabilityPolicy>,
     command_template: Vec<String>,
+}
+
+#[derive(Deserialize, Serialize)]
+struct CodexCapabilityPolicy {
+    disabled: Vec<String>,
+    config_overrides: Vec<String>,
+    neutral_instructions: String,
+    neutral_instructions_sha256: String,
 }
 
 #[derive(Deserialize, Serialize)]
@@ -460,6 +507,15 @@ fn run(arguments: RunArgs) -> Result<()> {
             model: arguments.model.clone(),
             reasoning: reasoning.to_owned(),
             timeout_seconds: arguments.timeout_seconds,
+            capability_policy: Some(CodexCapabilityPolicy {
+                disabled: PURE_ASSESSMENT_DISABLED_CAPABILITIES
+                    .iter()
+                    .map(|capability| (*capability).to_owned())
+                    .collect(),
+                config_overrides: pure_assessment_config_overrides(),
+                neutral_instructions: NEUTRAL_INSTRUCTIONS.to_owned(),
+                neutral_instructions_sha256: sha256_hex(NEUTRAL_INSTRUCTIONS.as_bytes()),
+            }),
             command_template,
         },
         ordering: OrderingManifest {
@@ -477,7 +533,7 @@ fn run(arguments: RunArgs) -> Result<()> {
         mode: arguments.mode,
         mode_contract: "call-shape enforcement only; no corpus-validity or annotation claim"
             .to_owned(),
-        instruction_isolation: "fresh CODEX_HOME containing only a private 0600 auth.json copy; fresh empty working directory; inherited CODEX_*/OPENAI_*/CHATGPT_* removed; --ignore-user-config --ignore-rules --strict-config"
+        instruction_isolation: "fresh CODEX_HOME starts with only a private 0600 auth.json copy; fresh empty working directory; inherited CODEX_*/OPENAI_*/CHATGPT_* removed; --ignore-user-config --ignore-rules --strict-config; exact capability denylist and neutral-context overrides recorded in codex.capability_policy; post-run CODEX_HOME state audited; strict event audit rejects any tool use"
             .to_owned(),
         oracle_boundary: "run cannot receive an oracle; score later with validate --run --oracle"
             .to_owned(),
@@ -1383,7 +1439,9 @@ fn execute_job(job: &Job, runtime: &Runtime<'_>) -> Prediction {
         .arg("--model")
         .arg(runtime.model)
         .arg("--config")
-        .arg(format!("model_reasoning_effort=\"{}\"", runtime.reasoning))
+        .arg(format!("model_reasoning_effort=\"{}\"", runtime.reasoning));
+    command.args(pure_assessment_capability_args());
+    command
         .arg("--output-last-message")
         .arg(&response_path)
         .arg("-")
@@ -1412,6 +1470,11 @@ fn execute_job(job: &Job, runtime: &Runtime<'_>) -> Prediction {
     let request = build_case_prompt(&prompt.content, case);
     let Some(mut stdin) = child.stdin.take() else {
         terminate_child_tree(&mut child);
+        if let Some(violation) =
+            isolated_home_violation(&prediction, isolated_home.path(), None, &raw)
+        {
+            return violation;
+        }
         return prediction.error(
             "process_stdin",
             "Codex stdin was not piped",
@@ -1432,10 +1495,20 @@ fn execute_job(job: &Job, runtime: &Runtime<'_>) -> Prediction {
         Ok(Ok(())) => {}
         Ok(Err(error)) => {
             terminate_child_tree(&mut child);
+            if let Some(violation) =
+                isolated_home_violation(&prediction, isolated_home.path(), None, &raw)
+            {
+                return violation;
+            }
             return prediction.error("process_stdin", error.to_string(), false, None, raw);
         }
         Err(_) => {
             terminate_child_tree(&mut child);
+            if let Some(violation) =
+                isolated_home_violation(&prediction, isolated_home.path(), None, &raw)
+            {
+                return violation;
+            }
             return prediction.error(
                 "timeout",
                 "Codex exceeded the timeout while receiving its prompt",
@@ -1451,18 +1524,29 @@ fn execute_job(job: &Job, runtime: &Runtime<'_>) -> Prediction {
         Ok(Some(status)) => status,
         Ok(None) => {
             terminate_child_tree(&mut child);
+            let usage = parse_events(&events_path)
+                .ok()
+                .and_then(|events| events.usage);
+            if let Some(violation) =
+                isolated_home_violation(&prediction, isolated_home.path(), usage.clone(), &raw)
+            {
+                return violation;
+            }
             return prediction.error(
                 "timeout",
                 "Codex exceeded the recorded timeout",
                 false,
-                parse_events(&events_path)
-                    .ok()
-                    .and_then(|events| events.usage),
+                usage,
                 raw,
             );
         }
         Err(error) => {
             terminate_child_tree(&mut child);
+            if let Some(violation) =
+                isolated_home_violation(&prediction, isolated_home.path(), None, &raw)
+            {
+                return violation;
+            }
             return prediction.error(
                 "process_wait",
                 format!("cannot wait for Codex: {error}"),
@@ -1478,6 +1562,11 @@ fn execute_job(job: &Job, runtime: &Runtime<'_>) -> Prediction {
         .as_ref()
         .ok()
         .and_then(|events| events.usage.clone());
+    if let Some(violation) =
+        isolated_home_violation(&prediction, isolated_home.path(), usage.clone(), &raw)
+    {
+        return violation;
+    }
     if !status.success() {
         return prediction.error(
             "process_exit",
@@ -1567,6 +1656,52 @@ fn make_private_auth_writable(path: &Path) -> std::io::Result<()> {
     }
 }
 
+fn audit_isolated_codex_home(root: &Path) -> Result<()> {
+    let mut pending = vec![root.to_owned()];
+    while let Some(directory) = pending.pop() {
+        let entries = fs::read_dir(&directory)
+            .with_context(|| format!("cannot audit isolated Codex home `{}`", root.display()))?;
+        for entry in entries {
+            let entry = entry.with_context(|| {
+                format!("cannot audit isolated Codex home `{}`", root.display())
+            })?;
+            let path = entry.path();
+            let name = entry.file_name();
+            if FORBIDDEN_ISOLATED_HOME_COMPONENTS
+                .iter()
+                .any(|forbidden| name == std::ffi::OsStr::new(forbidden))
+            {
+                let relative = path.strip_prefix(root).unwrap_or(&path);
+                bail!(
+                    "isolated Codex home created forbidden state `{}`",
+                    relative.display()
+                );
+            }
+            if entry.file_type()?.is_dir() {
+                pending.push(path);
+            }
+        }
+    }
+    Ok(())
+}
+
+fn isolated_home_violation(
+    prediction: &PredictionSeed<'_>,
+    root: &Path,
+    usage: Option<TokenUsage>,
+    raw: &RawArtifacts,
+) -> Option<Prediction> {
+    audit_isolated_codex_home(root).err().map(|error| {
+        prediction.error(
+            "isolation_violation",
+            error.to_string(),
+            false,
+            usage,
+            raw.clone(),
+        )
+    })
+}
+
 #[derive(Default)]
 struct EventSummary {
     usage: Option<TokenUsage>,
@@ -1653,7 +1788,7 @@ fn probe_codex_version(program: &Path) -> Result<String> {
 }
 
 fn command_template(reasoning: &str) -> Vec<String> {
-    [
+    let mut command: Vec<String> = [
         "exec",
         "--ephemeral",
         "--ignore-user-config",
@@ -1673,13 +1808,39 @@ fn command_template(reasoning: &str) -> Vec<String> {
         "<model>",
         "--config",
         &format!("model_reasoning_effort=\"{reasoning}\""),
-        "--output-last-message",
-        "<raw-response-path>",
-        "-",
     ]
     .into_iter()
     .map(str::to_owned)
-    .collect()
+    .collect();
+    command.extend(pure_assessment_capability_args());
+    command.extend(
+        ["--output-last-message", "<raw-response-path>", "-"]
+            .into_iter()
+            .map(str::to_owned),
+    );
+    command
+}
+
+fn pure_assessment_capability_args() -> Vec<String> {
+    let mut arguments = Vec::new();
+    for config in pure_assessment_config_overrides() {
+        arguments.push("--config".to_owned());
+        arguments.push(config);
+    }
+    for capability in PURE_ASSESSMENT_DISABLED_CAPABILITIES {
+        arguments.push("--disable".to_owned());
+        arguments.push((*capability).to_owned());
+    }
+    arguments
+}
+
+fn pure_assessment_config_overrides() -> Vec<String> {
+    let mut overrides: Vec<_> = PURE_ASSESSMENT_STATIC_CONFIG_OVERRIDES
+        .iter()
+        .map(|config| (*config).to_owned())
+        .collect();
+    overrides.push(format!("instructions=\"{NEUTRAL_INSTRUCTIONS}\""));
+    overrides
 }
 
 fn write_pretty(path: &Path, value: &impl Serialize) -> Result<()> {
@@ -1723,11 +1884,102 @@ mod tests {
     }
 
     #[test]
-    fn command_template_freezes_reasoning_without_a_model_default() {
+    fn command_template_freezes_model_reasoning_and_assessment_surface() {
         let command = command_template("low");
-        assert!(command.contains(&"model_reasoning_effort=\"low\"".to_owned()));
-        let model = command.iter().position(|part| part == "--model").unwrap();
-        assert_eq!(command[model + 1], "<model>");
+        let expected = [
+            "exec",
+            "--ephemeral",
+            "--ignore-user-config",
+            "--ignore-rules",
+            "--strict-config",
+            "--skip-git-repo-check",
+            "--sandbox",
+            "read-only",
+            "--color",
+            "never",
+            "-C",
+            "<fresh-empty-directory>",
+            "--output-schema",
+            "<response-schema>",
+            "--json",
+            "--model",
+            "<model>",
+            "--config",
+            "model_reasoning_effort=\"low\"",
+            "--config",
+            "web_search=\"disabled\"",
+            "--config",
+            "approval_policy=\"never\"",
+            "--config",
+            "skills.include_instructions=false",
+            "--config",
+            "skills.bundled.enabled=false",
+            "--config",
+            "orchestrator.skills.enabled=false",
+            "--config",
+            "include_environment_context=false",
+            "--config",
+            "include_permissions_instructions=false",
+            "--config",
+            "include_collaboration_mode_instructions=false",
+            "--config",
+            "tools.experimental_request_user_input.enabled=false",
+            "--config",
+            "notify=[]",
+            "--config",
+            "features.multi_agent_v2.root_agent_usage_hint_text=\"\"",
+            "--config",
+            "features.multi_agent_v2.multi_agent_mode_hint_text=\"\"",
+            "--config",
+            "features.multi_agent_v2.max_concurrent_threads_per_session=1",
+            "--config",
+            "instructions=\"Follow the user instruction exactly.\"",
+            "--disable",
+            "plugins",
+            "--disable",
+            "apps",
+            "--disable",
+            "shell_tool",
+            "--disable",
+            "image_generation",
+            "--disable",
+            "goals",
+            "--disable",
+            "hooks",
+            "--disable",
+            "personality",
+            "--disable",
+            "multi_agent",
+            "--disable",
+            "shell_snapshot",
+            "--output-last-message",
+            "<raw-response-path>",
+            "-",
+        ];
+        assert_eq!(command, expected.map(str::to_owned));
+    }
+
+    #[test]
+    fn legacy_smoke_bundle_without_capability_policy_remains_validatable() {
+        let run = Path::new(env!("CARGO_MANIFEST_DIR")).join("../runs/smoke-terra-low-001");
+        let verified = load_verified_run(&run).unwrap();
+        assert!(verified.manifest.codex.capability_policy.is_none());
+        assert_eq!(
+            verified.manifest.codex.version.as_deref(),
+            Some("codex-cli 0.142.5")
+        );
+        assert!(matches!(
+            &verified.predictions[0].outcome,
+            Outcome::OperationalError { class, .. } if class == "process_exit"
+        ));
+    }
+
+    #[test]
+    fn isolated_home_audit_rejects_forbidden_runtime_state() {
+        let directory = tempfile::tempdir().unwrap();
+        fs::create_dir_all(directory.path().join("cache/plugins/loaded")).unwrap();
+        let error = audit_isolated_codex_home(directory.path()).unwrap_err();
+        assert!(error.to_string().contains("cache/plugins"));
     }
 
     #[test]

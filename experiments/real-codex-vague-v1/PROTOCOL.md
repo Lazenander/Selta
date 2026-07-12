@@ -131,12 +131,13 @@ labels before the selected prompt and its digest are frozen.
 Before the first call, the run manifest freezes the Codex CLI version, exact
 model identifier, configuration, prompt digest, input and schema digests, random
 ordering seed, concurrency, and command-line flags. There is no model sweep in
-this pilot.
+this pilot. The current engineering runner is qualified against Codex CLI
+`0.144.1`; changing that version requires a new smoke and manifest.
 
 Each case is one fresh, ephemeral invocation in an otherwise empty temporary
 working directory. The runner snapshots inputs, both schemas, and prompts before
-calls. It gives every child a fresh `CODEX_HOME` containing only a private copy
-of `auth.json`, removes inherited `CODEX_*`, `OPENAI_*`, and `CHATGPT_*`
+calls. It gives every child a fresh `CODEX_HOME` that starts with only a private
+copy of `auth.json`, removes inherited `CODEX_*`, `OPENAI_*`, and `CHATGPT_*`
 variables, and retains raw event, stderr, and response artifacts. The intended
 command surface is:
 
@@ -145,13 +146,57 @@ codex exec --ephemeral --ignore-user-config --ignore-rules --strict-config \
   --skip-git-repo-check --sandbox read-only -C <empty-directory> \
   --output-schema <snapshotted-response-schema> --json -m <pinned-model> \
   --config model_reasoning_effort=\"<pinned-effort>\" \
+  --config web_search=\"disabled\" --config approval_policy=\"never\" \
+  --config skills.include_instructions=false \
+  --config skills.bundled.enabled=false \
+  --config orchestrator.skills.enabled=false \
+  --config include_environment_context=false \
+  --config include_permissions_instructions=false \
+  --config include_collaboration_mode_instructions=false \
+  --config tools.experimental_request_user_input.enabled=false \
+  --config notify=[] \
+  --config features.multi_agent_v2.root_agent_usage_hint_text=\"\" \
+  --config features.multi_agent_v2.multi_agent_mode_hint_text=\"\" \
+  --config features.multi_agent_v2.max_concurrent_threads_per_session=1 \
+  --config instructions=\"Follow the user instruction exactly.\" \
+  --disable plugins --disable apps --disable shell_tool \
+  --disable image_generation --disable goals --disable hooks \
+  --disable personality --disable multi_agent --disable shell_snapshot \
   --output-last-message <raw-response-path> -
 ```
+
+This centralized list is the source-traced minimum of direct optional gates for
+CLI `0.144.1`, with `multi_agent` retained as declared intent and
+`shell_snapshot` as independent process isolation. It is not a claim that one
+parent flag disables every descendant or that `codex exec` has no core or
+model-selected tool schemas. Codex exposes skill, orchestrator, environment,
+permission, collaboration, request-input, notification, and shell-snapshot
+channels through separate configuration paths, so each is pinned explicitly
+rather than hidden behind a larger prompt.
+
+Terra/Sol model metadata still selects multi-agent v2 despite `--disable
+multi_agent`. Its two model-visible hint strings are therefore frozen empty, and
+its session capacity is pinned to one: the root consumes that slot, preventing
+an accidental subagent from spending tokens before rejection. This containment
+does not remove schemas. Strict event auditing remains the actual no-tool-use
+invariant: any tool event invalidates the invocation.
+
+The fixed neutral harness instruction is exactly `Follow the user instruction
+exactly.` Its bytes and SHA-256 digest are recorded in the manifest. It is a
+harness constant, is never tuned, and is not a candidate prompt; `p0` remains
+the only task prompt optimized under section 4.
 
 The claim and text are supplied directly in the case prompt after `p0`; corpus
 paths and oracle paths are never exposed. Event JSONL is retained. Any tool call
 invalidates that invocation because the assessor was granted only the supplied
 text.
+
+`runs/smoke-terra-low-001` is an immutable, non-evidentiary infrastructure
+record. It failed operationally because Codex CLI `0.142.5` was too old for
+`gpt-5.6-terra`, and it exposed remote plugin synchronization into a fresh
+`CODEX_HOME`. It made no development-corpus calls and supplies no semantic or
+prompt-quality evidence. The runner was revised and the CLI upgraded to
+`0.144.1`; the failed bundle is retained unchanged rather than repaired in place.
 
 Calls are run in a precommitted randomized order with at most four concurrently.
 There is exactly one scored attempt per prompt-case pair. Semantic failure,

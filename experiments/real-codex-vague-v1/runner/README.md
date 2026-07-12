@@ -43,10 +43,59 @@ strictly admitted as Selta 1 against `AdmissionPolicy::pure_only()`, and every
 raw response must pass that canonical Selta contract before exact quotations
 are checked.
 
-Each child has an empty working directory and a fresh `CODEX_HOME` containing
-only a private writable copy of `auth.json`. Inherited `CODEX_*`, `OPENAI_*`,
+## Assessor isolation
+
+Each child has an empty working directory and a fresh `CODEX_HOME` that starts
+with only a private writable copy of `auth.json`. Inherited `CODEX_*`, `OPENAI_*`,
 and `CHATGPT_*` variables are removed. The child and descendants run in a
-dedicated process group so timeout termination cannot orphan a model call.
+dedicated process group so timeout termination cannot orphan a model call. This
+engineering revision is qualified against Codex CLI `0.144.1`.
+
+One runner constant freezes this exact optional-capability denylist, emitted as
+one `--disable` pair per entry and copied into the manifest:
+
+```text
+plugins
+apps
+shell_tool
+image_generation
+goals
+hooks
+personality
+multi_agent
+shell_snapshot
+```
+
+The command also carries one ordered, manifest-recorded neutral-context config
+list. It freezes `web_search="disabled"`, `approval_policy="never"`, all three
+skill-instruction paths, environment, permission, and collaboration instruction
+injection, the experimental request-input tool, and legacy notifications. It
+also empties Terra/Sol's two model-selected multi-agent hint strings and limits
+the session to its one root slot. Its last entry sets `instructions="Follow the
+user instruction exactly."`; the manifest also records that exact neutral
+instruction and its digest. This harness constant is never optimized; `p0`
+remains the only task prompt under optimization. The exact config list is visible
+in every command template and covered byte-for-byte by the runner tests.
+
+The denylist is the source-traced minimum of direct optional gates for CLI
+`0.144.1`, not an inheritance model or a promise that the CLI supplies no core
+or model-selected tool schemas. `multi_agent` records intent but is overridden
+by Terra/Sol metadata; the one-slot pin is operational containment, not schema
+removal. The broader config list remains necessary because Codex's ambient
+channels are independent, and shell snapshots can start a user shell when model
+shell tools are off. The raw-event parser is therefore authoritative: any
+observed tool event makes the attempt operationally invalid. After the child
+exits, the runner also rejects an isolated home containing a `plugins`,
+`remote_plugin_catalog`, or `shell_snapshots` path component.
+
+## Non-evidentiary smoke record
+
+`runs/smoke-terra-low-001` is retained unchanged as a failed infrastructure
+record. Codex CLI `0.142.5` was too old for `gpt-5.6-terra`, and the attempt
+revealed remote plugin synchronization into a nominally fresh `CODEX_HOME`.
+There were no development-corpus calls, so the bundle is neither semantic
+evidence nor a prompt result. The fix belongs to the runner and the `0.144.1`
+execution contract; the historical bundle must not be rewritten.
 
 A completed run retains:
 

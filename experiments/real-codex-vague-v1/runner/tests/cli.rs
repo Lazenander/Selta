@@ -169,6 +169,7 @@ for entry in "$CODEX_HOME"/*; do
 done
 [ "$count" -eq 1 ] || exit 41
 if env | grep -E '^(CODEX_|OPENAI_|CHATGPT_)' | grep -v '^CODEX_HOME=' >/dev/null; then exit 42; fi
+printf '%s\n' "$@" > "$ARGS_PATH"
 out=""
 while [ "$#" -gt 0 ]; do
   if [ "$1" = "--output-last-message" ]; then shift; out="$1"; fi
@@ -181,6 +182,7 @@ printf '%s\n' '{"type":"thread.started"}' '{"type":"turn.started"}' '{"type":"it
     )
     .unwrap();
     fs::set_permissions(&fake_codex, fs::Permissions::from_mode(0o700)).unwrap();
+    let observed_args = directory.path().join("observed-codex-args.txt");
     let completed_run = directory.path().join("completed-run");
     let completed = Command::new(env!("CARGO_BIN_EXE_selta-codex-eval"))
         .arg("run")
@@ -207,9 +209,80 @@ printf '%s\n' '{"type":"thread.started"}' '{"type":"turn.started"}' '{"type":"it
         .env("CODEX_HOME", &source_home)
         .env("CODEX_THREAD_ID", "must-be-cleared")
         .env("OPENAI_API_KEY", "must-be-cleared")
+        .env("ARGS_PATH", &observed_args)
         .status()
         .unwrap();
     assert!(completed.success());
+    let arguments: Vec<_> = fs::read_to_string(&observed_args)
+        .unwrap()
+        .lines()
+        .map(str::to_owned)
+        .collect();
+    let disabled: Vec<_> = arguments
+        .windows(2)
+        .filter(|pair| pair[0] == "--disable")
+        .map(|pair| pair[1].as_str())
+        .collect();
+    assert_eq!(
+        disabled,
+        [
+            "plugins",
+            "apps",
+            "shell_tool",
+            "image_generation",
+            "goals",
+            "hooks",
+            "personality",
+            "multi_agent",
+            "shell_snapshot",
+        ]
+    );
+    let configs: Vec<_> = arguments
+        .windows(2)
+        .filter(|pair| pair[0] == "--config")
+        .map(|pair| pair[1].as_str())
+        .collect();
+    assert_eq!(
+        configs,
+        [
+            "model_reasoning_effort=\"low\"",
+            "web_search=\"disabled\"",
+            "approval_policy=\"never\"",
+            "skills.include_instructions=false",
+            "skills.bundled.enabled=false",
+            "orchestrator.skills.enabled=false",
+            "include_environment_context=false",
+            "include_permissions_instructions=false",
+            "include_collaboration_mode_instructions=false",
+            "tools.experimental_request_user_input.enabled=false",
+            "notify=[]",
+            "features.multi_agent_v2.root_agent_usage_hint_text=\"\"",
+            "features.multi_agent_v2.multi_agent_mode_hint_text=\"\"",
+            "features.multi_agent_v2.max_concurrent_threads_per_session=1",
+            "instructions=\"Follow the user instruction exactly.\"",
+        ]
+    );
+    let manifest: Value =
+        serde_json::from_slice(&fs::read(completed_run.join("manifest.json")).unwrap()).unwrap();
+    assert_eq!(
+        manifest["codex"]["capability_policy"]["disabled"],
+        serde_json::to_value(disabled).unwrap()
+    );
+    assert_eq!(
+        manifest["codex"]["capability_policy"]["config_overrides"],
+        serde_json::to_value(&configs[1..]).unwrap()
+    );
+    assert_eq!(
+        manifest["codex"]["capability_policy"]["neutral_instructions"],
+        "Follow the user instruction exactly."
+    );
+    assert_eq!(
+        manifest["codex"]["capability_policy"]["neutral_instructions_sha256"],
+        "7fd9b89bc496883c3d87ffc1924454ebb7bc3eca64ecc7faefc34df101aee4aa"
+    );
+    let events = fs::read_to_string(completed_run.join("raw/a0001.events.jsonl")).unwrap();
+    assert!(!events.contains("command_execution"));
+    assert!(!events.contains("mcp_tool_call"));
     let bound = Command::new(env!("CARGO_BIN_EXE_selta-codex-eval"))
         .arg("validate")
         .arg("--run")

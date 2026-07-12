@@ -44,6 +44,10 @@ second model-authored field:
 - [`runner/README.md`](runner/README.md) documents the Rust dry-run, frozen-run
   validation, raw audit, scoring, and commitment workflow. No real model result
   has completed.
+- `runs/smoke-terra-low-001` is an immutable failed infrastructure smoke from
+  Codex CLI `0.142.5`: that CLI was too old for `gpt-5.6-terra`, and the attempt
+  revealed remote-plugin state entering a fresh `CODEX_HOME`. It made no
+  development-corpus calls and is not semantic or prompt-quality evidence.
 
 The engineering artifacts are not the formal pilot corpus. A formal result still
 requires newly sourced cases, three blinded human annotations per case, retained

@@ -10,9 +10,9 @@ preimages; equal identities may resolve through any listed equal projection.
 
 | Identity | Domain | Repository artifact |
 |---|---|---|
-| `sha256:51eac5c914d8a16bebaaf7edc42c1c090b9c032b4347a304f1aa9988481fecb8` | `selta.evidence.implementation/candidate-1` | [23-positive-controls-profile.md](../../../docs/23-positive-controls-profile.md) as the positive-controls specification oracle |
-| `sha256:20f0f2c555eaa10f8059baaa0169c263eb11ff1db62322c29d73d08f2dabf48a` | `selta.evidence.semantic-specification/candidate-1` | [23-positive-controls-profile.md](../../../docs/23-positive-controls-profile.md) for positive-controls semantics |
-| `sha256:a7f22ab207310dd3f8f00c6203f212f3b0975f640750a4fff8a56636a5edbe19` | `selta.evidence.environment/candidate-1` | [environment.json](environment.json) |
+| `sha256:b495d8e53cee79f5647241804f203ad7c50e0f8dd6088b5e94c3417985014ae8` | `selta.evidence.implementation/candidate-1` | [23-positive-controls-profile.md](../../../docs/23-positive-controls-profile.md) as the positive-controls specification oracle |
+| `sha256:1115586e608d1f9f3bd8c4f2c7c33d49c13be74b56df9c4199e64656ad7b4341` | `selta.evidence.semantic-specification/candidate-1` | [23-positive-controls-profile.md](../../../docs/23-positive-controls-profile.md) for positive-controls semantics |
+| `sha256:97a2795354041b74443f8686d75be998eebf563275b479d9d23a055adf92eba4` | `selta.evidence.environment/candidate-1` | [environment.json](environment.json) |
 | `sha256:71806dd912b31da7bbd8c03365654d28d6823715d3b8ca1c17b87b0c382fe0e5` | `selta.evidence.language-specification/candidate-1` | [15-evidence-language.md](../../../docs/15-evidence-language.md) |
 | `sha256:87c2564bfa13553c9dddb2d3726203239ad1aebec5f12b3cf96a9a52d32536d0` | `selta.evidence.core-semantics/candidate-1` | [16-evidence-semantics.md](../../../docs/16-evidence-semantics.md) |
 | `sha256:923879b5172a4b0f35ce37aeedaece6227716614dba1581e6635943a3e0dd186` | `selta.evidence.error-catalog/candidate-1` | [20-evidence-error-catalog.md](../../../docs/20-evidence-error-catalog.md) |
@@ -37,11 +37,10 @@ admitted-`Node` projection.
 | `sha256:0a823964c6368f09bce16c1d2400d4a86d25e0b005f7c5604a42e551dd168df4` | [unit.schema.json](../presence-candidate-1/schemas/unit.schema.json) and [non_empty.schema.json](../presence-candidate-1/builtin-config-schemas/non_empty.schema.json) |
 | `sha256:13552c5c23c91e20e8f8a526250eed1da10df6477f799842a84b30c07921100a` | [text.schema.json](../presence-candidate-1/schemas/text.schema.json) |
 | `sha256:13b16cc02138b704938cf94c84471604cf7c5fc2e29530bffa2090658632415b` | [sequential-accounting-expectation.schema.json](schemas/sequential-accounting-expectation.schema.json) |
-| `sha256:16c4e7c7126593250473e7030129d21f8d404ec00ea535acb08aa4d335388687` | [sequential-basis.schema.json](schemas/sequential-basis.schema.json) |
 | `sha256:20a282b25c0af5c367d95cf9f286171896d6df19dab64b0e24bcf762138d54ba` | [attestation-result.schema.json](../mechanics-candidate-1/schemas/attestation-result.schema.json) |
 | `sha256:20df89cad17e11996bea9e9bb791cc5961bdf2005ca2d579bc2fdf4372e17632` | [claim-theory-input.schema.json](../presence-candidate-1/schemas/claim-theory-input.schema.json) |
 | `sha256:26d81af6fb32302ffeb0c8fe7ff7415ba1e3b675d6faab3016aec843ae3029ef` | [outcome.schema.json](../../../schemas/evidence/candidate-1/outcome.schema.json) |
-| `sha256:3decf3f72c426d01cd9c3e1aec4878c785f623e8c586f8edf26a54985e01ff85` | [sequential-recovery-rule-input.schema.json](schemas/sequential-recovery-rule-input.schema.json) |
+| `sha256:2bb2b52c2919c0e47d5e9e96bf10fe2f90eba4aadce9edf368b294083b4693a4` | [sequential-recovery-rule-input.schema.json](schemas/sequential-recovery-rule-input.schema.json) |
 | `sha256:3e3af37163b5843fefde7d8e9a75e00b19b333402bf6b206a6da29c6df298617` | [stop-transition.schema.json](../mechanics-candidate-1/schemas/stop-transition.schema.json) |
 | `sha256:43caa030873a40106f7b52cb26e97a0eb7190d56b76a1d158b59d86e2b474dbb` | [interpreter-output.schema.json](../presence-candidate-1/schemas/interpreter-output.schema.json) |
 | `sha256:4c8c916e3211b3893744e001d2744208f193a0477721670cd5f89eb8abccc01e` | [interpreter-input.schema.json](../presence-candidate-1/schemas/interpreter-input.schema.json) |
@@ -53,6 +52,7 @@ admitted-`Node` projection.
 | `sha256:7d9f1696eacdc7ad2fa21bd54138cc0130014a5dd8794ff6eb7dfb4e8760db22` | [label.schema.json](../presence-candidate-1/schemas/label.schema.json) |
 | `sha256:7e4a048ab346b9bb188e72c9257f9b2089efe875558388c775eec77c4964a3f1` | [range.schema.json](../presence-candidate-1/builtin-config-schemas/range.schema.json) |
 | `sha256:7f7a815c00941e1186f8a7dc0f98e12d81a31a8f0ec14f0250bab7e3e68818d0` | [sequential-assumption.schema.json](schemas/sequential-assumption.schema.json) |
+| `sha256:83c7af8ffe5692b1964717cf93fb3c918df1fbe6af87380726bb83a427e6d190` | [sequential-basis.schema.json](schemas/sequential-basis.schema.json) |
 | `sha256:88ed6ef01d296dabffc45f695960cc946e8360ea094932e1cf6ea60c43cb1f9c` | [checked-witness-rule-input.schema.json](schemas/checked-witness-rule-input.schema.json) |
 | `sha256:898e7d7049ae2c584c7dc1f09c7ed48a5e25c4969c77900e9bc49808aa1b1b5a` | [projection-parameters.schema.json](../presence-candidate-1/schemas/projection-parameters.schema.json) |
 | `sha256:8a8148864234e18437cea1a98d1809777af685099161326ad7ee1d4a4ee78bf9` | [attestation-input.schema.json](../mechanics-candidate-1/schemas/attestation-input.schema.json) |

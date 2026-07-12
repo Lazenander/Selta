@@ -206,6 +206,7 @@ converted into evidence that no witness exists.
 ```text
 {
   revision: "selta.evidence.sequential-basis/candidate-1",
+  scope: DocumentRef,
   population: Digest,
   frame: Digest,
   dependence: Digest,
@@ -216,11 +217,15 @@ converted into evidence that no witness exists.
 }
 ```
 
-The seven IDs MUST be pairwise distinct. Each names one assumption in the
-caller-pinned basis. `SequentialAssumption` uses exactly two closed structural
-variants to encode the seven semantic roles. The six roles without additional
-role-specific structure share one variant; stopping remains separate because
-it alone carries a regime:
+`scope` is an independently constructed reference under the reused non-empty
+presence Text contract. Its value is a caller-pinned scope declaration, not
+the recoverability claim. The seven IDs MUST be pairwise distinct. Each names
+one assumption in the caller-pinned basis whose exact scope equals this
+independent reference.
+`SequentialAssumption` uses exactly two closed structural variants to encode
+the seven semantic roles. The six roles without additional role-specific
+structure share one variant; stopping remains separate because it alone
+carries a regime:
 
 ```text
 {
@@ -236,10 +241,32 @@ it alone carries a regime:
 ```
 
 Both structural variants use revision
-`selta.evidence.sequential-assumption/candidate-1`. Every assumption scope is
-the exact recoverability meta-claim. The declaration references remain typed
-and recoverable but opaque to this profile. No relation here tests their truth,
-calibration, stochastic validity, or empirical adequacy.
+`selta.evidence.sequential-assumption/candidate-1`. The independent scope and
+declaration references remain typed and recoverable but opaque to this
+profile. No relation here tests their truth, calibration, stochastic validity,
+or empirical adequacy.
+
+### Identity dependency order
+
+The sequential construction has this strict topological identity order:
+
+```text
+declarations and independent Text scope
+  -> SequentialAssumption statement documents
+  -> seven Assumption IDs
+  -> SequentialBasis
+  -> recoverability meta-claim
+  -> semantic parameter, acquisition, graph, and assessment basis
+```
+
+The assumption IDs bind their statement and independent scope. The
+`SequentialBasis` binds those seven bare IDs and that same scope, but it does
+not reference the recoverability claim. The claim then references the
+`SequentialBasis` as its proposition. There is therefore no edge from the
+basis or any assumption back to the claim. Core document-cycle admission
+continues to reject any application document that attempts to introduce a
+tagged-reference back-edge. In the admitted profile construction the scope is
+a Text scalar and therefore cannot contain such an edge at all.
 
 ### Scoped accounting expectation
 
@@ -270,9 +297,12 @@ attestation fields. Its descriptor is:
 | output contract | reused `AttestationResult` |
 | execution class | `builtin_total` |
 
-R1b verifies the parameter contract and requires `assertion` to have the
-`SequentialBasis` contract. R1c requires the exact semantic and recorder
-grants fixed by the core.
+R1b verifies the parameter contract, resolves `assertion` under the
+`SequentialBasis` contract, resolves that basis's `scope` under the reused
+non-empty presence Text contract, and requires `parameters.scope` to equal
+that independent scope reference. A mismatch is `relation.invalid_binding` at
+the complete verifier binding and causes no dispatch. R1c requires the exact
+semantic and recorder grants fixed by the core.
 
 R1d requires exact equality between the expectation and scoped record:
 
@@ -345,8 +375,11 @@ R1b requires:
 2. its modality to be presence Text with value
    `sequential-basis-recoverability`;
 3. its payload to resolve under the `SequentialBasis` contract;
-4. the parameter claim's proposition to equal its payload; and
-5. all seven role IDs in that resolved sequential basis to be pairwise
+4. the parameter claim's proposition to equal its payload;
+5. the basis's independent `scope` reference to resolve under the reused
+   non-empty presence Text contract and therefore remain distinct from the
+   recoverability claim; and
+6. all seven role IDs in that resolved sequential basis to be pairwise
    distinct.
 
 A failure is `relation.invalid_binding` at the complete rule binding.
@@ -361,7 +394,7 @@ R1d requires:
    IDs;
 2. each available assumption statement to have the
    `SequentialAssumption` contract and matching role;
-3. each assumption scope to equal the parameter claim; and
+3. each assumption scope to equal `arguments.value.scope`; and
 4. `arguments.reference` to equal the submitted derivation argument and
    `parameters.payload`, and to resolve under the `SequentialBasis` contract
    exactly to `arguments.value`.
@@ -400,6 +433,8 @@ recorder grant, sequential attestation binding and grant, recovery-rule
 binding and grant, reached claim theories, and interpreter. The conclusion
 closure additionally contains the reused projection binding and grant. It has
 no source grant because an accounting fact does not consume source content.
+The independent sequential scope remains recoverable through the basis payload
+and every consumed assumption; it is not the recoverability claim.
 
 For both controls, state `direct_inputs` remain exactly the target claim,
 assessment basis, and graph roots fixed by the presence interpreter. A
@@ -430,21 +465,27 @@ binding, or resource limit to the caller-pinned basis.
 `CALIBRATED-SEQUENTIAL-EVIDENCE` requires:
 
 1. one accepted scoped accounting record whose assertion is the exact
-   sequential basis;
+   sequential basis and whose expected scope equals that basis's independent
+   scope;
 2. seven distinct role assumptions and one recovery derivation over its
    `AccountingFact`;
 3. a `support_only` recoverability meta-target beside a substantive target
    that remains `neither`;
 4. both `fixed_horizon` and `anytime_valid` stopping variants;
-5. expectation mismatch, missing recorder authority, missing attestation
-   authority, and rejected-result cases;
+5. a basis scope with the wrong contract and a basis-scope versus
+   expectation-scope mismatch at R1b, checkpoint mismatch at R1d, missing
+   recorder authority, missing attestation authority, and a rejected-result
+   case;
 6. unavailable and omitted assumptions, one ID reused across two basis roles,
    and role-, statement-, and scope-mismatched assumption cases;
 7. an attempted substantive-assurance binding or output; and
-8. one forbidden closure mutation for each of the seven roles.
+8. one forbidden closure mutation for each of the seven roles and one omitting
+   the independent scope.
 
-An expectation mismatch with otherwise valid authority is the ordinary
-wire-reachable fixture for `relation.invalid_accounting` in R1d.
+A checkpoint mismatch between an otherwise binding-valid expectation and
+scoped record is the ordinary wire-reachable fixture for
+`relation.invalid_accounting` in R1d. A parameter scope unequal to the asserted
+basis scope fails earlier as `relation.invalid_binding` in R1b.
 
 These cases establish representability, explicit authority, exact
 recoverability, and constructive witness introduction only. They are not

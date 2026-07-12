@@ -16,7 +16,7 @@ No source file is copied from an earlier artifact tree.
 
 | Artifact | Identity |
 |---|---|
-| Environment | `sha256:a7f22ab207310dd3f8f00c6203f212f3b0975f640750a4fff8a56636a5edbe19` |
+| Environment | `sha256:97a2795354041b74443f8686d75be998eebf563275b479d9d23a055adf92eba4` |
 | Reused mechanics environment | `sha256:3cc649a47f2ff7f57d1f55ea8a22623bbe8affc9bd551eb1106212ce84473d18` |
 | Language source (document 15) | `sha256:71806dd912b31da7bbd8c03365654d28d6823715d3b8ca1c17b87b0c382fe0e5` |
 | Core-semantics source (document 16) | `sha256:87c2564bfa13553c9dddb2d3726203239ad1aebec5f12b3cf96a9a52d32536d0` |
@@ -24,10 +24,10 @@ No source file is copied from an earlier artifact tree.
 | Evaluation profile | `sha256:f65b12e185f2ed2d619cb04cd2f9b52f8a3be44b9a8a67a860988863ab6c3a30` |
 | Presence specification (document 19) | `sha256:f08f66de43aceef481f21bb4b556ab00eee85584885e077c01c44fc09aa36b6c` |
 | Mechanics specification (document 22) | `sha256:3b887f2fb911feba7fa584ee5da62a4011dc4ce25869901965ace8d192a52ab1` |
-| Positive-controls specification (document 23) | `sha256:20f0f2c555eaa10f8059baaa0169c263eb11ff1db62322c29d73d08f2dabf48a` |
+| Positive-controls specification (document 23) | `sha256:1115586e608d1f9f3bd8c4f2c7c33d49c13be74b56df9c4199e64656ad7b4341` |
 | Presence specification-oracle implementation | `sha256:bc899c6733c11b1c452e811ef662cb7bc808e792c3c18af64fd4e6f763283ea0` |
 | Mechanics specification-oracle implementation | `sha256:1138187cc0080e4074313f08eda11096c8164ac13387802e230b2ae968ec69ff` |
-| Positive-controls specification-oracle implementation | `sha256:51eac5c914d8a16bebaaf7edc42c1c090b9c032b4347a304f1aa9988481fecb8` |
+| Positive-controls specification-oracle implementation | `sha256:b495d8e53cee79f5647241804f203ad7c50e0f8dd6088b5e94c3417985014ae8` |
 
 The exact document-23 bytes serve as semantic specification and manual
 specification-oracle implementation under distinct domain tags. The oracle is
@@ -45,9 +45,9 @@ stable Selta's admitted `Node` projections.
 | Sequential attestation input | `sha256:65f7194f22f59c32178c84725decfe8d2c1d1cdb0676d502f7d50f0bffd5e4d0` | `sha256:7416fdc9606c10bdf3baa01c1693cd91e25c9327cb756b4e122ddcb66374fb60` | [sequential-attestation-input.schema.json](schemas/sequential-attestation-input.schema.json) |
 | Checked-witness rule input | `sha256:6f89d2f6e80da377c261cb1a7d5dd03c16428c5f077c4d542b1a4fc98134fd6e` | `sha256:88ed6ef01d296dabffc45f695960cc946e8360ea094932e1cf6ea60c43cb1f9c` | [checked-witness-rule-input.schema.json](schemas/checked-witness-rule-input.schema.json) |
 | Sequential assumption | `sha256:88cb8666ce356c31c9820788eb44a26c3fc059f416e62ef66ce77177ceb61f2c` | `sha256:7f7a815c00941e1186f8a7dc0f98e12d81a31a8f0ec14f0250bab7e3e68818d0` | [sequential-assumption.schema.json](schemas/sequential-assumption.schema.json) |
-| Sequential basis | `sha256:9c3d8414b5b66a10199a53efd30ddbd973848a75c98a783261d69d4e7728de03` | `sha256:16c4e7c7126593250473e7030129d21f8d404ec00ea535acb08aa4d335388687` | [sequential-basis.schema.json](schemas/sequential-basis.schema.json) |
 | SHA-256 preimage existential | `sha256:c22e37686725b91582a4d4f20ce84367ea89f622b799ee1b109fe7fe3656a85f` | `sha256:a9177145873423b7ae47faa74a54eeb9e6171190e64645810ce795226dce580e` | [sha256-preimage-existential.schema.json](schemas/sha256-preimage-existential.schema.json) |
-| Sequential recovery rule input | `sha256:e9676f7bb9f1be19d7b4a0927180dbe2b862377d39c82312a1ab3bf5418e3e7a` | `sha256:3decf3f72c426d01cd9c3e1aec4878c785f623e8c586f8edf26a54985e01ff85` | [sequential-recovery-rule-input.schema.json](schemas/sequential-recovery-rule-input.schema.json) |
+| Sequential basis | `sha256:d521883b7a6a07fba996b6ff4dca34ea498428c0710e0fd7636d176d530afbd6` | `sha256:83c7af8ffe5692b1964717cf93fb3c918df1fbe6af87380726bb83a427e6d190` | [sequential-basis.schema.json](schemas/sequential-basis.schema.json) |
+| Sequential recovery rule input | `sha256:eeef56a76d1dd0ef5ee38b84f00340a79961e8f5294ca7a6a017aa43f3ff4c3f` | `sha256:2bb2b52c2919c0e47d5e9e96bf10fe2f90eba4aadce9edf368b294083b4693a4` | [sequential-recovery-rule-input.schema.json](schemas/sequential-recovery-rule-input.schema.json) |
 | Sequential accounting expectation | `sha256:f0e46d4e4804450e0ea8268eac977b59b76758952ea80a9d430a1205e88b7644` | `sha256:13b16cc02138b704938cf94c84471604cf7c5fc2e29530bffa2090658632415b` | [sequential-accounting-expectation.schema.json](schemas/sequential-accounting-expectation.schema.json) |
 
 ## Semantic descriptors
@@ -60,24 +60,24 @@ their original specification sources and signatures.
 | Presence interpreter | `interpreter` | `sha256:0207e530315247b35e2593faf0ec8a2bdc8b20e406732f71cfe4882380ff8a1c` | presence |
 | Declared proposal | `schedule` | `sha256:075dad81f7a6a53797c8cf98c7f264f3cac9b5c6606dec080703860d3e636e6f` | mechanics |
 | Deterministic stop | `stopping` | `sha256:1a6482bcdcf21c0acb6b239ff67787f0d5a13c8059643a5575cc4cc0792244c5` | mechanics |
+| Sequential basis recovery | `rule` | `sha256:58a3a75167730c518e95c79fd2fce88b8d529a79d311ee0b98e997752d502802` | positive controls |
+| Checked existential witness | `rule` | `sha256:60559217d805d6c74cdc6dbb230727574830d9bc51c4ecd403a0c72b3e37fa12` | positive controls |
 | Accounting control | `attestation` | `sha256:6a25cdc3cc1f11b7e820da5583fab292975c6c58f7833057780a2beb9137f938` | mechanics |
 | Exact observation | `extractor` | `sha256:6aa2f61f16d40ef2dd513f34d6f01d1e698ef528671e0e149c688348e49239cf` | mechanics |
-| Checked existential witness | `rule` | `sha256:6dccfeb3bde11ced8205aecd1bd381411e67fc46b01b51a31443c85cb9d3bf93` | positive controls |
 | Explicit operational fact | `rule` | `sha256:a65164fc8aa89fffccb627fda5b5de126a9e0c6bbfe4d41f3b93f1b71f763076` | mechanics |
-| Sequential accounting expectation | `attestation` | `sha256:b62447545051b10f5eb4dfd0568d165beef78aebe8579e48d88986e242387d22` | positive controls |
 | One-premise forwarding | `rule` | `sha256:ba95e9a747bf00473fbb9d54092e2ae8f7e5b191ba131302853f2b169d873c07` | mechanics |
 | Exact claim theory | `claim_theory` | `sha256:e229afb0f7788286165dc081f68fe1e7e2d82d4f2b6eed88b4fe8041f62143f3` | presence |
 | Cautious projection | `projection` | `sha256:e409e51e75d345e931f9024f904600e0ccea7cf676738686dde9b054345ae546` | presence |
-| Sequential basis recovery | `rule` | `sha256:ee2f60a9610b753587e5804f4deac01a224ddb638bbe660624ad7b8dfc86f0ed` | positive controls |
+| Sequential accounting expectation | `attestation` | `sha256:f2283b93d06a083888e6faa02a4b48ebf91104b0faa77022bf2b37ca69121113` | positive controls |
 | Declared disposition | `selection` | `sha256:fefa98044617743883bae9f14ce957c0cc0ef4abb11f016b7ad2b2d8645bafda` | mechanics |
 
 ### Added signatures
 
 | Relation | Kind | Semantics ID | Parameter contract | Input contract | Output contract |
 |---|---|---|---|---|---|
-| Checked existential witness | `rule` | `sha256:6dccfeb3bde11ced8205aecd1bd381411e67fc46b01b51a31443c85cb9d3bf93` | `sha256:5931e6153f2fad63cf97f68cdb241d7a2057fbf96a066f91791d6e81198355c7` | `sha256:6f89d2f6e80da377c261cb1a7d5dd03c16428c5f077c4d542b1a4fc98134fd6e` | `sha256:8062ecad27e59838239b04878e2ee9fcbfad53479484334b9b49f1e1d4bfa8b3` |
-| Sequential accounting expectation | `attestation` | `sha256:b62447545051b10f5eb4dfd0568d165beef78aebe8579e48d88986e242387d22` | `sha256:f0e46d4e4804450e0ea8268eac977b59b76758952ea80a9d430a1205e88b7644` | `sha256:65f7194f22f59c32178c84725decfe8d2c1d1cdb0676d502f7d50f0bffd5e4d0` | `sha256:3f082e6ba83e0f641a95e87ddb11910cb23802f4ddbbcc7b1bb9b45d6fc6ac93` |
-| Sequential basis recovery | `rule` | `sha256:ee2f60a9610b753587e5804f4deac01a224ddb638bbe660624ad7b8dfc86f0ed` | `sha256:8062ecad27e59838239b04878e2ee9fcbfad53479484334b9b49f1e1d4bfa8b3` | `sha256:e9676f7bb9f1be19d7b4a0927180dbe2b862377d39c82312a1ab3bf5418e3e7a` | `sha256:8062ecad27e59838239b04878e2ee9fcbfad53479484334b9b49f1e1d4bfa8b3` |
+| Sequential basis recovery | `rule` | `sha256:58a3a75167730c518e95c79fd2fce88b8d529a79d311ee0b98e997752d502802` | `sha256:8062ecad27e59838239b04878e2ee9fcbfad53479484334b9b49f1e1d4bfa8b3` | `sha256:eeef56a76d1dd0ef5ee38b84f00340a79961e8f5294ca7a6a017aa43f3ff4c3f` | `sha256:8062ecad27e59838239b04878e2ee9fcbfad53479484334b9b49f1e1d4bfa8b3` |
+| Checked existential witness | `rule` | `sha256:60559217d805d6c74cdc6dbb230727574830d9bc51c4ecd403a0c72b3e37fa12` | `sha256:5931e6153f2fad63cf97f68cdb241d7a2057fbf96a066f91791d6e81198355c7` | `sha256:6f89d2f6e80da377c261cb1a7d5dd03c16428c5f077c4d542b1a4fc98134fd6e` | `sha256:8062ecad27e59838239b04878e2ee9fcbfad53479484334b9b49f1e1d4bfa8b3` |
+| Sequential accounting expectation | `attestation` | `sha256:f2283b93d06a083888e6faa02a4b48ebf91104b0faa77022bf2b37ca69121113` | `sha256:f0e46d4e4804450e0ea8268eac977b59b76758952ea80a9d430a1205e88b7644` | `sha256:65f7194f22f59c32178c84725decfe8d2c1d1cdb0676d502f7d50f0bffd5e4d0` | `sha256:3f082e6ba83e0f641a95e87ddb11910cb23802f4ddbbcc7b1bb9b45d6fc6ac93` |
 
 Both added rules declare `premise_order: "set"`. The added attestation has
 no premise-order field. All three use `execution_class: "builtin_total"` and

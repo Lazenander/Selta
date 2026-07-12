@@ -1,0 +1,13 @@
+{
+  "revision": "selta.evidence.finite-result/s2-1",
+  "results": [
+    {
+      "name": "majority-accuracy",
+      "value": {
+        "kind": "rational",
+        "numerator": "44",
+        "denominator": "125"
+      }
+    }
+  ]
+}

@@ -1,0 +1,8 @@
+{
+  "revision": "selta.evidence.conformance-case/s2-1",
+  "id": "incompetent-independent",
+  "operation": {
+    "kind": "finite_world",
+    "program": "sha256:64be15b658703e0e1ab02ce1e77c93354eb9713d56ef77a4e4aa709cedf10bbf"
+  }
+}

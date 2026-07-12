@@ -1,0 +1,13 @@
+{
+  "revision": "selta.evidence.conformance-case/s2-1",
+  "id": "presence-wrong-target",
+  "operation": {
+    "kind": "assess",
+    "context": "presence-candidate-1",
+    "package_source": "sha256:4935e5ac1db338fcb11e540d479ae07b775756b0f53705205e171c7dccd16a97",
+    "expected_basis": {
+      "$ref": "sha256:ad35948a59c5f65ec07635a8a49e95c03b657c2cc9073d27fdf67b04d8521730",
+      "contract": "sha256:938e5e124cb9648bb532949ff8588edeef0570eee18f6c7bfaf579af17a352a0"
+    }
+  }
+}

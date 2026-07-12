@@ -1,0 +1,25 @@
+{
+  "revision": "selta.evidence.finite-world/s2-1",
+  "kind": "repeat_event",
+  "single_event": {
+    "numerator": "1",
+    "denominator": "10"
+  },
+  "trials": [
+    {
+      "name": "depth-1",
+      "count": 1,
+      "representation": "reduced"
+    },
+    {
+      "name": "depth-2",
+      "count": 2,
+      "representation": "reduced"
+    },
+    {
+      "name": "depth-4",
+      "count": 4,
+      "representation": "reduced"
+    }
+  ]
+}

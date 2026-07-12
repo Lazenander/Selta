@@ -1,0 +1,34 @@
+{
+  "revision": "selta.evidence.finite-world/s2-1",
+  "kind": "world_table",
+  "rows": [
+    {
+      "id": "perspective-a",
+      "weight": "1",
+      "facts": [
+        { "name": "label", "value": "label-a" },
+        { "name": "lineage", "value": "perspective-a" }
+      ]
+    },
+    {
+      "id": "perspective-b",
+      "weight": "1",
+      "facts": [
+        { "name": "label", "value": "label-b" },
+        { "name": "lineage", "value": "perspective-b" }
+      ]
+    }
+  ],
+  "queries": [
+    {
+      "kind": "distinct_values",
+      "name": "distinct-labels",
+      "fields": ["label"]
+    },
+    {
+      "kind": "distinct_values",
+      "name": "distinct-lineages",
+      "fields": ["lineage"]
+    }
+  ]
+}

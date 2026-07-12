@@ -1,0 +1,15 @@
+{
+  "revision": "selta.evidence.finite-world/s2-1",
+  "kind": "repeat_event",
+  "single_event": {
+    "numerator": "1",
+    "denominator": "1024"
+  },
+  "trials": [
+    {
+      "name": "at-least-one-perfect",
+      "count": 1024,
+      "representation": "factored"
+    }
+  ]
+}

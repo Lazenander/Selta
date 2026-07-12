@@ -1,0 +1,14 @@
+{
+  "revision": "selta.evidence.finite-world/s2-1",
+  "kind": "transition",
+  "states": ["wrong-acceptance"],
+  "initial": "wrong-acceptance",
+  "transitions": [
+    { "from": "wrong-acceptance", "to": "wrong-acceptance" }
+  ],
+  "observations": [
+    { "name": "depth-000", "steps": 0 },
+    { "name": "depth-001", "steps": 1 },
+    { "name": "depth-016", "steps": 16 }
+  ]
+}

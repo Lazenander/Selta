@@ -1,0 +1,8 @@
+{
+  "revision": "selta.evidence.conformance-case/s2-1",
+  "id": "cascade-false-reject",
+  "operation": {
+    "kind": "finite_world",
+    "program": "sha256:969221b3fbd36e93597a773d3de3477a4c06ccab48c29b9169dfec7a1388a0dd"
+  }
+}

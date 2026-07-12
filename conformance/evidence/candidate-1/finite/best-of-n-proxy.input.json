@@ -1,0 +1,40 @@
+{
+  "revision": "selta.evidence.finite-world/s2-1",
+  "kind": "world_table",
+  "rows": [
+    {
+      "id": "candidate-a",
+      "weight": "1",
+      "facts": [
+        { "name": "proxy-score", "value": 0 },
+        { "name": "truth", "value": true }
+      ]
+    },
+    {
+      "id": "candidate-b",
+      "weight": "1",
+      "facts": [
+        { "name": "proxy-score", "value": 1 },
+        { "name": "truth", "value": false }
+      ]
+    }
+  ],
+  "queries": [
+    {
+      "kind": "argmax",
+      "name": "best-of-1-truth",
+      "score_field": "proxy-score",
+      "project_field": "truth",
+      "rows": ["candidate-a"],
+      "tie_break": "row_id"
+    },
+    {
+      "kind": "argmax",
+      "name": "best-of-2-truth",
+      "score_field": "proxy-score",
+      "project_field": "truth",
+      "rows": ["candidate-a", "candidate-b"],
+      "tie_break": "row_id"
+    }
+  ]
+}

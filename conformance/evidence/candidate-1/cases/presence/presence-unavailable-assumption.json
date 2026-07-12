@@ -1,0 +1,13 @@
+{
+  "revision": "selta.evidence.conformance-case/s2-1",
+  "id": "presence-unavailable-assumption",
+  "operation": {
+    "kind": "assess",
+    "context": "presence-candidate-1",
+    "package_source": "sha256:3fb6b654fd95c368d3a845b2ef04d9bd8498ca1ac94b707a2e937d8525fad1e3",
+    "expected_basis": {
+      "$ref": "sha256:c69a16eaae4c0c92914750a6d0876a848ede89e78fb90cf06a3672a2bf93f5fa",
+      "contract": "sha256:938e5e124cb9648bb532949ff8588edeef0570eee18f6c7bfaf579af17a352a0"
+    }
+  }
+}

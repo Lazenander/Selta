@@ -1,0 +1,8 @@
+{
+  "revision": "selta.evidence.conformance-case/s2-1",
+  "id": "correlated-majority",
+  "operation": {
+    "kind": "finite_world",
+    "program": "sha256:b650b898840765f75afb20cbc0940a942c716420a98110011ce6293e6ca616f5"
+  }
+}

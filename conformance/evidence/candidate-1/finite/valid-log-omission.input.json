@@ -1,0 +1,34 @@
+{
+  "revision": "selta.evidence.finite-world/s2-1",
+  "kind": "world_table",
+  "rows": [
+    {
+      "id": "world-a",
+      "weight": "1",
+      "facts": [
+        { "name": "exposed-log", "value": "log-1" },
+        { "name": "hidden-value", "value": "value-a" }
+      ]
+    },
+    {
+      "id": "world-b",
+      "weight": "1",
+      "facts": [
+        { "name": "exposed-log", "value": "log-1" },
+        { "name": "hidden-value", "value": "value-b" }
+      ]
+    }
+  ],
+  "queries": [
+    {
+      "kind": "distinct_values",
+      "name": "distinct-exposed-logs",
+      "fields": ["exposed-log"]
+    },
+    {
+      "kind": "distinct_values",
+      "name": "distinct-hidden-values",
+      "fields": ["hidden-value"]
+    }
+  ]
+}

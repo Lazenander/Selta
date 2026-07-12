@@ -1,0 +1,54 @@
+{
+  "revision": "selta.evidence.finite-world/s2-1",
+  "kind": "world_table",
+  "rows": [
+    {
+      "id": "correct",
+      "weight": "4",
+      "facts": [
+        { "name": "judge-a-correct", "value": true },
+        { "name": "judge-b-correct", "value": true }
+      ]
+    },
+    {
+      "id": "incorrect",
+      "weight": "1",
+      "facts": [
+        { "name": "judge-a-correct", "value": false },
+        { "name": "judge-b-correct", "value": false }
+      ]
+    }
+  ],
+  "queries": [
+    {
+      "kind": "weighted_event",
+      "name": "accuracy-given-unanimity",
+      "event": {
+        "any_of": [
+          {
+            "all_of": [
+              { "fact": "judge-a-correct", "equals": true },
+              { "fact": "judge-b-correct", "equals": true }
+            ]
+          }
+        ]
+      },
+      "given": {
+        "any_of": [
+          {
+            "all_of": [
+              { "fact": "judge-a-correct", "equals": false },
+              { "fact": "judge-b-correct", "equals": false }
+            ]
+          },
+          {
+            "all_of": [
+              { "fact": "judge-a-correct", "equals": true },
+              { "fact": "judge-b-correct", "equals": true }
+            ]
+          }
+        ]
+      }
+    }
+  ]
+}

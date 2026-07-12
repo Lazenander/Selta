@@ -1,0 +1,8 @@
+{
+  "revision": "selta.evidence.conformance-case/s2-1",
+  "id": "adaptive-holdout",
+  "operation": {
+    "kind": "finite_world",
+    "program": "sha256:75bb0e60e7a968c433629295a5aecfaae2c5bdc45e0a9d4af0af9327974020a1"
+  }
+}

@@ -1,0 +1,9 @@
+{
+  "revision": "selta.evidence.conformance-oracle/s2-1",
+  "case": "presence-wrong-modality",
+  "expected": {
+    "kind": "returned",
+    "package": "sha256:62500fdf4a4623188c333763066fd5e08390c9264870cc83feb6b3e868a80e7e",
+    "compare": "conformance_projection"
+  }
+}

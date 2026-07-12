@@ -1,0 +1,9 @@
+{
+  "revision": "selta.evidence.conformance-oracle/s2-1",
+  "case": "presence-unknown-contract",
+  "expected": {
+    "kind": "returned",
+    "package": "sha256:97ff559723c1bb9d25e1b0b24bfb4dd88fc2a1a9f2de33e3fc304c5330eb484d",
+    "compare": "conformance_projection"
+  }
+}

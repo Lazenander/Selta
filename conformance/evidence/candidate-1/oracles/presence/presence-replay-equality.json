@@ -1,0 +1,7 @@
+{
+  "revision": "selta.evidence.conformance-oracle/s2-1",
+  "case": "presence-replay-equality",
+  "expected": {
+    "kind": "comparison_pass"
+  }
+}

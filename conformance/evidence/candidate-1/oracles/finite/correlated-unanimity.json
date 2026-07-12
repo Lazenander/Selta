@@ -1,0 +1,8 @@
+{
+  "revision": "selta.evidence.conformance-oracle/s2-1",
+  "case": "correlated-unanimity",
+  "expected": {
+    "kind": "finite_result",
+    "result": "sha256:66df7c37cae5b03338195e2b11e84557541ba9418464a375feefd2206b0c3b91"
+  }
+}

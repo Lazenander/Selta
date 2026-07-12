@@ -1,0 +1,8 @@
+{
+  "revision": "selta.evidence.conformance-oracle/s2-1",
+  "case": "correlated-majority",
+  "expected": {
+    "kind": "finite_result",
+    "result": "sha256:ffdb796f4f791c29949d95beb8db8561d96b25a3a6b4a40d9df69342e3629163"
+  }
+}

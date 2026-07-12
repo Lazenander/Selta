@@ -1,0 +1,8 @@
+{
+  "revision": "selta.evidence.conformance-oracle/s2-1",
+  "case": "cascade-false-reject",
+  "expected": {
+    "kind": "finite_result",
+    "result": "sha256:abf3c3f6fc7be7ccfc31cba674a4b5303fa9be4b2b4f0a0ebe93299b408f141f"
+  }
+}

@@ -1,0 +1,8 @@
+{
+  "revision": "selta.evidence.conformance-case/s2-1",
+  "id": "genuine-disagreement",
+  "operation": {
+    "kind": "finite_world",
+    "program": "sha256:52e8151f767079053dd3edd32a18fbfa045582da3823859ba5127b0c4d994e8a"
+  }
+}

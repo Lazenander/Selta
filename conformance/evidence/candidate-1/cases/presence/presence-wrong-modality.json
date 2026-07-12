@@ -1,0 +1,13 @@
+{
+  "revision": "selta.evidence.conformance-case/s2-1",
+  "id": "presence-wrong-modality",
+  "operation": {
+    "kind": "assess",
+    "context": "presence-candidate-1",
+    "package_source": "sha256:ffdf105975cb05fbada4abb482bc10e10369c9b3843c156622e0cb088afc21b7",
+    "expected_basis": {
+      "$ref": "sha256:edb822bdf2ec326bae867db1e3daa5dd3ab109618955a8e185d78b8b744b89f3",
+      "contract": "sha256:938e5e124cb9648bb532949ff8588edeef0570eee18f6c7bfaf579af17a352a0"
+    }
+  }
+}

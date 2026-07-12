@@ -1,0 +1,13 @@
+{
+  "revision": "selta.evidence.conformance-case/s2-1",
+  "id": "presence-fuel-crossing",
+  "operation": {
+    "kind": "assess",
+    "context": "presence-candidate-1",
+    "package_source": "sha256:e49f57873cf8249c088a8719791b6283d851e916328f0ac019271e159de595cb",
+    "expected_basis": {
+      "$ref": "sha256:bfdfb21aa2b02cfcd9b0b1d2a7a5329d08037233451e2065475e8c89890f878f",
+      "contract": "sha256:938e5e124cb9648bb532949ff8588edeef0570eee18f6c7bfaf579af17a352a0"
+    }
+  }
+}

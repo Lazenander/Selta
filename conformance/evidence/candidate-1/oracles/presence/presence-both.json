@@ -1,0 +1,9 @@
+{
+  "revision": "selta.evidence.conformance-oracle/s2-1",
+  "case": "presence-both",
+  "expected": {
+    "kind": "returned",
+    "package": "sha256:3fe977ce3341ad45df4e8705361b86a7998bcb6c25b819d74504389977c6ec09",
+    "compare": "conformance_projection"
+  }
+}

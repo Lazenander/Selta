@@ -1,0 +1,8 @@
+{
+  "revision": "selta.evidence.conformance-case/s2-1",
+  "id": "optional-stop",
+  "operation": {
+    "kind": "finite_world",
+    "program": "sha256:f4d0736f71f5547f54071ae1b6c7013ddd5b14fbea4a20981aaa42ac6ecf5ebc"
+  }
+}

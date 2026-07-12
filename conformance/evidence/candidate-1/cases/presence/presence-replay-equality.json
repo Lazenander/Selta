@@ -1,0 +1,40 @@
+{
+  "revision": "selta.evidence.conformance-case/s2-1",
+  "id": "presence-replay-equality",
+  "operation": {
+    "kind": "compare",
+    "scope": "per_model",
+    "assertions": [
+      {
+        "relation": "equal",
+        "left": {
+          "producer": "current",
+          "case": "presence-neither",
+          "view": "package_jcs",
+          "pointer": ""
+        },
+        "right": {
+          "producer": "current",
+          "case": "presence-replay-equivalent",
+          "view": "package_jcs",
+          "pointer": ""
+        }
+      },
+      {
+        "relation": "equal",
+        "left": {
+          "producer": "current",
+          "case": "presence-neither",
+          "view": "package_jcs",
+          "pointer": ""
+        },
+        "right": {
+          "producer": "current",
+          "case": "presence-replay-identical",
+          "view": "package_jcs",
+          "pointer": ""
+        }
+      }
+    ]
+  }
+}

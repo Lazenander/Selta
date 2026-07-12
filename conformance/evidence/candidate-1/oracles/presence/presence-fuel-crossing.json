@@ -1,0 +1,9 @@
+{
+  "revision": "selta.evidence.conformance-oracle/s2-1",
+  "case": "presence-fuel-crossing",
+  "expected": {
+    "kind": "returned",
+    "package": "sha256:a5f157488d6d47ec546582edaaffc0ba2697accaebfa6e1a782d01f75dbf070d",
+    "compare": "conformance_projection"
+  }
+}

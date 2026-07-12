@@ -1,0 +1,9 @@
+{
+  "revision": "selta.evidence.conformance-oracle/s2-1",
+  "case": "presence-wrong-role-projection",
+  "expected": {
+    "kind": "returned",
+    "package": "sha256:ae323a4985e9738c3abd2b67ba932e199786f353ba718ff03882605df7c704d0",
+    "compare": "conformance_projection"
+  }
+}

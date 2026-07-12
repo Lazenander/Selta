@@ -1,0 +1,9 @@
+{
+  "revision": "selta.evidence.conformance-oracle/s2-1",
+  "case": "presence-fuel-exact",
+  "expected": {
+    "kind": "returned",
+    "package": "sha256:d99b653a43a2abc54a6bf3deafdfdc2939e34a27bd52feb6de522cf043dbcca6",
+    "compare": "conformance_projection"
+  }
+}

@@ -1,0 +1,9 @@
+{
+  "revision": "selta.evidence.conformance-oracle/s2-1",
+  "case": "presence-missing-reference",
+  "expected": {
+    "kind": "returned",
+    "package": "sha256:565afecfacb993a683580d52aa13337238322cb913a0fbaac9058ef46621193e",
+    "compare": "conformance_projection"
+  }
+}

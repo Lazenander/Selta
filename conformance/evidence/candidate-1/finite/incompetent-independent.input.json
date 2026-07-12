@@ -1,0 +1,106 @@
+{
+  "revision": "selta.evidence.finite-world/s2-1",
+  "kind": "world_table",
+  "rows": [
+    {
+      "id": "000",
+      "weight": "27",
+      "facts": [
+        { "name": "judge-a-correct", "value": false },
+        { "name": "judge-b-correct", "value": false },
+        { "name": "judge-c-correct", "value": false }
+      ]
+    },
+    {
+      "id": "001",
+      "weight": "18",
+      "facts": [
+        { "name": "judge-a-correct", "value": false },
+        { "name": "judge-b-correct", "value": false },
+        { "name": "judge-c-correct", "value": true }
+      ]
+    },
+    {
+      "id": "010",
+      "weight": "18",
+      "facts": [
+        { "name": "judge-a-correct", "value": false },
+        { "name": "judge-b-correct", "value": true },
+        { "name": "judge-c-correct", "value": false }
+      ]
+    },
+    {
+      "id": "011",
+      "weight": "12",
+      "facts": [
+        { "name": "judge-a-correct", "value": false },
+        { "name": "judge-b-correct", "value": true },
+        { "name": "judge-c-correct", "value": true }
+      ]
+    },
+    {
+      "id": "100",
+      "weight": "18",
+      "facts": [
+        { "name": "judge-a-correct", "value": true },
+        { "name": "judge-b-correct", "value": false },
+        { "name": "judge-c-correct", "value": false }
+      ]
+    },
+    {
+      "id": "101",
+      "weight": "12",
+      "facts": [
+        { "name": "judge-a-correct", "value": true },
+        { "name": "judge-b-correct", "value": false },
+        { "name": "judge-c-correct", "value": true }
+      ]
+    },
+    {
+      "id": "110",
+      "weight": "12",
+      "facts": [
+        { "name": "judge-a-correct", "value": true },
+        { "name": "judge-b-correct", "value": true },
+        { "name": "judge-c-correct", "value": false }
+      ]
+    },
+    {
+      "id": "111",
+      "weight": "8",
+      "facts": [
+        { "name": "judge-a-correct", "value": true },
+        { "name": "judge-b-correct", "value": true },
+        { "name": "judge-c-correct", "value": true }
+      ]
+    }
+  ],
+  "queries": [
+    {
+      "kind": "weighted_event",
+      "name": "majority-accuracy",
+      "event": {
+        "any_of": [
+          {
+            "all_of": [
+              { "fact": "judge-a-correct", "equals": true },
+              { "fact": "judge-b-correct", "equals": true }
+            ]
+          },
+          {
+            "all_of": [
+              { "fact": "judge-a-correct", "equals": true },
+              { "fact": "judge-c-correct", "equals": true }
+            ]
+          },
+          {
+            "all_of": [
+              { "fact": "judge-b-correct", "equals": true },
+              { "fact": "judge-c-correct", "equals": true }
+            ]
+          }
+        ]
+      }
+    }
+  ]
+}

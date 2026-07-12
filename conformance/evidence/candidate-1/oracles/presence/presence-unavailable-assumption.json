@@ -1,0 +1,9 @@
+{
+  "revision": "selta.evidence.conformance-oracle/s2-1",
+  "case": "presence-unavailable-assumption",
+  "expected": {
+    "kind": "returned",
+    "package": "sha256:d9b20b7d8d9785a6d5415922af40ea43aeaaddfeee0783af60f11cf09922cb02",
+    "compare": "conformance_projection"
+  }
+}

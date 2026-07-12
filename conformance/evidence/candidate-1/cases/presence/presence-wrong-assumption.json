@@ -1,0 +1,13 @@
+{
+  "revision": "selta.evidence.conformance-case/s2-1",
+  "id": "presence-wrong-assumption",
+  "operation": {
+    "kind": "assess",
+    "context": "presence-candidate-1",
+    "package_source": "sha256:1f380d29ab1d775e73b7511cccc0231f6cf962f4df6eecc20de2d785c0585471",
+    "expected_basis": {
+      "$ref": "sha256:5f5c4c17fe048c9096e97eb9cb8b83d08efa14a1173ea3d712edfa36316560df",
+      "contract": "sha256:938e5e124cb9648bb532949ff8588edeef0570eee18f6c7bfaf579af17a352a0"
+    }
+  }
+}

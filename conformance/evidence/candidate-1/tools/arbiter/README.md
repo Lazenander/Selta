@@ -34,6 +34,10 @@ The arbiter may check a returned package, recompute its identities, and derive
 the exact `ConformanceProjection`. It has no operation that accepts a package
 input and constructs candidate states, closures, conclusions, or outcomes.
 
+[`MANIFEST-AUTHORING.md`](MANIFEST-AUTHORING.md) freezes the exact authored
+boundary and derivation rules for the next construction step. It is not a
+manifest, model input, or substitute for the absent retained runtime evidence.
+
 ## Modules
 
 - `main` and `cli` contain command wiring only.
@@ -41,10 +45,13 @@ input and constructs candidate states, closures, conclusions, or outcomes.
 - `digest` owns raw SHA-256 and domain-separated identities.
 - `path` owns repository-relative paths and a root handle retained for the
   whole operation. Its Unix adapter descends with component-relative,
-  no-follow opens, exposes file identity from that same handle, and consumes
-  bytes only from retained handles. Other platforms fail closed until their
-  adapter provides equivalent semantics; the remaining arbiter logic contains
-  no operating-system path calls.
+  no-follow opens, requires exact stored component spelling, and rejects
+  case-fold aliases. Enumerated entries bind raw names and physical identity to
+  the same parent handle before opening; complete entry metadata is compared
+  without another directory scan, and file stamps are explicitly finalized
+  after complete reads. Other platforms fail closed until their adapter
+  provides equivalent semantics; the remaining arbiter logic contains no
+  operating-system path calls.
 - `records` contains only the conformance wire shapes.
 - `stable` is the sole module allowed to import `selta-core`.
 - `manifest`, `artifact`, and `kit` derive inventories and oracle-free kits.
@@ -87,10 +94,10 @@ arbiter artifact-set admit \
 It emits one JCS-plus-LF `{ id, bytes_sha256 }` result only after stable Selta
 verification, relational canonicality, pinned-handle file checks, streaming
 digests, and logical and hard-link self-exclusion all succeed. Its record,
-entry, per-file, and aggregate-byte flags are operational ceilings, not
-artifact-set semantics. Construction remains internal until an enclosing
-manifest, kit, or runtime operation supplies the closed member list; there is
-no second authored member-list DSL.
+artifact-count, visited-directory-entry, per-file, and aggregate-byte flags are
+operational ceilings, not artifact-set semantics. Construction remains
+internal until an enclosing manifest, kit, or runtime operation supplies the
+closed member list; there is no second authored member-list DSL.
 
 `check-foundation` derives and admits the retained
 `fixtures/artifact-set/minimal` tree. That fixture includes a nested member and

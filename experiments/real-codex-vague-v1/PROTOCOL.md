@@ -238,6 +238,13 @@ prompt-quality evidence. It used only the reusable synthetic smoke fixture,
 separate from development and held-out data, and no semantic correctness or
 selection threshold informed the revision.
 
+`runs/smoke-terra-low-004` is the immutable successful boundary smoke. The
+same synthetic fixture produced one Selta-admitted `support_only` response with
+2,511 input and 45 output tokens, no operational error, no tool event, empty
+stderr, and no plugin, hook, or isolated-home violation. It establishes that
+the frozen CLI, prompt transport, accounting, and admission path are ready for
+development execution; it remains non-semantic and is not corpus evidence.
+
 Calls are run in a precommitted randomized order with at most four concurrently.
 There is exactly one scored attempt per prompt-case pair. Semantic failure,
 malformed output, or an undesirable answer is never retried. A diagnostic retry

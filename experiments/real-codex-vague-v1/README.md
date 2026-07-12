@@ -61,6 +61,10 @@ second model-authored field:
   It justifies only the pre-development byte-fidelity clarification, used a
   reusable synthetic fixture separate from development and held-out data, and
   supplies no semantic/polarity or prompt-quality evidence.
+- `runs/smoke-terra-low-004` is the immutable successful boundary smoke. The
+  same synthetic fixture produced one admitted response with recorded usage,
+  no operational error, no tool event, and empty stderr. It establishes only
+  readiness for development execution, not semantic or prompt quality.
 
 The engineering artifacts are not the formal pilot corpus. A formal result still
 requires newly sourced cases, three blinded human annotations per case, retained

@@ -119,6 +119,12 @@ development and held-out data; semantic correctness, polarity, and selection
 thresholds were not consulted, so the run is not semantic or prompt-quality
 evidence.
 
+`runs/smoke-terra-low-004` is retained as the successful boundary smoke. The
+same synthetic fixture produced one admitted response with recorded usage, no
+operational error or tool event, empty stderr, and no forbidden isolated-home
+state. It demonstrates readiness of the frozen live path only; it is not a
+semantic score or development-corpus result.
+
 A completed run retains:
 
 - `manifest.json`: exact artifacts, model configuration, command template, and

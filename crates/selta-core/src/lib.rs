@@ -29,24 +29,31 @@ pub use cache::{
 };
 pub use engine::MAX_SAMPLE_IN_FLIGHT_PER_JOB;
 pub use host::builtin::{CmdInput, CmdTemplate, CmdTemplates};
-pub use host::rpc::{decl_from_manifest, initialize_over_peer, verify_over_peer, RpcHost, RpcPeer};
+pub use host::rpc::{
+    assess_over_peer, decl_from_manifest, initialize_over_peer, verify_over_peer, RpcHost, RpcPeer,
+};
 pub use host::{
-    ConfigPreflight, Determinism, EffectClass, Envelope, ExtensionDecl, ExtensionHost, HostCall,
-    InputDomain, InputKind, Needs, PassFail, WireDelta, WireUsage,
+    AssessmentEnvelope, ConfigPreflight, Determinism, EffectClass, Envelope, ExtensionDecl,
+    ExtensionHost, HostCall, InputDomain, InputKind, Needs, PassFail, WireDelta, WireUsage,
 };
 pub use intake::Mode;
 pub use monitor::{CallOutcome, Monitor};
 pub use path::Path;
 pub use registry::Registry;
 pub use registry_admission::{AdmissionPolicy, BuiltinAdmissionLimits};
-pub use report::{CheckResult, Children, NodeResult, Report, Timing, Usage};
-pub use schema::{Field, LeafSpec, LenBounds, Node, Sampling, Type, VerifierSpec, VotePolicy};
+pub use report::{CheckResult, Children, EvidenceSummary, NodeResult, Report, Timing, Usage};
+pub use schema::{
+    EvidenceProjection, Field, LeafSpec, LenBounds, Node, Sampling, Type, VerifierSpec, VotePolicy,
+};
 pub use settings::{NoSettings, ResolvedSettings, SettingsResolver};
 pub use strict_admission::{
-    validate_config_structure_with_env_holes, AdmittedNode, ConfigStructureValidator, MetaIssue,
-    MetaIssueCode, SELTA_META_VALIDATOR_REVISION, SELTA_SCHEMA_LANGUAGE_REVISION,
+    validate_config_structure_with_env_holes, AdmissionProfile, AdmittedNode,
+    ConfigStructureValidator, MetaIssue, MetaIssueCode, SELTA_META_VALIDATOR_REVISION,
+    SELTA_META_VALIDATOR_REVISION_V1, SELTA_META_VALIDATOR_REVISION_V2,
+    SELTA_SCHEMA_LANGUAGE_REVISION, SELTA_SCHEMA_LANGUAGE_REVISION_V1,
+    SELTA_SCHEMA_LANGUAGE_REVISION_V2,
 };
-pub use verdict::{CheckError, Delta, DeltaKind, Notice, Verdict, VoteTally};
+pub use verdict::{CheckError, Delta, DeltaKind, EvidenceState, Notice, Verdict, VoteTally};
 
 /// Everything a verification runs against, minus the request itself. The
 /// registry and cache are required; settings and monitoring default to none —

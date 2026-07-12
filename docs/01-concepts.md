@@ -18,12 +18,21 @@
    "semantic" part.
 
 3. **Every verifier declares itself deterministic or non-deterministic.**
-   A deterministic verifier (regex, range, a compile check) gives the same verdict for the
-   same input: run once, trust it. A non-deterministic verifier (an LLM judge) gives one
-   *vote*, not the truth: the engine samples it N times, verifies each sample's result
-   recursively with a reduced depth budget, and folds the votes with a voting policy.
-   This is where "delta" earns its name — failing votes carry critiques, and the merged
-   critiques are the delta.
+   A deterministic verifier (regex, range, a compile check) declares the same verdict for
+   the same input, so the engine runs it once. On the legacy path, a non-deterministic
+   verifier (an LLM judge) gives one *vote*, not the truth: the engine requests N
+   executions, verifies each result recursively with a reduced depth budget, and folds
+   the votes with a voting policy. This is where "delta" earns its name — failing votes
+   carry critiques, and the merged critiques are the delta. Selta records these
+   executions as samples; it does not prove that their outputs are statistically
+   independent.
+
+Selta 0.2 also has an explicit, opt-in presence-assessment leaf. It preserves support,
+refutation, both, and neither before cautiously projecting them to the ordinary report
+verdict. Legacy schemas keep the vote path above unchanged. The complete addition is
+specified in [24-presence-assessment.md](24-presence-assessment.md), with its admission
+and host compatibility rules in
+[25-assessment-compatibility.md](25-assessment-compatibility.md).
 
 ## The boundary
 

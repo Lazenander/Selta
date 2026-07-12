@@ -5,14 +5,59 @@
 import readline from "node:readline";
 
 const registry = new Map();
+const assessors = new Map();
+
+function normalizeDelta(delta) {
+  return typeof delta === "string" ? { message: delta } : delta;
+}
+
+function normalizeRefutation(delta) {
+  const normalized = normalizeDelta(delta);
+  if (
+    normalized === null
+    || typeof normalized !== "object"
+    || Array.isArray(normalized)
+    || typeof normalized.message !== "string"
+    || normalized.message.trim() === ""
+  ) {
+    throw new TypeError("a delta must be a non-empty message string or an object with one");
+  }
+  return normalized;
+}
+
+function context(params) {
+  return {
+    config: params.config,
+    settings: params.settings ?? {},
+    path: params.path,
+    root: params.root,
+    env: params.env,
+    budget: params.budget,
+  };
+}
 
 export function pass() {
   return { verdict: "pass" };
 }
 
 export function fail(delta) {
-  if (typeof delta === "string") delta = { message: delta };
-  return { verdict: "fail", delta };
+  return { verdict: "fail", delta: normalizeDelta(delta) };
+}
+
+export function support() {
+  return { support: true };
+}
+
+export function refute(delta) {
+  return { support: false, refute: normalizeRefutation(delta) };
+}
+
+export function both(delta) {
+  return { support: true, refute: normalizeRefutation(delta) };
+}
+
+export function neither() {
+  return { support: false };
 }
 
 export const host = {
@@ -54,7 +99,14 @@ export const host = {
     registry.set(name, { options: normalized, handler });
   },
 
-  run(info = { name: "selta-ts-host", version: "0.1.0" }) {
+  assessor(name, handler) {
+    if (!registry.has(name)) {
+      throw new TypeError(`assessor '${name}': register its verifier first`);
+    }
+    assessors.set(name, { handler });
+  },
+
+  run(info = { name: "selta-ts-host", version: "0.2.0" }) {
     const rl = readline.createInterface({ input: process.stdin, terminal: false });
     const write = (message) => process.stdout.write(JSON.stringify(message) + "\n");
 
@@ -87,28 +139,29 @@ export const host = {
             delta_schema: options.deltaSchema ?? null,
           })),
         });
-      } else if (method === "verify") {
-        const entry = registry.get(params.ext);
-        if (!entry) return replyError(-32601, `unknown extension '${params.ext}'`);
+      } else if (method === "verify" || method === "assess") {
+        const entries = method === "verify" ? registry : assessors;
+        const entry = entries.get(params?.ext);
+        if (!entry) {
+          const text = method === "verify"
+            ? `unknown extension '${params?.ext}'`
+            : `extension '${params?.ext}' has no assessor`;
+          return replyError(-32601, text);
+        }
         try {
-          const ctx = {
-            config: params.config,
-            settings: params.settings ?? {},
-            path: params.path,
-            root: params.root,
-            env: params.env,
-            budget: params.budget,
-          };
-          reply(await entry.handler(params.value, ctx));
+          reply(await entry.handler(params.value, context(params)));
         } catch (error) {
           replyError(-32000, String(error?.message ?? error));
         }
       } else if (method === "shutdown") {
         reply({});
         process.exit(0);
+      } else if (method === "cancel") {
+        // Best-effort notification: the reference SDK lets in-flight handlers
+        // finish because the caller has already stopped waiting.
+      } else {
+        replyError(-32601, `unknown method '${String(method)}'`);
       }
-      // "cancel" notifications are accepted; the reference SDK lets in-flight
-      // handlers finish — the server has already stopped waiting.
     });
   },
 };

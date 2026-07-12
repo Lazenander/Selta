@@ -83,6 +83,35 @@ The engine knows nothing about `config` except that it must satisfy the extensio
 `config_schema`. Determinism is declared by the extension, never by the schema —
 a `sampling` block on a deterministic extension is a registration error.
 
+### Admission revision and cautious evidence
+
+The unsuffixed source-admission APIs select schema-language revision 1. Revision 1 is
+the legacy grammar above and rejects an `evidence` property. A proof-grade caller admits
+untrusted revision-2 source explicitly with `AdmissionProfile::Selta2` through
+`AdmittedNode::admit_source_at` or `Registry::admit_source_at`. Revision 2 adds exactly
+one optional leaf field:
+
+```jsonc
+{
+  "ext": "semantic_judge",
+  "config": { "claim": "the release is ready" },
+  "evidence": "cautious",
+  "sampling": { "samples": 5, "depth": 1, "min_valid": 3 }
+}
+```
+
+An evidence leaf must omit `sampling.vote`, because it aggregates support and
+refutation presence instead of binary votes. Every leaf within one `all_of`, `any_of`,
+or `not` subtree must use the same mode. Omitting `evidence`, under either admission
+revision, retains the complete legacy execution path. The four states, composition,
+and report projection are specified in
+[24-presence-assessment.md](24-presence-assessment.md); exact revision identifiers and
+compatibility rules are in
+[25-assessment-compatibility.md](25-assessment-compatibility.md).
+
+`Node::from_value` remains a compatibility parser: it can deserialize the additive
+field, but it does not validate original source bytes or confer an admission profile.
+
 ### Dynamic config (`$env` references)
 
 Any field inside `config` may be a reference into the request's environment instead of

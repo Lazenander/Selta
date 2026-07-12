@@ -11,8 +11,8 @@ use async_trait::async_trait;
 use axum::extract::ws::{Message, WebSocket};
 use futures::{SinkExt, StreamExt};
 use selta_core::{
-    initialize_over_peer, verify_over_peer, Envelope, ExtensionDecl, ExtensionHost, HostCall,
-    RpcPeer,
+    assess_over_peer, initialize_over_peer, verify_over_peer, AssessmentEnvelope, Envelope,
+    ExtensionDecl, ExtensionHost, HostCall, RpcPeer,
 };
 use uuid::Uuid;
 
@@ -26,6 +26,10 @@ pub struct WsHost {
 impl ExtensionHost for WsHost {
     async fn verify(&self, call: HostCall<'_>) -> Result<Envelope, String> {
         verify_over_peer(&self.peer, call).await
+    }
+
+    async fn assess(&self, call: HostCall<'_>) -> Result<AssessmentEnvelope, String> {
+        assess_over_peer(&self.peer, call).await
     }
 }
 

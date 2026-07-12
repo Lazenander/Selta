@@ -105,7 +105,18 @@ pub struct LeafSpec {
     #[serde(default = "empty_object")]
     pub config: Value,
     #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub evidence: Option<EvidenceProjection>,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
     pub sampling: Option<Sampling>,
+}
+
+/// The conclusion projection used by an evidence-preserving verifier leaf.
+/// Additional projections are additive language revisions; Selta 0.2 defines
+/// only the conflict-preserving cautious projection.
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize, Deserialize)]
+#[serde(rename_all = "snake_case")]
+pub enum EvidenceProjection {
+    Cautious,
 }
 
 fn empty_object() -> Value {

@@ -13,7 +13,8 @@ use crate::meta::contains_env_ref;
 use crate::registry::Registry;
 use crate::schema::{Node, Type, VerifierSpec};
 use crate::strict_admission::{
-    child_pointer, validate_config_structure_with_env_holes, AdmittedNode, MetaIssue, MetaIssueCode,
+    child_pointer, validate_config_structure_with_env_holes, AdmissionProfile, AdmittedNode,
+    MetaIssue, MetaIssueCode,
 };
 
 /// Optional resource ceilings for Selta's in-process builtin configuration.
@@ -114,7 +115,16 @@ impl Registry {
         source: &[u8],
         policy: &AdmissionPolicy,
     ) -> Result<AdmittedNode, Vec<MetaIssue>> {
-        let admitted = AdmittedNode::admit_source(source)?;
+        self.admit_source_at(source, policy, AdmissionProfile::Selta1)
+    }
+
+    pub fn admit_source_at(
+        &self,
+        source: &[u8],
+        policy: &AdmissionPolicy,
+        profile: AdmissionProfile,
+    ) -> Result<AdmittedNode, Vec<MetaIssue>> {
+        let admitted = AdmittedNode::admit_source_at(source, profile)?;
         let issues = validate_node_with_policy(self, admitted.as_node(), policy);
         if issues.is_empty() {
             Ok(admitted)

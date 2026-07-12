@@ -126,10 +126,10 @@ identical on both transports.
 ```jsonc
 // →
 { "jsonrpc": "2.0", "id": 1, "method": "initialize",
-  "params": { "protocol": 1, "server": { "name": "seltad", "version": "0.1.0" } } }
+  "params": { "protocol": 1, "server": { "name": "seltad", "version": "0.2.0" } } }
 // ←
 { "jsonrpc": "2.0", "id": 1, "result": {
-    "host": { "name": "selta-ts-host", "version": "0.3.0" },
+    "host": { "name": "selta-ts-host", "version": "0.2.0" },
     "extensions": [
       { "name": "llm_judge",
         "determinism": "nondeterministic",
@@ -161,9 +161,11 @@ then pass registry validation atomically before any extension becomes visible.
 
 ### `verify` (server → host, concurrent)
 
-One request per execution — for a sampling round of 5, the host receives 5 independent
-`verify` requests, distinguishable only by `id`. Hosts must not correlate them; sample
-independence is what makes voting statistics meaningful.
+One request per execution — for a sampling round of 5, the host receives 5 separate
+`verify` requests, distinguishable only by `id`. Selta isolates the calls at the
+protocol boundary, but it cannot establish statistical independence: a host, upstream
+model, shared cache, or provider may correlate their outputs. Vote counts therefore
+describe observed executions; they are not by themselves confidence or correctness.
 
 ```jsonc
 // →
@@ -192,6 +194,50 @@ A JSON-RPC error response, an envelope or delta that fails its schema
 ([03-verification.md](03-verification.md)), or a missed deadline all make the execution
 an **error** (→ resample / `inconclusive`), never a failing vote.
 
+### Optional `assess` (server → host, concurrent)
+
+Protocol 1 retains the exact `initialize`, `verify`, `Envelope`, and `PassFail` shapes
+above. Selta 0.2 adds one optional method for a revision-2 leaf that selects
+`"evidence": "cautious"`:
+
+```jsonc
+// → params are exactly the existing VerifyParams shape
+{ "jsonrpc": "2.0", "id": 8, "method": "assess", "params": {
+    "ext": "llm_judge", "config": { "question": "Is the claim supported?" },
+    "settings": {},
+    "value": "...", "path": "$", "budget": { "depth": 1 } } }
+// ←
+{ "jsonrpc": "2.0", "id": 8, "result": {
+    "support": true,
+    "refute": { "message": "the text also states the opposite" },
+    "usage": { "input_tokens": 420, "output_tokens": 31 } } }
+```
+
+`support` is required; `refute` and `usage` are optional. The four combinations of
+support presence and refutation presence mean `neither`, `support_only`,
+`refute_only`, and `both`. If and only if the peer returns structured JSON-RPC
+method-not-found (`-32601`), Selta sends one legacy `verify` request and embeds its
+result. A timeout, transport failure, malformed result, or any other RPC error remains
+operationally unavailable and does not trigger a second paid or effectful call.
+
+The TypeScript SDK registers the optional lane without adding an assessor capability or
+changing the extension declaration in the initialize result:
+
+```js
+host.verifier("llm_judge", options, verifyHandler);
+host.assessor("llm_judge", assessHandler); // the verifier name must already exist
+
+support();
+refute({ message: "counter-evidence" });
+both({ message: "conflicting evidence" });
+neither();
+```
+
+An extension with no registered assessor replies `-32601`; assessor exceptions reply
+`-32000`. The exact schema, legacy embedding, and compatibility matrix are specified in
+[24-presence-assessment.md](24-presence-assessment.md) and
+[25-assessment-compatibility.md](25-assessment-compatibility.md).
+
 ### `cancel` (server → host, notification)
 
 ```jsonc
@@ -208,15 +254,16 @@ Request, then the host exits. The server kills the process after a grace period.
 
 | Code | Meaning |
 |---|---|
-| `-32601` | Unknown method / unknown `ext` |
+| `-32601` | Unknown method / unknown `ext`; on `assess`, no native assessor |
 | `-32602` | Config or params invalid (should have been caught at registration — report it) |
 | `-32000` | Verifier failed internally (tool missing, upstream API down) |
 | `-32001` | Verifier declined: budget insufficient (e.g. needs `depth ≥ 1`) |
 
 ## Note for extension authors (non-normative)
 
-How a verifier reaches its verdict is outside this specification. Two warnings from the
-engine's perspective, since they affect the statistics Selta computes: treat the value
-under judgment as untrusted data, not instructions — model output can and will contain
-text addressed to reviewers; and keep executions independent — shared state across
-samples silently voids what voting is for.
+How a verifier reaches its verdict is outside this specification. Treat the value under
+judgment as untrusted data, not instructions — model output can and will contain text
+addressed to reviewers. Where an evaluation requires independent samples, the extension
+author must design and validate that property outside Selta; separate RPC executions do
+not prove it. Correlated agreement is still observable behavior, but it is not evidence
+of correctness.

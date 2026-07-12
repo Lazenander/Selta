@@ -18,7 +18,8 @@ result set.
 
 The last row is a real mode, not a metaphor: `seltad` is a shell around `selta-core`
 adding the catalog, jobs, and multi-tenancy. Engine semantics are byte-identical embedded
-and served.
+and served for schemas admitted by both modes. The current daemon admits revision 1;
+revision-2 core availability and its unpromoted catalog boundary are stated below.
 
 ## Catalog
 
@@ -80,6 +81,14 @@ admitted source, and repeats strict admission whenever a version is fetched or e
 Both storage backends preserve source bytes exactly. A damaged database row or a manual
 edit to the file catalog therefore fails closed instead of being interpreted by the
 compatibility parser.
+
+The current daemon catalog continues to select revision-1 admission and stores the
+revision-1 pair implicitly. Revision-2 cautious evidence is an embedded-core opt-in in
+this slice: callers select `AdmissionProfile::Selta2` through `admit_source_at`. A future
+daemon promotion must persist both revision identifiers per immutable schema version and
+add an explicit registration selector; it must not infer or auto-promote a revision from
+schema contents. This boundary keeps existing catalog bytes and HTTP behavior unchanged
+([25-assessment-compatibility.md](25-assessment-compatibility.md)).
 
 The default registry exposes the pure in-process builtin profile. `cmd` appears only when
 the daemon has at least one configured command template; a registry constructed without a
@@ -191,13 +200,14 @@ per pool × extension:
 | usage totals (tokens, cost) | what does it spend? |
 | votes pass / fail, agreement rate | is it decisive? |
 
-Agreement — the fraction of valid samples that sided with each check's outcome — is the
-one metric only Selta can compute, and it is the quality signal for a judge: an extension
-that votes 3–2 every time is a coin, not a verifier. `GET /pools/{pool}/stats` returns
-the counters; per-extension availability (server host running, pool host connected)
-shows in `GET /pools/{pool}/extensions`. Counters aggregate in memory and are flushed
-through the storage trait — every few seconds when dirty, and once more on graceful
-shutdown — so they survive restarts. Per-report history and analytics remain deferred
+Agreement — the fraction of valid samples that sided with each check's outcome — is a
+decisiveness and behavioral-consistency diagnostic. It is not an accuracy, calibration,
+independence, or correctness measure: correlated or systematically wrong executions may
+agree perfectly. `GET /pools/{pool}/stats` returns the counters; per-extension
+availability (server host running, pool host connected) shows in
+`GET /pools/{pool}/extensions`. Counters aggregate in memory and are flushed through the
+storage trait — every few seconds when dirty, and once more on graceful shutdown — so
+they survive restarts. Per-report history and analytics remain deferred
 ([07-plan.md](07-plan.md)).
 
 ## Server configuration

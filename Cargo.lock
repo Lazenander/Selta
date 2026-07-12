@@ -1106,7 +1106,7 @@ checksum = "94143f37725109f92c262ed2cf5e59bce7498c01bcc1502d7b9afe439a4e9f49"
 
 [[package]]
 name = "selta-cli"
-version = "0.1.0"
+version = "0.2.0"
 dependencies = [
  "anyhow",
  "clap",
@@ -1117,7 +1117,7 @@ dependencies = [
 
 [[package]]
 name = "selta-core"
-version = "0.1.0"
+version = "0.2.0"
 dependencies = [
  "async-trait",
  "futures",
@@ -1134,7 +1134,7 @@ dependencies = [
 
 [[package]]
 name = "selta-protocol"
-version = "0.1.0"
+version = "0.2.0"
 dependencies = [
  "serde",
  "serde_json",
@@ -1142,7 +1142,7 @@ dependencies = [
 
 [[package]]
 name = "seltad"
-version = "0.1.0"
+version = "0.2.0"
 dependencies = [
  "anyhow",
  "async-trait",

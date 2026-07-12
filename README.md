@@ -14,6 +14,8 @@ constraint, a compiler error, a judge's critique.
 
 That line is the entire contract. Everything on the left of the arrow is input; everything
 Selta produces is on the right; nothing else crosses the boundary.
+An opt-in cautious leaf adds an evidence summary inside the same report before projecting
+to the same three verdicts; it does not create a second executor or product boundary.
 
 ## Scope
 
@@ -64,6 +66,8 @@ Selta is a type-check layer and nothing more.
 | [docs/21-s2-conformance-plan.md](docs/21-s2-conformance-plan.md) | Non-circular S2 fixture, mechanics-profile, and independent-model execution plan |
 | [docs/22-mechanics-conformance-profile.md](docs/22-mechanics-conformance-profile.md) | Minimal acquisition, attestation, extraction, and recursive-provenance test semantics |
 | [docs/23-positive-controls-profile.md](docs/23-positive-controls-profile.md) | Checked-witness and calibrated-sequential positive-control semantics |
+| [docs/24-presence-assessment.md](docs/24-presence-assessment.md) | Minimal opt-in four-state presence assessment and cautious projection |
+| [docs/25-assessment-compatibility.md](docs/25-assessment-compatibility.md) | Revision-1/2 admission, legacy embedding, optional RPC `assess`, and rollback |
 
 ## Glossary
 
@@ -78,7 +82,7 @@ Selta is a type-check layer and nothing more.
 | Verdict | `pass`, `fail`, or `inconclusive` |
 | Delta | The difference between the given value and an acceptable one; attached to `fail` |
 | Notice | Informational annotation that does not affect the verdict (e.g. an intake repair) |
-| Sample | One execution of a non-deterministic verifier; yields one vote or one error |
+| Sample | One requested execution slot for a non-deterministic extension; legacy mode yields a vote or error, cautious mode an assessment or unavailable acquisition. Selta does not establish statistical independence |
 | Vote | A valid sample result, aggregated by a vote policy |
 | Depth | Remaining budget for recursively verifying verifier output — deltas are typed values too |
 | Pool | A per-application namespace of schemas inside `seltad` (the analog of a database) |
@@ -108,14 +112,16 @@ arrives online, with each request, through `env` — the `$env` mechanism of
 
 ## Status
 
-v0.1 is an executable, end-to-end prototype: `selta-core` (engine, builtins, combinators,
-voting, depth recursion, cache, settings, monitoring), `selta-protocol` +
+The Selta 0.1 baseline was an executable, end-to-end implementation: `selta-core`
+(engine, builtins, combinators, voting, depth recursion, cache, settings, monitoring),
+`selta-protocol` +
 `@selta/extension` (TypeScript SDK), `seltad` (sqlite-backed catalog with a file-tree
 option behind one storage trait, jobs, settings resolution with `$secret` references,
 per-pool stats persisted across restarts, websocket pool hosts), and the `selta` CLI. The
 docs/01 worked example runs over HTTP with a real compile check and a real Node judge
 host; the docs/07 M4 acceptance — reconfiguring the judge at pool scope without touching
-the schema — runs as an integration test, as does a dependency-free websocket pool host. A Lean 4 host ships in
+the schema — runs as an integration test, as does a dependency-free websocket pool host.
+A Lean 4 host ships in
 [packages/lean-host](packages/lean-host/README.md): a compiler check with typed
 structured deltas, plus a codex judge voting on whether the code reflects exactly the
 statement supplied in context. Known deviations from the design live in the deferred
@@ -124,3 +130,17 @@ H1 strict admission are implemented; safe migration from compatibility parsing i
 tracked in [docs/09-runtime-soundness.md](docs/09-runtime-soundness.md).
 Proof-grade consumers admit original source bytes through `Registry::admit_source` and
 an explicit policy. Documents originated 2026-07-04.
+
+The Selta 0.2 development/core candidate adds opt-in cautious presence assessment
+without changing the legacy path. Revision-1 admission remains the default: the
+unsuffixed `admit_source`
+methods and revision constants still select revision 1. Callers must explicitly select
+`AdmissionProfile::Selta2` through `admit_source_at` before untrusted source containing
+`"evidence": "cautious"` can carry a strict-admission claim. The compatibility
+`Node::from_value` parser may deserialize the field but confers no admission identity.
+Protocol-1 `initialize`, `verify`, `Envelope`, and `PassFail` remain unchanged; `assess`
+is an optional RPC method with a narrow legacy fallback.
+The `seltad` catalog and HTTP registration path still select revision 1; revision-2
+catalog metadata and admission selection are intentionally not promoted in this slice.
+See [docs/24-presence-assessment.md](docs/24-presence-assessment.md) and
+[docs/25-assessment-compatibility.md](docs/25-assessment-compatibility.md).

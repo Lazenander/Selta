@@ -11,17 +11,18 @@ use serde_json::{json, Value};
 
 use crate::cache::{self, Cache};
 use crate::host::{
-    Determinism, Envelope, ExtensionDecl, ExtensionHost, HostCall, PassFail, WireDelta,
+    AssessmentEnvelope, Determinism, Envelope, ExtensionDecl, ExtensionHost, HostCall, PassFail,
+    WireDelta, WireUsage,
 };
 use crate::intake::Mode;
 use crate::meta::structure_only_ok;
 use crate::monitor::{CallOutcome, Monitor};
 use crate::path::Path;
 use crate::registry::Registry;
-use crate::report::{CheckResult, Children, NodeResult, Usage};
-use crate::schema::{LeafSpec, Node, Type, VerifierSpec};
+use crate::report::{CheckResult, Children, EvidenceSummary, NodeResult, Usage};
+use crate::schema::{EvidenceProjection, LeafSpec, Node, Type, VerifierSpec};
 use crate::settings::{ResolvedSettings, SettingsResolver};
-use crate::verdict::{CheckError, Delta, DeltaKind, Notice, Verdict, VoteTally};
+use crate::verdict::{CheckError, Delta, DeltaKind, EvidenceState, Notice, Verdict, VoteTally};
 use crate::Options;
 
 /// Maximum number of nondeterministic host calls materialized and polled as
@@ -59,6 +60,59 @@ pub(crate) struct Engine<'a> {
 enum SampleVote {
     Pass,
     Fail(WireDelta),
+}
+
+enum SampleOutcome {
+    Vote(SampleVote),
+    Evidence(AssessmentEnvelope),
+}
+
+#[derive(Clone, Copy)]
+enum HostLane {
+    Verify,
+    Assess,
+}
+
+enum HostOutput {
+    Verification(Envelope),
+    Assessment(AssessmentEnvelope),
+}
+
+impl HostOutput {
+    fn usage(&self) -> Option<&WireUsage> {
+        match self {
+            Self::Verification(envelope) => envelope.usage.as_ref(),
+            Self::Assessment(envelope) => envelope.usage.as_ref(),
+        }
+    }
+
+    fn into_verification(self) -> Result<Envelope, String> {
+        match self {
+            Self::Verification(envelope) => Ok(envelope),
+            Self::Assessment(_) => Err("host returned an assessment to verify".to_string()),
+        }
+    }
+
+    fn into_assessment(self) -> Result<AssessmentEnvelope, String> {
+        match self {
+            Self::Assessment(envelope) => Ok(envelope),
+            Self::Verification(_) => Err("host returned a verification to assess".to_string()),
+        }
+    }
+}
+
+struct SampleBatch {
+    outcomes: Vec<SampleOutcome>,
+    errors: Vec<String>,
+    attempts: u32,
+    budget_shortfall: u32,
+}
+
+#[derive(Clone, Copy, PartialEq, Eq)]
+enum VerifierMode {
+    Legacy,
+    Cautious,
+    Mixed,
 }
 
 impl<'e> Engine<'e> {
@@ -387,13 +441,28 @@ impl<'e> Engine<'e> {
         'e: 'a,
     {
         Box::pin(async move {
+            let evidence_mode = match verifier_mode(spec) {
+                VerifierMode::Mixed => {
+                    return self.error_check(
+                        "evidence",
+                        path,
+                        "a verifier combinator must be wholly legacy or wholly cautious"
+                            .to_string(),
+                        0,
+                    )
+                }
+                mode => mode,
+            };
             match spec {
                 VerifierSpec::AllOf { all_of } => {
                     let mut results = Vec::new();
                     for child in all_of {
                         results.push(self.run_spec(child, value, path, depth).await);
                     }
-                    all_of_result(results)
+                    match all_of_result(results, evidence_mode == VerifierMode::Cautious) {
+                        Ok(result) => result,
+                        Err(message) => self.error_check("all_of", path, message, 0),
+                    }
                 }
                 VerifierSpec::AnyOf { any_of } => {
                     let mut results = Vec::new();
@@ -401,10 +470,16 @@ impl<'e> Engine<'e> {
                         let result = self.run_spec(child, value, path, depth).await;
                         let passed = !result.skipped && result.verdict == Verdict::Pass;
                         results.push(result);
-                        if passed {
+                        if passed && evidence_mode == VerifierMode::Legacy {
                             // any_of stops at the first pass (docs/03).
                             return CheckResult::passing("any_of");
                         }
+                    }
+                    if evidence_mode == VerifierMode::Cautious {
+                        return match evidence_any_of_result(results) {
+                            Ok(result) => result,
+                            Err(message) => self.error_check("any_of", path, message, 0),
+                        };
                     }
                     let executed: Vec<&CheckResult> =
                         results.iter().filter(|c| !c.skipped).collect();
@@ -427,6 +502,12 @@ impl<'e> Engine<'e> {
                     let inner = self.run_spec(not, value, path, depth).await;
                     if inner.skipped {
                         return CheckResult::skipped("not");
+                    }
+                    if evidence_mode == VerifierMode::Cautious {
+                        return match evidence_not_result(inner, message, path) {
+                            Ok(result) => result,
+                            Err(error) => self.error_check("not", path, error, 0),
+                        };
                     }
                     match inner.verdict {
                         Verdict::Pass => CheckResult::failing(
@@ -465,20 +546,15 @@ impl<'e> Engine<'e> {
     ) -> CheckResult {
         let config = match resolve_config(&leaf.config, self.env) {
             Ok(config) => config,
-            Err(message) => return self.error_check(&leaf.ext, path, message, 0),
+            Err(message) => return self.leaf_error(leaf, path, message, 0),
         };
         let Some((decl, host)) = self.reg.get(&leaf.ext) else {
-            return self.error_check(
-                &leaf.ext,
-                path,
-                format!("unknown extension '{}'", leaf.ext),
-                0,
-            );
+            return self.leaf_error(leaf, path, format!("unknown extension '{}'", leaf.ext), 0);
         };
         if let Some(config_schema) = &decl.config_schema {
             if !structure_only_ok(config_schema, &config) {
-                return self.error_check(
-                    &leaf.ext,
+                return self.leaf_error(
+                    leaf,
                     path,
                     format!(
                         "resolved config does not satisfy the config_schema of '{}'",
@@ -489,8 +565,8 @@ impl<'e> Engine<'e> {
             }
         }
         if let Err(message) = decl.preflight_config(&config) {
-            return self.error_check(
-                &leaf.ext,
+            return self.leaf_error(
+                leaf,
                 path,
                 format!(
                     "resolved config failed the semantic preflight of '{}': {message}",
@@ -501,14 +577,12 @@ impl<'e> Engine<'e> {
         }
         let resolved = match self.settings.resolve(&leaf.ext) {
             Ok(resolved) => resolved,
-            Err(message) => {
-                return self.error_check(&leaf.ext, path, format!("settings: {message}"), 0)
-            }
+            Err(message) => return self.leaf_error(leaf, path, format!("settings: {message}"), 0),
         };
         if let Some(settings_schema) = &decl.settings_schema {
             if !structure_only_ok(settings_schema, &resolved.value) {
-                return self.error_check(
-                    &leaf.ext,
+                return self.leaf_error(
+                    leaf,
                     path,
                     format!(
                         "resolved settings do not satisfy the settings_schema of '{}'",
@@ -554,6 +628,14 @@ impl<'e> Engine<'e> {
         path: &Path,
         depth: u32,
     ) -> CheckResult {
+        if leaf.evidence == Some(EvidenceProjection::Cautious) {
+            return self
+                .run_deterministic_assessment(
+                    leaf, decl, host, config, resolved, value, path, depth,
+                )
+                .await;
+        }
+
         let root_ctx = decl.needs.root.then_some(self.root);
         let env_ctx = decl.needs.env.then_some(self.env);
         let envelope = if decl.cacheable {
@@ -572,7 +654,7 @@ impl<'e> Engine<'e> {
                 Some(hit) => Ok(hit),
                 None => {
                     let result = self
-                        .call_host(host, decl, config, &resolved.value, value, path, depth)
+                        .call_verifier(host, decl, config, &resolved.value, value, path, depth)
                         .await;
                     if let Ok(envelope) = &result {
                         self.cache.put(key, envelope.clone()).await;
@@ -581,7 +663,7 @@ impl<'e> Engine<'e> {
                 }
             }
         } else {
-            self.call_host(host, decl, config, &resolved.value, value, path, depth)
+            self.call_verifier(host, decl, config, &resolved.value, value, path, depth)
                 .await
         };
         let envelope = match envelope {
@@ -618,8 +700,53 @@ impl<'e> Engine<'e> {
         }
     }
 
-    /// Sampling round (docs/03 §Voting): N independent executions, malformed
-    /// results rejected and resampled, quorum, then the vote policy.
+    #[allow(clippy::too_many_arguments)]
+    async fn run_deterministic_assessment(
+        self,
+        leaf: &LeafSpec,
+        decl: &ExtensionDecl,
+        host: &dyn ExtensionHost,
+        config: &Value,
+        resolved: &ResolvedSettings,
+        value: &Value,
+        path: &Path,
+        depth: u32,
+    ) -> CheckResult {
+        let envelope = match self
+            .call_assessor(host, decl, config, &resolved.value, value, path, depth)
+            .await
+        {
+            Ok(envelope) => envelope,
+            Err(message) => {
+                let mut summary = EvidenceSummary::default();
+                if let Err(overflow) = summary.record_unavailable() {
+                    return self.error_check(&leaf.ext, path, overflow.to_string(), 1);
+                }
+                let mut check = self.error_check(&leaf.ext, path, message, 1);
+                check.evidence = Some(summary);
+                return check;
+            }
+        };
+
+        match self
+            .assessment_summary(leaf, decl, envelope, path, depth)
+            .await
+        {
+            Ok(summary) => evidence_check(&leaf.ext, summary),
+            Err(message) => {
+                let mut summary = EvidenceSummary::default();
+                if let Err(overflow) = summary.record_unavailable() {
+                    return self.error_check(&leaf.ext, path, overflow.to_string(), 1);
+                }
+                let mut check = self.error_check(&leaf.ext, path, message, 1);
+                check.evidence = Some(summary);
+                check
+            }
+        }
+    }
+
+    /// One bounded sampling round. Acquisition is shared by legacy voting and
+    /// cautious evidence projection; only their folds differ.
     #[allow(clippy::too_many_arguments)]
     async fn run_sampling(
         self,
@@ -636,19 +763,62 @@ impl<'e> Engine<'e> {
         let effective_depth = sampling.depth.min(depth);
         if effective_depth == 0 {
             self.push_notice(path, format!("skipped '{}': depth exhausted", leaf.ext));
-            return CheckResult::skipped(&leaf.ext);
+            let mut check = CheckResult::skipped(&leaf.ext);
+            if leaf.evidence == Some(EvidenceProjection::Cautious) {
+                check.evidence = Some(EvidenceSummary::default());
+            }
+            return check;
         }
         let quorum = sampling.quorum();
+
+        let lane = if leaf.evidence == Some(EvidenceProjection::Cautious) {
+            HostLane::Assess
+        } else {
+            HostLane::Verify
+        };
+        let batch = self
+            .collect_samples(
+                decl,
+                host,
+                config,
+                &resolved.value,
+                value,
+                path,
+                effective_depth,
+                sampling.samples,
+                lane,
+            )
+            .await;
+
+        match lane {
+            HostLane::Verify => self.finish_vote_sampling(leaf, sampling, quorum, batch, path),
+            HostLane::Assess => self.finish_evidence_sampling(leaf, quorum, batch, path),
+        }
+    }
+
+    #[allow(clippy::too_many_arguments)]
+    async fn collect_samples(
+        self,
+        decl: &ExtensionDecl,
+        host: &dyn ExtensionHost,
+        config: &Value,
+        settings: &Value,
+        value: &Value,
+        path: &Path,
+        effective_depth: u32,
+        requested: u32,
+        lane: HostLane,
+    ) -> SampleBatch {
         // Bound futures allocation before constructing it. The shared counter
         // remains the atomic authority when sibling checks race for budget.
         let available = self.shared.samples_left.load(Ordering::Relaxed);
-        let max_attempts = sampling.samples.saturating_mul(2).min(available);
+        let max_attempts = requested.saturating_mul(2).min(available);
 
-        let mut votes_pass: u32 = 0;
-        let mut fail_wires: Vec<WireDelta> = Vec::new();
+        let mut outcomes = Vec::new();
         let mut errors: Vec<String> = Vec::new();
         let mut attempts: u32 = 0;
-        let mut pending = sampling.samples.min(max_attempts);
+        let mut pending = requested.min(max_attempts);
+        let budget_shortfall = requested - pending;
 
         while pending > 0 && attempts < max_attempts {
             let batch = pending
@@ -662,18 +832,18 @@ impl<'e> Engine<'e> {
                         decl,
                         host,
                         config,
-                        &resolved.value,
+                        settings,
                         value,
                         path,
                         effective_depth,
+                        lane,
                     )
                 })
                 .collect();
             let mut budget_exhausted = false;
             for result in join_all(futures).await {
                 match result {
-                    Ok(SampleVote::Pass) => votes_pass += 1,
-                    Ok(SampleVote::Fail(wire)) => fail_wires.push(wire),
+                    Ok(outcome) => outcomes.push(outcome),
                     Err(message) => {
                         budget_exhausted |= message.contains("sample budget exhausted");
                         errors.push(message);
@@ -686,13 +856,46 @@ impl<'e> Engine<'e> {
             }
         }
 
+        SampleBatch {
+            outcomes,
+            errors,
+            attempts,
+            budget_shortfall,
+        }
+    }
+
+    fn finish_vote_sampling(
+        self,
+        leaf: &LeafSpec,
+        sampling: crate::schema::Sampling,
+        quorum: u32,
+        batch: SampleBatch,
+        path: &Path,
+    ) -> CheckResult {
+        let mut votes_pass: u32 = 0;
+        let mut fail_wires: Vec<WireDelta> = Vec::new();
+        for outcome in batch.outcomes {
+            match outcome {
+                SampleOutcome::Vote(SampleVote::Pass) => votes_pass += 1,
+                SampleOutcome::Vote(SampleVote::Fail(wire)) => fail_wires.push(wire),
+                SampleOutcome::Evidence(_) => {
+                    return self.error_check(
+                        &leaf.ext,
+                        path,
+                        "assessment result entered the legacy vote fold".to_string(),
+                        0,
+                    )
+                }
+            }
+        }
+
         let votes_fail = fail_wires.len() as u32;
         let valid = votes_pass + votes_fail;
         let tally = VoteTally {
             pass: votes_pass,
             fail: votes_fail,
-            errors: errors.len() as u32,
-            samples: attempts,
+            errors: batch.errors.len() as u32,
+            samples: batch.attempts,
         };
         if let Some(monitor) = self.monitor {
             monitor.votes(&leaf.ext, &tally);
@@ -703,8 +906,8 @@ impl<'e> Engine<'e> {
             self.push_error(
                 path,
                 &leaf.ext,
-                format!("{message}; sample errors: {}", errors.join(" | ")),
-                errors.len() as u32,
+                format!("{message}; sample errors: {}", batch.errors.join(" | ")),
+                batch.errors.len() as u32,
             );
             let mut check = CheckResult::erroring(&leaf.ext, message);
             check.votes = Some(tally);
@@ -751,6 +954,81 @@ impl<'e> Engine<'e> {
         check
     }
 
+    fn finish_evidence_sampling(
+        self,
+        leaf: &LeafSpec,
+        quorum: u32,
+        batch: SampleBatch,
+        path: &Path,
+    ) -> CheckResult {
+        let valid = batch.outcomes.len() as u32;
+        let mut summary = EvidenceSummary::default();
+        let attempted_failures = match u32::try_from(batch.errors.len()) {
+            Ok(count) => count,
+            Err(_) => {
+                return self.error_check(
+                    &leaf.ext,
+                    path,
+                    "evidence unavailable counter overflow".to_string(),
+                    0,
+                )
+            }
+        };
+        let unavailable = match attempted_failures.checked_add(batch.budget_shortfall) {
+            Some(count) => count,
+            None => {
+                return self.error_check(
+                    &leaf.ext,
+                    path,
+                    "evidence unavailable counter overflow".to_string(),
+                    0,
+                )
+            }
+        };
+        if let Err(message) = summary.record_unavailable_n(unavailable) {
+            return self.error_check(&leaf.ext, path, message.to_string(), 0);
+        }
+        for outcome in batch.outcomes {
+            let SampleOutcome::Evidence(envelope) = outcome else {
+                return self.error_check(
+                    &leaf.ext,
+                    path,
+                    "legacy vote entered the evidence fold".to_string(),
+                    0,
+                );
+            };
+            let state = envelope.state();
+            let refutation = envelope
+                .refute
+                .map(|wire| wire_to_delta(wire, path, DeltaKind::Semantic, &leaf.ext));
+            if let Err(message) = summary.record(state, refutation) {
+                return self.error_check(&leaf.ext, path, message.to_string(), 0);
+            }
+        }
+
+        if valid < quorum {
+            let message = format!("quorum not met: {valid} valid assessments of {quorum} needed");
+            let mut details = batch.errors;
+            if batch.budget_shortfall > 0 {
+                details.push(format!(
+                    "sample budget exhausted before {} requested assessment(s) could be scheduled",
+                    batch.budget_shortfall
+                ));
+            }
+            self.push_error(
+                path,
+                &leaf.ext,
+                format!("{message}; sample errors: {}", details.join(" | ")),
+                unavailable,
+            );
+            let mut check = CheckResult::erroring(&leaf.ext, message);
+            check.evidence = Some(summary);
+            return check;
+        }
+
+        evidence_check(&leaf.ext, summary)
+    }
+
     #[allow(clippy::too_many_arguments)]
     async fn sample_once(
         self,
@@ -761,7 +1039,8 @@ impl<'e> Engine<'e> {
         value: &Value,
         path: &Path,
         effective_depth: u32,
-    ) -> Result<SampleVote, String> {
+        lane: HostLane,
+    ) -> Result<SampleOutcome, String> {
         let taken = self
             .shared
             .samples_left
@@ -770,25 +1049,43 @@ impl<'e> Engine<'e> {
         if !taken {
             return Err("sample budget exhausted".to_string());
         }
-        let envelope = self
-            .call_host(host, decl, config, settings, value, path, effective_depth)
-            .await?;
-        match envelope.verdict {
-            PassFail::Pass => Ok(SampleVote::Pass),
-            PassFail::Fail => {
-                let wire = envelope
-                    .delta
-                    .ok_or_else(|| "fail verdict without a delta".to_string())?;
-                self.validate_delta(decl, &wire, effective_depth.saturating_sub(1))
-                    .await
-                    .map_err(|e| format!("delta failed its schema: {e}"))?;
-                Ok(SampleVote::Fail(wire))
+        match lane {
+            HostLane::Verify => {
+                let envelope = self
+                    .call_verifier(host, decl, config, settings, value, path, effective_depth)
+                    .await?;
+                match envelope.verdict {
+                    PassFail::Pass => Ok(SampleOutcome::Vote(SampleVote::Pass)),
+                    PassFail::Fail => {
+                        let wire = envelope
+                            .delta
+                            .ok_or_else(|| "fail verdict without a delta".to_string())?;
+                        self.validate_delta(decl, &wire, effective_depth.saturating_sub(1))
+                            .await
+                            .map_err(|e| format!("delta failed its schema: {e}"))?;
+                        Ok(SampleOutcome::Vote(SampleVote::Fail(wire)))
+                    }
+                }
+            }
+            HostLane::Assess => {
+                let envelope = self
+                    .call_assessor(host, decl, config, settings, value, path, effective_depth)
+                    .await?;
+                if let Some(wire) = &envelope.refute {
+                    if wire.message.trim().is_empty() {
+                        return Err("assessment refutation message must not be empty".to_string());
+                    }
+                    self.validate_delta(decl, wire, effective_depth.saturating_sub(1))
+                        .await
+                        .map_err(|e| format!("refutation failed its schema: {e}"))?;
+                }
+                Ok(SampleOutcome::Evidence(envelope))
             }
         }
     }
 
     #[allow(clippy::too_many_arguments)]
-    async fn call_host(
+    async fn call_verifier(
         self,
         host: &dyn ExtensionHost,
         decl: &ExtensionDecl,
@@ -798,6 +1095,57 @@ impl<'e> Engine<'e> {
         path: &Path,
         depth: u32,
     ) -> Result<Envelope, String> {
+        self.call_extension(
+            host,
+            decl,
+            config,
+            settings,
+            value,
+            path,
+            depth,
+            HostLane::Verify,
+        )
+        .await?
+        .into_verification()
+    }
+
+    #[allow(clippy::too_many_arguments)]
+    async fn call_assessor(
+        self,
+        host: &dyn ExtensionHost,
+        decl: &ExtensionDecl,
+        config: &Value,
+        settings: &Value,
+        value: &Value,
+        path: &Path,
+        depth: u32,
+    ) -> Result<AssessmentEnvelope, String> {
+        self.call_extension(
+            host,
+            decl,
+            config,
+            settings,
+            value,
+            path,
+            depth,
+            HostLane::Assess,
+        )
+        .await?
+        .into_assessment()
+    }
+
+    #[allow(clippy::too_many_arguments)]
+    async fn call_extension(
+        self,
+        host: &dyn ExtensionHost,
+        decl: &ExtensionDecl,
+        config: &Value,
+        settings: &Value,
+        value: &Value,
+        path: &Path,
+        depth: u32,
+        lane: HostLane,
+    ) -> Result<HostOutput, String> {
         let deadline_ms = self.remaining_ms();
         if deadline_ms == Some(0) {
             return Err("deadline exceeded".to_string());
@@ -816,12 +1164,20 @@ impl<'e> Engine<'e> {
         };
         let start = Instant::now();
         let mut result = match deadline_ms {
-            Some(ms) => tokio::time::timeout(Duration::from_millis(ms), host.verify(call))
-                .await
-                .unwrap_or_else(|_| Err("deadline exceeded".to_string())),
-            None => host.verify(call).await,
+            Some(ms) => tokio::time::timeout(Duration::from_millis(ms), async {
+                match lane {
+                    HostLane::Verify => host.verify(call).await.map(HostOutput::Verification),
+                    HostLane::Assess => host.assess(call).await.map(HostOutput::Assessment),
+                }
+            })
+            .await
+            .unwrap_or_else(|_| Err("deadline exceeded".to_string())),
+            None => match lane {
+                HostLane::Verify => host.verify(call).await.map(HostOutput::Verification),
+                HostLane::Assess => host.assess(call).await.map(HostOutput::Assessment),
+            },
         };
-        if let Ok(envelope) = &result {
+        if let Ok(output) = &result {
             let accounting = (|| {
                 let mut usage = self.shared.usage.lock().unwrap();
                 let mut next = *usage;
@@ -829,7 +1185,7 @@ impl<'e> Engine<'e> {
                     .samples
                     .checked_add(1)
                     .ok_or("host sample usage overflow")?;
-                if let Some(wire) = &envelope.usage {
+                if let Some(wire) = output.usage() {
                     next.try_add_wire(wire)?;
                 }
                 *usage = next;
@@ -847,7 +1203,7 @@ impl<'e> Engine<'e> {
                 }
                 Err(_) => CallOutcome::Error,
             };
-            let usage = result.as_ref().ok().and_then(|e| e.usage.as_ref());
+            let usage = result.as_ref().ok().and_then(HostOutput::usage);
             monitor.call(
                 &decl.name,
                 outcome,
@@ -856,6 +1212,32 @@ impl<'e> Engine<'e> {
             );
         }
         result
+    }
+
+    async fn assessment_summary(
+        self,
+        leaf: &LeafSpec,
+        decl: &ExtensionDecl,
+        envelope: AssessmentEnvelope,
+        path: &Path,
+        depth: u32,
+    ) -> Result<EvidenceSummary, String> {
+        if let Some(wire) = &envelope.refute {
+            if wire.message.trim().is_empty() {
+                return Err("assessment refutation message must not be empty".to_string());
+            }
+            self.validate_delta(decl, wire, depth.saturating_sub(1))
+                .await
+                .map_err(|error| format!("refutation failed its schema: {error}"))?;
+        }
+
+        let state = envelope.state();
+        let refutation = envelope
+            .refute
+            .map(|wire| wire_to_delta(wire, path, DeltaKind::Semantic, &leaf.ext));
+        let mut summary = EvidenceSummary::default();
+        summary.record(state, refutation).map_err(str::to_string)?;
+        Ok(summary)
     }
 
     /// The recursive step (docs/03 §3): a delta is a typed value, verified
@@ -969,13 +1351,62 @@ impl<'e> Engine<'e> {
         self.push_error(path, source, message.clone(), samples_lost);
         CheckResult::erroring(source, message)
     }
+
+    fn leaf_error(
+        self,
+        leaf: &LeafSpec,
+        path: &Path,
+        message: String,
+        samples_lost: u32,
+    ) -> CheckResult {
+        let mut check = self.error_check(&leaf.ext, path, message, samples_lost);
+        if leaf.evidence == Some(EvidenceProjection::Cautious) {
+            check.evidence = Some(EvidenceSummary::default());
+        }
+        check
+    }
 }
 
-fn all_of_result(results: Vec<CheckResult>) -> CheckResult {
-    if !results.is_empty() && results.iter().all(|c| c.skipped) {
-        return CheckResult::skipped("all_of");
+fn verifier_mode(spec: &VerifierSpec) -> VerifierMode {
+    match spec {
+        VerifierSpec::Leaf(leaf) => {
+            if leaf.evidence == Some(EvidenceProjection::Cautious) {
+                VerifierMode::Cautious
+            } else {
+                VerifierMode::Legacy
+            }
+        }
+        VerifierSpec::Not { not, .. } => verifier_mode(not),
+        VerifierSpec::AllOf { all_of } => verifier_children_mode(all_of),
+        VerifierSpec::AnyOf { any_of } => verifier_children_mode(any_of),
     }
-    let verdict = fold_spec_checks(&results);
+}
+
+fn verifier_children_mode(children: &[VerifierSpec]) -> VerifierMode {
+    let mut mode = None;
+    for child in children {
+        let child_mode = verifier_mode(child);
+        if child_mode == VerifierMode::Mixed {
+            return VerifierMode::Mixed;
+        }
+        match mode {
+            None => mode = Some(child_mode),
+            Some(current) if current == child_mode => {}
+            Some(_) => return VerifierMode::Mixed,
+        }
+    }
+    mode.unwrap_or(VerifierMode::Legacy)
+}
+
+fn all_of_result(results: Vec<CheckResult>, cautious: bool) -> Result<CheckResult, String> {
+    if !results.is_empty() && results.iter().all(|c| c.skipped) {
+        let mut check = CheckResult::skipped("all_of");
+        if cautious {
+            check.evidence = Some(EvidenceSummary::default());
+        }
+        return Ok(check);
+    }
+    let mut verdict = fold_spec_checks(&results);
     let mut deltas = Vec::new();
     let mut error = None;
     for result in &results {
@@ -986,7 +1417,30 @@ fn all_of_result(results: Vec<CheckResult>) -> CheckResult {
             error = result.error.clone();
         }
     }
-    CheckResult {
+    let evidence = if cautious {
+        let mut summary = checked_evidence_counts(&results)?;
+        summary.state = conjoin_evidence_states(&results)?;
+        summary.refutations = completed_refutations(&results);
+        verdict = summary
+            .state
+            .map(EvidenceState::project)
+            .unwrap_or(Verdict::Inconclusive);
+        if !summary.state.is_some_and(EvidenceState::refutes) {
+            summary.refutations.clear();
+        }
+        if verdict == Verdict::Fail && !summary.refutations.is_empty() {
+            deltas = summary.refutations.clone();
+        } else if verdict != Verdict::Fail {
+            deltas.clear();
+        }
+        Some(summary)
+    } else {
+        None
+    };
+    if cautious && verdict != Verdict::Inconclusive {
+        error = None;
+    }
+    Ok(CheckResult {
         source: "all_of".to_string(),
         verdict,
         deltas,
@@ -994,7 +1448,191 @@ fn all_of_result(results: Vec<CheckResult>) -> CheckResult {
         skipped: false,
         variant: None,
         error,
+        evidence,
+    })
+}
+
+fn evidence_any_of_result(results: Vec<CheckResult>) -> Result<CheckResult, String> {
+    if !results.is_empty() && results.iter().all(|check| check.skipped) {
+        return Ok(CheckResult::skipped("any_of").with_evidence(EvidenceSummary::default()));
     }
+    let executed: Vec<&CheckResult> = results.iter().filter(|check| !check.skipped).collect();
+    if executed.is_empty() {
+        return Ok(CheckResult::skipped("any_of").with_evidence(EvidenceSummary::default()));
+    }
+
+    let mut summary = checked_evidence_counts(&results)?;
+    summary.state = disjoin_evidence_states(&results)?;
+    summary.refutations = completed_refutations(&results);
+    let verdict = summary
+        .state
+        .map(EvidenceState::project)
+        .unwrap_or(Verdict::Inconclusive);
+    if !summary.state.is_some_and(EvidenceState::refutes) {
+        summary.refutations.clear();
+    }
+
+    let mut deltas = Vec::new();
+    if verdict == Verdict::Fail {
+        if summary.refutations.is_empty() {
+            if let Some(best) = executed.iter().min_by_key(|check| check.deltas.len()) {
+                deltas = best.deltas.clone();
+            }
+        } else {
+            deltas = summary.refutations.clone();
+        }
+    }
+    let error = (verdict == Verdict::Inconclusive).then(|| {
+        executed
+            .iter()
+            .find(|check| check.verdict == Verdict::Inconclusive)
+            .and_then(|check| check.error.clone())
+    });
+    Ok(CheckResult {
+        source: "any_of".to_string(),
+        verdict,
+        deltas,
+        votes: None,
+        skipped: false,
+        variant: None,
+        error: error.flatten(),
+        evidence: Some(summary),
+    })
+}
+
+fn evidence_not_result(
+    inner: CheckResult,
+    message: &str,
+    path: &Path,
+) -> Result<CheckResult, String> {
+    let mut summary = inner
+        .evidence
+        .clone()
+        .ok_or_else(|| "cautious not child omitted its evidence summary".to_string())?;
+    let child_state = if inner.error.is_none() && !inner.skipped {
+        summary.state
+    } else {
+        None
+    };
+    let outward_refutes = child_state.is_some_and(EvidenceState::supports);
+    summary.state = child_state.map(EvidenceState::negate);
+    summary.refutations.clear();
+    if outward_refutes {
+        summary.refutations.push(Delta {
+            path: path.to_string(),
+            kind: DeltaKind::Semantic,
+            message: message.to_string(),
+            expected: None,
+            actual: None,
+            source: "not".to_string(),
+            data: None,
+            votes: None,
+        });
+    }
+
+    let verdict = summary
+        .state
+        .map(EvidenceState::project)
+        .unwrap_or(Verdict::Inconclusive);
+    let deltas = if verdict == Verdict::Fail {
+        summary.refutations.clone()
+    } else {
+        Vec::new()
+    };
+    Ok(CheckResult {
+        source: "not".to_string(),
+        verdict,
+        deltas,
+        votes: None,
+        skipped: false,
+        variant: None,
+        error: if verdict == Verdict::Inconclusive {
+            inner.error
+        } else {
+            None
+        },
+        evidence: Some(summary),
+    })
+}
+
+fn checked_evidence_counts(results: &[CheckResult]) -> Result<EvidenceSummary, String> {
+    let mut combined = EvidenceSummary::default();
+    for result in results {
+        match &result.evidence {
+            Some(summary) => combined.checked_join(summary).map_err(str::to_string)?,
+            None if result.skipped => {}
+            None => return Err("cautious child omitted its evidence summary".to_string()),
+        }
+    }
+    Ok(combined)
+}
+
+fn completed_refutations(results: &[CheckResult]) -> Vec<Delta> {
+    let mut refutations = Vec::new();
+    for summary in results
+        .iter()
+        .filter(|result| result.error.is_none() && !result.skipped)
+        .filter_map(|result| result.evidence.as_ref())
+    {
+        for delta in &summary.refutations {
+            if !refutations.contains(delta) {
+                refutations.push(delta.clone());
+            }
+        }
+    }
+    refutations
+}
+
+fn conjoin_evidence_states(results: &[CheckResult]) -> Result<Option<EvidenceState>, String> {
+    fold_evidence_states(results, EvidenceState::SupportOnly, EvidenceState::conjoin)
+}
+
+fn disjoin_evidence_states(results: &[CheckResult]) -> Result<Option<EvidenceState>, String> {
+    fold_evidence_states(results, EvidenceState::RefuteOnly, EvidenceState::disjoin)
+}
+
+fn fold_evidence_states(
+    results: &[CheckResult],
+    identity: EvidenceState,
+    operation: fn(EvidenceState, EvidenceState) -> EvidenceState,
+) -> Result<Option<EvidenceState>, String> {
+    let mut any_completed = false;
+    let mut state = identity;
+    for result in results {
+        match &result.evidence {
+            Some(summary) => {
+                let usable = result.error.is_none() && !result.skipped;
+                any_completed |= usable && summary.state.is_some();
+                state = operation(
+                    state,
+                    if usable {
+                        summary.state.unwrap_or(EvidenceState::Neither)
+                    } else {
+                        EvidenceState::Neither
+                    },
+                );
+            }
+            None if result.skipped => {
+                state = operation(state, EvidenceState::Neither);
+            }
+            None => return Err("cautious child omitted its evidence summary".to_string()),
+        }
+    }
+    Ok(any_completed.then_some(state))
+}
+
+fn evidence_check(source: &str, summary: EvidenceSummary) -> CheckResult {
+    let verdict = summary
+        .state
+        .map(EvidenceState::project)
+        .unwrap_or(Verdict::Inconclusive);
+    let mut check = match verdict {
+        Verdict::Pass => CheckResult::passing(source),
+        Verdict::Fail => CheckResult::failing(source, summary.refutations.clone()),
+        Verdict::Inconclusive => CheckResult::inconclusive(source),
+    };
+    check.evidence = Some(summary);
+    check
 }
 
 /// Skipped checks are ignored unless every check was skipped (docs/03 §3).

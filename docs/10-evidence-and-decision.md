@@ -57,7 +57,7 @@ conclusion:
 
 ```text
 declared acquisition plan
-    -> channel-attested attempt trace with scoped completeness claim
+    -> attempt trace with scoped accounting attestation
     -> typed evidence derivation graph
     -> interpretation under trust base T and assumptions A
     -> conclusion projection P
@@ -73,9 +73,9 @@ interpret(graph, T, A, interpreter_revision) -> EpistemicState
 conclude(EpistemicState, projection_revision) -> ConclusionSet
 ```
 
-The evidence graph is intended to be a free, information-preserving syntax
-before a quotient is chosen; S2 of the evaluation plan must make that statement
-formal or weaken it. Boolean truth, K3, provenance semirings, bilattices,
+The evidence graph is intended to be a free, information-preserving syntax.
+Candidate 1 uses exact content identity and no alias quotient. Boolean truth,
+K3, provenance semirings, bilattices,
 probabilities, credal bounds, and reliability models are candidate
 interpretations or projections over it. None is silently the universal evidence
 domain. Cost and trust remain bound inputs rather than truth values.
@@ -91,19 +91,20 @@ A versioned acquisition manifest defines how observations may be requested and
 selected. It binds the selection frame, source and prompt/configuration
 revisions, permitted context, planned budget, adaptive policy, censoring and
 inclusion rules, and stopping rule. The resulting immutable trace records every
-attempt in order or causal partial order: successes, malformed results,
+declared attempt in order or causal partial order: successes, malformed results,
 timeouts, refusals, cancellations, and budget exhaustion.
 
 An evidence graph is not observationally complete merely because its internal
-provenance is complete. Each atom must point to an attempt, and the trace must
-make omitted or post-selected observations detectable relative to an admitted,
-exclusive or externally attestable acquisition channel. Precommitment to one
-plan cannot reveal secret parallel queries, and a trace supplied by an
-untrusted producer cannot prove its own completeness. The trace therefore
-carries a scoped completeness claim rather than claiming universal
-completeness. Secret payloads may be represented by access-controlled
-commitments, but privacy cannot be achieved by silently deleting attempt
-lineage; low-entropy payload hashes can themselves leak information.
+provenance is complete. Each atom must point to a recorded attempt. Detecting
+omitted or post-selected observations additionally requires an admitted
+exclusive channel or external accounting mechanism whose exact promise is
+stated; a manifest alone is insufficient. Precommitment to one plan cannot
+reveal secret parallel queries, and a trace supplied by an untrusted producer
+cannot prove its own completeness. The trace may therefore carry a scoped
+accounting attestation without claiming that authentication proves trace or
+universal completeness. Secret payloads may use access-controlled commitments,
+but privacy cannot be achieved by silently deleting attempt lineage;
+low-entropy payload hashes can themselves leak information.
 
 ### Claim
 

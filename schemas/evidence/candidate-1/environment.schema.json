@@ -1,0 +1,181 @@
+{
+  "type": "object",
+  "fields": {
+    "revision": {
+      "type": "str",
+      "verify": [{ "ext": "one_of", "config": { "values": ["selta.evidence.environment/candidate-1"] } }]
+    },
+    "id": {
+      "type": "str",
+      "verify": [{ "ext": "regex", "config": { "pattern": "\\Asha256:[0-9a-f]{64}\\z" } }]
+    },
+    "language_source": {
+      "type": "str",
+      "verify": [{ "ext": "regex", "config": { "pattern": "\\Asha256:[0-9a-f]{64}\\z" } }]
+    },
+    "semantics_source": {
+      "type": "str",
+      "verify": [{ "ext": "regex", "config": { "pattern": "\\Asha256:[0-9a-f]{64}\\z" } }]
+    },
+    "error_catalog_source": {
+      "type": "str",
+      "verify": [{ "ext": "regex", "config": { "pattern": "\\Asha256:[0-9a-f]{64}\\z" } }]
+    },
+    "evaluation_profiles": {
+      "type": "array",
+      "len": { "min": 1 },
+      "item": {
+        "type": "object",
+        "fields": {
+          "id": {
+            "type": "str",
+            "verify": [{ "ext": "regex", "config": { "pattern": "\\Asha256:[0-9a-f]{64}\\z" } }]
+          },
+          "raw_value_parser": {
+            "type": "str",
+            "verify": [{ "ext": "one_of", "config": { "values": ["strict_duplicate_safe"] } }]
+          },
+          "mode": {
+            "type": "str",
+            "verify": [{ "ext": "one_of", "config": { "values": ["strict"] } }]
+          },
+          "fail_fast": {
+            "type": "bool",
+            "verify": [{ "ext": "one_of", "config": { "values": [false] } }]
+          },
+          "max_depth": {
+            "type": "int",
+            "verify": [{ "ext": "one_of", "config": { "values": [1] } }]
+          },
+          "max_samples": {
+            "type": "int",
+            "verify": [{ "ext": "one_of", "config": { "values": [1] } }]
+          },
+          "extensions": {
+            "type": "array",
+            "item": {
+              "type": "object",
+              "fields": {
+                "name": {
+                  "type": "str",
+                  "verify": [{ "ext": "regex", "config": { "pattern": "\\A[a-z][a-z0-9_]*\\z" } }]
+                },
+                "semantic_revision": {
+                  "type": "str",
+                  "verify": [{ "ext": "non_empty" }]
+                },
+                "accepted_input": {
+                  "type": "array",
+                  "len": { "min": 1 },
+                  "item": {
+                    "type": "str",
+                    "verify": [{
+                      "ext": "one_of",
+                      "config": {
+                        "values": ["null", "bool", "int", "float", "str", "object", "array"]
+                      }
+                    }]
+                  }
+                },
+                "config_schema_source": {
+                  "type": "str",
+                  "verify": [{ "ext": "regex", "config": { "pattern": "\\Asha256:[0-9a-f]{64}\\z" } }]
+                },
+                "determinism": {
+                  "type": "str",
+                  "verify": [{ "ext": "one_of", "config": { "values": ["deterministic"] } }]
+                },
+                "effect": {
+                  "type": "str",
+                  "verify": [{ "ext": "one_of", "config": { "values": ["pure"] } }]
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "contracts": {
+      "type": "array",
+      "len": { "min": 1 },
+      "item": {
+        "type": "object",
+        "fields": {
+          "id": {
+            "type": "str",
+            "verify": [{ "ext": "regex", "config": { "pattern": "\\Asha256:[0-9a-f]{64}\\z" } }]
+          },
+          "schema_source": {
+            "type": "str",
+            "verify": [{ "ext": "regex", "config": { "pattern": "\\Asha256:[0-9a-f]{64}\\z" } }]
+          },
+          "schema_language": {
+            "type": "str",
+            "verify": [{ "ext": "one_of", "config": { "values": ["selta.schema-language/1"] } }]
+          },
+          "evaluation_profile": {
+            "type": "str",
+            "verify": [{ "ext": "regex", "config": { "pattern": "\\Asha256:[0-9a-f]{64}\\z" } }]
+          }
+        }
+      }
+    },
+    "semantics": {
+      "type": "array",
+      "len": { "min": 1 },
+      "item": {
+        "type": "object",
+        "fields": {
+          "id": {
+            "type": "str",
+            "verify": [{ "ext": "regex", "config": { "pattern": "\\Asha256:[0-9a-f]{64}\\z" } }]
+          },
+          "specification_source": {
+            "type": "str",
+            "verify": [{ "ext": "regex", "config": { "pattern": "\\Asha256:[0-9a-f]{64}\\z" } }]
+          },
+          "kind": {
+            "type": "str",
+            "verify": [{
+              "ext": "one_of",
+              "config": {
+                "values": [
+                  "claim_theory",
+                  "schedule",
+                  "selection",
+                  "stopping",
+                  "attestation",
+                  "extractor",
+                  "rule",
+                  "interpreter",
+                  "projection"
+                ]
+              }
+            }]
+          },
+          "parameter_contract": {
+            "type": "str",
+            "verify": [{ "ext": "regex", "config": { "pattern": "\\Asha256:[0-9a-f]{64}\\z" } }]
+          },
+          "input_contract": {
+            "type": "str",
+            "verify": [{ "ext": "regex", "config": { "pattern": "\\Asha256:[0-9a-f]{64}\\z" } }]
+          },
+          "output_contract": {
+            "type": "str",
+            "verify": [{ "ext": "regex", "config": { "pattern": "\\Asha256:[0-9a-f]{64}\\z" } }]
+          },
+          "premise_order": {
+            "type": "str",
+            "required": false,
+            "verify": [{ "ext": "one_of", "config": { "values": ["sequence", "set"] } }]
+          },
+          "execution_class": {
+            "type": "str",
+            "verify": [{ "ext": "one_of", "config": { "values": ["builtin_total"] } }]
+          }
+        }
+      }
+    }
+  }
+}

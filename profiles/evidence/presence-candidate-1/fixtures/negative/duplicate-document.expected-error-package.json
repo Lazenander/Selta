@@ -1,0 +1,41 @@
+{
+  "language": "selta.evidence.package/candidate-1",
+  "environment": "sha256:6cdcb1b5d26f2b713a4fed5dcc5f8f6306895cacb4d733d4eb356eff61017225",
+  "documents": [
+    {
+      "contract": "sha256:86ed6b6f38c1b1a1d6bc5f09e2997a0df9e0f1e8554624372031034f17ebf7fb",
+      "digest": "sha256:46198779a43c2a7ff4a563c444972d5e3c41f69ad7dfae27cb4a4e15fc5d6a48",
+      "value": {
+        "revision": "selta.evidence.outcome/candidate-1",
+        "status": "error",
+        "environment": "sha256:6cdcb1b5d26f2b713a4fed5dcc5f8f6306895cacb4d733d4eb356eff61017225",
+        "errors": [
+          {
+            "phase": "identity",
+            "code": "identity.duplicate",
+            "path": "/input/documents",
+            "message": "canonical set contains a duplicate identity"
+          }
+        ],
+        "executions": [],
+        "resources": {
+          "documents": 11,
+          "total_document_bytes": 5830,
+          "attempts_total": 0,
+          "graph_nodes": 0,
+          "graph_edges": 0,
+          "max_fan_in_observed": 0,
+          "graph_depth": 0,
+          "semantic_calls": 0,
+          "semantic_fuel": 0,
+          "state_bytes": 0,
+          "conclusion_labels_total": 0
+        }
+      }
+    }
+  ],
+  "root": {
+    "$ref": "sha256:46198779a43c2a7ff4a563c444972d5e3c41f69ad7dfae27cb4a4e15fc5d6a48",
+    "contract": "sha256:86ed6b6f38c1b1a1d6bc5f09e2997a0df9e0f1e8554624372031034f17ebf7fb"
+  }
+}

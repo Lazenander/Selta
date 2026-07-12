@@ -54,6 +54,13 @@ Selta is a type-check layer and nothing more.
 | [docs/11-compatibility-and-versioning.md](docs/11-compatibility-and-versioning.md) | Frozen 0.1 boundary and compatibility gates for epistemic research |
 | [docs/12-evidence-evaluation-plan.md](docs/12-evidence-evaluation-plan.md) | Gated theory, DSL, falsification, evaluation, and migration plan |
 | [docs/13-evidence-research-ledger.md](docs/13-evidence-research-ledger.md) | Primary research results, transfer constraints, and limits |
+| [docs/14-terms-and-counterexamples.md](docs/14-terms-and-counterexamples.md) | Precise S1 vocabulary, negative countermodels, and positive controls |
+| [docs/15-evidence-language.md](docs/15-evidence-language.md) | Normative candidate package, evidence calculus, and `assess` interface |
+| [docs/16-evidence-semantics.md](docs/16-evidence-semantics.md) | Canonical identity, admission judgments, reference profiles, and laws |
+| [docs/17-legacy-and-conformance.md](docs/17-legacy-and-conformance.md) | Non-duplicating 0.1 bridge, trace honesty, and conformance layers |
+| [docs/18-platform-boundaries.md](docs/18-platform-boundaries.md) | OS-neutral core rules, current portability gaps, and future adapter contracts |
+| [docs/19-presence-reference-profile.md](docs/19-presence-reference-profile.md) | Exact minimal presence semantics, dependency closure, and profile corpus |
+| [docs/20-evidence-error-catalog.md](docs/20-evidence-error-catalog.md) | Complete candidate error codes, fixed messages, ordering, and pointers |
 
 ## Glossary
 

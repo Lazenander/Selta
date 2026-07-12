@@ -1,0 +1,7 @@
+{
+  "type": "object",
+  "fields": {
+    "min": { "type": "int", "required": false },
+    "max": { "type": "int", "required": false }
+  }
+}

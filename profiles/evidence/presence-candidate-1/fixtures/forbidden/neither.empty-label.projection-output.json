@@ -1,0 +1,11 @@
+{
+  "conclusions": [
+    {
+      "claim": {
+        "$ref": "sha256:7bfb4ef573349711620effe363c9d4881eb1df277c92764fae8fc6625e723e32",
+        "contract": "sha256:751cc09329f4a485fce9683a29ea5432786cf22b43df9cfd4b3900a326594239"
+      },
+      "labels": []
+    }
+  ]
+}

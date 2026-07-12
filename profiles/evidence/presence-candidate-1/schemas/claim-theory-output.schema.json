@@ -1,0 +1,26 @@
+{
+  "type": "object",
+  "fields": {
+    "subject": {
+      "type": "object",
+      "fields": {
+        "$ref": { "type": "str", "verify": [{ "ext": "regex", "config": { "pattern": "\\Asha256:[0-9a-f]{64}\\z" } }] },
+        "contract": { "type": "str", "verify": [{ "ext": "regex", "config": { "pattern": "\\Asha256:[0-9a-f]{64}\\z" } }] }
+      }
+    },
+    "proposition": {
+      "type": "object",
+      "fields": {
+        "$ref": { "type": "str", "verify": [{ "ext": "regex", "config": { "pattern": "\\Asha256:[0-9a-f]{64}\\z" } }] },
+        "contract": { "type": "str", "verify": [{ "ext": "regex", "config": { "pattern": "\\Asha256:[0-9a-f]{64}\\z" } }] }
+      }
+    },
+    "boundary": {
+      "type": "object",
+      "fields": {
+        "$ref": { "type": "str", "verify": [{ "ext": "regex", "config": { "pattern": "\\Asha256:[0-9a-f]{64}\\z" } }] },
+        "contract": { "type": "str", "verify": [{ "ext": "regex", "config": { "pattern": "\\Asha256:[0-9a-f]{64}\\z" } }] }
+      }
+    }
+  }
+}

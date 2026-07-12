@@ -1,8 +1,8 @@
 # 12 — Evidence research and evaluation plan
 
-> **Status: fork-ready plan, not an implementation commitment.** This track
-> may study a future evidence interface, but Selta 0.1 remains authoritative.
-> Stages are gated: completing one stage does not authorize the next.
+> **Status: active gated research plan; S0 and S1 complete, S2 candidate under
+> review.** Selta 0.1 remains authoritative. Completing one stage does not
+> authorize the next, and no candidate interface is stable.
 
 ## Objective
 
@@ -94,11 +94,10 @@ must define:
 - canonical claim identity and polarity;
 - an acquisition manifest binding selection frame, attempted sources,
   adaptive policy, censoring and inclusion rules, planned budget, stopping
-  rule, and the exclusive or attestable acquisition channel whose scope is
-  claimed complete;
-- a channel-attested attempt trace with a scoped completeness claim that
-  preserves successes, malformed results, refusals, timeouts, cancellations,
-  and budget exhaustion;
+  rule, channel declaration, and any separately scoped accounting assertion;
+- an attempt trace with a scoped accounting attestation that preserves
+  successes, malformed results, refusals, timeouts, cancellations, and budget
+  exhaustion without claiming the attestation proves completeness;
 - evidence atoms, typed payloads, source revision, observation lineage, and
   permitted context projection;
 - content-addressed derivations with named rules and recoverable premises;
@@ -107,8 +106,8 @@ must define:
 - a replayable conclusion basis binding all relevant digests; and
 - bounded, deterministic validation and interpretation failure behavior.
 
-The specification must also define the claim language and incompatibility or
-negation relation, graph typing and inference judgments, an
+The specification must also define the claim language and canonical equality,
+any profile-specific incompatibility or negation relation, graph typing and inference judgments, an
 evidence-information preorder, conclusion universe, meanings of singleton,
 non-singleton, and empty conclusion sets, and the preservation obligations of
 interpreters and projections. Epistemic conclusions and application actions
@@ -120,9 +119,8 @@ claim, and conflicting evidence. It must not encode confidence as an
 unexplained scalar.
 
 Candidate laws are tested algebraically and with generated finite graphs:
-provenance preservation, replay, formal invariance under duplicate, alias,
-reorder, and relabel transformations admitted by a versioned lineage-equivalence
-relation, no inferred independence, conflict and negation preservation,
+provenance preservation, replay, exact duplicate rejection, canonical set
+ordering, no inferred independence, conflict and polarity preservation,
 polarity symmetry, explicit coercion, operational separation, acquisition
 accountability, bounded evaluation, and legacy conservativity. Paraphrase
 resistance remains an empirical test because the graph calculus cannot assume a
@@ -160,8 +158,8 @@ ordinary Rust tests as proofs.
   tests;
 - privacy review covers leakage through content hashes, source IDs, lineage,
   context commitments, and attempt timing;
-- trust expiry, revocation, and supersession distinguish historical replay from
-  re-evaluation under a new basis; and
+- caller-pinned immutable assessment-basis references distinguish historical
+  replay from re-evaluation under a new basis; and
 - the stable workspace suite is unchanged.
 
 ### S4 — Run falsifying case studies
@@ -289,18 +287,18 @@ Any row falsifies promotion. The response is to repair the theory and repeat
 the held-out test, narrow the advertised domain, or stop the feature. It is not
 to waive the property after observing the failure.
 
-## Decisions deliberately deferred
+## Questions deliberately deferred beyond candidate 1
 
-- the exact evidence algebra and its minimal combinators;
-- whether claim negation is primitive or represented by incompatible claims;
-- the privacy-preserving form of source and lineage identity;
-- the acquisition language for adaptive policies, censoring, and stopping;
-- which amplification rules can be machine-admitted rather than reviewed;
-- whether probability is a standard optional interpretation or an external
-  profile;
-- the assessment interface and protocol version; and
-- the threshold for moving from a negative research result to no product
-  feature.
+- richer evidence algebras beyond the minimal exact-identity presence profile;
+- theory-specific incompatibility and negation operations;
+- cryptographic sealed/blinded source and payload representations;
+- concrete adaptive acquisition policy profiles;
+- any assumption-bearing amplification rule beyond ordinary typed derivation;
+- probability or calibration profiles;
+- promotion to a stable assessment interface or protocol version; and
+- the threshold for ending the product direction after a negative S4 result.
 
-These are outputs of the gated research, not details to guess during initial
-implementation.
+Documents 15 through 20 resolve only the candidate-1 grammar, semantics,
+reference profile, error contract, and compatibility boundary needed for S2.
+The remaining questions are later gated outputs, not details to guess during a
+reference implementation.

@@ -1,0 +1,6 @@
+{
+  "type": "object",
+  "fields": {
+    "pattern": { "type": "str" }
+  }
+}

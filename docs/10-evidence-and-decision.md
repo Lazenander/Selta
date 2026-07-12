@@ -165,7 +165,10 @@ and `ConclusionSet` are requirements on the specification, not public types.
 
 ## Required laws
 
-Any candidate calculus must satisfy these laws before an API is designed.
+Any candidate calculus must satisfy these laws before a stable or public API is
+selected. Isolated conformance surfaces may exist only to test the laws.
+These are non-normative research obligations; document 16 is the sole numbered
+candidate-1 law inventory and maps or narrows each obligation operationally.
 
 1. **Provenance preservation.** The basis of every interpreted result remains
    reconstructable from the graph.
@@ -191,9 +194,10 @@ Any candidate calculus must satisfy these laws before an API is designed.
    conversion never erases the attempt facts.
 9. **Bounded evaluation.** Finite admitted graphs and total interpreters
    terminate. Resource depth is not an assurance measure.
-10. **Conservativity.** Selta 0.1 sampling and K3 projection can be represented
-    as an explicit legacy interpretation-and-projection profile without
-    changing their historical meaning.
+10. **Stable-boundary non-interference.** Candidate evidence work does not
+    change or reimplement Selta 0.1 sampling, K3, reports, or protocol behavior.
+    A future legacy profile may represent those results, but byte-level
+    differential equivalence belongs to the later L4 gate.
 11. **Acquisition accountability.** Every attempt, its outcome, and its
     inclusion, exclusion, or censoring decision is reconstructable relative to
     the declared acquisition manifest, adaptive choices, stopping rule, and an

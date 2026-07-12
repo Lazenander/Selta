@@ -1,6 +1,6 @@
 {
   "language": "selta.evidence.package/candidate-1",
-  "environment": "sha256:6cdcb1b5d26f2b713a4fed5dcc5f8f6306895cacb4d733d4eb356eff61017225",
+  "environment": "sha256:8b453875a037adf9353c111d7c39a3fe9f43fa97b27d93d57d324b3e4e0fc867",
   "documents": [
     {
       "contract": "sha256:938e5e124cb9648bb532949ff8588edeef0570eee18f6c7bfaf579af17a352a0",
@@ -144,33 +144,8 @@
       }
     },
     {
-      "contract": "sha256:a587092a0074c9b57a2a22225b99fb20cb6fd0ba69ea27156cab7b8b1ca6ed21",
-      "digest": "sha256:8e44b8d480af4e5f7ae079439a0864ce9454a25a1484d6e3160dbeafca0b134d",
-      "value": "explicit_assumption"
-    },
-    {
-      "contract": "sha256:78295e80afc955a2c6450d677b024e62cb63b7d1eb4759be4af9c05c364b5dc0",
-      "digest": "sha256:a1c6319780e8148b02fe1286753562756d9fc765aa62c072b66e119437add9af",
-      "value": {
-        "revision": "selta.evidence.presence-state/candidate-1",
-        "targets": [
-          {
-            "claim": {
-              "$ref": "sha256:7bfb4ef573349711620effe363c9d4881eb1df277c92764fae8fc6625e723e32",
-              "contract": "sha256:751cc09329f4a485fce9683a29ea5432786cf22b43df9cfd4b3900a326594239"
-            },
-            "support_basis": [
-              "sha256:8e1581cd043945bf4962fecd1957ef617aa885ed23d595f36fd180752c8550a5"
-            ],
-            "refute_basis": [],
-            "state": "support_only"
-          }
-        ]
-      }
-    },
-    {
       "contract": "sha256:86ed6b6f38c1b1a1d6bc5f09e2997a0df9e0f1e8554624372031034f17ebf7fb",
-      "digest": "sha256:a4c245191019f34d4308827f93cabbdaaaf76fb806b0de7ecbd568f6bcccb52c",
+      "digest": "sha256:7cfbbc3d0a9ce22b1ead8d21da6c00e4522971219ebbe6fd312dace81533dcaf",
       "value": {
         "revision": "selta.evidence.outcome/candidate-1",
         "status": "concluded",
@@ -178,7 +153,7 @@
           "$ref": "sha256:0e3f6d6e9ec1b1fe42eaa208e4860eed05562864f7cdf632347c3c379310b735",
           "contract": "sha256:938e5e124cb9648bb532949ff8588edeef0570eee18f6c7bfaf579af17a352a0"
         },
-        "environment": "sha256:6cdcb1b5d26f2b713a4fed5dcc5f8f6306895cacb4d733d4eb356eff61017225",
+        "environment": "sha256:8b453875a037adf9353c111d7c39a3fe9f43fa97b27d93d57d324b3e4e0fc867",
         "state": {
           "$ref": "sha256:a1c6319780e8148b02fe1286753562756d9fc765aa62c072b66e119437add9af",
           "contract": "sha256:78295e80afc955a2c6450d677b024e62cb63b7d1eb4759be4af9c05c364b5dc0"
@@ -354,6 +329,31 @@
     },
     {
       "contract": "sha256:a587092a0074c9b57a2a22225b99fb20cb6fd0ba69ea27156cab7b8b1ca6ed21",
+      "digest": "sha256:8e44b8d480af4e5f7ae079439a0864ce9454a25a1484d6e3160dbeafca0b134d",
+      "value": "explicit_assumption"
+    },
+    {
+      "contract": "sha256:78295e80afc955a2c6450d677b024e62cb63b7d1eb4759be4af9c05c364b5dc0",
+      "digest": "sha256:a1c6319780e8148b02fe1286753562756d9fc765aa62c072b66e119437add9af",
+      "value": {
+        "revision": "selta.evidence.presence-state/candidate-1",
+        "targets": [
+          {
+            "claim": {
+              "$ref": "sha256:7bfb4ef573349711620effe363c9d4881eb1df277c92764fae8fc6625e723e32",
+              "contract": "sha256:751cc09329f4a485fce9683a29ea5432786cf22b43df9cfd4b3900a326594239"
+            },
+            "support_basis": [
+              "sha256:8e1581cd043945bf4962fecd1957ef617aa885ed23d595f36fd180752c8550a5"
+            ],
+            "refute_basis": [],
+            "state": "support_only"
+          }
+        ]
+      }
+    },
+    {
+      "contract": "sha256:a587092a0074c9b57a2a22225b99fb20cb6fd0ba69ea27156cab7b8b1ca6ed21",
       "digest": "sha256:ab3e9b5fbe497e212d9f59cdbd938356a75fd00c5cd4cc2c306ae12ea2b27f78",
       "value": "support_only:scope"
     },
@@ -459,7 +459,7 @@
     }
   ],
   "root": {
-    "$ref": "sha256:a4c245191019f34d4308827f93cabbdaaaf76fb806b0de7ecbd568f6bcccb52c",
+    "$ref": "sha256:7cfbbc3d0a9ce22b1ead8d21da6c00e4522971219ebbe6fd312dace81533dcaf",
     "contract": "sha256:86ed6b6f38c1b1a1d6bc5f09e2997a0df9e0f1e8554624372031034f17ebf7fb"
   }
 }

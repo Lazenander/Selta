@@ -9,9 +9,9 @@ runtime or platform-support claim.
 
 | Artifact | Identity |
 |---|---|
-| Environment | `sha256:6cdcb1b5d26f2b713a4fed5dcc5f8f6306895cacb4d733d4eb356eff61017225` |
+| Environment | `sha256:8b453875a037adf9353c111d7c39a3fe9f43fa97b27d93d57d324b3e4e0fc867` |
 | Language source | `sha256:48c45a214e311e6d9dc14bff45c1b8781701b3f675080d6d728759abc32d0d1c` |
-| Core-semantics source | `sha256:0a97db0c91b985c9dcdb31652c7739922ac65b2202dbaa2b90ff379db901f8ea` |
+| Core-semantics source | `sha256:3a7a03c261ebcd376569792c857734b22f859bea7f75232af349708c49314ad7` |
 | Error-catalog source | `sha256:acb1c8b61f2899f31ec4d36f50eb94bca24f3879674ed1b6c527c44964a772c1` |
 | Evaluation profile | `sha256:f65b12e185f2ed2d619cb04cd2f9b52f8a3be44b9a8a67a860988863ab6c3a30` |
 | Profile specification | `sha256:f08f66de43aceef481f21bb4b556ab00eee85584885e077c01c44fc09aa36b6c` |

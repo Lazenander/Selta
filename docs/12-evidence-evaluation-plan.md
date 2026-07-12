@@ -122,9 +122,19 @@ Candidate laws are tested algebraically and with generated finite graphs:
 provenance preservation, replay, exact duplicate rejection, canonical set
 ordering, no inferred independence, conflict and polarity preservation,
 polarity symmetry, explicit coercion, operational separation, acquisition
-accountability, bounded evaluation, and legacy conservativity. Paraphrase
-resistance remains an empirical test because the graph calculus cannot assume a
-general semantic-equivalence decider.
+accountability, bounded evaluation, and stable-boundary non-interference.
+Legacy representability is an S2 design obligation; byte-level legacy
+differential equivalence remains the later L4 gate. Paraphrase resistance
+remains an empirical test because the graph calculus cannot assume a general
+semantic-equivalence decider.
+Document 16 is the sole numbered candidate-1 law inventory; this paragraph
+states research coverage obligations rather than a second competing list.
+
+S2 explicitly permits isolated, non-product conformance models needed to test
+the candidate. They expose no library, daemon, protocol, or application API;
+have no inbound dependency from the stable workspace or another project; and
+may not be reused as the later reference implementation. Their only consumers
+are the S2 corpus and comparison harness.
 
 **Exit gate**
 
@@ -132,21 +142,21 @@ general semantic-equivalence decider.
   encoding are reviewable without reading implementation code;
 - each advertised amplification rule names sufficient assumptions and has a
   proof sketch or a bounded claim that can be experimentally falsified; and
-- two independent implementations could produce compatible artifacts from the
-  specification alone.
+- two independently authored, isolated conformance models produce compatible
+  artifacts from the specification and held-out inputs alone.
 
 ### S3 — Build a pure reference model
 
-Only after S2, consider an experimental `selta-epistemics` crate. It should
+Only after S2, consider a durable experimental `selta-epistemics` crate. It should
 contain values, canonicalization, admission, finite graph construction, pure
 interpreters, and pure conclusion projection. It should not modify `selta-core`
 or protocol 1.
 
-Use property tests, exhaustive small-graph checks where tractable, and a second
-small executable model of the semantics to detect implementation agreement on
-the same mistaken code path. If the chosen algebra supports mechanization,
-formalize the central no-amplification and conservativity claims; do not label
-ordinary Rust tests as proofs.
+Use the sealed S2 conformance predictions as external oracles, then add property
+tests and exhaustive small-graph checks where tractable. The reference crate
+must not import either disposable model. If the chosen algebra supports
+mechanization, formalize the central no-amplification and stable-boundary
+claims; do not label ordinary tests as proofs.
 
 **Exit gate**
 

@@ -254,12 +254,16 @@ error number.
 - no hidden modality conversion;
 - operational/evidence separation;
 - authority non-escalation under the caller-pinned assessment basis;
+- stable Selta 0.1 boundary non-interference;
 - non-empty projection; and
 - fuel-bounded termination.
 
 ### Deferred L4 — legacy differential
 
-L4 is not an S2 deliverable. It begins only after separate review accepts:
+L4 byte-level legacy differential equivalence is not an S2 deliverable. S2
+requires only that the stable implementation and protocol remain unchanged and
+that the candidate leaves a non-duplicating adapter boundary. L4 begins only
+after separate review accepts:
 
 - a closed legacy-capsule schema with provenance and `unknown` variants;
 - report-value and optional wire-observation contracts;
@@ -317,27 +321,54 @@ path is as incomplete for the research goal as one that accepts every vote.
 ## Independent implementation criterion
 
 S2 is not complete merely because one implementation matches its own fixtures.
-Before evidence-language promotion, an independent test developer receives
-only:
+It therefore permits two isolated conformance implementations before the S3
+reference crate. Each implementer initially receives only:
 
 - documents 10 through 20;
 - the candidate Selta schemas;
 - canonicalization vectors;
-- input packages and expected outcomes; and
+- artifact resolver inventories and environment manifests;
+- every digest-resolved normative schema and semantic-specification artifact
+  named by those manifests;
+- input packages and law-case inputs, but no expected outcomes or intermediate
+  semantic values; and
 - this compatibility boundary, without an inferred legacy capsule wire format.
 
-The test developer must be able to predict every evidence admission result,
-stable error location, presence state, and cautious conclusion set without
-reading candidate implementation source. Exact legacy capsule serialization
-and L4 differential equivalence have their own later independent-review gate.
+The implementers work without the temporary corpus generator, one another's
+source, generated types, or shared candidate helpers. Each source identity and
+prediction ledger is sealed before held-out outcomes are revealed. They must
+predict every evidence admission result, stable error location, state,
+dependency closure, conclusion set, execution set, and resource counter without
+reading another candidate implementation. Exact legacy capsule serialization
+and L4 differential equivalence retain their later independent-review gate.
 
-Candidate implementation source is withheld for this test. Documentation,
-schemas, the digest-to-path artifact index, and conformance vectors are the
-complete public contract; code cannot establish an omitted rule. A DSL concept
-survives S2 only when it is needed to distinguish a named countermodel, state a
-law, bind authority or resources, or execute the mandatory reference profile.
-Redundant convenience forms and implementation-shaped fields are removed
-rather than explained as aliases.
+The models live only below `conformance/evidence/candidate-1/`, are not Cargo
+workspace members or installable packages, and expose no daemon, protocol, or
+application entry point. Stable Selta may provide its already-authoritative
+schema admission and value-verification boundary; raw parsing, candidate
+identity, relational admission, semantic dispatch, closures, resources, errors,
+and output construction remain independently implemented. No production crate
+or downstream project may depend on either model.
+
+Each model records its own truthful implementation-artifact identity. Complete
+successful outcome bytes may therefore differ only where document 16 permits
+execution artifacts to differ. A semantics-free arbiter verifies each package
+independently and compares the exact `ConformanceProjection` from document 16.
+It never substitutes the manual specification-oracle identity for executable
+code.
+
+Before predictions are sealed, each model is packaged as one exact executable
+byte artifact. Its implementation identity is `HB` over those bytes under the
+document-16 implementation domain. Multi-file source trees may be retained for
+review, but neither a directory walk nor an implementation-chosen archive is
+an executable identity preimage.
+
+Documentation, schemas, the digest-to-path artifact index, and conformance
+vectors are the complete public contract; one implementation cannot establish
+an omitted rule for the other. A DSL concept survives S2 only when it is needed
+to distinguish a named countermodel, state a law, bind authority or resources,
+or execute a mandatory conformance profile. Redundant convenience forms and
+implementation-shaped fields are removed rather than explained as aliases.
 
 Any disagreement is a specification defect until resolved in the documents and
 fixtures.

@@ -866,21 +866,60 @@ a current support claim.
 
 ## S2 semantic gate
 
-Reference implementation work remains blocked until:
+The durable Rust reference crate and every product integration remain blocked
+until S2 closes. S2-only conformance models are instead permitted and required:
+they are isolated executables with no public API, no inbound production
+dependency, and no authority beyond producing sealed predictions for the
+candidate corpus. They MUST be implemented independently of one another, using
+only these public artifacts, and MUST NOT share candidate semantic, parser,
+identity, or error code. They are disposable test evidence, not the future
+reference runtime.
+
+For cross-model comparison, the arbiter first validates each complete returned
+package and all of its identities independently. It then constructs this
+non-serialized conformance projection from the resolved outcome:
+
+```text
+ConformanceProjection {
+  revision,
+  status,
+  environment,
+  basis?: DocumentRef,
+  state?: { reference: DocumentRef, value: JSON },
+  closures?: [DependencyClosure],
+  conclusions?: [{ claim: DocumentRef, labels: [DocumentRef] }],
+  resources: ResourceUsage,
+  errors?: [{ phase, code, path, message }],
+  semantics: [SemanticsId]
+}
+```
+
+`semantics` is the canonical semantics-ID projection of `executions`.
+Implementation digests, the outcome document, its digest, and the package root
+are excluded because truthful implementation identities may differ. No other
+field is removed or normalized. A concluded outcome supplies `basis`, `state`,
+`closures`, and `conclusions` and omits `errors`; an error outcome supplies
+`errors` and omits those concluded-only fields. This projection exists only for
+S2 conformance; it is not candidate DSL, identity input, or product output.
+
+S2 closes only when:
 
 - all schemas named in document 15 exist and admit through stable Selta;
 - the environment, presence profile, labels, error catalog, and complete
   package/outcome vectors have immutable computed IDs;
-- a second reviewer can implement admission and the presence profile from the
-  public artifacts alone;
+- two independently authored conformance models implement the complete
+  assessment judgment from public artifacts and held-out inputs alone;
 - every law has positive and falsifying fixtures;
 - identity, collection order, resources, trust, privacy, and errors are
   independently reproducible;
-- the legacy boundary consumes the future language without reimplementing V1;
+- the stable Selta 0.1 boundary remains unchanged and a future legacy adapter
+  can consume the candidate without reimplementing V1; exact legacy
+  differential equivalence remains the deferred L4 gate;
   and
 - independent formal and compatibility reviews have no unresolved blocker.
 
 **Current status:** the presence/error corpus does not yet provide executable
-positive and falsifying fixtures for every law, and no second implementation of
-the complete assessment judgment exists. The S2 gate therefore remains open;
-this candidate does not authorize a Rust reference crate yet.
+positive and falsifying fixtures for every law, and two independent complete
+conformance models do not yet exist. The S2 gate therefore remains open; this
+candidate does not authorize a durable Rust reference crate or product
+integration yet.

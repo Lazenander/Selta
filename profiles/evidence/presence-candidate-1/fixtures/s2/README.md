@@ -11,7 +11,8 @@ semantic descriptor. Every assessment uses the caller-supplied input root as
 | `duplicate-node` | Duplicate graph-node identity stops at I0c with `identity.duplicate` |
 | `unknown-wrapper-field` | Closed wrapper rejection at S0 with zero counters |
 | `wrong-package-language` | Wrong package revision rejection at S0 with zero counters |
-| `unknown-contract` | Unknown typed-document contract stops at S2 before value verification |
+| `unknown-contract` | Unknown typed-document contract suppresses verification of a deliberately non-text object and stops at S2 |
+| `missing-stance` | A graph node missing required `stance` stops at S2 document-shape verification before identity |
 | `missing-reference` | An identity-valid unresolved `DocumentRef` stops at I1 |
 | `wrong-modality` | The rule call commits and a contract-valid wrong submitted modality becomes `relation.semantic_mismatch` |
 | `unavailable-assumption` | An assumption absent from the caller-pinned basis stops at R1c without dispatch |

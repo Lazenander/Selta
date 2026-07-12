@@ -148,7 +148,9 @@
     {
       "contract": "sha256:0000000000000000000000000000000000000000000000000000000000000000",
       "digest": "sha256:ea26a500b4a96a6972a797d5e9063c6a12b08402c60051748fca2684d0371468",
-      "value": "fixture:empty-evidence-graph"
+      "value": {
+        "not_text": true
+      }
     },
     {
       "contract": "sha256:45a97f98cb6fe6d8e07bf2d0e9d820e604c428170b279199b99b1f0563586322",

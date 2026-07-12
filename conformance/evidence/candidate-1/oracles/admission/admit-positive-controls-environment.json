@@ -1,0 +1,8 @@
+{
+  "revision": "selta.evidence.conformance-oracle/s2-1",
+  "case": "admit-positive-controls-environment",
+  "expected": {
+    "kind": "admitted",
+    "environment": "sha256:97a2795354041b74443f8686d75be998eebf563275b479d9d23a055adf92eba4"
+  }
+}

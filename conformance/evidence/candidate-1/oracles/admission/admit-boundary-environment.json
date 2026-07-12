@@ -1,0 +1,8 @@
+{
+  "revision": "selta.evidence.conformance-oracle/s2-1",
+  "case": "admit-boundary-environment",
+  "expected": {
+    "kind": "admitted",
+    "environment": "sha256:5059697608b5bb6669cf93122a7c360ac18b68cc2e8612236e51a0634387b566"
+  }
+}

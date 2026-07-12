@@ -54,6 +54,8 @@ const PURE_ASSESSMENT_STATIC_CONFIG_OVERRIDES: &[&str] = &[
 ];
 const FORBIDDEN_ISOLATED_HOME_COMPONENTS: &[&str] =
     &["plugins", "remote_plugin_catalog", "shell_snapshots"];
+const LEGACY_UNSUPPORTED_UNIQUE_ITEMS_SCHEMA_SHA256: &str =
+    "dbc54011037a89adc2f002e9cf55763a88007c307a51c0f455c0f27d468fd78f";
 
 #[derive(Parser)]
 #[command(name = "selta-codex-eval")]
@@ -1059,6 +1061,26 @@ fn verify_manifest_snapshots(manifest: &Manifest, run: &Path) -> Result<()> {
     Ok(())
 }
 
+fn validate_frozen_response_schema(manifest: &Manifest, path: &Path) -> Result<()> {
+    match validate_schema_file(path) {
+        Ok(()) => Ok(()),
+        Err(error)
+            if manifest.mode == RunMode::EngineeringSmoke
+                && manifest.response_schema.sha256
+                    == LEGACY_UNSUPPORTED_UNIQUE_ITEMS_SCHEMA_SHA256 =>
+        {
+            // Smoke 001/002 predate the API-compatibility correction. Live
+            // runs still accept only the current canonical transport schema.
+            if sha256_file(path)? == LEGACY_UNSUPPORTED_UNIQUE_ITEMS_SCHEMA_SHA256 {
+                Ok(())
+            } else {
+                Err(error)
+            }
+        }
+        Err(error) => Err(error),
+    }
+}
+
 fn verify_artifact(recorded: &Artifact, expected_path: &Path, run: &Path) -> Result<()> {
     if recorded.path.is_absolute()
         || recorded
@@ -1167,7 +1189,7 @@ fn load_verified_run(path: &Path) -> Result<VerifiedRun> {
     }
     let cases = read_cases(&inputs_path)?;
     let contract = SeltaContract::from_path(&run.join("artifacts/response.selta.json"))?;
-    validate_schema_file(&run.join("artifacts/response.schema.json"))?;
+    validate_frozen_response_schema(&manifest, &run.join("artifacts/response.schema.json"))?;
     let prompt_arguments: Vec<_> = manifest
         .prompts
         .iter()
@@ -1960,13 +1982,41 @@ mod tests {
     }
 
     #[test]
+    fn baseline_prompt_keeps_the_general_no_repeat_invariant_lean() {
+        let prompt = include_str!("../../prompts/p0.txt");
+        assert_eq!(prompt.split_whitespace().count(), 86);
+        assert!(prompt.contains("Do not repeat quotations."));
+    }
+
+    #[test]
     fn legacy_smoke_bundle_without_capability_policy_remains_validatable() {
         let run = Path::new(env!("CARGO_MANIFEST_DIR")).join("../runs/smoke-terra-low-001");
-        let verified = load_verified_run(&run).unwrap();
+        let mut verified = load_verified_run(&run).unwrap();
         assert!(verified.manifest.codex.capability_policy.is_none());
         assert_eq!(
             verified.manifest.codex.version.as_deref(),
             Some("codex-cli 0.142.5")
+        );
+        assert!(matches!(
+            &verified.predictions[0].outcome,
+            Outcome::OperationalError { class, .. } if class == "process_exit"
+        ));
+        verified.manifest.mode = RunMode::Development;
+        assert!(validate_frozen_response_schema(
+            &verified.manifest,
+            &run.join("artifacts/response.schema.json")
+        )
+        .is_err());
+    }
+
+    #[test]
+    fn transport_failure_smoke_bundle_remains_validatable() {
+        let run = Path::new(env!("CARGO_MANIFEST_DIR")).join("../runs/smoke-terra-low-002");
+        let verified = load_verified_run(&run).unwrap();
+        assert!(verified.manifest.codex.capability_policy.is_some());
+        assert_eq!(
+            verified.manifest.codex.version.as_deref(),
+            Some("codex-cli 0.144.1")
         );
         assert!(matches!(
             &verified.predictions[0].outcome,

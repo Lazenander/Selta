@@ -31,7 +31,9 @@ second model-authored field:
   rules.
 - `prompts/p0.txt` is the zero-shot baseline prompt.
 - `schemas/response.schema.json` is the minimal structured-output shape supplied
-  to Codex. It is a transport guard, not the semantic authority.
+  to Codex. It omits unsupported `uniqueItems` and is a transport guard, not the
+  semantic authority; deterministic post-Selta checks retain uniqueness and
+  cross-side disjointness.
 - `schemas/response.selta.json` is the exact strict, pure-builtin Selta response
   contract.
 - `corpus/dev.inputs.jsonl` and `corpus/dev.oracle.jsonl` are a balanced,
@@ -48,6 +50,10 @@ second model-authored field:
   Codex CLI `0.142.5`: that CLI was too old for `gpt-5.6-terra`, and the attempt
   revealed remote-plugin state entering a fresh `CODEX_HOME`. It made no
   development-corpus calls and is not semantic or prompt-quality evidence.
+- `runs/smoke-terra-low-002` is an immutable failed transport smoke. CLI
+  `0.144.1` and its isolated configuration succeeded, but the API rejected
+  `uniqueItems` before judgment. It made no development-corpus calls and is not
+  semantic or prompt-quality evidence.
 
 The engineering artifacts are not the formal pilot corpus. A formal result still
 requires newly sourced cases, three blinded human annotations per case, retained

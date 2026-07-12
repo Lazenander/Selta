@@ -38,10 +38,12 @@ Modes enforce only call shape, never corpus validity: `development` is 24 cases
 and one or two prompts; `heldout` is 24 cases and one or two prompts including
 `p0`; `engineering-smoke` is one prompt and at most four cases.
 
-The JSON Schema is only the Codex structured-output guard. The second schema is
-strictly admitted as Selta 1 against `AdmissionPolicy::pure_only()`, and every
-raw response must pass that canonical Selta contract before exact quotations
-are checked.
+The JSON Schema is only the Codex structured-output guard and intentionally
+omits unsupported `uniqueItems`. The second schema is strictly admitted as Selta
+1 against `AdmissionPolicy::pure_only()`. Every raw response must pass that
+canonical Selta contract before deterministic within-array uniqueness,
+cross-side disjointness, and exact-quotation checks run. Removing a transport
+keyword therefore does not weaken the admitted scoring value.
 
 ## Assessor isolation
 
@@ -96,6 +98,16 @@ revealed remote plugin synchronization into a nominally fresh `CODEX_HOME`.
 There were no development-corpus calls, so the bundle is neither semantic
 evidence nor a prompt result. The fix belongs to the runner and the `0.144.1`
 execution contract; the historical bundle must not be rewritten.
+
+`runs/smoke-terra-low-002` is likewise retained unchanged. CLI `0.144.1` and the
+isolated configuration succeeded, but the API rejected `uniqueItems` in the
+transport output schema before model judgment. It made no development-corpus
+calls and provides no semantic or prompt-quality evidence. The compatibility
+revision removes that keyword only from the live transport schema and its exact
+canonical checker; deterministic post-Selta uniqueness and disjointness remain.
+Bound validation recognizes the old schema only in `engineering-smoke` mode and
+by its single frozen SHA-256, so both historical smoke bundles remain
+verifiable; a new `run` cannot use it.
 
 A completed run retains:
 

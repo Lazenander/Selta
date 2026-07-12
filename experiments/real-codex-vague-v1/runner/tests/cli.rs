@@ -37,11 +37,11 @@ fn dry_run_and_validation_require_no_model_call() {
             "type": "object",
             "properties": {
                 "support": {
-                    "type": "array", "maxItems": 3, "uniqueItems": true,
+                    "type": "array", "maxItems": 3,
                     "items": {"type": "string", "minLength": 1, "maxLength": 160}
                 },
                 "refute": {
-                    "type": "array", "maxItems": 3, "uniqueItems": true,
+                    "type": "array", "maxItems": 3,
                     "items": {"type": "string", "minLength": 1, "maxLength": 160}
                 }
             },

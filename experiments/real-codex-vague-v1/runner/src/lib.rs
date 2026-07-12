@@ -447,13 +447,12 @@ pub fn validate_schema_file(path: &Path) -> Result<()> {
         let property = &properties[polarity];
         if property.get("type").and_then(Value::as_str) != Some("array")
             || property.get("maxItems").and_then(Value::as_u64) != Some(3)
-            || property.get("uniqueItems").and_then(Value::as_bool) != Some(true)
             || property.pointer("/items/type").and_then(Value::as_str) != Some("string")
             || property.pointer("/items/minLength").and_then(Value::as_u64) != Some(1)
             || property.pointer("/items/maxLength").and_then(Value::as_u64) != Some(160)
         {
             bail!(
-                "response schema `{polarity}` must contain up to three unique, non-empty strings of at most 160 characters"
+                "response schema `{polarity}` must contain up to three non-empty strings of at most 160 characters"
             );
         }
     }
@@ -789,9 +788,15 @@ mod tests {
         assert_eq!(invented.class, "exact_quotation");
         assert!(invented.response_contract_valid);
 
-        let duplicate =
-            validate_response(r#"{"support":["x"],"refute":["x"]}"#, "x", &contract).unwrap_err();
-        assert_eq!(duplicate.class, "response_contract");
+        let cross_side_raw = r#"{"support":["x"],"refute":["x"]}"#;
+        assert!(contract.verify_raw(cross_side_raw).is_ok());
+        let cross_side_duplicate = validate_response(cross_side_raw, "x", &contract).unwrap_err();
+        assert_eq!(cross_side_duplicate.class, "response_contract");
+
+        let within_side_raw = r#"{"support":["x","x"],"refute":[]}"#;
+        assert!(contract.verify_raw(within_side_raw).is_ok());
+        let within_side_duplicate = validate_response(within_side_raw, "x", &contract).unwrap_err();
+        assert_eq!(within_side_duplicate.class, "response_contract");
     }
 
     #[test]

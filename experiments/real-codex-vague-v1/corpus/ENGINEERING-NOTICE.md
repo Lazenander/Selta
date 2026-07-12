@@ -24,9 +24,9 @@ development/held-out split, and a withheld oracle procedure.
 
 Separately prepared engineering heldout inputs, oracle, and nonce are withheld
 outside the checkout. Only `holdout.commitment.json` remains visible before the
-prompt freeze. The baseline prompt has been amended only with the general
-cross-polarity quotation-disjointness rule and has not been run against these
-cases.
+prompt freeze. The baseline prompt's pre-development amendment now states the
+general no-repeat invariant covering both within-side uniqueness and cross-side
+disjointness. It has not been run against these cases.
 
 ## Constructed balance
 

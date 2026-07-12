@@ -57,9 +57,12 @@ missing output are operational failures. They never become `neither`, support,
 or refutation. Exact quotation validity is mechanical; whether a valid quotation
 really bears the claimed polarity remains part of semantic evaluation.
 
-The JSON Schema is only Codex's structured-output guard. Before execution, a
-canonical Selta schema and deterministic quotation-membership check must admit
-the same response contract. The Selta-admitted value is the scoring input.
+The JSON Schema is only Codex's structured-output guard. Codex's accepted schema
+subset does not permit `uniqueItems`, so uniqueness and cross-side disjointness
+are deliberately absent from that transport schema. The raw response is first
+admitted by the canonical Selta schema; deterministic host checks then enforce
+within-array uniqueness, cross-side disjointness, and quotation membership on
+the Selta-admitted value. That fully checked value is the scoring input.
 
 ## 3. Corpus and split
 
@@ -112,6 +115,13 @@ has at least four oracle-aligned semantic errors spanning both development
 domains and both clarity strata, and those errors support one general mechanism
 rather than mainly exposing oracle disagreement. Otherwise `p0` wins without a
 new prompt.
+
+Smoke 002 failed at transport-schema validation before any judgment. Because no
+development or semantic result existed, the pre-development baseline was
+narrowly clarified from `Do not repeat a quotation across sides.` to the more
+general `Do not repeat quotations.` This reduced `p0` from 89 to 86 words and
+aligns it with the unchanged deterministic uniqueness and disjointness rules; it
+is not a development-tuned `p1` attempt.
 
 Every prompt must:
 
@@ -197,6 +207,14 @@ record. It failed operationally because Codex CLI `0.142.5` was too old for
 `CODEX_HOME`. It made no development-corpus calls and supplies no semantic or
 prompt-quality evidence. The runner was revised and the CLI upgraded to
 `0.144.1`; the failed bundle is retained unchanged rather than repaired in place.
+
+`runs/smoke-terra-low-002` is also immutable and non-evidentiary. Codex CLI
+`0.144.1` accepted the isolated command and configuration, but the API rejected
+the transport output schema because `uniqueItems` is unsupported. The failure
+occurred before model judgment, made no development-corpus calls, and supplies
+no semantic or prompt-quality evidence. The bundle remains unchanged; the live
+transport schema alone drops `uniqueItems`, while post-Selta deterministic
+uniqueness and disjointness checks remain authoritative.
 
 Calls are run in a precommitted randomized order with at most four concurrently.
 There is exactly one scored attempt per prompt-case pair. Semantic failure,

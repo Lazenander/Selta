@@ -17,7 +17,7 @@ calibration, or deployment prevalence.
 | Complete prediction bundle pushed before oracle disclosure | `ca50f909e6a8b1bdd1372ed1af41760a374ac991` |
 | Optional authored-state compatibility recorded | `0df6d393104f0d3f4854fde2d3421fdce9db6a38` |
 | Clarity-reporting compatibility recorded | `b9420f916bbd8de9cc257047f3182bb880d2554e` |
-| This result and revealed corpus | pending final result commit |
+| Result and revealed corpus published | `c821ef18459aa517f759113bd933d0cf65540850` |
 
 The pre-reveal receipt contains the manifest, jobs, prompt and input snapshots,
 predictions, raw artifacts, raw index, and completion record, but no oracle,

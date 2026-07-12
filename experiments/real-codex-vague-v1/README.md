@@ -44,6 +44,8 @@ second model-authored field:
   their protocol freeze points.
 - `corpus/ENGINEERING-NOTICE.md` states the permitted uses and non-claims for
   these artifacts.
+- [`DEVELOPMENT-DECISION.md`](DEVELOPMENT-DECISION.md) freezes the `p0`-only
+  selection and held-out configuration before input or oracle disclosure.
 - [`runner/README.md`](runner/README.md) documents the Rust dry-run, frozen-run
   validation, raw audit, scoring, and commitment workflow. No development or
   semantically evaluated model result has completed.

@@ -1,9 +1,8 @@
 # Real-Codex vague-verifier experiment
 
-Status: engineering preparation in progress. Engineering-only inputs, a
-development oracle, and a committed holdout procedure exist; no formal
-three-human corpus or completed development or semantically evaluated model
-result exists.
+Status: author-constructed engineering development and held-out runs are
+complete. Their frozen decisions, raw bundles, and scores are recorded, but no
+formal three-human-annotated pilot result exists.
 
 This experiment asks a deliberately small question: can a concise, general
 prompt make a real Codex assessor preserve textual support, textual refutation,
@@ -40,15 +39,21 @@ second model-authored field:
 - `corpus/dev.inputs.jsonl` and `corpus/dev.oracle.jsonl` are a balanced,
   author-constructed 24-case engineering fixture.
 - `corpus/holdout.commitment.json` binds engineering heldout inputs and an
-  oracle; input wording, oracle, and nonce remain outside the checkout until
-  their protocol freeze points.
+  oracle. The exact inputs, oracle, and nonce were disclosed and preserved as
+  `corpus/holdout.inputs.jsonl`, `corpus/holdout.oracle.jsonl`, and
+  `corpus/holdout.nonce` only after the prediction bundle was pushed.
 - `corpus/ENGINEERING-NOTICE.md` states the permitted uses and non-claims for
   these artifacts.
 - [`DEVELOPMENT-DECISION.md`](DEVELOPMENT-DECISION.md) freezes the `p0`-only
   selection and held-out configuration before input or oracle disclosure.
+- [`HELDOUT-RESULT.md`](HELDOUT-RESULT.md) records the bound engineering
+  held-out result, reveal chain, compatibility corrections, and non-claims.
 - [`runner/README.md`](runner/README.md) documents the Rust dry-run, frozen-run
   validation, raw audit, scoring, and commitment workflow. The completed
   engineering development result is recorded in `DEVELOPMENT-DECISION.md`.
+- `runs/dev-p0-terra-low-001` and `runs/heldout-p0-terra-low-001` preserve the
+  complete development and held-out bundles; each result remains
+  engineering-only.
 - `runs/smoke-terra-low-001` is an immutable failed infrastructure smoke from
   Codex CLI `0.142.5`: that CLI was too old for `gpt-5.6-terra`, and the attempt
   revealed remote-plugin state entering a fresh `CODEX_HOME`. It made no

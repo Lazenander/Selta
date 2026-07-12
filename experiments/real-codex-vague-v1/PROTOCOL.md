@@ -67,13 +67,14 @@ the Selta-admitted value. That fully checked value is the scoring input.
 ## 3. Corpus and split
 
 No **formal pilot corpus** has been created. The repository contains an
-author-constructed development fixture and a commitment. Separately prepared,
-unlabeled engineering holdout inputs remain withheld outside the checkout until
-the prompt is frozen. These artifacts exist to develop and exercise plumbing. They do
-not have the three blinded human annotations required below, must not be substituted for
-the formal split, and cannot support a semantic-performance or prompt-quality claim.
-`corpus/ENGINEERING-NOTICE.md` records the development fixture's boundary; the
-unannotated holdout inputs are likewise engineering-only.
+author-constructed development fixture and, after the frozen prediction bundle
+was pushed, the disclosed author-constructed engineering holdout artifacts. The
+holdout inputs remained outside the checkout until prompt selection was frozen;
+its oracle and nonce remained outside through model execution and the external
+prediction receipt. These artifacts exist to develop and exercise plumbing.
+They do not have the three blinded human annotations required below, must not be
+substituted for the formal split, and cannot support a semantic-performance or
+prompt-quality claim. `corpus/ENGINEERING-NOTICE.md` records their boundary.
 
 The first formal pilot corpus will contain exactly 48 cases:
 

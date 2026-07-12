@@ -1,0 +1,24 @@
+{"id":"hv1-001","domain_family":"medical_scheduling","clarity":"clear","support":["Rowan's 9:00 a.m. visit on Monday has been moved to Wednesday at 2:15 p.m."],"refute":[]}
+{"id":"hv1-002","domain_family":"open_source_governance","clarity":"clear","support":[],"refute":[]}
+{"id":"hv1-003","domain_family":"medical_scheduling","clarity":"boundary","support":["the clinician is running about 25 minutes behind and Ana should expect a wait."],"refute":["The live appointment status still shows her visit as on time."]}
+{"id":"hv1-004","domain_family":"open_source_governance","clarity":"clear","support":[],"refute":["Employment or organizational affiliation does not disqualify a candidate from the steering committee."]}
+{"id":"hv1-005","domain_family":"medical_scheduling","clarity":"boundary","support":[],"refute":[]}
+{"id":"hv1-006","domain_family":"open_source_governance","clarity":"boundary","support":["Changes produced with code-generation tools are to be identified in the pull request description before review."],"refute":[]}
+{"id":"hv1-007","domain_family":"medical_scheduling","clarity":"clear","support":[],"refute":["The 9 August MRI slot was cancelled."]}
+{"id":"hv1-008","domain_family":"open_source_governance","clarity":"clear","support":["Maintainer consensus is required before a pull request can merge."],"refute":["If consensus is not reached after seven days, a simple majority may authorize the merge."]}
+{"id":"hv1-009","domain_family":"medical_scheduling","clarity":"boundary","support":["I can hold 8:40 a.m. for Noor until noon today; reply before then if that time works."],"refute":[]}
+{"id":"hv1-010","domain_family":"open_source_governance","clarity":"boundary","support":[],"refute":[]}
+{"id":"hv1-011","domain_family":"medical_scheduling","clarity":"clear","support":["Imani's Tuesday appointment has been cancelled."],"refute":["The cancellation entry was made in error; the Tuesday appointment is still active."]}
+{"id":"hv1-012","domain_family":"open_source_governance","clarity":"boundary","support":[],"refute":["Anyone may open a proposal for community discussion."]}
+{"id":"hv1-013","domain_family":"medical_scheduling","clarity":"clear","support":[],"refute":[]}
+{"id":"hv1-014","domain_family":"open_source_governance","clarity":"clear","support":["A pull request may merge only after approvals from two reviewers with merge rights."],"refute":[]}
+{"id":"hv1-015","domain_family":"medical_scheduling","clarity":"boundary","support":[],"refute":["Friday is difficult; please leave Tuesday in place unless I call again."]}
+{"id":"hv1-016","domain_family":"open_source_governance","clarity":"boundary","support":["Maintainers serve one-year terms."],"refute":["The current appointments will remain in force for eighteen months before the first regular election."]}
+{"id":"hv1-017","domain_family":"medical_scheduling","clarity":"clear","support":["Please arrange a Mandarin interpreter for my consultation next week."],"refute":[]}
+{"id":"hv1-018","domain_family":"open_source_governance","clarity":"clear","support":[],"refute":[]}
+{"id":"hv1-019","domain_family":"medical_scheduling","clarity":"clear","support":["Telehealth link sent to Jules."],"refute":["The earlier log entry was incorrect; no link has been issued yet."]}
+{"id":"hv1-020","domain_family":"open_source_governance","clarity":"clear","support":[],"refute":["Each member's vote is recorded by name in the public minutes."]}
+{"id":"hv1-021","domain_family":"medical_scheduling","clarity":"boundary","support":[],"refute":[]}
+{"id":"hv1-022","domain_family":"open_source_governance","clarity":"boundary","support":["A release manager may hold a tag while a reported vulnerability remains untriaged."],"refute":[]}
+{"id":"hv1-023","domain_family":"medical_scheduling","clarity":"boundary","support":[],"refute":["The transport request for Mira was submitted this morning, but dispatch has not accepted it."]}
+{"id":"hv1-024","domain_family":"open_source_governance","clarity":"boundary","support":["Publish an advisory immediately after the issue is confirmed."],"refute":["A confirmed issue may remain private for up to fourteen days while a fix is prepared."]}

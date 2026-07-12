@@ -191,6 +191,12 @@ Model A and Model B source, executable, runtime, and transcript material never
 crosses sets. Source, executable, runtime evidence, ledger, and transcripts are
 sealed before any oracle artifact is revealed.
 
+The two prediction seals must carry unequal `executable.bytes_sha256` values
+and unequal `executable.implementation` values. Equality in either field
+invalidates the pair before oracle comparison; two producer labels cannot turn
+one executable into independent evidence. This is a cross-record admission
+rule and therefore is not expressible in either local prediction-seal variant.
+
 ### Completion
 
 The completion seal binds the protected pre-S2 baseline, the common freeze,
@@ -205,6 +211,11 @@ applicable schema, identity, closure, resource, oracle, trap, projection,
 finite-result, and comparison check actually ran. Global manifest closure,
 law/named/error coverage, kit exclusion, and prediction completeness are
 ledger admission preconditions rather than duplicated status rows.
+
+Before evaluating any cross-model case, the arbiter loads both referenced
+prediction seals and enforces the unequal executable-byte and implementation-
+identity rule above. Completion cannot use package inequality as a circular
+proof of that precondition.
 
 The review set contains exactly runtime independence, arithmetic bounds, error
 reachability, formal consistency, privacy boundary, identity integrity, and

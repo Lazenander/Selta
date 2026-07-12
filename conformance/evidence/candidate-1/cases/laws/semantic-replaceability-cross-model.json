@@ -1,0 +1,2155 @@
+{
+  "revision": "selta.evidence.conformance-case/s2-1",
+  "id": "semantic-replaceability-cross-model",
+  "operation": {
+    "kind": "compare",
+    "scope": "cross_model",
+    "assertions": [
+      {
+        "relation": "equal",
+        "left": {
+          "producer": "model_a",
+          "case": "boundary-decoded-string-exact",
+          "view": "conformance_projection",
+          "pointer": ""
+        },
+        "right": {
+          "producer": "model_b",
+          "case": "boundary-decoded-string-exact",
+          "view": "conformance_projection",
+          "pointer": ""
+        }
+      },
+      {
+        "relation": "equal",
+        "left": {
+          "producer": "model_a",
+          "case": "boundary-decoded-string-exceeded",
+          "view": "conformance_projection",
+          "pointer": ""
+        },
+        "right": {
+          "producer": "model_b",
+          "case": "boundary-decoded-string-exceeded",
+          "view": "conformance_projection",
+          "pointer": ""
+        }
+      },
+      {
+        "relation": "equal",
+        "left": {
+          "producer": "model_a",
+          "case": "boundary-depth-exact",
+          "view": "conformance_projection",
+          "pointer": ""
+        },
+        "right": {
+          "producer": "model_b",
+          "case": "boundary-depth-exact",
+          "view": "conformance_projection",
+          "pointer": ""
+        }
+      },
+      {
+        "relation": "equal",
+        "left": {
+          "producer": "model_a",
+          "case": "boundary-depth-exceeded",
+          "view": "conformance_projection",
+          "pointer": ""
+        },
+        "right": {
+          "producer": "model_b",
+          "case": "boundary-depth-exceeded",
+          "view": "conformance_projection",
+          "pointer": ""
+        }
+      },
+      {
+        "relation": "equal",
+        "left": {
+          "producer": "model_a",
+          "case": "boundary-environment-mismatch",
+          "view": "conformance_projection",
+          "pointer": ""
+        },
+        "right": {
+          "producer": "model_b",
+          "case": "boundary-environment-mismatch",
+          "view": "conformance_projection",
+          "pointer": ""
+        }
+      },
+      {
+        "relation": "equal",
+        "left": {
+          "producer": "model_a",
+          "case": "boundary-error-truncation",
+          "view": "conformance_projection",
+          "pointer": ""
+        },
+        "right": {
+          "producer": "model_b",
+          "case": "boundary-error-truncation",
+          "view": "conformance_projection",
+          "pointer": ""
+        }
+      },
+      {
+        "relation": "equal",
+        "left": {
+          "producer": "model_a",
+          "case": "boundary-pointer-normalization-dedup",
+          "view": "conformance_projection",
+          "pointer": ""
+        },
+        "right": {
+          "producer": "model_b",
+          "case": "boundary-pointer-normalization-dedup",
+          "view": "conformance_projection",
+          "pointer": ""
+        }
+      },
+      {
+        "relation": "equal",
+        "left": {
+          "producer": "model_a",
+          "case": "boundary-raw-bytes-exact",
+          "view": "conformance_projection",
+          "pointer": ""
+        },
+        "right": {
+          "producer": "model_b",
+          "case": "boundary-raw-bytes-exact",
+          "view": "conformance_projection",
+          "pointer": ""
+        }
+      },
+      {
+        "relation": "equal",
+        "left": {
+          "producer": "model_a",
+          "case": "boundary-raw-invalid-utf8",
+          "view": "conformance_projection",
+          "pointer": ""
+        },
+        "right": {
+          "producer": "model_b",
+          "case": "boundary-raw-invalid-utf8",
+          "view": "conformance_projection",
+          "pointer": ""
+        }
+      },
+      {
+        "relation": "equal",
+        "left": {
+          "producer": "model_a",
+          "case": "boundary-raw-lone-surrogate",
+          "view": "conformance_projection",
+          "pointer": ""
+        },
+        "right": {
+          "producer": "model_b",
+          "case": "boundary-raw-lone-surrogate",
+          "view": "conformance_projection",
+          "pointer": ""
+        }
+      },
+      {
+        "relation": "equal",
+        "left": {
+          "producer": "model_a",
+          "case": "boundary-raw-noncharacter",
+          "view": "conformance_projection",
+          "pointer": ""
+        },
+        "right": {
+          "producer": "model_b",
+          "case": "boundary-raw-noncharacter",
+          "view": "conformance_projection",
+          "pointer": ""
+        }
+      },
+      {
+        "relation": "equal",
+        "left": {
+          "producer": "model_a",
+          "case": "boundary-raw-number-out-of-range",
+          "view": "conformance_projection",
+          "pointer": ""
+        },
+        "right": {
+          "producer": "model_b",
+          "case": "boundary-raw-number-out-of-range",
+          "view": "conformance_projection",
+          "pointer": ""
+        }
+      },
+      {
+        "relation": "equal",
+        "left": {
+          "producer": "model_a",
+          "case": "boundary-raw-syntax",
+          "view": "conformance_projection",
+          "pointer": ""
+        },
+        "right": {
+          "producer": "model_b",
+          "case": "boundary-raw-syntax",
+          "view": "conformance_projection",
+          "pointer": ""
+        }
+      },
+      {
+        "relation": "equal",
+        "left": {
+          "producer": "model_a",
+          "case": "boundary-raw-trailing-data",
+          "view": "conformance_projection",
+          "pointer": ""
+        },
+        "right": {
+          "producer": "model_b",
+          "case": "boundary-raw-trailing-data",
+          "view": "conformance_projection",
+          "pointer": ""
+        }
+      },
+      {
+        "relation": "equal",
+        "left": {
+          "producer": "model_a",
+          "case": "boundary-unsafe-int",
+          "view": "conformance_projection",
+          "pointer": ""
+        },
+        "right": {
+          "producer": "model_b",
+          "case": "boundary-unsafe-int",
+          "view": "conformance_projection",
+          "pointer": ""
+        }
+      },
+      {
+        "relation": "equal",
+        "left": {
+          "producer": "model_a",
+          "case": "boundary-values-exact",
+          "view": "conformance_projection",
+          "pointer": ""
+        },
+        "right": {
+          "producer": "model_b",
+          "case": "boundary-values-exact",
+          "view": "conformance_projection",
+          "pointer": ""
+        }
+      },
+      {
+        "relation": "equal",
+        "left": {
+          "producer": "model_a",
+          "case": "boundary-values-exceeded",
+          "view": "conformance_projection",
+          "pointer": ""
+        },
+        "right": {
+          "producer": "model_b",
+          "case": "boundary-values-exceeded",
+          "view": "conformance_projection",
+          "pointer": ""
+        }
+      },
+      {
+        "relation": "equal",
+        "left": {
+          "producer": "model_a",
+          "case": "control-claim-noncanonical",
+          "view": "conformance_projection",
+          "pointer": ""
+        },
+        "right": {
+          "producer": "model_b",
+          "case": "control-claim-noncanonical",
+          "view": "conformance_projection",
+          "pointer": ""
+        }
+      },
+      {
+        "relation": "equal",
+        "left": {
+          "producer": "model_a",
+          "case": "control-document-reference-cycle",
+          "view": "conformance_projection",
+          "pointer": ""
+        },
+        "right": {
+          "producer": "model_b",
+          "case": "control-document-reference-cycle",
+          "view": "conformance_projection",
+          "pointer": ""
+        }
+      },
+      {
+        "relation": "equal",
+        "left": {
+          "producer": "model_a",
+          "case": "control-graph-premise-cycle",
+          "view": "conformance_projection",
+          "pointer": ""
+        },
+        "right": {
+          "producer": "model_b",
+          "case": "control-graph-premise-cycle",
+          "view": "conformance_projection",
+          "pointer": ""
+        }
+      },
+      {
+        "relation": "equal",
+        "left": {
+          "producer": "model_a",
+          "case": "control-input-identity-collision",
+          "view": "conformance_projection",
+          "pointer": ""
+        },
+        "right": {
+          "producer": "model_b",
+          "case": "control-input-identity-collision",
+          "view": "conformance_projection",
+          "pointer": ""
+        }
+      },
+      {
+        "relation": "equal",
+        "left": {
+          "producer": "model_a",
+          "case": "control-interpret-invalid-output",
+          "view": "conformance_projection",
+          "pointer": ""
+        },
+        "right": {
+          "producer": "model_b",
+          "case": "control-interpret-invalid-output",
+          "view": "conformance_projection",
+          "pointer": ""
+        }
+      },
+      {
+        "relation": "equal",
+        "left": {
+          "producer": "model_a",
+          "case": "control-outcome-identity-collision",
+          "view": "conformance_projection",
+          "pointer": ""
+        },
+        "right": {
+          "producer": "model_b",
+          "case": "control-outcome-identity-collision",
+          "view": "conformance_projection",
+          "pointer": ""
+        }
+      },
+      {
+        "relation": "equal",
+        "left": {
+          "producer": "model_a",
+          "case": "control-project-invalid-output",
+          "view": "conformance_projection",
+          "pointer": ""
+        },
+        "right": {
+          "producer": "model_b",
+          "case": "control-project-invalid-output",
+          "view": "conformance_projection",
+          "pointer": ""
+        }
+      },
+      {
+        "relation": "equal",
+        "left": {
+          "producer": "model_a",
+          "case": "control-relation-invalid-output",
+          "view": "conformance_projection",
+          "pointer": ""
+        },
+        "right": {
+          "producer": "model_b",
+          "case": "control-relation-invalid-output",
+          "view": "conformance_projection",
+          "pointer": ""
+        }
+      },
+      {
+        "relation": "equal",
+        "left": {
+          "producer": "model_a",
+          "case": "control-schema-s0-verification-fault",
+          "view": "conformance_projection",
+          "pointer": ""
+        },
+        "right": {
+          "producer": "model_b",
+          "case": "control-schema-s0-verification-fault",
+          "view": "conformance_projection",
+          "pointer": ""
+        }
+      },
+      {
+        "relation": "equal",
+        "left": {
+          "producer": "model_a",
+          "case": "control-schema-s2-verification-fault",
+          "view": "conformance_projection",
+          "pointer": ""
+        },
+        "right": {
+          "producer": "model_b",
+          "case": "control-schema-s2-verification-fault",
+          "view": "conformance_projection",
+          "pointer": ""
+        }
+      },
+      {
+        "relation": "equal",
+        "left": {
+          "producer": "model_a",
+          "case": "control-state-identity-collision",
+          "view": "conformance_projection",
+          "pointer": ""
+        },
+        "right": {
+          "producer": "model_b",
+          "case": "control-state-identity-collision",
+          "view": "conformance_projection",
+          "pointer": ""
+        }
+      },
+      {
+        "relation": "equal",
+        "left": {
+          "producer": "model_a",
+          "case": "identity-reference-contract-mismatch",
+          "view": "conformance_projection",
+          "pointer": ""
+        },
+        "right": {
+          "producer": "model_b",
+          "case": "identity-reference-contract-mismatch",
+          "view": "conformance_projection",
+          "pointer": ""
+        }
+      },
+      {
+        "relation": "equal",
+        "left": {
+          "producer": "model_a",
+          "case": "identity-unreachable-document",
+          "view": "conformance_projection",
+          "pointer": ""
+        },
+        "right": {
+          "producer": "model_b",
+          "case": "identity-unreachable-document",
+          "view": "conformance_projection",
+          "pointer": ""
+        }
+      },
+      {
+        "relation": "equal",
+        "left": {
+          "producer": "model_a",
+          "case": "identity-wrong-domain",
+          "view": "conformance_projection",
+          "pointer": ""
+        },
+        "right": {
+          "producer": "model_b",
+          "case": "identity-wrong-domain",
+          "view": "conformance_projection",
+          "pointer": ""
+        }
+      },
+      {
+        "relation": "equal",
+        "left": {
+          "producer": "model_a",
+          "case": "identity-wrong-revision",
+          "view": "conformance_projection",
+          "pointer": ""
+        },
+        "right": {
+          "producer": "model_b",
+          "case": "identity-wrong-revision",
+          "view": "conformance_projection",
+          "pointer": ""
+        }
+      },
+      {
+        "relation": "equal",
+        "left": {
+          "producer": "model_a",
+          "case": "mechanics-arithmetic-overflow-interpret",
+          "view": "conformance_projection",
+          "pointer": ""
+        },
+        "right": {
+          "producer": "model_b",
+          "case": "mechanics-arithmetic-overflow-interpret",
+          "view": "conformance_projection",
+          "pointer": ""
+        }
+      },
+      {
+        "relation": "equal",
+        "left": {
+          "producer": "model_a",
+          "case": "mechanics-arithmetic-overflow-project",
+          "view": "conformance_projection",
+          "pointer": ""
+        },
+        "right": {
+          "producer": "model_b",
+          "case": "mechanics-arithmetic-overflow-project",
+          "view": "conformance_projection",
+          "pointer": ""
+        }
+      },
+      {
+        "relation": "equal",
+        "left": {
+          "producer": "model_a",
+          "case": "mechanics-arithmetic-overflow-relation",
+          "view": "conformance_projection",
+          "pointer": ""
+        },
+        "right": {
+          "producer": "model_b",
+          "case": "mechanics-arithmetic-overflow-relation",
+          "view": "conformance_projection",
+          "pointer": ""
+        }
+      },
+      {
+        "relation": "equal",
+        "left": {
+          "producer": "model_a",
+          "case": "mechanics-forwarding-recursive",
+          "view": "conformance_projection",
+          "pointer": ""
+        },
+        "right": {
+          "producer": "model_b",
+          "case": "mechanics-forwarding-recursive",
+          "view": "conformance_projection",
+          "pointer": ""
+        }
+      },
+      {
+        "relation": "equal",
+        "left": {
+          "producer": "model_a",
+          "case": "mechanics-invalid-atom-unavailable",
+          "view": "conformance_projection",
+          "pointer": ""
+        },
+        "right": {
+          "producer": "model_b",
+          "case": "mechanics-invalid-atom-unavailable",
+          "view": "conformance_projection",
+          "pointer": ""
+        }
+      },
+      {
+        "relation": "equal",
+        "left": {
+          "producer": "model_a",
+          "case": "mechanics-invalid-stop-transition",
+          "view": "conformance_projection",
+          "pointer": ""
+        },
+        "right": {
+          "producer": "model_b",
+          "case": "mechanics-invalid-stop-transition",
+          "view": "conformance_projection",
+          "pointer": ""
+        }
+      },
+      {
+        "relation": "equal",
+        "left": {
+          "producer": "model_a",
+          "case": "mechanics-malformed-censor",
+          "view": "conformance_projection",
+          "pointer": ""
+        },
+        "right": {
+          "producer": "model_b",
+          "case": "mechanics-malformed-censor",
+          "view": "conformance_projection",
+          "pointer": ""
+        }
+      },
+      {
+        "relation": "equal",
+        "left": {
+          "producer": "model_a",
+          "case": "mechanics-malformed-exclude",
+          "view": "conformance_projection",
+          "pointer": ""
+        },
+        "right": {
+          "producer": "model_b",
+          "case": "mechanics-malformed-exclude",
+          "view": "conformance_projection",
+          "pointer": ""
+        }
+      },
+      {
+        "relation": "equal",
+        "left": {
+          "producer": "model_a",
+          "case": "mechanics-malformed-include",
+          "view": "conformance_projection",
+          "pointer": ""
+        },
+        "right": {
+          "producer": "model_b",
+          "case": "mechanics-malformed-include",
+          "view": "conformance_projection",
+          "pointer": ""
+        }
+      },
+      {
+        "relation": "equal",
+        "left": {
+          "producer": "model_a",
+          "case": "mechanics-missing-attestation-grant",
+          "view": "conformance_projection",
+          "pointer": ""
+        },
+        "right": {
+          "producer": "model_b",
+          "case": "mechanics-missing-attestation-grant",
+          "view": "conformance_projection",
+          "pointer": ""
+        }
+      },
+      {
+        "relation": "equal",
+        "left": {
+          "producer": "model_a",
+          "case": "mechanics-missing-recorder",
+          "view": "conformance_projection",
+          "pointer": ""
+        },
+        "right": {
+          "producer": "model_b",
+          "case": "mechanics-missing-recorder",
+          "view": "conformance_projection",
+          "pointer": ""
+        }
+      },
+      {
+        "relation": "equal",
+        "left": {
+          "producer": "model_a",
+          "case": "mechanics-missing-source-grant",
+          "view": "conformance_projection",
+          "pointer": ""
+        },
+        "right": {
+          "producer": "model_b",
+          "case": "mechanics-missing-source-grant",
+          "view": "conformance_projection",
+          "pointer": ""
+        }
+      },
+      {
+        "relation": "equal",
+        "left": {
+          "producer": "model_a",
+          "case": "mechanics-noncanonical-predecessors",
+          "view": "conformance_projection",
+          "pointer": ""
+        },
+        "right": {
+          "producer": "model_b",
+          "case": "mechanics-noncanonical-predecessors",
+          "view": "conformance_projection",
+          "pointer": ""
+        }
+      },
+      {
+        "relation": "equal",
+        "left": {
+          "producer": "model_a",
+          "case": "mechanics-observed-censor",
+          "view": "conformance_projection",
+          "pointer": ""
+        },
+        "right": {
+          "producer": "model_b",
+          "case": "mechanics-observed-censor",
+          "view": "conformance_projection",
+          "pointer": ""
+        }
+      },
+      {
+        "relation": "equal",
+        "left": {
+          "producer": "model_a",
+          "case": "mechanics-observed-exclude-opaque-a",
+          "view": "conformance_projection",
+          "pointer": ""
+        },
+        "right": {
+          "producer": "model_b",
+          "case": "mechanics-observed-exclude-opaque-a",
+          "view": "conformance_projection",
+          "pointer": ""
+        }
+      },
+      {
+        "relation": "equal",
+        "left": {
+          "producer": "model_a",
+          "case": "mechanics-observed-exclude-opaque-b",
+          "view": "conformance_projection",
+          "pointer": ""
+        },
+        "right": {
+          "producer": "model_b",
+          "case": "mechanics-observed-exclude-opaque-b",
+          "view": "conformance_projection",
+          "pointer": ""
+        }
+      },
+      {
+        "relation": "equal",
+        "left": {
+          "producer": "model_a",
+          "case": "mechanics-observed-include-atom",
+          "view": "conformance_projection",
+          "pointer": ""
+        },
+        "right": {
+          "producer": "model_b",
+          "case": "mechanics-observed-include-atom",
+          "view": "conformance_projection",
+          "pointer": ""
+        }
+      },
+      {
+        "relation": "equal",
+        "left": {
+          "producer": "model_a",
+          "case": "mechanics-opaque-payload-mutant-a",
+          "view": "conformance_projection",
+          "pointer": ""
+        },
+        "right": {
+          "producer": "model_b",
+          "case": "mechanics-opaque-payload-mutant-a",
+          "view": "conformance_projection",
+          "pointer": ""
+        }
+      },
+      {
+        "relation": "equal",
+        "left": {
+          "producer": "model_a",
+          "case": "mechanics-opaque-payload-mutant-b",
+          "view": "conformance_projection",
+          "pointer": ""
+        },
+        "right": {
+          "producer": "model_b",
+          "case": "mechanics-opaque-payload-mutant-b",
+          "view": "conformance_projection",
+          "pointer": ""
+        }
+      },
+      {
+        "relation": "equal",
+        "left": {
+          "producer": "model_a",
+          "case": "mechanics-scoped-accepted",
+          "view": "conformance_projection",
+          "pointer": ""
+        },
+        "right": {
+          "producer": "model_b",
+          "case": "mechanics-scoped-accepted",
+          "view": "conformance_projection",
+          "pointer": ""
+        }
+      },
+      {
+        "relation": "equal",
+        "left": {
+          "producer": "model_a",
+          "case": "mechanics-scoped-rejected",
+          "view": "conformance_projection",
+          "pointer": ""
+        },
+        "right": {
+          "producer": "model_b",
+          "case": "mechanics-scoped-rejected",
+          "view": "conformance_projection",
+          "pointer": ""
+        }
+      },
+      {
+        "relation": "equal",
+        "left": {
+          "producer": "model_a",
+          "case": "mechanics-two-attempt-predecessor",
+          "view": "conformance_projection",
+          "pointer": ""
+        },
+        "right": {
+          "producer": "model_b",
+          "case": "mechanics-two-attempt-predecessor",
+          "view": "conformance_projection",
+          "pointer": ""
+        }
+      },
+      {
+        "relation": "equal",
+        "left": {
+          "producer": "model_a",
+          "case": "mechanics-unavailable-censor",
+          "view": "conformance_projection",
+          "pointer": ""
+        },
+        "right": {
+          "producer": "model_b",
+          "case": "mechanics-unavailable-censor",
+          "view": "conformance_projection",
+          "pointer": ""
+        }
+      },
+      {
+        "relation": "equal",
+        "left": {
+          "producer": "model_a",
+          "case": "mechanics-unavailable-include",
+          "view": "conformance_projection",
+          "pointer": ""
+        },
+        "right": {
+          "producer": "model_b",
+          "case": "mechanics-unavailable-include",
+          "view": "conformance_projection",
+          "pointer": ""
+        }
+      },
+      {
+        "relation": "equal",
+        "left": {
+          "producer": "model_a",
+          "case": "mechanics-unavailable-operational",
+          "view": "conformance_projection",
+          "pointer": ""
+        },
+        "right": {
+          "producer": "model_b",
+          "case": "mechanics-unavailable-operational",
+          "view": "conformance_projection",
+          "pointer": ""
+        }
+      },
+      {
+        "relation": "equal",
+        "left": {
+          "producer": "model_a",
+          "case": "mechanics-wrong-manifest-view",
+          "view": "conformance_projection",
+          "pointer": ""
+        },
+        "right": {
+          "producer": "model_b",
+          "case": "mechanics-wrong-manifest-view",
+          "view": "conformance_projection",
+          "pointer": ""
+        }
+      },
+      {
+        "relation": "equal",
+        "left": {
+          "producer": "model_a",
+          "case": "mechanics-wrong-observed-plans",
+          "view": "conformance_projection",
+          "pointer": ""
+        },
+        "right": {
+          "producer": "model_b",
+          "case": "mechanics-wrong-observed-plans",
+          "view": "conformance_projection",
+          "pointer": ""
+        }
+      },
+      {
+        "relation": "equal",
+        "left": {
+          "producer": "model_a",
+          "case": "mechanics-wrong-selection-outcome",
+          "view": "conformance_projection",
+          "pointer": ""
+        },
+        "right": {
+          "producer": "model_b",
+          "case": "mechanics-wrong-selection-outcome",
+          "view": "conformance_projection",
+          "pointer": ""
+        }
+      },
+      {
+        "relation": "equal",
+        "left": {
+          "producer": "model_a",
+          "case": "mechanics-wrong-selection-plan",
+          "view": "conformance_projection",
+          "pointer": ""
+        },
+        "right": {
+          "producer": "model_b",
+          "case": "mechanics-wrong-selection-plan",
+          "view": "conformance_projection",
+          "pointer": ""
+        }
+      },
+      {
+        "relation": "equal",
+        "left": {
+          "producer": "model_a",
+          "case": "mechanics-zero-attempt",
+          "view": "conformance_projection",
+          "pointer": ""
+        },
+        "right": {
+          "producer": "model_b",
+          "case": "mechanics-zero-attempt",
+          "view": "conformance_projection",
+          "pointer": ""
+        }
+      },
+      {
+        "relation": "equal",
+        "left": {
+          "producer": "model_a",
+          "case": "output-error-skips-o1",
+          "view": "conformance_projection",
+          "pointer": ""
+        },
+        "right": {
+          "producer": "model_b",
+          "case": "output-error-skips-o1",
+          "view": "conformance_projection",
+          "pointer": ""
+        }
+      },
+      {
+        "relation": "equal",
+        "left": {
+          "producer": "model_a",
+          "case": "output-o0-too-large-skips-o1",
+          "view": "conformance_projection",
+          "pointer": ""
+        },
+        "right": {
+          "producer": "model_b",
+          "case": "output-o0-too-large-skips-o1",
+          "view": "conformance_projection",
+          "pointer": ""
+        }
+      },
+      {
+        "relation": "equal",
+        "left": {
+          "producer": "model_a",
+          "case": "output-success-too-large",
+          "view": "conformance_projection",
+          "pointer": ""
+        },
+        "right": {
+          "producer": "model_b",
+          "case": "output-success-too-large",
+          "view": "conformance_projection",
+          "pointer": ""
+        }
+      },
+      {
+        "relation": "equal",
+        "left": {
+          "producer": "model_a",
+          "case": "positive-controls-checked-witness-invalid-omitted",
+          "view": "conformance_projection",
+          "pointer": ""
+        },
+        "right": {
+          "producer": "model_b",
+          "case": "positive-controls-checked-witness-invalid-omitted",
+          "view": "conformance_projection",
+          "pointer": ""
+        }
+      },
+      {
+        "relation": "equal",
+        "left": {
+          "producer": "model_a",
+          "case": "positive-controls-checked-witness-invalid-submitted",
+          "view": "conformance_projection",
+          "pointer": ""
+        },
+        "right": {
+          "producer": "model_b",
+          "case": "positive-controls-checked-witness-invalid-submitted",
+          "view": "conformance_projection",
+          "pointer": ""
+        }
+      },
+      {
+        "relation": "equal",
+        "left": {
+          "producer": "model_a",
+          "case": "positive-controls-checked-witness-matching",
+          "view": "conformance_projection",
+          "pointer": ""
+        },
+        "right": {
+          "producer": "model_b",
+          "case": "positive-controls-checked-witness-matching",
+          "view": "conformance_projection",
+          "pointer": ""
+        }
+      },
+      {
+        "relation": "equal",
+        "left": {
+          "producer": "model_a",
+          "case": "positive-controls-checked-witness-missing-checker-grant",
+          "view": "conformance_projection",
+          "pointer": ""
+        },
+        "right": {
+          "producer": "model_b",
+          "case": "positive-controls-checked-witness-missing-checker-grant",
+          "view": "conformance_projection",
+          "pointer": ""
+        }
+      },
+      {
+        "relation": "equal",
+        "left": {
+          "producer": "model_a",
+          "case": "positive-controls-checked-witness-unavailable-theory-assumption",
+          "view": "conformance_projection",
+          "pointer": ""
+        },
+        "right": {
+          "producer": "model_b",
+          "case": "positive-controls-checked-witness-unavailable-theory-assumption",
+          "view": "conformance_projection",
+          "pointer": ""
+        }
+      },
+      {
+        "relation": "equal",
+        "left": {
+          "producer": "model_a",
+          "case": "positive-controls-checked-witness-valid-refute",
+          "view": "conformance_projection",
+          "pointer": ""
+        },
+        "right": {
+          "producer": "model_b",
+          "case": "positive-controls-checked-witness-valid-refute",
+          "view": "conformance_projection",
+          "pointer": ""
+        }
+      },
+      {
+        "relation": "equal",
+        "left": {
+          "producer": "model_a",
+          "case": "positive-controls-checked-witness-wrong-theory-scope",
+          "view": "conformance_projection",
+          "pointer": ""
+        },
+        "right": {
+          "producer": "model_b",
+          "case": "positive-controls-checked-witness-wrong-theory-scope",
+          "view": "conformance_projection",
+          "pointer": ""
+        }
+      },
+      {
+        "relation": "equal",
+        "left": {
+          "producer": "model_a",
+          "case": "positive-controls-checked-witness-wrong-theory-statement",
+          "view": "conformance_projection",
+          "pointer": ""
+        },
+        "right": {
+          "producer": "model_b",
+          "case": "positive-controls-checked-witness-wrong-theory-statement",
+          "view": "conformance_projection",
+          "pointer": ""
+        }
+      },
+      {
+        "relation": "equal",
+        "left": {
+          "producer": "model_a",
+          "case": "positive-controls-sequential-anytime-valid",
+          "view": "conformance_projection",
+          "pointer": ""
+        },
+        "right": {
+          "producer": "model_b",
+          "case": "positive-controls-sequential-anytime-valid",
+          "view": "conformance_projection",
+          "pointer": ""
+        }
+      },
+      {
+        "relation": "equal",
+        "left": {
+          "producer": "model_a",
+          "case": "positive-controls-sequential-assumption-scope-mismatch",
+          "view": "conformance_projection",
+          "pointer": ""
+        },
+        "right": {
+          "producer": "model_b",
+          "case": "positive-controls-sequential-assumption-scope-mismatch",
+          "view": "conformance_projection",
+          "pointer": ""
+        }
+      },
+      {
+        "relation": "equal",
+        "left": {
+          "producer": "model_a",
+          "case": "positive-controls-sequential-checkpoint-mismatch",
+          "view": "conformance_projection",
+          "pointer": ""
+        },
+        "right": {
+          "producer": "model_b",
+          "case": "positive-controls-sequential-checkpoint-mismatch",
+          "view": "conformance_projection",
+          "pointer": ""
+        }
+      },
+      {
+        "relation": "equal",
+        "left": {
+          "producer": "model_a",
+          "case": "positive-controls-sequential-duplicate-role-id",
+          "view": "conformance_projection",
+          "pointer": ""
+        },
+        "right": {
+          "producer": "model_b",
+          "case": "positive-controls-sequential-duplicate-role-id",
+          "view": "conformance_projection",
+          "pointer": ""
+        }
+      },
+      {
+        "relation": "equal",
+        "left": {
+          "producer": "model_a",
+          "case": "positive-controls-sequential-expectation-scope-mismatch",
+          "view": "conformance_projection",
+          "pointer": ""
+        },
+        "right": {
+          "producer": "model_b",
+          "case": "positive-controls-sequential-expectation-scope-mismatch",
+          "view": "conformance_projection",
+          "pointer": ""
+        }
+      },
+      {
+        "relation": "equal",
+        "left": {
+          "producer": "model_a",
+          "case": "positive-controls-sequential-fixed-horizon",
+          "view": "conformance_projection",
+          "pointer": ""
+        },
+        "right": {
+          "producer": "model_b",
+          "case": "positive-controls-sequential-fixed-horizon",
+          "view": "conformance_projection",
+          "pointer": ""
+        }
+      },
+      {
+        "relation": "equal",
+        "left": {
+          "producer": "model_a",
+          "case": "positive-controls-sequential-missing-attestation-grant",
+          "view": "conformance_projection",
+          "pointer": ""
+        },
+        "right": {
+          "producer": "model_b",
+          "case": "positive-controls-sequential-missing-attestation-grant",
+          "view": "conformance_projection",
+          "pointer": ""
+        }
+      },
+      {
+        "relation": "equal",
+        "left": {
+          "producer": "model_a",
+          "case": "positive-controls-sequential-missing-recorder-grant",
+          "view": "conformance_projection",
+          "pointer": ""
+        },
+        "right": {
+          "producer": "model_b",
+          "case": "positive-controls-sequential-missing-recorder-grant",
+          "view": "conformance_projection",
+          "pointer": ""
+        }
+      },
+      {
+        "relation": "equal",
+        "left": {
+          "producer": "model_a",
+          "case": "positive-controls-sequential-missing-recovery-grant",
+          "view": "conformance_projection",
+          "pointer": ""
+        },
+        "right": {
+          "producer": "model_b",
+          "case": "positive-controls-sequential-missing-recovery-grant",
+          "view": "conformance_projection",
+          "pointer": ""
+        }
+      },
+      {
+        "relation": "equal",
+        "left": {
+          "producer": "model_a",
+          "case": "positive-controls-sequential-omitted-assumption",
+          "view": "conformance_projection",
+          "pointer": ""
+        },
+        "right": {
+          "producer": "model_b",
+          "case": "positive-controls-sequential-omitted-assumption",
+          "view": "conformance_projection",
+          "pointer": ""
+        }
+      },
+      {
+        "relation": "equal",
+        "left": {
+          "producer": "model_a",
+          "case": "positive-controls-sequential-rejected-result",
+          "view": "conformance_projection",
+          "pointer": ""
+        },
+        "right": {
+          "producer": "model_b",
+          "case": "positive-controls-sequential-rejected-result",
+          "view": "conformance_projection",
+          "pointer": ""
+        }
+      },
+      {
+        "relation": "equal",
+        "left": {
+          "producer": "model_a",
+          "case": "positive-controls-sequential-role-mismatch",
+          "view": "conformance_projection",
+          "pointer": ""
+        },
+        "right": {
+          "producer": "model_b",
+          "case": "positive-controls-sequential-role-mismatch",
+          "view": "conformance_projection",
+          "pointer": ""
+        }
+      },
+      {
+        "relation": "equal",
+        "left": {
+          "producer": "model_a",
+          "case": "positive-controls-sequential-statement-contract-mismatch",
+          "view": "conformance_projection",
+          "pointer": ""
+        },
+        "right": {
+          "producer": "model_b",
+          "case": "positive-controls-sequential-statement-contract-mismatch",
+          "view": "conformance_projection",
+          "pointer": ""
+        }
+      },
+      {
+        "relation": "equal",
+        "left": {
+          "producer": "model_a",
+          "case": "positive-controls-sequential-substantive-target-binding",
+          "view": "conformance_projection",
+          "pointer": ""
+        },
+        "right": {
+          "producer": "model_b",
+          "case": "positive-controls-sequential-substantive-target-binding",
+          "view": "conformance_projection",
+          "pointer": ""
+        }
+      },
+      {
+        "relation": "equal",
+        "left": {
+          "producer": "model_a",
+          "case": "positive-controls-sequential-substantive-target-output",
+          "view": "conformance_projection",
+          "pointer": ""
+        },
+        "right": {
+          "producer": "model_b",
+          "case": "positive-controls-sequential-substantive-target-output",
+          "view": "conformance_projection",
+          "pointer": ""
+        }
+      },
+      {
+        "relation": "equal",
+        "left": {
+          "producer": "model_a",
+          "case": "positive-controls-sequential-unavailable-assumption",
+          "view": "conformance_projection",
+          "pointer": ""
+        },
+        "right": {
+          "producer": "model_b",
+          "case": "positive-controls-sequential-unavailable-assumption",
+          "view": "conformance_projection",
+          "pointer": ""
+        }
+      },
+      {
+        "relation": "equal",
+        "left": {
+          "producer": "model_a",
+          "case": "positive-controls-sequential-wrong-scope-contract",
+          "view": "conformance_projection",
+          "pointer": ""
+        },
+        "right": {
+          "producer": "model_b",
+          "case": "positive-controls-sequential-wrong-scope-contract",
+          "view": "conformance_projection",
+          "pointer": ""
+        }
+      },
+      {
+        "relation": "equal",
+        "left": {
+          "producer": "model_a",
+          "case": "precedence-identity-duplicate-before-unknown",
+          "view": "conformance_projection",
+          "pointer": ""
+        },
+        "right": {
+          "producer": "model_b",
+          "case": "precedence-identity-duplicate-before-unknown",
+          "view": "conformance_projection",
+          "pointer": ""
+        }
+      },
+      {
+        "relation": "equal",
+        "left": {
+          "producer": "model_a",
+          "case": "precedence-identity-mismatch-before-duplicate",
+          "view": "conformance_projection",
+          "pointer": ""
+        },
+        "right": {
+          "producer": "model_b",
+          "case": "precedence-identity-mismatch-before-duplicate",
+          "view": "conformance_projection",
+          "pointer": ""
+        }
+      },
+      {
+        "relation": "equal",
+        "left": {
+          "producer": "model_a",
+          "case": "precedence-identity-noncanonical-before-mismatch",
+          "view": "conformance_projection",
+          "pointer": ""
+        },
+        "right": {
+          "producer": "model_b",
+          "case": "precedence-identity-noncanonical-before-mismatch",
+          "view": "conformance_projection",
+          "pointer": ""
+        }
+      },
+      {
+        "relation": "equal",
+        "left": {
+          "producer": "model_a",
+          "case": "precedence-identity-unknown-before-reference",
+          "view": "conformance_projection",
+          "pointer": ""
+        },
+        "right": {
+          "producer": "model_b",
+          "case": "precedence-identity-unknown-before-reference",
+          "view": "conformance_projection",
+          "pointer": ""
+        }
+      },
+      {
+        "relation": "equal",
+        "left": {
+          "producer": "model_a",
+          "case": "precedence-interpret-fuel-before-invalid-output",
+          "view": "conformance_projection",
+          "pointer": ""
+        },
+        "right": {
+          "producer": "model_b",
+          "case": "precedence-interpret-fuel-before-invalid-output",
+          "view": "conformance_projection",
+          "pointer": ""
+        }
+      },
+      {
+        "relation": "equal",
+        "left": {
+          "producer": "model_a",
+          "case": "precedence-parse-earlier-duplicate-before-later-syntax",
+          "view": "conformance_projection",
+          "pointer": ""
+        },
+        "right": {
+          "producer": "model_b",
+          "case": "precedence-parse-earlier-duplicate-before-later-syntax",
+          "view": "conformance_projection",
+          "pointer": ""
+        }
+      },
+      {
+        "relation": "equal",
+        "left": {
+          "producer": "model_a",
+          "case": "precedence-parse-outer-before-duplicate",
+          "view": "conformance_projection",
+          "pointer": ""
+        },
+        "right": {
+          "producer": "model_b",
+          "case": "precedence-parse-outer-before-duplicate",
+          "view": "conformance_projection",
+          "pointer": ""
+        }
+      },
+      {
+        "relation": "equal",
+        "left": {
+          "producer": "model_a",
+          "case": "precedence-project-fuel-before-invalid-output",
+          "view": "conformance_projection",
+          "pointer": ""
+        },
+        "right": {
+          "producer": "model_b",
+          "case": "precedence-project-fuel-before-invalid-output",
+          "view": "conformance_projection",
+          "pointer": ""
+        }
+      },
+      {
+        "relation": "equal",
+        "left": {
+          "producer": "model_a",
+          "case": "precedence-reference-before-cycle",
+          "view": "conformance_projection",
+          "pointer": ""
+        },
+        "right": {
+          "producer": "model_b",
+          "case": "precedence-reference-before-cycle",
+          "view": "conformance_projection",
+          "pointer": ""
+        }
+      },
+      {
+        "relation": "equal",
+        "left": {
+          "producer": "model_a",
+          "case": "precedence-relation-authority-before-local",
+          "view": "conformance_projection",
+          "pointer": ""
+        },
+        "right": {
+          "producer": "model_b",
+          "case": "precedence-relation-authority-before-local",
+          "view": "conformance_projection",
+          "pointer": ""
+        }
+      },
+      {
+        "relation": "equal",
+        "left": {
+          "producer": "model_a",
+          "case": "precedence-relation-binding-before-authority",
+          "view": "conformance_projection",
+          "pointer": ""
+        },
+        "right": {
+          "producer": "model_b",
+          "case": "precedence-relation-binding-before-authority",
+          "view": "conformance_projection",
+          "pointer": ""
+        }
+      },
+      {
+        "relation": "equal",
+        "left": {
+          "producer": "model_a",
+          "case": "precedence-relation-cross-record-before-cycle",
+          "view": "conformance_projection",
+          "pointer": ""
+        },
+        "right": {
+          "producer": "model_b",
+          "case": "precedence-relation-cross-record-before-cycle",
+          "view": "conformance_projection",
+          "pointer": ""
+        }
+      },
+      {
+        "relation": "equal",
+        "left": {
+          "producer": "model_a",
+          "case": "precedence-relation-fuel-before-invalid-output",
+          "view": "conformance_projection",
+          "pointer": ""
+        },
+        "right": {
+          "producer": "model_b",
+          "case": "precedence-relation-fuel-before-invalid-output",
+          "view": "conformance_projection",
+          "pointer": ""
+        }
+      },
+      {
+        "relation": "equal",
+        "left": {
+          "producer": "model_a",
+          "case": "precedence-relation-local-before-cross-record",
+          "view": "conformance_projection",
+          "pointer": ""
+        },
+        "right": {
+          "producer": "model_b",
+          "case": "precedence-relation-local-before-cross-record",
+          "view": "conformance_projection",
+          "pointer": ""
+        }
+      },
+      {
+        "relation": "equal",
+        "left": {
+          "producer": "model_a",
+          "case": "presence-both",
+          "view": "conformance_projection",
+          "pointer": ""
+        },
+        "right": {
+          "producer": "model_b",
+          "case": "presence-both",
+          "view": "conformance_projection",
+          "pointer": ""
+        }
+      },
+      {
+        "relation": "equal",
+        "left": {
+          "producer": "model_a",
+          "case": "presence-duplicate-document",
+          "view": "conformance_projection",
+          "pointer": ""
+        },
+        "right": {
+          "producer": "model_b",
+          "case": "presence-duplicate-document",
+          "view": "conformance_projection",
+          "pointer": ""
+        }
+      },
+      {
+        "relation": "equal",
+        "left": {
+          "producer": "model_a",
+          "case": "presence-duplicate-node",
+          "view": "conformance_projection",
+          "pointer": ""
+        },
+        "right": {
+          "producer": "model_b",
+          "case": "presence-duplicate-node",
+          "view": "conformance_projection",
+          "pointer": ""
+        }
+      },
+      {
+        "relation": "equal",
+        "left": {
+          "producer": "model_a",
+          "case": "presence-equal-label-projection",
+          "view": "conformance_projection",
+          "pointer": ""
+        },
+        "right": {
+          "producer": "model_b",
+          "case": "presence-equal-label-projection",
+          "view": "conformance_projection",
+          "pointer": ""
+        }
+      },
+      {
+        "relation": "equal",
+        "left": {
+          "producer": "model_a",
+          "case": "presence-fuel-crossing",
+          "view": "conformance_projection",
+          "pointer": ""
+        },
+        "right": {
+          "producer": "model_b",
+          "case": "presence-fuel-crossing",
+          "view": "conformance_projection",
+          "pointer": ""
+        }
+      },
+      {
+        "relation": "equal",
+        "left": {
+          "producer": "model_a",
+          "case": "presence-fuel-exact",
+          "view": "conformance_projection",
+          "pointer": ""
+        },
+        "right": {
+          "producer": "model_b",
+          "case": "presence-fuel-exact",
+          "view": "conformance_projection",
+          "pointer": ""
+        }
+      },
+      {
+        "relation": "equal",
+        "left": {
+          "producer": "model_a",
+          "case": "presence-missing-reference",
+          "view": "conformance_projection",
+          "pointer": ""
+        },
+        "right": {
+          "producer": "model_b",
+          "case": "presence-missing-reference",
+          "view": "conformance_projection",
+          "pointer": ""
+        }
+      },
+      {
+        "relation": "equal",
+        "left": {
+          "producer": "model_a",
+          "case": "presence-missing-stance",
+          "view": "conformance_projection",
+          "pointer": ""
+        },
+        "right": {
+          "producer": "model_b",
+          "case": "presence-missing-stance",
+          "view": "conformance_projection",
+          "pointer": ""
+        }
+      },
+      {
+        "relation": "equal",
+        "left": {
+          "producer": "model_a",
+          "case": "presence-neither",
+          "view": "conformance_projection",
+          "pointer": ""
+        },
+        "right": {
+          "producer": "model_b",
+          "case": "presence-neither",
+          "view": "conformance_projection",
+          "pointer": ""
+        }
+      },
+      {
+        "relation": "equal",
+        "left": {
+          "producer": "model_a",
+          "case": "presence-refute-only",
+          "view": "conformance_projection",
+          "pointer": ""
+        },
+        "right": {
+          "producer": "model_b",
+          "case": "presence-refute-only",
+          "view": "conformance_projection",
+          "pointer": ""
+        }
+      },
+      {
+        "relation": "equal",
+        "left": {
+          "producer": "model_a",
+          "case": "presence-replay-equivalent",
+          "view": "conformance_projection",
+          "pointer": ""
+        },
+        "right": {
+          "producer": "model_b",
+          "case": "presence-replay-equivalent",
+          "view": "conformance_projection",
+          "pointer": ""
+        }
+      },
+      {
+        "relation": "equal",
+        "left": {
+          "producer": "model_a",
+          "case": "presence-replay-identical",
+          "view": "conformance_projection",
+          "pointer": ""
+        },
+        "right": {
+          "producer": "model_b",
+          "case": "presence-replay-identical",
+          "view": "conformance_projection",
+          "pointer": ""
+        }
+      },
+      {
+        "relation": "equal",
+        "left": {
+          "producer": "model_a",
+          "case": "presence-support-only",
+          "view": "conformance_projection",
+          "pointer": ""
+        },
+        "right": {
+          "producer": "model_b",
+          "case": "presence-support-only",
+          "view": "conformance_projection",
+          "pointer": ""
+        }
+      },
+      {
+        "relation": "equal",
+        "left": {
+          "producer": "model_a",
+          "case": "presence-two-support",
+          "view": "conformance_projection",
+          "pointer": ""
+        },
+        "right": {
+          "producer": "model_b",
+          "case": "presence-two-support",
+          "view": "conformance_projection",
+          "pointer": ""
+        }
+      },
+      {
+        "relation": "equal",
+        "left": {
+          "producer": "model_a",
+          "case": "presence-unauthorized-projection",
+          "view": "conformance_projection",
+          "pointer": ""
+        },
+        "right": {
+          "producer": "model_b",
+          "case": "presence-unauthorized-projection",
+          "view": "conformance_projection",
+          "pointer": ""
+        }
+      },
+      {
+        "relation": "equal",
+        "left": {
+          "producer": "model_a",
+          "case": "presence-unavailable-assumption",
+          "view": "conformance_projection",
+          "pointer": ""
+        },
+        "right": {
+          "producer": "model_b",
+          "case": "presence-unavailable-assumption",
+          "view": "conformance_projection",
+          "pointer": ""
+        }
+      },
+      {
+        "relation": "equal",
+        "left": {
+          "producer": "model_a",
+          "case": "presence-unknown-contract",
+          "view": "conformance_projection",
+          "pointer": ""
+        },
+        "right": {
+          "producer": "model_b",
+          "case": "presence-unknown-contract",
+          "view": "conformance_projection",
+          "pointer": ""
+        }
+      },
+      {
+        "relation": "equal",
+        "left": {
+          "producer": "model_a",
+          "case": "presence-unknown-wrapper-field",
+          "view": "conformance_projection",
+          "pointer": ""
+        },
+        "right": {
+          "producer": "model_b",
+          "case": "presence-unknown-wrapper-field",
+          "view": "conformance_projection",
+          "pointer": ""
+        }
+      },
+      {
+        "relation": "equal",
+        "left": {
+          "producer": "model_a",
+          "case": "presence-wrong-assumption",
+          "view": "conformance_projection",
+          "pointer": ""
+        },
+        "right": {
+          "producer": "model_b",
+          "case": "presence-wrong-assumption",
+          "view": "conformance_projection",
+          "pointer": ""
+        }
+      },
+      {
+        "relation": "equal",
+        "left": {
+          "producer": "model_a",
+          "case": "presence-wrong-modality",
+          "view": "conformance_projection",
+          "pointer": ""
+        },
+        "right": {
+          "producer": "model_b",
+          "case": "presence-wrong-modality",
+          "view": "conformance_projection",
+          "pointer": ""
+        }
+      },
+      {
+        "relation": "equal",
+        "left": {
+          "producer": "model_a",
+          "case": "presence-wrong-package-language",
+          "view": "conformance_projection",
+          "pointer": ""
+        },
+        "right": {
+          "producer": "model_b",
+          "case": "presence-wrong-package-language",
+          "view": "conformance_projection",
+          "pointer": ""
+        }
+      },
+      {
+        "relation": "equal",
+        "left": {
+          "producer": "model_a",
+          "case": "presence-wrong-role-projection",
+          "view": "conformance_projection",
+          "pointer": ""
+        },
+        "right": {
+          "producer": "model_b",
+          "case": "presence-wrong-role-projection",
+          "view": "conformance_projection",
+          "pointer": ""
+        }
+      },
+      {
+        "relation": "equal",
+        "left": {
+          "producer": "model_a",
+          "case": "presence-wrong-target",
+          "view": "conformance_projection",
+          "pointer": ""
+        },
+        "right": {
+          "producer": "model_b",
+          "case": "presence-wrong-target",
+          "view": "conformance_projection",
+          "pointer": ""
+        }
+      },
+      {
+        "relation": "equal",
+        "left": {
+          "producer": "model_a",
+          "case": "relation-basis-mismatch",
+          "view": "conformance_projection",
+          "pointer": ""
+        },
+        "right": {
+          "producer": "model_b",
+          "case": "relation-basis-mismatch",
+          "view": "conformance_projection",
+          "pointer": ""
+        }
+      },
+      {
+        "relation": "equal",
+        "left": {
+          "producer": "model_a",
+          "case": "relation-kind-mismatch",
+          "view": "conformance_projection",
+          "pointer": ""
+        },
+        "right": {
+          "producer": "model_b",
+          "case": "relation-kind-mismatch",
+          "view": "conformance_projection",
+          "pointer": ""
+        }
+      },
+      {
+        "relation": "equal",
+        "left": {
+          "producer": "model_a",
+          "case": "resource-interpret-call-limit",
+          "view": "conformance_projection",
+          "pointer": ""
+        },
+        "right": {
+          "producer": "model_b",
+          "case": "resource-interpret-call-limit",
+          "view": "conformance_projection",
+          "pointer": ""
+        }
+      },
+      {
+        "relation": "equal",
+        "left": {
+          "producer": "model_a",
+          "case": "resource-interpret-fuel-exact-project-crossing",
+          "view": "conformance_projection",
+          "pointer": ""
+        },
+        "right": {
+          "producer": "model_b",
+          "case": "resource-interpret-fuel-exact-project-crossing",
+          "view": "conformance_projection",
+          "pointer": ""
+        }
+      },
+      {
+        "relation": "equal",
+        "left": {
+          "producer": "model_a",
+          "case": "resource-interpret-state-limits-exact",
+          "view": "conformance_projection",
+          "pointer": ""
+        },
+        "right": {
+          "producer": "model_b",
+          "case": "resource-interpret-state-limits-exact",
+          "view": "conformance_projection",
+          "pointer": ""
+        }
+      },
+      {
+        "relation": "equal",
+        "left": {
+          "producer": "model_a",
+          "case": "resource-interpret-state-limits-exceeded",
+          "view": "conformance_projection",
+          "pointer": ""
+        },
+        "right": {
+          "producer": "model_b",
+          "case": "resource-interpret-state-limits-exceeded",
+          "view": "conformance_projection",
+          "pointer": ""
+        }
+      },
+      {
+        "relation": "equal",
+        "left": {
+          "producer": "model_a",
+          "case": "resource-project-call-limit",
+          "view": "conformance_projection",
+          "pointer": ""
+        },
+        "right": {
+          "producer": "model_b",
+          "case": "resource-project-call-limit",
+          "view": "conformance_projection",
+          "pointer": ""
+        }
+      },
+      {
+        "relation": "equal",
+        "left": {
+          "producer": "model_a",
+          "case": "resource-project-labels-exact",
+          "view": "conformance_projection",
+          "pointer": ""
+        },
+        "right": {
+          "producer": "model_b",
+          "case": "resource-project-labels-exact",
+          "view": "conformance_projection",
+          "pointer": ""
+        }
+      },
+      {
+        "relation": "equal",
+        "left": {
+          "producer": "model_a",
+          "case": "resource-project-labels-exceeded",
+          "view": "conformance_projection",
+          "pointer": ""
+        },
+        "right": {
+          "producer": "model_b",
+          "case": "resource-project-labels-exceeded",
+          "view": "conformance_projection",
+          "pointer": ""
+        }
+      },
+      {
+        "relation": "equal",
+        "left": {
+          "producer": "model_a",
+          "case": "resource-relation-call-limit",
+          "view": "conformance_projection",
+          "pointer": ""
+        },
+        "right": {
+          "producer": "model_b",
+          "case": "resource-relation-call-limit",
+          "view": "conformance_projection",
+          "pointer": ""
+        }
+      },
+      {
+        "relation": "equal",
+        "left": {
+          "producer": "model_a",
+          "case": "resource-relation-fuel-crossing",
+          "view": "conformance_projection",
+          "pointer": ""
+        },
+        "right": {
+          "producer": "model_b",
+          "case": "resource-relation-fuel-crossing",
+          "view": "conformance_projection",
+          "pointer": ""
+        }
+      },
+      {
+        "relation": "equal",
+        "left": {
+          "producer": "model_a",
+          "case": "resource-relation-fuel-exact-interpret-crossing",
+          "view": "conformance_projection",
+          "pointer": ""
+        },
+        "right": {
+          "producer": "model_b",
+          "case": "resource-relation-fuel-exact-interpret-crossing",
+          "view": "conformance_projection",
+          "pointer": ""
+        }
+      },
+      {
+        "relation": "equal",
+        "left": {
+          "producer": "model_a",
+          "case": "resource-relation-static-exact",
+          "view": "conformance_projection",
+          "pointer": ""
+        },
+        "right": {
+          "producer": "model_b",
+          "case": "resource-relation-static-exact",
+          "view": "conformance_projection",
+          "pointer": ""
+        }
+      },
+      {
+        "relation": "equal",
+        "left": {
+          "producer": "model_a",
+          "case": "resource-relation-static-exceeded",
+          "view": "conformance_projection",
+          "pointer": ""
+        },
+        "right": {
+          "producer": "model_b",
+          "case": "resource-relation-static-exceeded",
+          "view": "conformance_projection",
+          "pointer": ""
+        }
+      },
+      {
+        "relation": "equal",
+        "left": {
+          "producer": "model_a",
+          "case": "resource-state-equal-digest-keeps-charge",
+          "view": "conformance_projection",
+          "pointer": ""
+        },
+        "right": {
+          "producer": "model_b",
+          "case": "resource-state-equal-digest-keeps-charge",
+          "view": "conformance_projection",
+          "pointer": ""
+        }
+      },
+      {
+        "relation": "not_equal",
+        "left": {
+          "producer": "model_a",
+          "case": "presence-neither",
+          "view": "package_jcs",
+          "pointer": ""
+        },
+        "right": {
+          "producer": "model_b",
+          "case": "presence-neither",
+          "view": "package_jcs",
+          "pointer": ""
+        }
+      }
+    ]
+  }
+}

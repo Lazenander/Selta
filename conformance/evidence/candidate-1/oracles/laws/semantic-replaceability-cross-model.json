@@ -1,0 +1,7 @@
+{
+  "revision": "selta.evidence.conformance-oracle/s2-1",
+  "case": "semantic-replaceability-cross-model",
+  "expected": {
+    "kind": "comparison_pass"
+  }
+}

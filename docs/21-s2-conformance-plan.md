@@ -169,6 +169,9 @@ verifies every returned package and identity independently, and compares:
 Each executable records its own implementation-artifact identity. Full outcome
 digests may therefore differ exactly where semantic replaceability permits;
 the harness never substitutes the manual specification-oracle identity.
+The arbiter rejects a prediction pair whose executable raw-byte hashes or
+implementation-artifact identities are equal before it evaluates any
+cross-model comparison.
 
 Each model is sealed as one executable byte artifact before predictions run;
 that file is the implementation-identity preimage. The private harness protocol

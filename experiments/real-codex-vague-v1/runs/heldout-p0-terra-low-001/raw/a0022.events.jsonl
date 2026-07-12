@@ -1,0 +1,4 @@
+{"type":"thread.started","thread_id":"019f5859-4324-7481-8014-68d627f8dfa0"}
+{"type":"turn.started"}
+{"type":"item.completed","item":{"id":"item_0","type":"agent_message","text":"{\"support\":[\"Rowan's 9:00 a.m. visit on Monday has been moved to Wednesday at 2:15 p.m.\"],\"refute\":[]}"}}
+{"type":"turn.completed","usage":{"input_tokens":2521,"cached_input_tokens":2304,"output_tokens":44,"reasoning_output_tokens":0}}

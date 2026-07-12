@@ -1,0 +1,4 @@
+{"type":"thread.started","thread_id":"019f5858-f7fc-7fe2-9058-438db0fe0239"}
+{"type":"turn.started"}
+{"type":"item.completed","item":{"id":"item_0","type":"agent_message","text":"{\"support\":[],\"refute\":[\"Each member's vote is recorded by name in the public minutes.\",\"Closed discussion does not make the final vote confidential.\"]}"}}
+{"type":"turn.completed","usage":{"input_tokens":2507,"cached_input_tokens":0,"output_tokens":42,"reasoning_output_tokens":0}}

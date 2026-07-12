@@ -1,0 +1,4 @@
+{"type":"thread.started","thread_id":"019f5859-4181-7472-841a-92c2d49b70e5"}
+{"type":"turn.started"}
+{"type":"item.completed","item":{"id":"item_0","type":"agent_message","text":"{\"support\":[],\"refute\":[\"Friday is difficult; please leave Tuesday in place unless I call again.\"]}"}}
+{"type":"turn.completed","usage":{"input_tokens":2508,"cached_input_tokens":2304,"output_tokens":33,"reasoning_output_tokens":0}}

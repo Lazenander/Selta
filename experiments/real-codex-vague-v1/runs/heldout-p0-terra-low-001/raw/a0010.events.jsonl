@@ -1,0 +1,4 @@
+{"type":"thread.started","thread_id":"019f5859-0c39-7f71-a8c4-5e94a2a5a3db"}
+{"type":"turn.started"}
+{"type":"item.completed","item":{"id":"item_0","type":"agent_message","text":"{\"support\":[\"Imani's Tuesday appointment has been cancelled.\"],\"refute\":[\"The cancellation entry was made in error; the Tuesday appointment is still active.\"]}"}}
+{"type":"turn.completed","usage":{"input_tokens":2518,"cached_input_tokens":2304,"output_tokens":43,"reasoning_output_tokens":0}}

@@ -1,0 +1,4 @@
+{"type":"thread.started","thread_id":"019f5859-4946-7dc1-8465-88a572d6f4e6"}
+{"type":"turn.started"}
+{"type":"item.completed","item":{"id":"item_0","type":"agent_message","text":"{\"support\":[\"Maintainer consensus is required before a pull request can merge.\"],\"refute\":[\"If consensus is not reached after seven days, a simple majority may authorize the merge.\"]}"}}
+{"type":"turn.completed","usage":{"input_tokens":2521,"cached_input_tokens":2304,"output_tokens":48,"reasoning_output_tokens":0}}

@@ -1,0 +1,4 @@
+{"type":"thread.started","thread_id":"019f5859-213c-7cf1-90a8-b9f0ea86df7a"}
+{"type":"turn.started"}
+{"type":"item.completed","item":{"id":"item_0","type":"agent_message","text":"{\"support\":[\"Please arrange a Mandarin interpreter for my consultation next week.\",\"Reception added the request to the visit notes.\"],\"refute\":[]}"}}
+{"type":"turn.completed","usage":{"input_tokens":2506,"cached_input_tokens":2304,"output_tokens":38,"reasoning_output_tokens":0}}

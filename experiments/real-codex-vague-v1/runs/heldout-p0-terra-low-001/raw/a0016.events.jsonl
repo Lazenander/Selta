@@ -1,0 +1,4 @@
+{"type":"thread.started","thread_id":"019f5859-269c-7a93-9832-6b2ae48b9981"}
+{"type":"turn.started"}
+{"type":"item.completed","item":{"id":"item_0","type":"agent_message","text":"{\"support\":[\"the clinician is running about 25 minutes behind and Ana should expect a wait\"],\"refute\":[\"The live appointment status still shows her visit as on time.\"]}"}}
+{"type":"turn.completed","usage":{"input_tokens":2515,"cached_input_tokens":2304,"output_tokens":47,"reasoning_output_tokens":0}}

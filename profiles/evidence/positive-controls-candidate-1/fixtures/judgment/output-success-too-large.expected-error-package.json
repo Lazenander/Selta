@@ -1,0 +1,41 @@
+{
+  "language": "selta.evidence.package/candidate-1",
+  "environment": "sha256:0c153635b88d6dee3f1301f1a46b20d1a4439d5f7b755fe276e8d93a8ccdf8a3",
+  "documents": [
+    {
+      "contract": "sha256:86ed6b6f38c1b1a1d6bc5f09e2997a0df9e0f1e8554624372031034f17ebf7fb",
+      "digest": "sha256:90a2295263c2adb3f6b3af0cfd8986ed3ca4cccae1e536ce72e99fe0b8d096ef",
+      "value": {
+        "revision": "selta.evidence.outcome/candidate-1",
+        "status": "error",
+        "environment": "sha256:0c153635b88d6dee3f1301f1a46b20d1a4439d5f7b755fe276e8d93a8ccdf8a3",
+        "errors": [
+          {
+            "phase": "output",
+            "code": "output.too_large",
+            "path": "/generated",
+            "message": "candidate outcome exceeds the outer output limit"
+          }
+        ],
+        "executions": [],
+        "resources": {
+          "documents": 7016,
+          "total_document_bytes": 10396151,
+          "attempts_total": 0,
+          "graph_nodes": 7000,
+          "graph_edges": 0,
+          "max_fan_in_observed": 0,
+          "graph_depth": 1,
+          "semantic_calls": 7003,
+          "semantic_fuel": 12995955,
+          "state_bytes": 518305,
+          "conclusion_labels_total": 1
+        }
+      }
+    }
+  ],
+  "root": {
+    "$ref": "sha256:90a2295263c2adb3f6b3af0cfd8986ed3ca4cccae1e536ce72e99fe0b8d096ef",
+    "contract": "sha256:86ed6b6f38c1b1a1d6bc5f09e2997a0df9e0f1e8554624372031034f17ebf7fb"
+  }
+}

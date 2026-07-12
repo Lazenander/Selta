@@ -1,0 +1,9 @@
+{
+  "revision": "selta.evidence.conformance-oracle/s2-1",
+  "case": "resource-project-labels-exact",
+  "expected": {
+    "kind": "returned",
+    "package": "sha256:5a37fec36955cc786534f391549865a668d2465d6c72b3c5fbb2e29dbb29205b",
+    "compare": "conformance_projection"
+  }
+}

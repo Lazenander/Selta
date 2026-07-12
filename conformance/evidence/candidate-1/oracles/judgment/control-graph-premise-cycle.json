@@ -1,0 +1,9 @@
+{
+  "revision": "selta.evidence.conformance-oracle/s2-1",
+  "case": "control-graph-premise-cycle",
+  "expected": {
+    "kind": "returned",
+    "package": "sha256:dd446350d681c6feaae4af037895d083e4f74c7872ebb5328873740e13eca017",
+    "compare": "conformance_projection"
+  }
+}

@@ -1,0 +1,13 @@
+{
+  "revision": "selta.evidence.conformance-case/s2-1",
+  "id": "precedence-relation-authority-before-local",
+  "operation": {
+    "kind": "assess",
+    "context": "positive-controls-candidate-1",
+    "package_source": "sha256:21d44e233a191053a875a7473c6933942965d4c0c45cc9213abae192bb4b2241",
+    "expected_basis": {
+      "$ref": "sha256:f778f4ba80b851988e78664f6be087acc4267ddb71254f3228d2455cdef18b11",
+      "contract": "sha256:938e5e124cb9648bb532949ff8588edeef0570eee18f6c7bfaf579af17a352a0"
+    }
+  }
+}

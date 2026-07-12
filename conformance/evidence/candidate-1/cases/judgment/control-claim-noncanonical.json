@@ -1,0 +1,40 @@
+{
+  "revision": "selta.evidence.conformance-case/s2-1",
+  "id": "control-claim-noncanonical",
+  "operation": {
+    "kind": "assess",
+    "context": "positive-controls-candidate-1",
+    "package_source": "sha256:eb93b400eb8bb9ab2a03beb07ca65acfa4217fa5fbb9c97f8f2f4c6894caed0d",
+    "expected_basis": {
+      "$ref": "sha256:c8b325ea2f8fafdc66b2c9c45cc25fb5dc93050d10554727a84ce9359a29fea5",
+      "contract": "sha256:938e5e124cb9648bb532949ff8588edeef0570eee18f6c7bfaf579af17a352a0"
+    },
+    "controls": {
+      "identity_results": [],
+      "semantic_outputs": [
+        {
+          "call_ordinal": 0,
+          "semantics": "sha256:e229afb0f7788286165dc081f68fe1e7e2d82d4f2b6eed88b4fe8041f62143f3",
+          "output": {
+            "subject": {
+              "$ref": "sha256:3a13b5ee7d0f7a298650360cb36c8517c01ea52ba360f36dd3214140e91cc976",
+              "contract": "sha256:a587092a0074c9b57a2a22225b99fb20cb6fd0ba69ea27156cab7b8b1ca6ed21"
+            },
+            "proposition": {
+              "$ref": "sha256:51d673826bd65cab4f18767999e2d690654c289ee6a5d8093b087d4b2c586b79",
+              "contract": "sha256:c22e37686725b91582a4d4f20ce84367ea89f622b799ee1b109fe7fe3656a85f"
+            },
+            "boundary": {
+              "$ref": "sha256:9a0123043d6466663fd390846849e1e88dc45562835f35114a7678030595d733",
+              "contract": "sha256:a587092a0074c9b57a2a22225b99fb20cb6fd0ba69ea27156cab7b8b1ca6ed21"
+            }
+          }
+        }
+      ],
+      "semantic_output_bytes": [],
+      "verification_faults": [],
+      "semantic_reads": [],
+      "forbidden_reads": []
+    }
+  }
+}

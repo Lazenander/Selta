@@ -1,0 +1,9 @@
+{
+  "revision": "selta.evidence.conformance-oracle/s2-1",
+  "case": "resource-interpret-fuel-exact-project-crossing",
+  "expected": {
+    "kind": "returned",
+    "package": "sha256:333411ec5bc8e33e30b57b14197660eff4391b1dde781d269c2158f5fd097b7c",
+    "compare": "conformance_projection"
+  }
+}

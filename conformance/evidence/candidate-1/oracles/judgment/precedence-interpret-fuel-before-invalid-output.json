@@ -1,0 +1,9 @@
+{
+  "revision": "selta.evidence.conformance-oracle/s2-1",
+  "case": "precedence-interpret-fuel-before-invalid-output",
+  "expected": {
+    "kind": "returned",
+    "package": "sha256:14e3f98ab300003346c5e9449f282a1a02f552ae9445b1320389b52dbaff47e3",
+    "compare": "conformance_projection"
+  }
+}

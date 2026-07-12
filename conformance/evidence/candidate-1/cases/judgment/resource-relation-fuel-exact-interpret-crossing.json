@@ -1,0 +1,13 @@
+{
+  "revision": "selta.evidence.conformance-case/s2-1",
+  "id": "resource-relation-fuel-exact-interpret-crossing",
+  "operation": {
+    "kind": "assess",
+    "context": "positive-controls-candidate-1",
+    "package_source": "sha256:19de10ab4ebf64df14c88c76db3ba9e20826da4c8256326ea6387d13c8fb763b",
+    "expected_basis": {
+      "$ref": "sha256:f386a061178ff8ea95b76cda8732b79356621872b50795b81178f4fb74254e72",
+      "contract": "sha256:938e5e124cb9648bb532949ff8588edeef0570eee18f6c7bfaf579af17a352a0"
+    }
+  }
+}

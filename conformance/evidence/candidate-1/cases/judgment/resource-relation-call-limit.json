@@ -1,0 +1,13 @@
+{
+  "revision": "selta.evidence.conformance-case/s2-1",
+  "id": "resource-relation-call-limit",
+  "operation": {
+    "kind": "assess",
+    "context": "positive-controls-candidate-1",
+    "package_source": "sha256:811f27ee6686e6e644669cdc65cd195a0964389c30712cfd8f18ff5cd68b701e",
+    "expected_basis": {
+      "$ref": "sha256:00abc2232cd592b146d5050056501202c7e96dd4e2071f36a9078bc4380b259a",
+      "contract": "sha256:938e5e124cb9648bb532949ff8588edeef0570eee18f6c7bfaf579af17a352a0"
+    }
+  }
+}

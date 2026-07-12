@@ -1,0 +1,9 @@
+{
+  "revision": "selta.evidence.conformance-oracle/s2-1",
+  "case": "relation-kind-mismatch",
+  "expected": {
+    "kind": "returned",
+    "package": "sha256:aa1996bd7ae789af1501d02637017c9f42465328d297d6283729742587e7e1e9",
+    "compare": "conformance_projection"
+  }
+}

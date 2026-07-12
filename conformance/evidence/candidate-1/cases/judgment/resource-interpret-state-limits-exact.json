@@ -1,0 +1,13 @@
+{
+  "revision": "selta.evidence.conformance-case/s2-1",
+  "id": "resource-interpret-state-limits-exact",
+  "operation": {
+    "kind": "assess",
+    "context": "positive-controls-candidate-1",
+    "package_source": "sha256:d24248b30bd1c5426c09f35f849a46d3b27a8e28e65c6dd9b9937ec3b6edb2b3",
+    "expected_basis": {
+      "$ref": "sha256:ac483a388b2005138b35d658475ea41f59cc0ecdc843ed4a0aef23596ba081ca",
+      "contract": "sha256:938e5e124cb9648bb532949ff8588edeef0570eee18f6c7bfaf579af17a352a0"
+    }
+  }
+}

@@ -1,0 +1,9 @@
+{
+  "revision": "selta.evidence.conformance-oracle/s2-1",
+  "case": "precedence-relation-cross-record-before-cycle",
+  "expected": {
+    "kind": "returned",
+    "package": "sha256:02a2a4c9c8019fd1866e6a7b5e1570e7c5a9f2f848113901f7d6ddf94d797d24",
+    "compare": "conformance_projection"
+  }
+}

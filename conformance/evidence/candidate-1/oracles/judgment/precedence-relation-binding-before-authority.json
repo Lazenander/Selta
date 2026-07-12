@@ -1,0 +1,9 @@
+{
+  "revision": "selta.evidence.conformance-oracle/s2-1",
+  "case": "precedence-relation-binding-before-authority",
+  "expected": {
+    "kind": "returned",
+    "package": "sha256:765d8bc9ed6491109cb9dd5307a5757e8461a14ba89303d609beb667a31dc7ca",
+    "compare": "conformance_projection"
+  }
+}

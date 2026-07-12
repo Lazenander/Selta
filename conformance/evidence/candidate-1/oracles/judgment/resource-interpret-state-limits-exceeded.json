@@ -1,0 +1,9 @@
+{
+  "revision": "selta.evidence.conformance-oracle/s2-1",
+  "case": "resource-interpret-state-limits-exceeded",
+  "expected": {
+    "kind": "returned",
+    "package": "sha256:8e3bb13beef109eb5f28d5ac3f5e25923cc2625a201aae17ebdd6b37371c5c7e",
+    "compare": "conformance_projection"
+  }
+}

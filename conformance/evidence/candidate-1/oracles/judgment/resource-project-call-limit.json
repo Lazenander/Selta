@@ -1,0 +1,9 @@
+{
+  "revision": "selta.evidence.conformance-oracle/s2-1",
+  "case": "resource-project-call-limit",
+  "expected": {
+    "kind": "returned",
+    "package": "sha256:087f3b939a3a82501db3a499f459e7077cf7b0e1c0ee9796c2b57f713d05b8d9",
+    "compare": "conformance_projection"
+  }
+}

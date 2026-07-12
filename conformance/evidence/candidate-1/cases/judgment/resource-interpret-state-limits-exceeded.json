@@ -1,0 +1,13 @@
+{
+  "revision": "selta.evidence.conformance-case/s2-1",
+  "id": "resource-interpret-state-limits-exceeded",
+  "operation": {
+    "kind": "assess",
+    "context": "positive-controls-candidate-1",
+    "package_source": "sha256:b2eb06f8e5aea8925f63623baf590d3a18d09a26adb258bfa425afcee1003f05",
+    "expected_basis": {
+      "$ref": "sha256:69136a23c1ebe3c126e526e160a3042bfc6c893db893fd5eff27573ba5773ee1",
+      "contract": "sha256:938e5e124cb9648bb532949ff8588edeef0570eee18f6c7bfaf579af17a352a0"
+    }
+  }
+}

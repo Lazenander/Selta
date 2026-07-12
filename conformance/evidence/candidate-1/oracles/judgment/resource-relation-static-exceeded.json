@@ -1,0 +1,9 @@
+{
+  "revision": "selta.evidence.conformance-oracle/s2-1",
+  "case": "resource-relation-static-exceeded",
+  "expected": {
+    "kind": "returned",
+    "package": "sha256:b7abec50f242b3048d725b4b493ed7da0429275f104d0989195c17392dc239ac",
+    "compare": "conformance_projection"
+  }
+}

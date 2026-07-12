@@ -1,0 +1,9 @@
+{
+  "revision": "selta.evidence.conformance-oracle/s2-1",
+  "case": "resource-interpret-state-limits-exact",
+  "expected": {
+    "kind": "returned",
+    "package": "sha256:194977ef51af87b8bd1ac517f3bdefb62c428202daa3939982c687c087b7e627",
+    "compare": "conformance_projection"
+  }
+}

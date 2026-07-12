@@ -1,0 +1,27 @@
+{
+  "revision": "selta.evidence.conformance-case/s2-1",
+  "id": "precedence-relation-fuel-before-invalid-output",
+  "operation": {
+    "kind": "assess",
+    "context": "positive-controls-candidate-1",
+    "package_source": "sha256:029c4e7ad08ea1047b4bb7b1275d2881c7af5a0b8c1f4f453eb5a48c44393b2b",
+    "expected_basis": {
+      "$ref": "sha256:58c0acccf16ebe21b342a03aae451b57cb634484711ab7fe7e4224352942d92b",
+      "contract": "sha256:938e5e124cb9648bb532949ff8588edeef0570eee18f6c7bfaf579af17a352a0"
+    },
+    "controls": {
+      "identity_results": [],
+      "semantic_outputs": [
+        {
+          "call_ordinal": 0,
+          "semantics": "sha256:e229afb0f7788286165dc081f68fe1e7e2d82d4f2b6eed88b4fe8041f62143f3",
+          "output": null
+        }
+      ],
+      "semantic_output_bytes": [],
+      "verification_faults": [],
+      "semantic_reads": [],
+      "forbidden_reads": []
+    }
+  }
+}

@@ -1,0 +1,46 @@
+{
+  "language": "selta.evidence.package/candidate-1",
+  "environment": "sha256:97a2795354041b74443f8686d75be998eebf563275b479d9d23a055adf92eba4",
+  "documents": [
+    {
+      "contract": "sha256:86ed6b6f38c1b1a1d6bc5f09e2997a0df9e0f1e8554624372031034f17ebf7fb",
+      "digest": "sha256:7300b4883de773f03dbac49dd2b9afcbab8a917b4edfc20f2ed43d6eb1e752ef",
+      "value": {
+        "revision": "selta.evidence.outcome/candidate-1",
+        "status": "error",
+        "environment": "sha256:97a2795354041b74443f8686d75be998eebf563275b479d9d23a055adf92eba4",
+        "errors": [
+          {
+            "phase": "relation",
+            "code": "evaluation.fuel_exhausted",
+            "path": "/generated/resources/semantic_fuel",
+            "message": "semantic fuel limit exceeded"
+          }
+        ],
+        "executions": [
+          {
+            "semantics": "sha256:e229afb0f7788286165dc081f68fe1e7e2d82d4f2b6eed88b4fe8041f62143f3",
+            "implementation": "sha256:bc899c6733c11b1c452e811ef662cb7bc808e792c3c18af64fd4e6f763283ea0"
+          }
+        ],
+        "resources": {
+          "documents": 33,
+          "total_document_bytes": 27999,
+          "attempts_total": 1,
+          "graph_nodes": 2,
+          "graph_edges": 1,
+          "max_fan_in_observed": 1,
+          "graph_depth": 2,
+          "semantic_calls": 1,
+          "semantic_fuel": 1413,
+          "state_bytes": 0,
+          "conclusion_labels_total": 0
+        }
+      }
+    }
+  ],
+  "root": {
+    "$ref": "sha256:7300b4883de773f03dbac49dd2b9afcbab8a917b4edfc20f2ed43d6eb1e752ef",
+    "contract": "sha256:86ed6b6f38c1b1a1d6bc5f09e2997a0df9e0f1e8554624372031034f17ebf7fb"
+  }
+}

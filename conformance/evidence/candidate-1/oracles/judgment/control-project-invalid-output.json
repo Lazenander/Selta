@@ -1,0 +1,9 @@
+{
+  "revision": "selta.evidence.conformance-oracle/s2-1",
+  "case": "control-project-invalid-output",
+  "expected": {
+    "kind": "returned",
+    "package": "sha256:a19a2db5e4032027dea7025774736d3d8ea40e7c42a4f2900728118df4174f8d",
+    "compare": "conformance_projection"
+  }
+}

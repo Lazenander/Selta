@@ -1,0 +1,27 @@
+{
+  "revision": "selta.evidence.conformance-case/s2-1",
+  "id": "control-state-identity-collision",
+  "operation": {
+    "kind": "assess",
+    "context": "positive-controls-candidate-1",
+    "package_source": "sha256:eb93b400eb8bb9ab2a03beb07ca65acfa4217fa5fbb9c97f8f2f4c6894caed0d",
+    "expected_basis": {
+      "$ref": "sha256:c8b325ea2f8fafdc66b2c9c45cc25fb5dc93050d10554727a84ce9359a29fea5",
+      "contract": "sha256:938e5e124cb9648bb532949ff8588edeef0570eee18f6c7bfaf579af17a352a0"
+    },
+    "controls": {
+      "identity_results": [
+        {
+          "boundary": "state",
+          "preimage_base64": "c2VsdGEuZXZpZGVuY2UuZG9jdW1lbnQvY2FuZGlkYXRlLTEAeyJjb250cmFjdCI6InNoYTI1Njo3ODI5NWU4MGFmYzk1NWEyYzY0NTBkNjc3YjAyNGU2MmNiNjNiN2QxZWI0NzU5YmU0YWY5YzA1YzM2NGI1ZGMwIiwidmFsdWUiOnsicmV2aXNpb24iOiJzZWx0YS5ldmlkZW5jZS5wcmVzZW5jZS1zdGF0ZS9jYW5kaWRhdGUtMSIsInRhcmdldHMiOlt7ImNsYWltIjp7IiRyZWYiOiJzaGEyNTY6MGIzZDViMTlhMWIwMjczNzk2ZGE5ZjkyZDRkYWJjMDQwOGQzNjdjNDViMWEyNDE3YmIyMjRmMWMyMjg5ZmY3MSIsImNvbnRyYWN0Ijoic2hhMjU2Ojc1MWNjMDkzMjlmNGE0ODVmY2U5NjgzYTI5ZWE1NDMyNzg2Y2YyMmI0M2RmOWNmZDRiMzkwMGEzMjY1OTQyMzkifSwicmVmdXRlX2Jhc2lzIjpbXSwic3RhdGUiOiJzdXBwb3J0X29ubHkiLCJzdXBwb3J0X2Jhc2lzIjpbInNoYTI1Njo2ZWQ3MmZmNTVhMTdlZjdiYzhmMDA5MDg1Y2Y1NjdjNDVkMzk1YjdiNGMyZWM0YzRjMTc4NDk3NTYyN2VkOWViIl19XX19",
+          "returned_digest": "sha256:081bc982cd78fd052b072145c0b4c7048e534baa852f1cb03dbd4264e5899b42"
+        }
+      ],
+      "semantic_outputs": [],
+      "semantic_output_bytes": [],
+      "verification_faults": [],
+      "semantic_reads": [],
+      "forbidden_reads": []
+    }
+  }
+}

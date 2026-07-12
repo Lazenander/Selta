@@ -1,0 +1,9 @@
+{
+  "revision": "selta.evidence.conformance-oracle/s2-1",
+  "case": "control-claim-noncanonical",
+  "expected": {
+    "kind": "returned",
+    "package": "sha256:2a62098ac5c40b803f4d0eb1db57c859cd9787292f3ce3776ec76683a0f2f3d4",
+    "compare": "conformance_projection"
+  }
+}

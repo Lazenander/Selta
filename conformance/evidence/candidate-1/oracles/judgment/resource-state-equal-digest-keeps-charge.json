@@ -1,0 +1,9 @@
+{
+  "revision": "selta.evidence.conformance-oracle/s2-1",
+  "case": "resource-state-equal-digest-keeps-charge",
+  "expected": {
+    "kind": "returned",
+    "package": "sha256:799ec4583b1b467d77c7e2344779dafb43aa654ee69b4124e18038ac91889430",
+    "compare": "conformance_projection"
+  }
+}

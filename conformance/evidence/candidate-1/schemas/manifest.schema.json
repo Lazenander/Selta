@@ -9,52 +9,38 @@
       "type": "array",
       "len": { "min": 1 },
       "item": {
-        "type": "union",
-        "variants": [
-          {
-            "type": "object",
-            "fields": {
-              "media": { "type": "str", "verify": [{ "ext": "one_of", "config": { "values": ["bytes"] } }] },
-              "bytes_sha256": { "type": "str", "verify": [{ "ext": "regex", "config": { "pattern": "\\Asha256:[0-9a-f]{64}\\z" } }] },
-              "path": {
-                "type": "str",
-                "verify": [
-                  { "ext": "regex", "config": { "pattern": "\\A(?:[A-Za-z0-9_-][A-Za-z0-9._-]*/)*[A-Za-z0-9_-][A-Za-z0-9._-]*\\z" } },
-                  { "ext": "len", "config": { "max": 1024 } }
-                ]
-              }
-            }
+        "type": "object",
+        "fields": {
+          "bytes_sha256": { "type": "str", "verify": [{ "ext": "regex", "config": { "pattern": "\\Asha256:[0-9a-f]{64}\\z" } }] },
+          "path": {
+            "type": "str",
+            "verify": [
+              { "ext": "regex", "config": { "pattern": "\\A(?:[A-Za-z0-9_-][A-Za-z0-9._-]*/)*[A-Za-z0-9_-][A-Za-z0-9._-]*\\z" } },
+              { "ext": "len", "config": { "max": 1024 } }
+            ]
           },
-          {
-            "type": "object",
-            "fields": {
-              "media": { "type": "str", "verify": [{ "ext": "one_of", "config": { "values": ["selta_schema"] } }] },
-              "bytes_sha256": { "type": "str", "verify": [{ "ext": "regex", "config": { "pattern": "\\Asha256:[0-9a-f]{64}\\z" } }] },
-              "path": {
-                "type": "str",
-                "verify": [
-                  { "ext": "regex", "config": { "pattern": "\\A(?:[A-Za-z0-9_-][A-Za-z0-9._-]*/)*[A-Za-z0-9_-][A-Za-z0-9._-]*\\z" } },
-                  { "ext": "len", "config": { "max": 1024 } }
-                ]
-              }
-            }
-          },
-          {
-            "type": "object",
-            "fields": {
-              "media": { "type": "str", "verify": [{ "ext": "one_of", "config": { "values": ["selta_value"] } }] },
-              "bytes_sha256": { "type": "str", "verify": [{ "ext": "regex", "config": { "pattern": "\\Asha256:[0-9a-f]{64}\\z" } }] },
-              "path": {
-                "type": "str",
-                "verify": [
-                  { "ext": "regex", "config": { "pattern": "\\A(?:[A-Za-z0-9_-][A-Za-z0-9._-]*/)*[A-Za-z0-9_-][A-Za-z0-9._-]*\\z" } },
-                  { "ext": "len", "config": { "max": 1024 } }
-                ]
-              },
-              "schema_source": { "type": "str", "verify": [{ "ext": "regex", "config": { "pattern": "\\Asha256:[0-9a-f]{64}\\z" } }] }
+          "admissions": {
+            "type": "array",
+            "item": {
+              "type": "union",
+              "variants": [
+                {
+                  "type": "object",
+                  "fields": {
+                    "kind": { "type": "str", "verify": [{ "ext": "one_of", "config": { "values": ["selta_schema"] } }] }
+                  }
+                },
+                {
+                  "type": "object",
+                  "fields": {
+                    "kind": { "type": "str", "verify": [{ "ext": "one_of", "config": { "values": ["selta_value"] } }] },
+                    "schema_source": { "type": "str", "verify": [{ "ext": "regex", "config": { "pattern": "\\Asha256:[0-9a-f]{64}\\z" } }] }
+                  }
+                }
+              ]
             }
           }
-        ]
+        }
       }
     },
     "contexts": {

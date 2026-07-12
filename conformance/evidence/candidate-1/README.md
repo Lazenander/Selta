@@ -5,10 +5,12 @@
 > protocol remain in documents 15, 16, 20, and 21. Nothing in this directory
 > is a product API or a second definition of those rules.
 
-This directory defines the seven Selta shapes needed to inventory atomic S2
+This directory defines the Selta shapes needed to inventory atomic S2
 cases, keep their withheld oracles separate, state law and countermodel
 coverage, and encode the finite exact countermodels from document 14:
 
+- `schemas/manifest-input.schema.json` — the small authored choices from which
+  the final manifest is derived;
 - `schemas/manifest.schema.json` — the arbiter-side artifact, context, case,
   law, named-case, and error-coverage index;
 - `schemas/case.schema.json` — one environment-admission, assessment,
@@ -16,8 +18,19 @@ coverage, and encode the finite exact countermodels from document 14:
 - `schemas/oracle.schema.json` — the separately held expected response;
 - `schemas/request.schema.json` — the private model's exact stdin request;
 - `schemas/response.schema.json` — the private model's exact stdout response;
-- `schemas/finite-world.schema.json` — one small exact finite calculation; and
-- `schemas/finite-result.schema.json` — its canonical result ledger.
+- `schemas/finite-world.schema.json` — one small exact finite calculation;
+- `schemas/finite-result.schema.json` — its canonical result ledger;
+- `schemas/artifact-set.schema.json` — an exact path-and-byte set;
+- `schemas/kit-index.schema.json` — the producer-neutral model input index;
+- `schemas/prediction-ledger.schema.json` — one model's complete executions;
+- `schemas/completion-ledger.schema.json` — the arbiter's minimal all-pass
+  claim;
+- `schemas/runtime-evidence.schema.json` — the actual sealed process launcher
+  and probe record; and
+- `schemas/seal.schema.json` — the freeze, prediction, and completion records.
+
+[SEALING.md](SEALING.md) fixes their identities, acyclic lifecycle, withheld
+split, and invalidation rules.
 
 The schemas describe closed wire shapes. The relational checks below are part
 of conformance-manifest admission by the S2 harness. They are not evidence DSL
@@ -35,15 +48,23 @@ sha256:<64 lowercase hexadecimal digits>
 It is repository-integrity metadata, not any domain-separated identity from
 document 16. An artifact path is relative to the repository root, uses `/`,
 and contains neither `.` nor `..` segments. The harness checks the bytes before
-parsing them. A `selta_schema` artifact must admit through the candidate's
-stable pure-builtin admission profile. A `selta_value` artifact must verify in
-strict `Input::Value` mode under the artifact named by `schema_source`.
+parsing them. Each artifact has a canonical `admissions` set. An empty set
+means exact raw bytes only. A `selta_schema` admission must pass the candidate's
+stable pure-builtin profile. Every `selta_value` admission must verify in
+strict `Input::Value` mode under the artifact named by its `schema_source`.
+The same bytes may therefore be admitted as a schema, under several value
+schemas, or both without duplicating the artifact.
 
-Artifact entries, resolver entries, contexts, cases, law lists, named-case
-lists, error entries, and every set-like nested array are unique and in their
-documented lexical or numeric canonical order. Equal byte digests reuse one
-artifact entry; unequal available bytes under one byte digest fail manifest
-admission.
+Artifact entries are unique by raw digest, ordered by `bytes_sha256`, and use
+the lexically first repository path among equal-byte aliases. Their admission
+rows are unique and ordered by `(kind, schema_source)`, treating the absent
+`selta_schema` `schema_source` as the empty string. Resolver rows are ordered
+by `(digest, domain, source)`, contexts and cases by `id`, laws by `number`, and
+named rows in the order fixed by document 17. Error rows use the phase rank
+`parse < schema < identity < relation < interpret < project < output`, then
+`code`; their case lists and every other set-like case-ID array use lexical
+order. Equal byte digests reuse one artifact entry; unequal available bytes
+under one byte digest fail manifest admission.
 
 Each context supplies exact environment source bytes and a digest/domain/source
 resolver. Every resolver source and schema source resolves through the artifact
@@ -81,15 +102,21 @@ resolved document contracts before using it.
 If an assessment `controls` object is present, all six arrays are present,
 even when empty; the separate `forbidden_boundary` member remains optional.
 `call_ordinal` is zero-based in document 16's dispatch order.
-An `identity_results` entry carries a non-empty canonical-Base64 preimage and
-replaces the digest for exactly one matching canonical preimage at its named
+An input/state `identity_results` entry carries a non-empty canonical-Base64
+literal preimage and replaces the digest for exactly one match at its named
 insertion boundary. The encoded bytes include the complete document-16 domain
 tag, `0x00` separator, and JCS or raw suffix actually passed to SHA-256.
-Multiple entries may map
-different preimages to one digest, so both collision and fixed-point/cycle
-identity cases are expressible. Semantic outputs, semantic-output-byte
-measurements, semantic-read attempts, and verification faults match exactly
-one scheduled call or defensive boundary. A `semantic_output_bytes` entry
+Multiple entries may map different preimages to one digest, so both collision
+and fixed-point/cycle identity cases are expressible.
+
+An outcome entry instead carries `preimage_template_base64` and uses only the
+fixed `__SELTA_S2_REQUEST_IMPLEMENTATION__` sentinel under the structural
+substitution and exact-use rules in document 21. This removes the executable-
+identity cycle without modifying any actual candidate outcome.
+
+Semantic outputs, semantic-output-byte measurements, semantic-read attempts,
+and verification faults match exactly one scheduled call or defensive
+boundary. A `semantic_output_bytes` entry
 replaces only the `UTF8_bytes(JCS(output))` quantity used in dispatch step 3;
 the actual output remains unchanged for contract verification, comparison, and
 every other purpose. A call cannot occur in both `semantic_outputs` and

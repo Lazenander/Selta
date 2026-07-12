@@ -324,7 +324,7 @@ S2 is not complete merely because one implementation matches its own fixtures.
 It therefore permits two isolated conformance implementations before the S3
 reference crate. Each implementer initially receives only:
 
-- documents 10 through 20;
+- documents 10 through 23;
 - the candidate Selta schemas;
 - canonicalization vectors;
 - artifact resolver inventories and environment manifests;

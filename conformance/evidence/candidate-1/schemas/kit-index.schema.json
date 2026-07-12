@@ -1,0 +1,69 @@
+{
+  "type": "object",
+  "fields": {
+    "revision": {
+      "type": "str",
+      "verify": [{ "ext": "one_of", "config": { "values": ["selta.evidence.conformance-kit-index/s2-1"] } }]
+    },
+    "protocol": {
+      "type": "object",
+      "fields": {
+        "case_schema_source": { "type": "str", "verify": [{ "ext": "regex", "config": { "pattern": "\\Asha256:[0-9a-f]{64}\\z" } }] },
+        "request_schema_source": { "type": "str", "verify": [{ "ext": "regex", "config": { "pattern": "\\Asha256:[0-9a-f]{64}\\z" } }] },
+        "response_schema_source": { "type": "str", "verify": [{ "ext": "regex", "config": { "pattern": "\\Asha256:[0-9a-f]{64}\\z" } }] }
+      }
+    },
+    "contexts": {
+      "type": "array",
+      "len": { "min": 1 },
+      "item": {
+        "type": "object",
+        "fields": {
+          "id": {
+            "type": "str",
+            "verify": [
+              { "ext": "regex", "config": { "pattern": "\\A[a-z0-9]+(?:-[a-z0-9]+)*\\z" } },
+              { "ext": "len", "config": { "max": 128 } }
+            ]
+          },
+          "environment_source": { "type": "str", "verify": [{ "ext": "regex", "config": { "pattern": "\\Asha256:[0-9a-f]{64}\\z" } }] },
+          "resolver": {
+            "type": "array",
+            "len": { "min": 1 },
+            "item": {
+              "type": "object",
+              "fields": {
+                "digest": { "type": "str", "verify": [{ "ext": "regex", "config": { "pattern": "\\Asha256:[0-9a-f]{64}\\z" } }] },
+                "domain": {
+                  "type": "str",
+                  "verify": [
+                    { "ext": "regex", "config": { "pattern": "\\A[A-Za-z0-9][A-Za-z0-9._/-]*\\z" } },
+                    { "ext": "len", "config": { "max": 256 } }
+                  ]
+                },
+                "source": { "type": "str", "verify": [{ "ext": "regex", "config": { "pattern": "\\Asha256:[0-9a-f]{64}\\z" } }] }
+              }
+            }
+          }
+        }
+      }
+    },
+    "cases": {
+      "type": "array",
+      "len": { "min": 1 },
+      "item": {
+        "type": "object",
+        "fields": {
+          "id": {
+            "type": "str",
+            "verify": [
+              { "ext": "regex", "config": { "pattern": "\\A[a-z0-9]+(?:-[a-z0-9]+)*\\z" } },
+              { "ext": "len", "config": { "max": 128 } }
+            ]
+          },
+          "record": { "type": "str", "verify": [{ "ext": "regex", "config": { "pattern": "\\Asha256:[0-9a-f]{64}\\z" } }] }
+        }
+      }
+    }
+  }
+}

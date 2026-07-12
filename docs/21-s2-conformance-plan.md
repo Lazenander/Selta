@@ -194,15 +194,19 @@ computed digest of the sealed executable bytes. Request and response schemas
 are conformance artifacts, not product protocol. Diagnostics may use stderr;
 exit zero requires exactly one response. The runtime/toolchain pair and their
 versions MUST be fixed by an independence review before either implementer kit
-is released. No model source work begins while that selection is open.
+is released. The actual launcher, process policy, arguments, and version probes
+are retained in the typed runtime-evidence record fixed by the sealing
+protocol. No model source work begins while that selection is open.
 
 `controls` is absent for ordinary cases and is a closed conformance-only object
 for otherwise unobservable boundaries:
 
 ```text
 controls {
-  identity_results: [{ boundary: "input | state | outcome",
-                       preimage_base64, returned_digest }],
+  identity_results: [
+    { boundary: "input | state", preimage_base64, returned_digest } |
+    { boundary: "outcome", preimage_template_base64, returned_digest }
+  ],
   semantic_outputs: [{ call_ordinal, semantics, output }],
   semantic_output_bytes: [{ call_ordinal, semantics, utf8_bytes }],
   semantic_reads: [{ call_ordinal, semantics, reference: DocumentRef }],
@@ -212,13 +216,39 @@ controls {
 }
 ```
 
-An identity override applies only when its exact canonical preimage and named
-insertion boundary match. `preimage_base64` encodes the complete byte string
-passed to SHA-256, including the UTF-8 domain tag and `0x00` separator from
-document 16, not merely its JCS or raw-byte suffix. Repeating a returned digest
-for two unequal preimages creates an injected collision; binding the mutually
-referential preimages creates a fixed-point test without pretending to break
-SHA-256. A semantic override applies to exactly one scheduled call. A
+At the input and state boundaries, an identity override applies only when its
+exact canonical preimage and named insertion boundary match.
+`preimage_base64` encodes the complete byte string passed to SHA-256, including
+the UTF-8 domain tag and `0x00` separator from document 16, not merely its JCS
+or raw-byte suffix. Repeating a returned digest for two unequal preimages
+creates an injected collision; binding the mutually referential preimages
+creates a fixed-point test without pretending to break SHA-256.
+
+The concluded-outcome preimage contains the sealed executable's truthful
+implementation digest and therefore cannot be byte-fixed before the two model
+artifacts exist. Its sole portable control form is
+`preimage_template_base64`. The decoded bytes MUST:
+
+1. begin with the exact UTF-8 bytes of
+   `selta.evidence.document/candidate-1`, followed by `0x00`;
+2. have a suffix that is strict duplicate-safe I-JSON and byte-equal to its
+   own JCS serialization;
+3. encode an outcome-contract `TypedDocument` preimage whose value is
+   concluded and has a non-empty `executions` set; and
+4. contain the protocol-fixed JSON string
+   `__SELTA_S2_REQUEST_IMPLEMENTATION__` at all and only
+   `/value/executions/<i>/implementation`, with no occurrence elsewhere.
+
+The harness structurally replaces those exact string values with the
+top-level request `implementation`, serializes the value again with JCS, and
+reconstructs the complete preimage. It MUST NOT perform raw or global string
+replacement. The expanded bytes must match exactly one actual O1 outcome
+preimage, and every returned outcome execution must independently carry the
+same request implementation. The sentinel is fixed by this protocol and is
+not caller-selected. Literal outcome preimages and templated input or state
+preimages are invalid.
+
+A semantic override applies to exactly one scheduled call. A
 semantic-output-byte override also applies to exactly one scheduled call and
 replaces only the `UTF8_bytes(JCS(output))` quantity used by step 3 of document
 16's dispatch precedence. The actual output remains unchanged for output-
@@ -270,8 +300,12 @@ S2 closes only after the repository contains:
 - a passing stable workspace suite with no inbound dependency from stable or
   downstream code into the conformance models.
 
-Only that evidence may change document 16 from an open candidate gate to a
-completed S2 result.
+Document 16's exact bytes are an identity input to every candidate-1
+environment, so its historical `Current status` paragraph is not rewritten
+after the run. A typed external completion seal under the contract in
+`conformance/evidence/candidate-1/SEALING.md` supersedes only that lifecycle
+status. Any semantic edit to documents 15, 16, or 20 changes the bound source
+identity and requires a new candidate environment and conformance run.
 
 The named S2 algebraic and representability corpus seeds L5 and later S4 work;
 it does not constitute empirical falsification of real assessors, calibration,

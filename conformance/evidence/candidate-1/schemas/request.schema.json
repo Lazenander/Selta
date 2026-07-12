@@ -96,18 +96,37 @@
             "identity_results": {
               "type": "array",
               "item": {
-                "type": "object",
-                "fields": {
-                  "boundary": { "type": "str", "verify": [{ "ext": "one_of", "config": { "values": ["input", "state", "outcome"] } }] },
-                  "preimage_base64": {
-                    "type": "str",
-                    "verify": [
-                      { "ext": "non_empty" },
-                      { "ext": "regex", "config": { "pattern": "\\A(?:[A-Za-z0-9+/]{4})*(?:[A-Za-z0-9+/][AQgw]==|[A-Za-z0-9+/]{2}[AEIMQUYcgkosw048]=)?\\z" } }
-                    ]
+                "type": "union",
+                "variants": [
+                  {
+                    "type": "object",
+                    "fields": {
+                      "boundary": { "type": "str", "verify": [{ "ext": "one_of", "config": { "values": ["input", "state"] } }] },
+                      "preimage_base64": {
+                        "type": "str",
+                        "verify": [
+                          { "ext": "non_empty" },
+                          { "ext": "regex", "config": { "pattern": "\\A(?:[A-Za-z0-9+/]{4})*(?:[A-Za-z0-9+/][AQgw]==|[A-Za-z0-9+/]{2}[AEIMQUYcgkosw048]=)?\\z" } }
+                        ]
+                      },
+                      "returned_digest": { "type": "str", "verify": [{ "ext": "regex", "config": { "pattern": "\\Asha256:[0-9a-f]{64}\\z" } }] }
+                    }
                   },
-                  "returned_digest": { "type": "str", "verify": [{ "ext": "regex", "config": { "pattern": "\\Asha256:[0-9a-f]{64}\\z" } }] }
-                }
+                  {
+                    "type": "object",
+                    "fields": {
+                      "boundary": { "type": "str", "verify": [{ "ext": "one_of", "config": { "values": ["outcome"] } }] },
+                      "preimage_template_base64": {
+                        "type": "str",
+                        "verify": [
+                          { "ext": "non_empty" },
+                          { "ext": "regex", "config": { "pattern": "\\A(?:[A-Za-z0-9+/]{4})*(?:[A-Za-z0-9+/][AQgw]==|[A-Za-z0-9+/]{2}[AEIMQUYcgkosw048]=)?\\z" } }
+                        ]
+                      },
+                      "returned_digest": { "type": "str", "verify": [{ "ext": "regex", "config": { "pattern": "\\Asha256:[0-9a-f]{64}\\z" } }] }
+                    }
+                  }
+                ]
               }
             },
             "semantic_outputs": {

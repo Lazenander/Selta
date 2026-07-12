@@ -9,4 +9,5 @@
 *.ts text eol=lf
 *.yaml text eol=lf
 *.yml text eol=lf
+*.raw binary
 Cargo.lock text eol=lf

@@ -9,7 +9,7 @@
 | Model | Runtime | Permitted shared boundary | Sealed artifact |
 |---|---|---|---|
 | A | Rust 1.93.0 (`aarch64-apple-darwin`, LLVM 21.1.8) | Stable Selta schema-source admission and value verification only | One release executable file |
-| B | Host `/usr/bin/python3` 3.9.6, standard library only | Public schemas and protocol bytes; no Model-A or candidate helper code | One executable zip application |
+| B | Retained Xcode CPython 3.9.6 closure, `-I -S -B`, standard library only | Public schemas and protocol bytes; no Model-A or candidate helper code | One executable zip application plus a frozen runtime set |
 
 Rust remains the default implementation language for repository-owned non-UI
 work. The second model deliberately uses a different parser, object model,
@@ -38,10 +38,24 @@ black-box test evidence, not a Python Selta implementation or future library.
 
 The harness hashes the exact executable file supplied to it under document
 16's implementation domain and inserts that digest into each request. Model A
-is the compiled release binary. Model B is the exact zip-application file;
-the fixed Python runtime version is an external conformance precondition, not
-part of the file preimage. Both consume one request on standard input and emit
-one response on standard output under the private schemas in this directory.
+is the compiled release binary and is invoked directly with no arguments.
+Model B is the exact zip-application file and is invoked as
+`<retained-runtime>/bin/python3.9 -I -S -B <sealed-zipapp>`. The interpreter is
+not part of the implementation preimage, but the exact retained framework
+engine, launcher, standard library, `lib-dynload` modules, invocation, and
+isolation probe are bound by the prediction's typed runtime-evidence record.
+Both consume one request on standard input and emit one response on standard
+output under the private schemas in this directory.
+
+Every process uses policy `selta.evidence.conformance-process/s2-1`: a new
+empty working directory, new empty private `HOME` and `TMPDIR`, and an inherited
+environment otherwise cleared and replaced by `LANG=C` and `LC_ALL=C`. The
+arbiter runs one fixed `python-runtime` probe immediately before the prediction
+batch to require CPython 3.9.6, isolated mode, disabled `site`, disabled
+bytecode writes, and a `sys.path` wholly within the retained root. It rechecks
+the retained set, deterministic modes, and launcher bytes immediately before
+every Model-B process. The admitted record and captured probe streams are
+sealed before oracle reveal.
 
 No source file, directory walk, interpreter installation, dependency cache,
 native path, process ID, or build timestamp is an implementation-identity

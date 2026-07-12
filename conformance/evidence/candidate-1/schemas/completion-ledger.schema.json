@@ -1,0 +1,28 @@
+{
+  "type": "object",
+  "fields": {
+    "revision": {
+      "type": "str",
+      "verify": [{ "ext": "one_of", "config": { "values": ["selta.evidence.conformance-completion-ledger/s2-1"] } }]
+    },
+    "evaluations": {
+      "type": "array",
+      "len": { "min": 1 },
+      "item": {
+        "type": "object",
+        "fields": {
+          "ordinal": { "type": "int", "verify": [{ "ext": "range", "config": { "min": 0, "max": 9007199254740991 } }] },
+          "case": {
+            "type": "str",
+            "verify": [
+              { "ext": "regex", "config": { "pattern": "\\A[a-z0-9]+(?:-[a-z0-9]+)*\\z" } },
+              { "ext": "len", "config": { "max": 128 } }
+            ]
+          },
+          "subject": { "type": "str", "verify": [{ "ext": "one_of", "config": { "values": ["model_a", "model_b", "arbiter"] } }] },
+          "status": { "type": "str", "verify": [{ "ext": "one_of", "config": { "values": ["pass"] } }] }
+        }
+      }
+    }
+  }
+}

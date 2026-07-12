@@ -54,7 +54,10 @@ manifest, model input, or substitute for the absent retained runtime evidence.
   operating-system path calls.
 - `records` contains only the conformance wire shapes.
 - `stable` is the sole module allowed to import `selta-core`.
-- `manifest`, `artifact`, and `kit` derive inventories and oracle-free kits.
+- `inventory` owns policy-neutral bounded recursive file closure.
+- `corpus` admits and pairs the closed case, oracle, and schema inventories.
+- `manifest`, `artifact`, and `kit` derive the generated manifest and
+  oracle-free kits.
 - `process` and `prediction` own isolated launch and capture.
 - `candidate_check` performs post-hoc package checks only.
 - `finite` evaluates the closed, generic finite-world DSL.
@@ -66,6 +69,7 @@ kit contains the arbiter source, and the two models share no semantic helper.
 ## Command lifecycle
 
 ```text
+arbiter check-corpus-inventory
 arbiter manifest
 arbiter artifact-set
 arbiter kit
@@ -81,6 +85,21 @@ Commands are added only when their complete invariant can be enforced. A
 watchdog, output ceiling, malformed record, or failed relational check aborts
 without emitting a ledger or seal; operational failure never becomes a
 candidate conformance outcome.
+
+The implemented corpus-inventory command is:
+
+```text
+arbiter check-corpus-inventory \
+  --repository <physical-repository>
+```
+
+It recursively inventories exact `.json` suffixes beneath the three authored
+roots, admits all fifteen conformance schemas and every case and oracle through
+stable Selta, and requires the frozen `163/163/15` cardinalities, relative-path
+bijection, filename IDs, and operation/oracle-kind compatibility. Its category
+and kind distributions are derived retained-fixture observations, not a second
+hidden authored case list. The command follows no case artifact reference,
+writes nothing, and cannot emit a partial manifest.
 
 The implemented generic-set admission command is:
 

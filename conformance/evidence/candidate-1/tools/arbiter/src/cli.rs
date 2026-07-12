@@ -9,6 +9,7 @@ use clap::{Parser, Subcommand};
 use serde_json::Value;
 
 use crate::artifact::{self, ArtifactLimits};
+use crate::corpus::{self, SCHEMA_FILES};
 use crate::digest::{bytes_sha256, h, hb, Digest};
 use crate::finite;
 use crate::json::{jcs, parse_ijson, render_record, ParseLimits};
@@ -18,23 +19,6 @@ use crate::stable::StableSelta;
 const CANDIDATE: &str = "conformance/evidence/candidate-1";
 const ARTIFACT_LIMIT: usize = 1_048_576;
 const FIXTURE_ARTIFACT_LIMITS: ArtifactLimits = ArtifactLimits::new(301, 2, 16, 5, 10);
-const SCHEMA_FILES: [&str; 15] = [
-    "artifact-set.schema.json",
-    "case.schema.json",
-    "completion-ledger.schema.json",
-    "finite-result.schema.json",
-    "finite-world.schema.json",
-    "jcs-vectors.schema.json",
-    "kit-index.schema.json",
-    "manifest-input.schema.json",
-    "manifest.schema.json",
-    "oracle.schema.json",
-    "prediction-ledger.schema.json",
-    "request.schema.json",
-    "response.schema.json",
-    "runtime-evidence.schema.json",
-    "seal.schema.json",
-];
 const FINITE_CASES: [&str; 10] = [
     "adaptive-holdout",
     "best-of-n-proxy",
@@ -59,6 +43,11 @@ struct Cli {
 enum Command {
     /// Admit every conformance schema and execute the public JCS vectors.
     CheckFoundation {
+        #[arg(long)]
+        repository: PathBuf,
+    },
+    /// Inventory, admit, and pair the closed case, oracle, and schema trees.
+    CheckCorpusInventory {
         #[arg(long)]
         repository: PathBuf,
     },
@@ -102,6 +91,7 @@ enum ArtifactSetCommand {
 pub(crate) fn run() -> Result<()> {
     match Cli::parse().command {
         Command::CheckFoundation { repository } => check_foundation(&repository),
+        Command::CheckCorpusInventory { repository } => check_corpus_inventory(&repository),
         Command::CheckFiniteCorpus { repository } => check_finite_corpus(&repository),
         Command::ArtifactSet { command } => match command {
             ArtifactSetCommand::Admit {
@@ -127,6 +117,41 @@ pub(crate) fn run() -> Result<()> {
             ),
         },
     }
+}
+
+fn check_corpus_inventory(repository: &Path) -> Result<()> {
+    let repository = Repository::open(repository)?;
+    let runtime = tokio::runtime::Builder::new_current_thread().build()?;
+    let summary = runtime.block_on(corpus::check(&repository))?;
+
+    println!(
+        "corpus inventory pass: {} schemas, {} cases, {} oracles; operations admit_environment={} assess={} finite_world={} compare={}; oracle kinds admitted={} returned={} trap={} finite_result={} comparison_pass={} rejected={}",
+        summary.schemas,
+        summary.cases,
+        summary.oracles,
+        summary.operation_count("admit_environment"),
+        summary.operation_count("assess"),
+        summary.operation_count("finite_world"),
+        summary.operation_count("compare"),
+        summary.oracle_kind_count("admitted"),
+        summary.oracle_kind_count("returned"),
+        summary.oracle_kind_count("trap"),
+        summary.oracle_kind_count("finite_result"),
+        summary.oracle_kind_count("comparison_pass"),
+        summary.oracle_kind_count("rejected"),
+    );
+    println!(
+        "categories admission={} boundary={} finite={} judgment={} laws={} mechanics={} positive-controls={} presence={}",
+        summary.category_count("admission"),
+        summary.category_count("boundary"),
+        summary.category_count("finite"),
+        summary.category_count("judgment"),
+        summary.category_count("laws"),
+        summary.category_count("mechanics"),
+        summary.category_count("positive-controls"),
+        summary.category_count("presence"),
+    );
+    Ok(())
 }
 
 fn check_foundation(repository: &Path) -> Result<()> {

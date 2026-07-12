@@ -15,7 +15,6 @@ use serde::{Deserialize, Deserializer, Serialize, Serializer};
 pub(crate) struct RepoPath(String);
 
 /// One canonical ASCII path component obtained from an exact directory entry.
-#[allow(dead_code)] // Public to the immediately following manifest-derivation slice.
 #[derive(Debug, Clone, PartialEq, Eq, PartialOrd, Ord, Hash)]
 pub(crate) struct ChildName(String);
 
@@ -41,7 +40,6 @@ pub(crate) enum NodeKind {
 ///
 /// Opening this entry verifies that the name still denotes the observed
 /// object. A rename or replacement between enumeration and opening fails.
-#[allow(dead_code)] // Public to the immediately following manifest-derivation slice.
 pub(crate) struct PinnedEntry<'directory> {
     parent: &'directory PinnedDirectory,
     name: ChildName,
@@ -115,7 +113,6 @@ impl PinnedDirectory {
     /// Every returned entry carries the no-follow type and physical identity
     /// observed from this exact directory handle. Noncanonical names and
     /// ASCII-case-folded sibling collisions fail the closed inventory.
-    #[allow(dead_code)] // Public to the immediately following manifest-derivation slice.
     pub(crate) fn entries(&self, max_entries: usize) -> Result<Vec<PinnedEntry<'_>>> {
         let observed = self.0.entries(max_entries)?;
         let mut folded = BTreeMap::new();
@@ -136,7 +133,6 @@ impl PinnedDirectory {
     }
 }
 
-#[allow(dead_code)] // Public to the immediately following manifest-derivation slice.
 impl PinnedEntry<'_> {
     pub(crate) fn name(&self) -> &ChildName {
         &self.name
@@ -192,7 +188,6 @@ impl RepoPath {
         &self.0
     }
 
-    #[allow(dead_code)] // Public to the immediately following manifest-derivation slice.
     pub(crate) fn join_child(&self, child: &ChildName) -> Result<Self> {
         format!("{self}/{child}").parse()
     }
@@ -200,7 +195,6 @@ impl RepoPath {
     /// Return the non-empty component suffix when `self` is strictly beneath
     /// `root`. Equality and textual prefixes without a `/` boundary return
     /// `None`.
-    #[allow(dead_code)] // Public to the immediately following manifest-derivation slice.
     pub(crate) fn strict_relative_to(&self, root: &RepoPath) -> Option<Self> {
         self.0
             .strip_prefix(root.as_str())
@@ -208,13 +202,12 @@ impl RepoPath {
             .and_then(|suffix| suffix.parse().ok())
     }
 
-    #[allow(dead_code)] // Public to the immediately following manifest-derivation slice.
+    #[allow(dead_code)] // Reserved for manifest root-antichain validation.
     pub(crate) fn ascii_folded(&self) -> String {
         self.0.to_ascii_lowercase()
     }
 }
 
-#[allow(dead_code)] // Public to the immediately following manifest-derivation slice.
 impl ChildName {
     fn from_bytes(value: &[u8]) -> Result<Self> {
         let value = std::str::from_utf8(value).context("directory entry name is not UTF-8")?;
@@ -439,7 +432,6 @@ mod platform {
                 .map(|handle| PinnedDirectory { handle })
         }
 
-        #[allow(dead_code)] // Public to the immediately following manifest-derivation slice.
         pub(super) fn open_regular_entry(
             &self,
             name: &ChildName,
@@ -454,7 +446,6 @@ mod platform {
             pinned_file_with_stamp(descriptor, expected, &name.to_string())
         }
 
-        #[allow(dead_code)] // Public to the immediately following manifest-derivation slice.
         pub(super) fn open_directory_entry(
             &self,
             name: &ChildName,
@@ -469,7 +460,6 @@ mod platform {
             .map(|handle| PinnedDirectory { handle })
         }
 
-        #[allow(dead_code)] // Public to the immediately following manifest-derivation slice.
         pub(super) fn entries(&self, max_entries: usize) -> Result<Vec<(Vec<u8>, EntryStamp)>> {
             let mut entries = Vec::new();
             visit_directory(self.handle.as_raw_fd(), |name| {
@@ -786,7 +776,6 @@ mod platform {
             bail!("secure no-follow artifact access is not implemented on this platform")
         }
 
-        #[allow(dead_code)] // Public to the immediately following manifest-derivation slice.
         pub(super) fn open_regular_entry(
             &self,
             _name: &ChildName,
@@ -795,7 +784,6 @@ mod platform {
             bail!("secure no-follow artifact access is not implemented on this platform")
         }
 
-        #[allow(dead_code)] // Public to the immediately following manifest-derivation slice.
         pub(super) fn open_directory_entry(
             &self,
             _name: &ChildName,
@@ -804,7 +792,6 @@ mod platform {
             bail!("secure no-follow artifact access is not implemented on this platform")
         }
 
-        #[allow(dead_code)] // Public to the immediately following manifest-derivation slice.
         pub(super) fn entries(&self, _max_entries: usize) -> Result<Vec<(Vec<u8>, EntryStamp)>> {
             bail!("secure no-follow artifact access is not implemented on this platform")
         }

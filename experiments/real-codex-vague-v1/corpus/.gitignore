@@ -1,0 +1,4 @@
+# Withheld until the selected prompt and held-out predictions are externally frozen.
+holdout.inputs.jsonl
+holdout.oracle.jsonl
+holdout.nonce

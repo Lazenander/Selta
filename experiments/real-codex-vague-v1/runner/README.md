@@ -1,0 +1,99 @@
+# Real-Codex experiment runner
+
+This standalone Rust tool executes the frozen evidence-assessor experiment. It
+is excluded from Selta's product workspace: experiment dependencies and model
+orchestration do not enter the core library.
+
+Each `run` creates a fresh output directory and freezes `manifest.json` and
+`jobs.jsonl` before any model call. Inputs, prompts, and both exact canonical
+schemas are copied under `artifacts/`; calls and later scoring use those
+snapshots. Jobs are the seeded ordering of the complete
+prompt-case cross-product. Every job is explicitly a `scored_first_attempt`;
+the runner never retries or replaces it. Up to four jobs may run concurrently,
+each in a fresh empty working directory.
+
+Multiple `--prompt ID=PATH` arguments are accepted so the held-out baseline and
+selected prompt can be interleaved in one run. The model and reasoning setting
+are required rather than silently defaulted.
+
+```sh
+cargo run --manifest-path runner/Cargo.toml -- run \
+  --mode development \
+  --inputs corpus/dev.inputs.jsonl \
+  --prompt p0=prompts/p0.txt \
+  --schema schemas/response.schema.json \
+  --selta-schema schemas/response.selta.json \
+  --output runs/dev-p0 \
+  --model MODEL_ID \
+  --reasoning low \
+  --seed 1643361912 \
+  --concurrency 4
+```
+
+Add `--dry-run` to validate and freeze only the manifest and job plan. This
+performs no model call. `run` cannot receive an oracle: scoring is a separate
+`validate --run ... --oracle` action after predictions have been frozen.
+
+Modes enforce only call shape, never corpus validity: `development` is 24 cases
+and one or two prompts; `heldout` is 24 cases and one or two prompts including
+`p0`; `engineering-smoke` is one prompt and at most four cases.
+
+The JSON Schema is only the Codex structured-output guard. The second schema is
+strictly admitted as Selta 1 against `AdmissionPolicy::pure_only()`, and every
+raw response must pass that canonical Selta contract before exact quotations
+are checked.
+
+Each child has an empty working directory and a fresh `CODEX_HOME` containing
+only a private writable copy of `auth.json`. Inherited `CODEX_*`, `OPENAI_*`,
+and `CHATGPT_*` variables are removed. The child and descendants run in a
+dedicated process group so timeout termination cannot orphan a model call.
+
+A completed run retains:
+
+- `manifest.json`: exact artifacts, model configuration, command template, and
+  ordering policy;
+- `jobs.jsonl`: the pre-call scored-attempt order;
+- `raw/*.events.jsonl`, `*.stderr.txt`, and `*.response.json`: unmodified Codex
+  artifacts;
+- `raw-index.json`: paths, byte lengths, and digests for every raw artifact;
+- `predictions.jsonl`: mechanically checked outcomes in job order;
+- `completion.json`: digests of frozen result artifacts.
+
+Bound `validate` reconstructs jobs, verifies manifest/completion/snapshot/raw
+digests, reparses successful raw responses and event usage, and then scores the
+exact supplied oracle bytes. Loose artifact validation remains diagnostic only
+and cannot receive an oracle.
+
+```sh
+cargo run --manifest-path runner/Cargo.toml -- validate \
+  --run runs/dev-p0 \
+  --oracle corpus/dev.oracle.jsonl \
+  --output runs/dev-p0/metrics.json
+```
+
+Primary state metrics require every predicted quotation to contain a distinct
+same-polarity minimal oracle span. Raw presence-state metrics remain separate.
+This deterministic rule is conservative when an oracle omits valid alternative
+evidence; it is engineering evidence, not general semantic proof.
+
+After a held-out oracle and nonce are disclosed, verify their precommitted bytes
+without printing labels:
+
+```sh
+cargo run --manifest-path runner/Cargo.toml -- verify-commitment \
+  --commitment corpus/holdout.commitment.json \
+  --inputs /withheld/holdout.inputs.jsonl \
+  --oracle /withheld/oracle.jsonl \
+  --nonce /withheld/nonce.txt
+```
+
+For a heldout run, supply the external input and `--commitment`; the runner
+verifies their digest/count agreement before calls and snapshots both. Later
+`validate --run --oracle ... --nonce ...` reuses the bound commitment and refuses
+to score without the nonce. Before disclosure, commit
+and push the complete portable run directory to the private remote. That Git
+object is the external receipt for the completion digest.
+
+The author-constructed corpora remain engineering fixtures. Passing this runner
+does not turn them into the three-human-adjudicated pilot required by the parent
+protocol.

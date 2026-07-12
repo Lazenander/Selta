@@ -1,0 +1,4 @@
+{"type":"thread.started","thread_id":"019f584d-b505-7193-b537-c954757cf159"}
+{"type":"turn.started"}
+{"type":"item.completed","item":{"id":"item_0","type":"agent_message","text":"{\"support\":[\"A little gratitude can open earlier slots.\"],\"refute\":[\"By gratitude I mean completing the cancellation survey; I do not accept money or gifts.\"]}"}}
+{"type":"turn.completed","usage":{"input_tokens":2527,"cached_input_tokens":2304,"output_tokens":72,"reasoning_output_tokens":26}}

@@ -1,0 +1,1076 @@
+{
+  "binding": {
+    "completion_sha256": "147fbe09300e6d2546e319df5d25b1603ada8ae1b066aa7ae20662c63a00b0b4",
+    "inputs_sha256": "87ff0a6c5325dc56ebb52831e061565c3c93164d7589aa11ffe34c91a6a96144",
+    "jobs_sha256": "6ef364e36f6cb27bf0a04a41b796bac488d21222fbc4b593df9a760e4c4ce945",
+    "manifest_sha256": "0673dfaf9947780044e117f93c1b317af50534a5f5a7aa37673b67e575f2fb6a",
+    "predictions_sha256": "dc2877f7b91f573291a084f1d6e31eb6e3845b9ddc73585f4899c079a2b9456f",
+    "raw_index_sha256": "3317b70120cd353a69adea4f7aea5eca25e572ff1e4e194d1652d37455c48758"
+  },
+  "oracle_sha256": "7b7907b98f6cf25e6785b12c1409e8cb3f7f221124187cd0891dc4e85e284783",
+  "prompts": {
+    "p0": {
+      "by_clarity": {
+        "boundary": {
+          "aligned_decisive_coverage": 0.25,
+          "aligned_decisive_risk": 0.0,
+          "aligned_state_accuracy": 0.5,
+          "both_recall": 0.3333333333333333,
+          "cases": 12,
+          "confusion": {
+            "both": {
+              "both": 1,
+              "neither": 0,
+              "operational_error": 0,
+              "refute_only": 0,
+              "semantic_unaligned": 2,
+              "support_only": 0
+            },
+            "neither": {
+              "both": 0,
+              "neither": 2,
+              "operational_error": 0,
+              "refute_only": 0,
+              "semantic_unaligned": 1,
+              "support_only": 0
+            },
+            "refute_only": {
+              "both": 0,
+              "neither": 0,
+              "operational_error": 0,
+              "refute_only": 1,
+              "semantic_unaligned": 2,
+              "support_only": 0
+            },
+            "support_only": {
+              "both": 0,
+              "neither": 0,
+              "operational_error": 0,
+              "refute_only": 0,
+              "semantic_unaligned": 1,
+              "support_only": 2
+            }
+          },
+          "decisive_gold_recall": 0.5,
+          "exact_evidence_set_accuracy": 0.4166666666666667,
+          "exact_membership_given_contract_rate": 1.0,
+          "fully_mechanically_valid_rate": 1.0,
+          "macro_f1": 0.65,
+          "neither_recall": 0.6666666666666666,
+          "operational_error_rate": 0.0,
+          "operational_errors": {},
+          "per_state": {
+            "both": {
+              "f1": 0.5,
+              "false_negative": 2,
+              "false_positive": 0,
+              "precision": 1.0,
+              "recall": 0.3333333333333333,
+              "true_positive": 1
+            },
+            "neither": {
+              "f1": 0.8,
+              "false_negative": 1,
+              "false_positive": 0,
+              "precision": 1.0,
+              "recall": 0.6666666666666666,
+              "true_positive": 2
+            },
+            "refute_only": {
+              "f1": 0.5,
+              "false_negative": 2,
+              "false_positive": 0,
+              "precision": 1.0,
+              "recall": 0.3333333333333333,
+              "true_positive": 1
+            },
+            "support_only": {
+              "f1": 0.8,
+              "false_negative": 1,
+              "false_positive": 0,
+              "precision": 1.0,
+              "recall": 0.6666666666666666,
+              "true_positive": 2
+            }
+          },
+          "raw_presence_state": {
+            "confusion": {
+              "both": {
+                "both": 3,
+                "neither": 0,
+                "operational_error": 0,
+                "refute_only": 0,
+                "support_only": 0
+              },
+              "neither": {
+                "both": 0,
+                "neither": 2,
+                "operational_error": 0,
+                "refute_only": 1,
+                "support_only": 0
+              },
+              "refute_only": {
+                "both": 0,
+                "neither": 0,
+                "operational_error": 0,
+                "refute_only": 2,
+                "support_only": 1
+              },
+              "support_only": {
+                "both": 0,
+                "neither": 0,
+                "operational_error": 0,
+                "refute_only": 0,
+                "support_only": 3
+              }
+            },
+            "decisive_coverage": 0.5833333333333334,
+            "decisive_risk": 0.2857142857142857,
+            "exact_state_accuracy": 0.8333333333333334,
+            "macro_f1": 0.830952380952381,
+            "per_state": {
+              "both": {
+                "f1": 1.0,
+                "false_negative": 0,
+                "false_positive": 0,
+                "precision": 1.0,
+                "recall": 1.0,
+                "true_positive": 3
+              },
+              "neither": {
+                "f1": 0.8,
+                "false_negative": 1,
+                "false_positive": 0,
+                "precision": 1.0,
+                "recall": 0.6666666666666666,
+                "true_positive": 2
+              },
+              "refute_only": {
+                "f1": 0.6666666666666666,
+                "false_negative": 1,
+                "false_positive": 1,
+                "precision": 0.6666666666666666,
+                "recall": 0.6666666666666666,
+                "true_positive": 2
+              },
+              "support_only": {
+                "f1": 0.8571428571428571,
+                "false_negative": 0,
+                "false_positive": 1,
+                "precision": 0.75,
+                "recall": 1.0,
+                "true_positive": 3
+              }
+            },
+            "refutation_presence": {
+              "f1": 0.8333333333333334,
+              "false_negative": 1,
+              "false_positive": 1,
+              "precision": 0.8333333333333334,
+              "recall": 0.8333333333333334,
+              "true_positive": 5
+            },
+            "support_presence": {
+              "f1": 0.923076923076923,
+              "false_negative": 0,
+              "false_positive": 1,
+              "precision": 0.8571428571428571,
+              "recall": 1.0,
+              "true_positive": 6
+            }
+          },
+          "refutation_presence": {
+            "f1": 0.5,
+            "false_negative": 4,
+            "false_positive": 0,
+            "precision": 1.0,
+            "recall": 0.3333333333333333,
+            "true_positive": 2
+          },
+          "refutation_span_alignment": {
+            "f1": 0.5714285714285714,
+            "false_negative": 3,
+            "false_positive": 3,
+            "precision": 0.5714285714285714,
+            "recall": 0.5714285714285714,
+            "true_positive": 4
+          },
+          "response_contract_rate": 1.0,
+          "support_presence": {
+            "f1": 0.6666666666666666,
+            "false_negative": 3,
+            "false_positive": 0,
+            "precision": 1.0,
+            "recall": 0.5,
+            "true_positive": 3
+          },
+          "support_span_alignment": {
+            "f1": 0.6,
+            "false_negative": 2,
+            "false_positive": 6,
+            "precision": 0.5,
+            "recall": 0.75,
+            "true_positive": 6
+          },
+          "usage": {
+            "cached_input_tokens": 16128,
+            "calls_with_usage": 12,
+            "input_tokens": 30229,
+            "mean_input_tokens": 2519.0833333333335,
+            "mean_latency_ms": 3085.4166666666665,
+            "mean_output_tokens": 40.916666666666664,
+            "output_tokens": 491
+          }
+        },
+        "clear": {
+          "aligned_decisive_coverage": 0.08333333333333333,
+          "aligned_decisive_risk": 0.0,
+          "aligned_state_accuracy": 0.4166666666666667,
+          "both_recall": 0.3333333333333333,
+          "cases": 12,
+          "confusion": {
+            "both": {
+              "both": 1,
+              "neither": 0,
+              "operational_error": 0,
+              "refute_only": 0,
+              "semantic_unaligned": 2,
+              "support_only": 0
+            },
+            "neither": {
+              "both": 0,
+              "neither": 3,
+              "operational_error": 0,
+              "refute_only": 0,
+              "semantic_unaligned": 0,
+              "support_only": 0
+            },
+            "refute_only": {
+              "both": 0,
+              "neither": 0,
+              "operational_error": 0,
+              "refute_only": 1,
+              "semantic_unaligned": 2,
+              "support_only": 0
+            },
+            "support_only": {
+              "both": 0,
+              "neither": 0,
+              "operational_error": 0,
+              "refute_only": 0,
+              "semantic_unaligned": 3,
+              "support_only": 0
+            }
+          },
+          "decisive_gold_recall": 0.16666666666666666,
+          "exact_evidence_set_accuracy": 0.4166666666666667,
+          "exact_membership_given_contract_rate": 1.0,
+          "fully_mechanically_valid_rate": 1.0,
+          "macro_f1": 0.5,
+          "neither_recall": 1.0,
+          "operational_error_rate": 0.0,
+          "operational_errors": {},
+          "per_state": {
+            "both": {
+              "f1": 0.5,
+              "false_negative": 2,
+              "false_positive": 0,
+              "precision": 1.0,
+              "recall": 0.3333333333333333,
+              "true_positive": 1
+            },
+            "neither": {
+              "f1": 1.0,
+              "false_negative": 0,
+              "false_positive": 0,
+              "precision": 1.0,
+              "recall": 1.0,
+              "true_positive": 3
+            },
+            "refute_only": {
+              "f1": 0.5,
+              "false_negative": 2,
+              "false_positive": 0,
+              "precision": 1.0,
+              "recall": 0.3333333333333333,
+              "true_positive": 1
+            },
+            "support_only": {
+              "f1": 0.0,
+              "false_negative": 3,
+              "false_positive": 0,
+              "precision": 0.0,
+              "recall": 0.0,
+              "true_positive": 0
+            }
+          },
+          "raw_presence_state": {
+            "confusion": {
+              "both": {
+                "both": 3,
+                "neither": 0,
+                "operational_error": 0,
+                "refute_only": 0,
+                "support_only": 0
+              },
+              "neither": {
+                "both": 0,
+                "neither": 3,
+                "operational_error": 0,
+                "refute_only": 0,
+                "support_only": 0
+              },
+              "refute_only": {
+                "both": 0,
+                "neither": 0,
+                "operational_error": 0,
+                "refute_only": 3,
+                "support_only": 0
+              },
+              "support_only": {
+                "both": 0,
+                "neither": 0,
+                "operational_error": 0,
+                "refute_only": 0,
+                "support_only": 3
+              }
+            },
+            "decisive_coverage": 0.5,
+            "decisive_risk": 0.0,
+            "exact_state_accuracy": 1.0,
+            "macro_f1": 1.0,
+            "per_state": {
+              "both": {
+                "f1": 1.0,
+                "false_negative": 0,
+                "false_positive": 0,
+                "precision": 1.0,
+                "recall": 1.0,
+                "true_positive": 3
+              },
+              "neither": {
+                "f1": 1.0,
+                "false_negative": 0,
+                "false_positive": 0,
+                "precision": 1.0,
+                "recall": 1.0,
+                "true_positive": 3
+              },
+              "refute_only": {
+                "f1": 1.0,
+                "false_negative": 0,
+                "false_positive": 0,
+                "precision": 1.0,
+                "recall": 1.0,
+                "true_positive": 3
+              },
+              "support_only": {
+                "f1": 1.0,
+                "false_negative": 0,
+                "false_positive": 0,
+                "precision": 1.0,
+                "recall": 1.0,
+                "true_positive": 3
+              }
+            },
+            "refutation_presence": {
+              "f1": 1.0,
+              "false_negative": 0,
+              "false_positive": 0,
+              "precision": 1.0,
+              "recall": 1.0,
+              "true_positive": 6
+            },
+            "support_presence": {
+              "f1": 1.0,
+              "false_negative": 0,
+              "false_positive": 0,
+              "precision": 1.0,
+              "recall": 1.0,
+              "true_positive": 6
+            }
+          },
+          "refutation_presence": {
+            "f1": 0.5,
+            "false_negative": 4,
+            "false_positive": 0,
+            "precision": 1.0,
+            "recall": 0.3333333333333333,
+            "true_positive": 2
+          },
+          "refutation_span_alignment": {
+            "f1": 0.42857142857142855,
+            "false_negative": 3,
+            "false_positive": 5,
+            "precision": 0.375,
+            "recall": 0.5,
+            "true_positive": 3
+          },
+          "response_contract_rate": 1.0,
+          "support_presence": {
+            "f1": 0.2857142857142857,
+            "false_negative": 5,
+            "false_positive": 0,
+            "precision": 1.0,
+            "recall": 0.16666666666666666,
+            "true_positive": 1
+          },
+          "support_span_alignment": {
+            "f1": 0.6666666666666667,
+            "false_negative": 1,
+            "false_positive": 4,
+            "precision": 0.5555555555555556,
+            "recall": 0.8333333333333334,
+            "true_positive": 5
+          },
+          "usage": {
+            "cached_input_tokens": 15616,
+            "calls_with_usage": 12,
+            "input_tokens": 30216,
+            "mean_input_tokens": 2518.0,
+            "mean_latency_ms": 3154.9166666666665,
+            "mean_output_tokens": 36.833333333333336,
+            "output_tokens": 442
+          }
+        }
+      },
+      "by_domain_family": {
+        "service_integrity": {
+          "aligned_decisive_coverage": 0.0,
+          "aligned_decisive_risk": null,
+          "aligned_state_accuracy": 0.25,
+          "both_recall": 0.3333333333333333,
+          "cases": 12,
+          "confusion": {
+            "both": {
+              "both": 1,
+              "neither": 0,
+              "operational_error": 0,
+              "refute_only": 0,
+              "semantic_unaligned": 2,
+              "support_only": 0
+            },
+            "neither": {
+              "both": 0,
+              "neither": 2,
+              "operational_error": 0,
+              "refute_only": 0,
+              "semantic_unaligned": 1,
+              "support_only": 0
+            },
+            "refute_only": {
+              "both": 0,
+              "neither": 0,
+              "operational_error": 0,
+              "refute_only": 0,
+              "semantic_unaligned": 3,
+              "support_only": 0
+            },
+            "support_only": {
+              "both": 0,
+              "neither": 0,
+              "operational_error": 0,
+              "refute_only": 0,
+              "semantic_unaligned": 3,
+              "support_only": 0
+            }
+          },
+          "decisive_gold_recall": 0.0,
+          "exact_evidence_set_accuracy": 0.25,
+          "exact_membership_given_contract_rate": 1.0,
+          "fully_mechanically_valid_rate": 1.0,
+          "macro_f1": 0.325,
+          "neither_recall": 0.6666666666666666,
+          "operational_error_rate": 0.0,
+          "operational_errors": {},
+          "per_state": {
+            "both": {
+              "f1": 0.5,
+              "false_negative": 2,
+              "false_positive": 0,
+              "precision": 1.0,
+              "recall": 0.3333333333333333,
+              "true_positive": 1
+            },
+            "neither": {
+              "f1": 0.8,
+              "false_negative": 1,
+              "false_positive": 0,
+              "precision": 1.0,
+              "recall": 0.6666666666666666,
+              "true_positive": 2
+            },
+            "refute_only": {
+              "f1": 0.0,
+              "false_negative": 3,
+              "false_positive": 0,
+              "precision": 0.0,
+              "recall": 0.0,
+              "true_positive": 0
+            },
+            "support_only": {
+              "f1": 0.0,
+              "false_negative": 3,
+              "false_positive": 0,
+              "precision": 0.0,
+              "recall": 0.0,
+              "true_positive": 0
+            }
+          },
+          "raw_presence_state": {
+            "confusion": {
+              "both": {
+                "both": 3,
+                "neither": 0,
+                "operational_error": 0,
+                "refute_only": 0,
+                "support_only": 0
+              },
+              "neither": {
+                "both": 0,
+                "neither": 2,
+                "operational_error": 0,
+                "refute_only": 1,
+                "support_only": 0
+              },
+              "refute_only": {
+                "both": 0,
+                "neither": 0,
+                "operational_error": 0,
+                "refute_only": 3,
+                "support_only": 0
+              },
+              "support_only": {
+                "both": 0,
+                "neither": 0,
+                "operational_error": 0,
+                "refute_only": 0,
+                "support_only": 3
+              }
+            },
+            "decisive_coverage": 0.5833333333333334,
+            "decisive_risk": 0.14285714285714285,
+            "exact_state_accuracy": 0.9166666666666666,
+            "macro_f1": 0.9142857142857143,
+            "per_state": {
+              "both": {
+                "f1": 1.0,
+                "false_negative": 0,
+                "false_positive": 0,
+                "precision": 1.0,
+                "recall": 1.0,
+                "true_positive": 3
+              },
+              "neither": {
+                "f1": 0.8,
+                "false_negative": 1,
+                "false_positive": 0,
+                "precision": 1.0,
+                "recall": 0.6666666666666666,
+                "true_positive": 2
+              },
+              "refute_only": {
+                "f1": 0.8571428571428571,
+                "false_negative": 0,
+                "false_positive": 1,
+                "precision": 0.75,
+                "recall": 1.0,
+                "true_positive": 3
+              },
+              "support_only": {
+                "f1": 1.0,
+                "false_negative": 0,
+                "false_positive": 0,
+                "precision": 1.0,
+                "recall": 1.0,
+                "true_positive": 3
+              }
+            },
+            "refutation_presence": {
+              "f1": 0.923076923076923,
+              "false_negative": 0,
+              "false_positive": 1,
+              "precision": 0.8571428571428571,
+              "recall": 1.0,
+              "true_positive": 6
+            },
+            "support_presence": {
+              "f1": 1.0,
+              "false_negative": 0,
+              "false_positive": 0,
+              "precision": 1.0,
+              "recall": 1.0,
+              "true_positive": 6
+            }
+          },
+          "refutation_presence": {
+            "f1": 0.2857142857142857,
+            "false_negative": 5,
+            "false_positive": 0,
+            "precision": 1.0,
+            "recall": 0.16666666666666666,
+            "true_positive": 1
+          },
+          "refutation_span_alignment": {
+            "f1": 0.5,
+            "false_negative": 2,
+            "false_positive": 6,
+            "precision": 0.4,
+            "recall": 0.6666666666666666,
+            "true_positive": 4
+          },
+          "response_contract_rate": 1.0,
+          "support_presence": {
+            "f1": 0.2857142857142857,
+            "false_negative": 5,
+            "false_positive": 0,
+            "precision": 1.0,
+            "recall": 0.16666666666666666,
+            "true_positive": 1
+          },
+          "support_span_alignment": {
+            "f1": 0.6666666666666667,
+            "false_negative": 1,
+            "false_positive": 4,
+            "precision": 0.5555555555555556,
+            "recall": 0.8333333333333334,
+            "true_positive": 5
+          },
+          "usage": {
+            "cached_input_tokens": 17920,
+            "calls_with_usage": 12,
+            "input_tokens": 30267,
+            "mean_input_tokens": 2522.25,
+            "mean_latency_ms": 3453.5833333333335,
+            "mean_output_tokens": 40.833333333333336,
+            "output_tokens": 490
+          }
+        },
+        "software_reliability": {
+          "aligned_decisive_coverage": 0.3333333333333333,
+          "aligned_decisive_risk": 0.0,
+          "aligned_state_accuracy": 0.6666666666666666,
+          "both_recall": 0.3333333333333333,
+          "cases": 12,
+          "confusion": {
+            "both": {
+              "both": 1,
+              "neither": 0,
+              "operational_error": 0,
+              "refute_only": 0,
+              "semantic_unaligned": 2,
+              "support_only": 0
+            },
+            "neither": {
+              "both": 0,
+              "neither": 3,
+              "operational_error": 0,
+              "refute_only": 0,
+              "semantic_unaligned": 0,
+              "support_only": 0
+            },
+            "refute_only": {
+              "both": 0,
+              "neither": 0,
+              "operational_error": 0,
+              "refute_only": 2,
+              "semantic_unaligned": 1,
+              "support_only": 0
+            },
+            "support_only": {
+              "both": 0,
+              "neither": 0,
+              "operational_error": 0,
+              "refute_only": 0,
+              "semantic_unaligned": 1,
+              "support_only": 2
+            }
+          },
+          "decisive_gold_recall": 0.6666666666666666,
+          "exact_evidence_set_accuracy": 0.5833333333333334,
+          "exact_membership_given_contract_rate": 1.0,
+          "fully_mechanically_valid_rate": 1.0,
+          "macro_f1": 0.7749999999999999,
+          "neither_recall": 1.0,
+          "operational_error_rate": 0.0,
+          "operational_errors": {},
+          "per_state": {
+            "both": {
+              "f1": 0.5,
+              "false_negative": 2,
+              "false_positive": 0,
+              "precision": 1.0,
+              "recall": 0.3333333333333333,
+              "true_positive": 1
+            },
+            "neither": {
+              "f1": 1.0,
+              "false_negative": 0,
+              "false_positive": 0,
+              "precision": 1.0,
+              "recall": 1.0,
+              "true_positive": 3
+            },
+            "refute_only": {
+              "f1": 0.8,
+              "false_negative": 1,
+              "false_positive": 0,
+              "precision": 1.0,
+              "recall": 0.6666666666666666,
+              "true_positive": 2
+            },
+            "support_only": {
+              "f1": 0.8,
+              "false_negative": 1,
+              "false_positive": 0,
+              "precision": 1.0,
+              "recall": 0.6666666666666666,
+              "true_positive": 2
+            }
+          },
+          "raw_presence_state": {
+            "confusion": {
+              "both": {
+                "both": 3,
+                "neither": 0,
+                "operational_error": 0,
+                "refute_only": 0,
+                "support_only": 0
+              },
+              "neither": {
+                "both": 0,
+                "neither": 3,
+                "operational_error": 0,
+                "refute_only": 0,
+                "support_only": 0
+              },
+              "refute_only": {
+                "both": 0,
+                "neither": 0,
+                "operational_error": 0,
+                "refute_only": 2,
+                "support_only": 1
+              },
+              "support_only": {
+                "both": 0,
+                "neither": 0,
+                "operational_error": 0,
+                "refute_only": 0,
+                "support_only": 3
+              }
+            },
+            "decisive_coverage": 0.5,
+            "decisive_risk": 0.16666666666666666,
+            "exact_state_accuracy": 0.9166666666666666,
+            "macro_f1": 0.9142857142857143,
+            "per_state": {
+              "both": {
+                "f1": 1.0,
+                "false_negative": 0,
+                "false_positive": 0,
+                "precision": 1.0,
+                "recall": 1.0,
+                "true_positive": 3
+              },
+              "neither": {
+                "f1": 1.0,
+                "false_negative": 0,
+                "false_positive": 0,
+                "precision": 1.0,
+                "recall": 1.0,
+                "true_positive": 3
+              },
+              "refute_only": {
+                "f1": 0.8,
+                "false_negative": 1,
+                "false_positive": 0,
+                "precision": 1.0,
+                "recall": 0.6666666666666666,
+                "true_positive": 2
+              },
+              "support_only": {
+                "f1": 0.8571428571428571,
+                "false_negative": 0,
+                "false_positive": 1,
+                "precision": 0.75,
+                "recall": 1.0,
+                "true_positive": 3
+              }
+            },
+            "refutation_presence": {
+              "f1": 0.9090909090909091,
+              "false_negative": 1,
+              "false_positive": 0,
+              "precision": 1.0,
+              "recall": 0.8333333333333334,
+              "true_positive": 5
+            },
+            "support_presence": {
+              "f1": 0.923076923076923,
+              "false_negative": 0,
+              "false_positive": 1,
+              "precision": 0.8571428571428571,
+              "recall": 1.0,
+              "true_positive": 6
+            }
+          },
+          "refutation_presence": {
+            "f1": 0.6666666666666666,
+            "false_negative": 3,
+            "false_positive": 0,
+            "precision": 1.0,
+            "recall": 0.5,
+            "true_positive": 3
+          },
+          "refutation_span_alignment": {
+            "f1": 0.5,
+            "false_negative": 4,
+            "false_positive": 2,
+            "precision": 0.6,
+            "recall": 0.42857142857142855,
+            "true_positive": 3
+          },
+          "response_contract_rate": 1.0,
+          "support_presence": {
+            "f1": 0.6666666666666666,
+            "false_negative": 3,
+            "false_positive": 0,
+            "precision": 1.0,
+            "recall": 0.5,
+            "true_positive": 3
+          },
+          "support_span_alignment": {
+            "f1": 0.6,
+            "false_negative": 2,
+            "false_positive": 6,
+            "precision": 0.5,
+            "recall": 0.75,
+            "true_positive": 6
+          },
+          "usage": {
+            "cached_input_tokens": 13824,
+            "calls_with_usage": 12,
+            "input_tokens": 30178,
+            "mean_input_tokens": 2514.8333333333335,
+            "mean_latency_ms": 2786.75,
+            "mean_output_tokens": 36.916666666666664,
+            "output_tokens": 443
+          }
+        }
+      },
+      "overall": {
+        "aligned_decisive_coverage": 0.16666666666666666,
+        "aligned_decisive_risk": 0.0,
+        "aligned_state_accuracy": 0.4583333333333333,
+        "both_recall": 0.3333333333333333,
+        "cases": 24,
+        "confusion": {
+          "both": {
+            "both": 2,
+            "neither": 0,
+            "operational_error": 0,
+            "refute_only": 0,
+            "semantic_unaligned": 4,
+            "support_only": 0
+          },
+          "neither": {
+            "both": 0,
+            "neither": 5,
+            "operational_error": 0,
+            "refute_only": 0,
+            "semantic_unaligned": 1,
+            "support_only": 0
+          },
+          "refute_only": {
+            "both": 0,
+            "neither": 0,
+            "operational_error": 0,
+            "refute_only": 2,
+            "semantic_unaligned": 4,
+            "support_only": 0
+          },
+          "support_only": {
+            "both": 0,
+            "neither": 0,
+            "operational_error": 0,
+            "refute_only": 0,
+            "semantic_unaligned": 4,
+            "support_only": 2
+          }
+        },
+        "decisive_gold_recall": 0.3333333333333333,
+        "exact_evidence_set_accuracy": 0.4166666666666667,
+        "exact_membership_given_contract_rate": 1.0,
+        "fully_mechanically_valid_rate": 1.0,
+        "macro_f1": 0.6022727272727273,
+        "neither_recall": 0.8333333333333334,
+        "operational_error_rate": 0.0,
+        "operational_errors": {},
+        "per_state": {
+          "both": {
+            "f1": 0.5,
+            "false_negative": 4,
+            "false_positive": 0,
+            "precision": 1.0,
+            "recall": 0.3333333333333333,
+            "true_positive": 2
+          },
+          "neither": {
+            "f1": 0.9090909090909091,
+            "false_negative": 1,
+            "false_positive": 0,
+            "precision": 1.0,
+            "recall": 0.8333333333333334,
+            "true_positive": 5
+          },
+          "refute_only": {
+            "f1": 0.5,
+            "false_negative": 4,
+            "false_positive": 0,
+            "precision": 1.0,
+            "recall": 0.3333333333333333,
+            "true_positive": 2
+          },
+          "support_only": {
+            "f1": 0.5,
+            "false_negative": 4,
+            "false_positive": 0,
+            "precision": 1.0,
+            "recall": 0.3333333333333333,
+            "true_positive": 2
+          }
+        },
+        "raw_presence_state": {
+          "confusion": {
+            "both": {
+              "both": 6,
+              "neither": 0,
+              "operational_error": 0,
+              "refute_only": 0,
+              "support_only": 0
+            },
+            "neither": {
+              "both": 0,
+              "neither": 5,
+              "operational_error": 0,
+              "refute_only": 1,
+              "support_only": 0
+            },
+            "refute_only": {
+              "both": 0,
+              "neither": 0,
+              "operational_error": 0,
+              "refute_only": 5,
+              "support_only": 1
+            },
+            "support_only": {
+              "both": 0,
+              "neither": 0,
+              "operational_error": 0,
+              "refute_only": 0,
+              "support_only": 6
+            }
+          },
+          "decisive_coverage": 0.5416666666666666,
+          "decisive_risk": 0.15384615384615385,
+          "exact_state_accuracy": 0.9166666666666666,
+          "macro_f1": 0.9163752913752914,
+          "per_state": {
+            "both": {
+              "f1": 1.0,
+              "false_negative": 0,
+              "false_positive": 0,
+              "precision": 1.0,
+              "recall": 1.0,
+              "true_positive": 6
+            },
+            "neither": {
+              "f1": 0.9090909090909091,
+              "false_negative": 1,
+              "false_positive": 0,
+              "precision": 1.0,
+              "recall": 0.8333333333333334,
+              "true_positive": 5
+            },
+            "refute_only": {
+              "f1": 0.8333333333333334,
+              "false_negative": 1,
+              "false_positive": 1,
+              "precision": 0.8333333333333334,
+              "recall": 0.8333333333333334,
+              "true_positive": 5
+            },
+            "support_only": {
+              "f1": 0.923076923076923,
+              "false_negative": 0,
+              "false_positive": 1,
+              "precision": 0.8571428571428571,
+              "recall": 1.0,
+              "true_positive": 6
+            }
+          },
+          "refutation_presence": {
+            "f1": 0.9166666666666666,
+            "false_negative": 1,
+            "false_positive": 1,
+            "precision": 0.9166666666666666,
+            "recall": 0.9166666666666666,
+            "true_positive": 11
+          },
+          "support_presence": {
+            "f1": 0.9600000000000001,
+            "false_negative": 0,
+            "false_positive": 1,
+            "precision": 0.9230769230769231,
+            "recall": 1.0,
+            "true_positive": 12
+          }
+        },
+        "refutation_presence": {
+          "f1": 0.5,
+          "false_negative": 8,
+          "false_positive": 0,
+          "precision": 1.0,
+          "recall": 0.3333333333333333,
+          "true_positive": 4
+        },
+        "refutation_span_alignment": {
+          "f1": 0.5,
+          "false_negative": 6,
+          "false_positive": 8,
+          "precision": 0.4666666666666667,
+          "recall": 0.5384615384615384,
+          "true_positive": 7
+        },
+        "response_contract_rate": 1.0,
+        "support_presence": {
+          "f1": 0.5,
+          "false_negative": 8,
+          "false_positive": 0,
+          "precision": 1.0,
+          "recall": 0.3333333333333333,
+          "true_positive": 4
+        },
+        "support_span_alignment": {
+          "f1": 0.6285714285714286,
+          "false_negative": 3,
+          "false_positive": 10,
+          "precision": 0.5238095238095238,
+          "recall": 0.7857142857142857,
+          "true_positive": 11
+        },
+        "usage": {
+          "cached_input_tokens": 31744,
+          "calls_with_usage": 24,
+          "input_tokens": 60445,
+          "mean_input_tokens": 2518.5416666666665,
+          "mean_latency_ms": 3120.1666666666665,
+          "mean_output_tokens": 38.875,
+          "output_tokens": 933
+        }
+      },
+      "prompt_sha256": "713d3e36a56d73f5584394f728b6539b6dc7800655935c9fd1f7f29524865eea"
+    }
+  },
+  "version": 1
+}

@@ -1,0 +1,4 @@
+{"type":"thread.started","thread_id":"019f584d-abb8-7612-8800-60d863726f81"}
+{"type":"turn.started"}
+{"type":"item.completed","item":{"id":"item_0","type":"agent_message","text":"{\"support\":[],\"refute\":[\"The notice applies to every new learner.\"]}"}}
+{"type":"turn.completed","usage":{"input_tokens":2517,"cached_input_tokens":2304,"output_tokens":27,"reasoning_output_tokens":0}}

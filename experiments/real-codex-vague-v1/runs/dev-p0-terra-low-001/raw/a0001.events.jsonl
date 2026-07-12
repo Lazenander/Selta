@@ -1,0 +1,4 @@
+{"type":"thread.started","thread_id":"019f584d-86dc-7ab0-ba62-21b3cf37ad77"}
+{"type":"turn.started"}
+{"type":"item.completed","item":{"id":"item_0","type":"agent_message","text":"{\"support\":[\"The banner showed Saved, but after I reopened the document my final paragraph was gone.\",\"Version history also ended before that paragraph.\"],\"refute\":[]}"}}
+{"type":"turn.completed","usage":{"input_tokens":2515,"cached_input_tokens":0,"output_tokens":43,"reasoning_output_tokens":0}}

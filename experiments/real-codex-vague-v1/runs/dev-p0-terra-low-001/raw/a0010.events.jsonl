@@ -1,0 +1,4 @@
+{"type":"thread.started","thread_id":"019f584d-a085-7432-b981-9a70c8fca961"}
+{"type":"turn.started"}
+{"type":"item.completed","item":{"id":"item_0","type":"agent_message","text":"{\"support\":[\"The recovery file stops at 10:14, while the activity log records Save complete at 10:19.\",\"The text added between those times is absent after restart.\"],\"refute\":[]}"}}
+{"type":"turn.completed","usage":{"input_tokens":2519,"cached_input_tokens":2304,"output_tokens":52,"reasoning_output_tokens":0}}

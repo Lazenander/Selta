@@ -31,6 +31,8 @@ pub struct Oracle {
     pub id: String,
     pub state: EvidenceState,
     #[serde(default)]
+    pub clarity: Option<String>,
+    #[serde(default)]
     pub support: Vec<String>,
     #[serde(default)]
     pub refute: Vec<String>,
@@ -41,6 +43,8 @@ struct OracleWire {
     id: String,
     #[serde(default, deserialize_with = "deserialize_optional_state")]
     state: Option<EvidenceState>,
+    #[serde(default)]
+    clarity: Option<String>,
     #[serde(default)]
     support: Vec<String>,
     #[serde(default)]
@@ -386,6 +390,7 @@ pub fn read_oracles_bytes(
         oracles.push(Oracle {
             id: wire.id,
             state,
+            clarity: wire.clarity,
             support: evidence.support,
             refute: evidence.refute,
         });
@@ -836,7 +841,7 @@ mod tests {
             case("both", "alpha beta"),
         ];
         let bytes = concat!(
-            "{\"id\":\"neither\",\"support\":[],\"refute\":[],\"metadata\":\"ignored\"}\n",
+            "{\"id\":\"neither\",\"clarity\":\"clear\",\"support\":[],\"refute\":[],\"metadata\":\"ignored\"}\n",
             "{\"id\":\"support\",\"support\":[\"alpha\"],\"refute\":[]}\n",
             "{\"id\":\"refute\",\"support\":[],\"refute\":[\"beta\"]}\n",
             "{\"id\":\"both\",\"support\":[\"alpha\"],\"refute\":[\"beta\"]}\n",
@@ -849,6 +854,7 @@ mod tests {
                 .collect::<Vec<_>>(),
             EvidenceState::ALL
         );
+        assert_eq!(oracles[0].clarity.as_deref(), Some("clear"));
     }
 
     #[test]

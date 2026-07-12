@@ -183,10 +183,18 @@ Oracle decoding now treats authored `state` as optional wire metadata. Support
 and refutation spans must first pass the unchanged Selta and deterministic
 evidence checks; canonical state is always derived from their presence. If a
 wire record does include `state`, it must be non-null and equal that derivation
-or scoring fails. The scoring command still reads the oracle once: those exact in-memory
-bytes are commitment-verified, parsed, hashed, and reported without rewriting
-or canonicalizing the disclosed file. This is deterministic format
+or scoring fails. The scoring command still reads the oracle once: those exact
+in-memory bytes are commitment-verified, parsed, hashed, and reported without
+rewriting or canonicalizing the disclosed file. This is deterministic format
 compatibility, not a scoring-rule or semantic change.
+
+The first successful held-out metrics file then lacked the required clarity
+stratification because the frozen input snapshot omitted optional `clarity`
+while the disclosed oracle carried all labels. It was regenerated after a
+reporting-only metadata fallback: use input clarity when present, otherwise
+oracle clarity, and fail if both are present but unequal. Clarity never enters
+state derivation, alignment, or any metric definition; predictions and corpus
+bytes remain unchanged.
 
 The author-constructed corpora remain engineering fixtures. Passing this runner
 does not turn them into the three-human-adjudicated pilot required by the parent

@@ -93,6 +93,7 @@ pub struct UsageSummary {
 
 struct Row<'a> {
     case: &'a Case,
+    clarity: Option<&'a str>,
     gold: EvidenceState,
     predicted: Option<EvidenceState>,
     raw_predicted: Option<EvidenceState>,
@@ -160,6 +161,17 @@ pub fn score(
                             case.id
                         )
                     })?;
+                let clarity = match (case.clarity.as_deref(), oracle.clarity.as_deref()) {
+                    (Some(case_clarity), Some(oracle_clarity))
+                        if case_clarity != oracle_clarity =>
+                    {
+                        bail!(
+                            "case and oracle clarity disagree for `{}`: `{case_clarity}` != `{oracle_clarity}`",
+                            case.id
+                        )
+                    }
+                    (case_clarity, oracle_clarity) => case_clarity.or(oracle_clarity),
+                };
                 let error_class = match &prediction.outcome {
                     Outcome::Admitted { .. } => None,
                     Outcome::OperationalError { class, .. } => Some(class.as_str()),
@@ -196,6 +208,7 @@ pub fn score(
                     };
                 Ok(Row {
                     case,
+                    clarity,
                     gold: oracle.state,
                     predicted,
                     raw_predicted,
@@ -215,7 +228,7 @@ pub fn score(
             })
             .collect::<Result<_>>()?;
 
-        let by_clarity = group_summaries(&rows, |row| row.case.clarity.as_deref());
+        let by_clarity = group_summaries(&rows, |row| row.clarity);
         let by_domain_family = group_summaries(&rows, |row| Some(row.case.domain_family.as_str()));
         prompts.insert(
             prompt_id.to_owned(),
@@ -258,6 +271,7 @@ where
 fn clone_row<'a>(row: &Row<'a>) -> Row<'a> {
     Row {
         case: row.case,
+        clarity: row.clarity,
         gold: row.gold,
         predicted: row.predicted,
         raw_predicted: row.raw_predicted,
@@ -598,7 +612,7 @@ fn ratio(numerator: u64, denominator: u64) -> Option<f64> {
 #[cfg(test)]
 mod tests {
     use super::*;
-    use crate::{AttemptRole, Evidence, RawArtifacts};
+    use crate::{read_oracles_bytes, AttemptRole, Evidence, RawArtifacts};
 
     fn binding() -> ScoreBinding {
         ScoreBinding {
@@ -668,6 +682,7 @@ mod tests {
         let oracles = vec![Oracle {
             id: "one".into(),
             state: EvidenceState::SupportOnly,
+            clarity: None,
             support: vec!["support".into()],
             refute: vec![],
         }];
@@ -685,6 +700,68 @@ mod tests {
         assert_eq!(metrics.confusion["support_only"]["operational_error"], 1);
         assert_eq!(metrics.confusion["support_only"]["neither"], 0);
         assert_eq!(metrics.decisive_gold_recall, Some(0.0));
+    }
+
+    #[test]
+    fn oracle_clarity_fills_missing_case_clarity() {
+        let contract =
+            SeltaContract::from_source(include_bytes!("../../schemas/response.selta.json"))
+                .unwrap();
+        let cases = vec![Case {
+            id: "one".into(),
+            domain_family: "domain".into(),
+            clarity: None,
+            claim: "claim".into(),
+            text: "support".into(),
+        }];
+        let oracles = read_oracles_bytes(
+            br#"{"id":"one","clarity":"boundary","support":["support"],"refute":[]}
+"#,
+            &cases,
+            &contract,
+        )
+        .unwrap();
+        let evaluation = score(
+            &cases,
+            &[prediction("one", Some(EvidenceState::SupportOnly))],
+            &oracles,
+            "oracle".into(),
+            &contract,
+            binding(),
+        )
+        .unwrap();
+        assert_eq!(evaluation.prompts["p0"].by_clarity["boundary"].cases, 1);
+    }
+
+    #[test]
+    fn case_and_oracle_clarity_must_match() {
+        let contract =
+            SeltaContract::from_source(include_bytes!("../../schemas/response.selta.json"))
+                .unwrap();
+        let cases = vec![Case {
+            id: "one".into(),
+            domain_family: "domain".into(),
+            clarity: Some("clear".into()),
+            claim: "claim".into(),
+            text: "support".into(),
+        }];
+        let oracles = read_oracles_bytes(
+            br#"{"id":"one","clarity":"boundary","support":["support"],"refute":[]}
+"#,
+            &cases,
+            &contract,
+        )
+        .unwrap();
+        let error = score(
+            &cases,
+            &[prediction("one", Some(EvidenceState::SupportOnly))],
+            &oracles,
+            "oracle".into(),
+            &contract,
+            binding(),
+        )
+        .unwrap_err();
+        assert!(error.to_string().contains("clarity disagree for `one`"));
     }
 
     #[test]
@@ -707,6 +784,7 @@ mod tests {
             oracles.push(Oracle {
                 id: id.into(),
                 state,
+                clarity: None,
                 support: state
                     .supports()
                     .then(|| "support".into())
@@ -753,6 +831,7 @@ mod tests {
         let oracles = vec![Oracle {
             id: "one".into(),
             state: EvidenceState::SupportOnly,
+            clarity: None,
             support: vec!["oracle evidence".into()],
             refute: vec![],
         }];

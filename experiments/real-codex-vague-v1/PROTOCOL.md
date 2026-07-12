@@ -359,6 +359,13 @@ oracle digest use the same single read of the exact disclosed bytes. No prompt,
 prediction, oracle byte, or scorer semantic may change for this compatibility
 correction.
 
+The first successful metrics file had an empty clarity table because the frozen
+held-out inputs omitted optional clarity metadata while the disclosed oracle
+carried all 24 labels. Regeneration uses a reporting-only fallback: case clarity
+when present, otherwise oracle clarity, with disagreement rejected when both are
+present. This does not change state, alignment, metric definitions, prompt,
+predictions, or corpus bytes.
+
 The round order is strict:
 
 1. withhold heldout wording, oracle, and nonce;

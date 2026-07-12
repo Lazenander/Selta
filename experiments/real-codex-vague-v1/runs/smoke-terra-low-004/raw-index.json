@@ -1,0 +1,20 @@
+{
+  "version": 1,
+  "artifacts": [
+    {
+      "path": "raw/a0001.events.jsonl",
+      "sha256": "ee891edb502b477f23e0fe385d3fe4b5efb8aca75fe00de1ccab2e068e8e4529",
+      "bytes": 473
+    },
+    {
+      "path": "raw/a0001.response.json",
+      "sha256": "9a4a623108aaab0efd9099baf27b36ab030a7ba20264e929bab527b7e56d0d10",
+      "bytes": 155
+    },
+    {
+      "path": "raw/a0001.stderr.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    }
+  ]
+}

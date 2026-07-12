@@ -1,0 +1,9 @@
+{
+  "revision": "selta.evidence.conformance-oracle/s2-1",
+  "case": "positive-controls-sequential-missing-recorder-grant",
+  "expected": {
+    "kind": "returned",
+    "package": "sha256:408ba11583545e615af57504da81587e44eadd9ccc9c176b984aae37484ba62d",
+    "compare": "conformance_projection"
+  }
+}

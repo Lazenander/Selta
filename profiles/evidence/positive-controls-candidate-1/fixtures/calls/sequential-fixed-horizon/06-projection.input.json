@@ -1,0 +1,26 @@
+{
+  "parameters": {
+    "affirm": {
+      "$ref": "sha256:38fee66602b90c9a829a5d3b297f67c5d31cfd2f31ccc9477bbbd2ca7deac062",
+      "contract": "sha256:45a97f98cb6fe6d8e07bf2d0e9d820e604c428170b279199b99b1f0563586322"
+    },
+    "deny": {
+      "$ref": "sha256:f19ef6e631f3223e8c4d99e714773c3da4ba814d991cdbd4ff2c77a6d1c1b026",
+      "contract": "sha256:45a97f98cb6fe6d8e07bf2d0e9d820e604c428170b279199b99b1f0563586322"
+    }
+  },
+  "state": {
+    "$ref": "sha256:c8336b9bb7058938022852f3b5da4a065e77b9073eff2f55a4cab577d571f83b",
+    "contract": "sha256:78295e80afc955a2c6450d677b024e62cb63b7d1eb4759be4af9c05c364b5dc0"
+  },
+  "targets": [
+    {
+      "$ref": "sha256:5bb3235ef9264e8f0157135ad04ae72dbbbae4ccbc0a763be480d2ac5330f2a9",
+      "contract": "sha256:751cc09329f4a485fce9683a29ea5432786cf22b43df9cfd4b3900a326594239"
+    },
+    {
+      "$ref": "sha256:ee427dd14813f536c3f1eb6ec2c77c069a22fa668bd374159dd45858cfeecb28",
+      "contract": "sha256:751cc09329f4a485fce9683a29ea5432786cf22b43df9cfd4b3900a326594239"
+    }
+  ]
+}

@@ -1,0 +1,9 @@
+{
+  "revision": "selta.evidence.conformance-oracle/s2-1",
+  "case": "positive-controls-checked-witness-matching",
+  "expected": {
+    "kind": "returned",
+    "package": "sha256:5baec06a86f409af2bd3876c152aa77576775db0604b5edd07ab6cd43cf6894b",
+    "compare": "conformance_projection"
+  }
+}

@@ -1,0 +1,9 @@
+{
+  "revision": "selta.evidence.conformance-oracle/s2-1",
+  "case": "positive-controls-sequential-checkpoint-mismatch",
+  "expected": {
+    "kind": "returned",
+    "package": "sha256:da17e4344118b3b65d5532d335004d06fadf763735d8b42d6a97b4ceb0aaf235",
+    "compare": "conformance_projection"
+  }
+}

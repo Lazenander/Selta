@@ -1,0 +1,9 @@
+{
+  "revision": "selta.evidence.conformance-oracle/s2-1",
+  "case": "positive-controls-checked-witness-invalid-omitted",
+  "expected": {
+    "kind": "returned",
+    "package": "sha256:e0d128aaf767560fc6ebb0dd7ef87408f0892215094ce0497d4f2323dc58e34f",
+    "compare": "conformance_projection"
+  }
+}

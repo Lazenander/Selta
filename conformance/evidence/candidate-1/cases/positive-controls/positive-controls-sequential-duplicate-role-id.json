@@ -1,0 +1,13 @@
+{
+  "revision": "selta.evidence.conformance-case/s2-1",
+  "id": "positive-controls-sequential-duplicate-role-id",
+  "operation": {
+    "kind": "assess",
+    "context": "positive-controls-candidate-1",
+    "package_source": "sha256:1a88671edfba09b21dd3cbe1cfb114e06be7636cb23b21d4e70792cfb0658bff",
+    "expected_basis": {
+      "$ref": "sha256:07b46d3aad5044509a5528abcdc6ea36071d50089631152b1048826f5f1c6e79",
+      "contract": "sha256:938e5e124cb9648bb532949ff8588edeef0570eee18f6c7bfaf579af17a352a0"
+    }
+  }
+}

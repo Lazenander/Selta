@@ -1,0 +1,13 @@
+{
+  "revision": "selta.evidence.conformance-case/s2-1",
+  "id": "positive-controls-sequential-statement-contract-mismatch",
+  "operation": {
+    "kind": "assess",
+    "context": "positive-controls-candidate-1",
+    "package_source": "sha256:10e73285ca721fd330ba4d82378ba7ce70265c1febecd7fb9f5008600b530351",
+    "expected_basis": {
+      "$ref": "sha256:f038a67586331ff4b1842bb224c5aaefdeb9b733864a145ba64e88ea2b2bd0ae",
+      "contract": "sha256:938e5e124cb9648bb532949ff8588edeef0570eee18f6c7bfaf579af17a352a0"
+    }
+  }
+}

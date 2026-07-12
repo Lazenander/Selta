@@ -1,0 +1,13 @@
+{
+  "revision": "selta.evidence.conformance-case/s2-1",
+  "id": "positive-controls-sequential-anytime-valid",
+  "operation": {
+    "kind": "assess",
+    "context": "positive-controls-candidate-1",
+    "package_source": "sha256:748701efb32c9acbb678af025d56a53081bf529996900a67f55c29de5559eaa4",
+    "expected_basis": {
+      "$ref": "sha256:dc28e0cc10a0212ed492a9e0d1bbf5e78fd70795a0ef78aefda7298f8160dc42",
+      "contract": "sha256:938e5e124cb9648bb532949ff8588edeef0570eee18f6c7bfaf579af17a352a0"
+    }
+  }
+}

@@ -1,0 +1,13 @@
+{
+  "revision": "selta.evidence.conformance-case/s2-1",
+  "id": "positive-controls-checked-witness-wrong-theory-scope",
+  "operation": {
+    "kind": "assess",
+    "context": "positive-controls-candidate-1",
+    "package_source": "sha256:81f303994bd8c83cfbfb9202e401a4ecba98473372a336a59ced9146441f29de",
+    "expected_basis": {
+      "$ref": "sha256:d90395c367434bcc32486e72db02dd41d08c80ea208279132c7d16fb4e097125",
+      "contract": "sha256:938e5e124cb9648bb532949ff8588edeef0570eee18f6c7bfaf579af17a352a0"
+    }
+  }
+}

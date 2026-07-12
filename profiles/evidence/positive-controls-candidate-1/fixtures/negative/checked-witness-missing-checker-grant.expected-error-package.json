@@ -1,0 +1,41 @@
+{
+  "language": "selta.evidence.package/candidate-1",
+  "environment": "sha256:97a2795354041b74443f8686d75be998eebf563275b479d9d23a055adf92eba4",
+  "documents": [
+    {
+      "contract": "sha256:86ed6b6f38c1b1a1d6bc5f09e2997a0df9e0f1e8554624372031034f17ebf7fb",
+      "digest": "sha256:331f74b98a2523abde31fe10c24fcd477dcb11e418820a244a3316a1fe168fee",
+      "value": {
+        "revision": "selta.evidence.outcome/candidate-1",
+        "status": "error",
+        "environment": "sha256:97a2795354041b74443f8686d75be998eebf563275b479d9d23a055adf92eba4",
+        "errors": [
+          {
+            "phase": "relation",
+            "code": "relation.unauthorized",
+            "path": "/input/documents/27/value/nodes/0/rule",
+            "message": "assessment basis does not grant the required exact role"
+          }
+        ],
+        "executions": [],
+        "resources": {
+          "documents": 33,
+          "total_document_bytes": 27974,
+          "attempts_total": 1,
+          "graph_nodes": 2,
+          "graph_edges": 1,
+          "max_fan_in_observed": 1,
+          "graph_depth": 2,
+          "semantic_calls": 0,
+          "semantic_fuel": 0,
+          "state_bytes": 0,
+          "conclusion_labels_total": 0
+        }
+      }
+    }
+  ],
+  "root": {
+    "$ref": "sha256:331f74b98a2523abde31fe10c24fcd477dcb11e418820a244a3316a1fe168fee",
+    "contract": "sha256:86ed6b6f38c1b1a1d6bc5f09e2997a0df9e0f1e8554624372031034f17ebf7fb"
+  }
+}

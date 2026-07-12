@@ -1,0 +1,9 @@
+{
+  "revision": "selta.evidence.conformance-oracle/s2-1",
+  "case": "positive-controls-sequential-unavailable-assumption",
+  "expected": {
+    "kind": "returned",
+    "package": "sha256:e7c5afb80b7ed92bf8062954a421fc9fd386f86930e1a720113c5803568f1bcc",
+    "compare": "conformance_projection"
+  }
+}

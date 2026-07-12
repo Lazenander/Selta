@@ -1,0 +1,9 @@
+{
+  "revision": "selta.evidence.conformance-oracle/s2-1",
+  "case": "positive-controls-sequential-wrong-scope-contract",
+  "expected": {
+    "kind": "returned",
+    "package": "sha256:ad245e41a8112df01915593056d76d4e6692eb3eeee16ab125b1328ba755e599",
+    "compare": "conformance_projection"
+  }
+}

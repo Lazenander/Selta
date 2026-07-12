@@ -1,0 +1,15 @@
+{
+  "claim": {
+    "$ref": "sha256:9d62a7c97cf6b5243f24fcd7833a19d02e7a4e65e3202e6db8aa0310e910a139",
+    "contract": "sha256:751cc09329f4a485fce9683a29ea5432786cf22b43df9cfd4b3900a326594239"
+  },
+  "stance": "support",
+  "modality": {
+    "$ref": "sha256:fce16273e29dbe4c53195c6e54005b98e9323414518dfa7a740f36c1f925c07e",
+    "contract": "sha256:a587092a0074c9b57a2a22225b99fb20cb6fd0ba69ea27156cab7b8b1ca6ed21"
+  },
+  "payload": {
+    "$ref": "sha256:e1800fdd9945d73311ba187d17965d23803165370ff62b15346d8674eca6bee3",
+    "contract": "sha256:d521883b7a6a07fba996b6ff4dca34ea498428c0710e0fd7636d176d530afbd6"
+  }
+}

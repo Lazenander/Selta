@@ -1,0 +1,9 @@
+{
+  "revision": "selta.evidence.conformance-oracle/s2-1",
+  "case": "positive-controls-sequential-missing-recovery-grant",
+  "expected": {
+    "kind": "returned",
+    "package": "sha256:e70a440b52156c6ce9c6222a00132112f87edc09387758632ed215f327ac817a",
+    "compare": "conformance_projection"
+  }
+}

@@ -1,0 +1,9 @@
+{
+  "revision": "selta.evidence.conformance-oracle/s2-1",
+  "case": "positive-controls-sequential-expectation-scope-mismatch",
+  "expected": {
+    "kind": "returned",
+    "package": "sha256:1629b786d6775877d810815fae0d043465e5a1630c2a9785042bfb0efef6a7b4",
+    "compare": "conformance_projection"
+  }
+}

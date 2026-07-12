@@ -1,0 +1,9 @@
+{
+  "revision": "selta.evidence.conformance-oracle/s2-1",
+  "case": "positive-controls-checked-witness-unavailable-theory-assumption",
+  "expected": {
+    "kind": "returned",
+    "package": "sha256:170e51a8e664f31483ec737d39c70cf94a0885f38779d17c2c9eb4fc1cbf21e2",
+    "compare": "conformance_projection"
+  }
+}

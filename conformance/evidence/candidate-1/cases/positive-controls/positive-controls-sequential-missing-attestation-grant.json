@@ -1,0 +1,13 @@
+{
+  "revision": "selta.evidence.conformance-case/s2-1",
+  "id": "positive-controls-sequential-missing-attestation-grant",
+  "operation": {
+    "kind": "assess",
+    "context": "positive-controls-candidate-1",
+    "package_source": "sha256:f67d226ccd1bf4039d67ee3d4a092daaf655cc8089a759fe9bb4ca7b2900e73f",
+    "expected_basis": {
+      "$ref": "sha256:8976dc9616dfe89e0b294a0b1a40df4eb82a11b2ebbc8ebf3e45678b3fbf119f",
+      "contract": "sha256:938e5e124cb9648bb532949ff8588edeef0570eee18f6c7bfaf579af17a352a0"
+    }
+  }
+}

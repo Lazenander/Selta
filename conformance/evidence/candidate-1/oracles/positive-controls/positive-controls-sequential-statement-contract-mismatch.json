@@ -1,0 +1,9 @@
+{
+  "revision": "selta.evidence.conformance-oracle/s2-1",
+  "case": "positive-controls-sequential-statement-contract-mismatch",
+  "expected": {
+    "kind": "returned",
+    "package": "sha256:072f85fbbf14cf32c79b1513fab1fc42302ce3b9bde3bb2b552f7a0d5b1887e4",
+    "compare": "conformance_projection"
+  }
+}

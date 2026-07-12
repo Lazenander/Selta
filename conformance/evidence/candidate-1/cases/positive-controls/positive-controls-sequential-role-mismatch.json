@@ -1,0 +1,13 @@
+{
+  "revision": "selta.evidence.conformance-case/s2-1",
+  "id": "positive-controls-sequential-role-mismatch",
+  "operation": {
+    "kind": "assess",
+    "context": "positive-controls-candidate-1",
+    "package_source": "sha256:a7179808b5a0d5ff014cd1c847ad60fcb246ca84e6108c90504c10b0f878098a",
+    "expected_basis": {
+      "$ref": "sha256:688b51e0ecd4d346766ffdca36a3e4212686a83ba1c5918b8899143698591803",
+      "contract": "sha256:938e5e124cb9648bb532949ff8588edeef0570eee18f6c7bfaf579af17a352a0"
+    }
+  }
+}

@@ -1,0 +1,13 @@
+{
+  "revision": "selta.evidence.conformance-case/s2-1",
+  "id": "positive-controls-sequential-wrong-scope-contract",
+  "operation": {
+    "kind": "assess",
+    "context": "positive-controls-candidate-1",
+    "package_source": "sha256:39c0957223616f145ae917f0964882fd66158da0b5373b00550b28b297d0d417",
+    "expected_basis": {
+      "$ref": "sha256:94752371ff5563b1e8b0fa99fc53647cc64ad627b535fd051e06331e37b09f16",
+      "contract": "sha256:938e5e124cb9648bb532949ff8588edeef0570eee18f6c7bfaf579af17a352a0"
+    }
+  }
+}

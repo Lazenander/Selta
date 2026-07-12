@@ -1,0 +1,9 @@
+{
+  "revision": "selta.evidence.conformance-oracle/s2-1",
+  "case": "positive-controls-sequential-omitted-assumption",
+  "expected": {
+    "kind": "returned",
+    "package": "sha256:2e84437db67481bc09f1ccfb29e6d4ba55b3caeb71de0f69a14fd296868cf060",
+    "compare": "conformance_projection"
+  }
+}

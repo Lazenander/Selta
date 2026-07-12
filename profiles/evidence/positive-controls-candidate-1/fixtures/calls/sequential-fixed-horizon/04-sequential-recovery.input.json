@@ -1,0 +1,90 @@
+{
+  "parameters": {
+    "claim": {
+      "$ref": "sha256:5bb3235ef9264e8f0157135ad04ae72dbbbae4ccbc0a763be480d2ac5330f2a9",
+      "contract": "sha256:751cc09329f4a485fce9683a29ea5432786cf22b43df9cfd4b3900a326594239"
+    },
+    "stance": "support",
+    "modality": {
+      "$ref": "sha256:fce16273e29dbe4c53195c6e54005b98e9323414518dfa7a740f36c1f925c07e",
+      "contract": "sha256:a587092a0074c9b57a2a22225b99fb20cb6fd0ba69ea27156cab7b8b1ca6ed21"
+    },
+    "payload": {
+      "$ref": "sha256:41dbb3d164ebcf577e9d7f7741e09b2bba61bf293ee400858c90f0dba4a65021",
+      "contract": "sha256:d521883b7a6a07fba996b6ff4dca34ea498428c0710e0fd7636d176d530afbd6"
+    }
+  },
+  "premises": [
+    {
+      "fact": {
+        "accounting": {
+          "$ref": "sha256:059dd86dce9be03d89f1c36993b984322bab356b5cb60397754ab98155f65637",
+          "contract": "sha256:febf5ad5f7f06e0a014163c97de740272ce0229c8df949a4c553a84ce849cf91"
+        }
+      },
+      "resolved": {
+        "accounting": {
+          "kind": "scoped",
+          "recorder": {
+            "$ref": "sha256:1043869c4753db26a65b0c1f5610167fdc294034a56bd4c97c85e890fbbce757",
+            "contract": "sha256:a587092a0074c9b57a2a22225b99fb20cb6fd0ba69ea27156cab7b8b1ca6ed21"
+          },
+          "scope": {
+            "$ref": "sha256:1b56b6339ac96ab25a7d1cd89b296b85e35e6e872d5b5c067f9d9608b299b6e9",
+            "contract": "sha256:a587092a0074c9b57a2a22225b99fb20cb6fd0ba69ea27156cab7b8b1ca6ed21"
+          },
+          "checkpoint": {
+            "$ref": "sha256:5b4c5921eb9fbc26c9227a8b2aeaccb8a92c71b4d657c740c4f7db7e18860083",
+            "contract": "sha256:a587092a0074c9b57a2a22225b99fb20cb6fd0ba69ea27156cab7b8b1ca6ed21"
+          },
+          "exceptions": [
+            {
+              "$ref": "sha256:01caf5f3dfb1b37b9a711b2020d92179297dd515b3a2e0026100e43c12b58095",
+              "contract": "sha256:a587092a0074c9b57a2a22225b99fb20cb6fd0ba69ea27156cab7b8b1ca6ed21"
+            }
+          ],
+          "attestation": {
+            "$ref": "sha256:41dbb3d164ebcf577e9d7f7741e09b2bba61bf293ee400858c90f0dba4a65021",
+            "contract": "sha256:d521883b7a6a07fba996b6ff4dca34ea498428c0710e0fd7636d176d530afbd6"
+          },
+          "verifier": {
+            "semantics": "sha256:f2283b93d06a083888e6faa02a4b48ebf91104b0faa77022bf2b37ca69121113",
+            "parameters": {
+              "$ref": "sha256:547ec59790b8b49b3e77d380bc50097a837f589ce26ca16f8e26ae4e4eca01eb",
+              "contract": "sha256:f0e46d4e4804450e0ea8268eac977b59b76758952ea80a9d430a1205e88b7644"
+            }
+          }
+        }
+      }
+    }
+  ],
+  "assumptions": [
+    "sha256:0b1a59c2a868bf72dcc99605ed5425ec3a33797fb859ea3bb9211a481e321ce8",
+    "sha256:1068d832a1bd9fd402f2c2face75a61305b02ef62fc5764b9b50acf241e46a5e",
+    "sha256:3b85656bc84e85555ed2065c2b8795de69ff6fe043db554d037f56957dcac185",
+    "sha256:4d3b28d74acb36c9b279b13a733df3e6efbff9ddbe509eb3ebd668b86cbef636",
+    "sha256:9e33700972aaa47de449627c71f0bb678e2ef79b95243dffe242044b5d1a01bf",
+    "sha256:9ff187f1eb86235431d3ac6e9b7ed0f334de37c95e3968350f4e04a6ccfc77b0",
+    "sha256:d998fb0d2f52383c19b7d2e1ef927e119bfb7ecf38a0200b26b970ad6c14f601"
+  ],
+  "arguments": {
+    "reference": {
+      "$ref": "sha256:41dbb3d164ebcf577e9d7f7741e09b2bba61bf293ee400858c90f0dba4a65021",
+      "contract": "sha256:d521883b7a6a07fba996b6ff4dca34ea498428c0710e0fd7636d176d530afbd6"
+    },
+    "value": {
+      "revision": "selta.evidence.sequential-basis/candidate-1",
+      "scope": {
+        "$ref": "sha256:1b56b6339ac96ab25a7d1cd89b296b85e35e6e872d5b5c067f9d9608b299b6e9",
+        "contract": "sha256:a587092a0074c9b57a2a22225b99fb20cb6fd0ba69ea27156cab7b8b1ca6ed21"
+      },
+      "population": "sha256:9e33700972aaa47de449627c71f0bb678e2ef79b95243dffe242044b5d1a01bf",
+      "frame": "sha256:4d3b28d74acb36c9b279b13a733df3e6efbff9ddbe509eb3ebd668b86cbef636",
+      "dependence": "sha256:d998fb0d2f52383c19b7d2e1ef927e119bfb7ecf38a0200b26b970ad6c14f601",
+      "calibration": "sha256:3b85656bc84e85555ed2065c2b8795de69ff6fe043db554d037f56957dcac185",
+      "history": "sha256:0b1a59c2a868bf72dcc99605ed5425ec3a33797fb859ea3bb9211a481e321ce8",
+      "statistic": "sha256:1068d832a1bd9fd402f2c2face75a61305b02ef62fc5764b9b50acf241e46a5e",
+      "stopping": "sha256:9ff187f1eb86235431d3ac6e9b7ed0f334de37c95e3968350f4e04a6ccfc77b0"
+    }
+  }
+}

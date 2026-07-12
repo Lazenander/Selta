@@ -1,0 +1,31 @@
+{
+  "parameters": {
+    "claim": {
+      "$ref": "sha256:cb586622d4cff5aaab78076c5fd7d7d922e35e1a3d73d9851a249c82e265e46c",
+      "contract": "sha256:751cc09329f4a485fce9683a29ea5432786cf22b43df9cfd4b3900a326594239"
+    },
+    "stance": "support",
+    "modality": {
+      "$ref": "sha256:d323586f24e46918dbad2693b24fddbb23ad4070bff19f81d94bd97413df0ba8",
+      "contract": "sha256:a587092a0074c9b57a2a22225b99fb20cb6fd0ba69ea27156cab7b8b1ca6ed21"
+    },
+    "payload": {
+      "$ref": "sha256:de24607bfe73b6eecfa8db3ef7bc9187849ba5d70bc42662d362050e510245bc",
+      "contract": "sha256:a587092a0074c9b57a2a22225b99fb20cb6fd0ba69ea27156cab7b8b1ca6ed21"
+    }
+  },
+  "attempt": {
+    "acquisition": {
+      "$ref": "sha256:361bd1771626cfc55ef7336e2c2cd79ae82778a86bedfa3d0c8adc39af300155",
+      "contract": "sha256:febf5ad5f7f06e0a014163c97de740272ce0229c8df949a4c553a84ce849cf91"
+    },
+    "attempt": "sha256:1ed0ce85c8a5dba968fc547c074047d7cc2be07454ef871e814e85e153b68147"
+  },
+  "response": {
+    "reference": {
+      "$ref": "sha256:de24607bfe73b6eecfa8db3ef7bc9187849ba5d70bc42662d362050e510245bc",
+      "contract": "sha256:a587092a0074c9b57a2a22225b99fb20cb6fd0ba69ea27156cab7b8b1ca6ed21"
+    },
+    "value": "checked-witness-invalid-omitted:invalid-witness"
+  }
+}

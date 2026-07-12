@@ -1,0 +1,9 @@
+{
+  "revision": "selta.evidence.conformance-oracle/s2-1",
+  "case": "positive-controls-sequential-substantive-target-binding",
+  "expected": {
+    "kind": "returned",
+    "package": "sha256:3f28e737e073238df02c6ce3bf77c8508d0e7a84c5040ac56a551a318a687262",
+    "compare": "conformance_projection"
+  }
+}

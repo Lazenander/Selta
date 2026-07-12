@@ -1,0 +1,52 @@
+{
+  "parameters": {
+    "revision": "selta.evidence.sequential-accounting-expectation/candidate-1",
+    "result": {
+      "status": "accepted"
+    },
+    "recorder": {
+      "$ref": "sha256:e5ffc4108b5b790d3b37a79bac2468c80af317485312862f9e2f15de111884f8",
+      "contract": "sha256:a587092a0074c9b57a2a22225b99fb20cb6fd0ba69ea27156cab7b8b1ca6ed21"
+    },
+    "scope": {
+      "$ref": "sha256:03f0052700a9ec6dd2bd42de1a056fd55af3f4bfbe521235b25edc9052c89374",
+      "contract": "sha256:a587092a0074c9b57a2a22225b99fb20cb6fd0ba69ea27156cab7b8b1ca6ed21"
+    },
+    "checkpoint": {
+      "$ref": "sha256:fcc1d130330323a8af0087498321554a718b4cbdbaf29df5676655b26ce7d04f",
+      "contract": "sha256:a587092a0074c9b57a2a22225b99fb20cb6fd0ba69ea27156cab7b8b1ca6ed21"
+    },
+    "exceptions": [
+      {
+        "$ref": "sha256:8aabc2d1847fc666d8a40faa5c109b99ebf734886ce11c54442f3b30f81c8caf",
+        "contract": "sha256:a587092a0074c9b57a2a22225b99fb20cb6fd0ba69ea27156cab7b8b1ca6ed21"
+      }
+    ],
+    "assertion": {
+      "$ref": "sha256:f8c2a2d6b82db621ec4fe57f1d37bb0a9b9dea35f0e3aad62353aadaf01957fb",
+      "contract": "sha256:d521883b7a6a07fba996b6ff4dca34ea498428c0710e0fd7636d176d530afbd6"
+    }
+  },
+  "recorder": {
+    "$ref": "sha256:e5ffc4108b5b790d3b37a79bac2468c80af317485312862f9e2f15de111884f8",
+    "contract": "sha256:a587092a0074c9b57a2a22225b99fb20cb6fd0ba69ea27156cab7b8b1ca6ed21"
+  },
+  "scope": {
+    "$ref": "sha256:03f0052700a9ec6dd2bd42de1a056fd55af3f4bfbe521235b25edc9052c89374",
+    "contract": "sha256:a587092a0074c9b57a2a22225b99fb20cb6fd0ba69ea27156cab7b8b1ca6ed21"
+  },
+  "checkpoint": {
+    "$ref": "sha256:fcc1d130330323a8af0087498321554a718b4cbdbaf29df5676655b26ce7d04f",
+    "contract": "sha256:a587092a0074c9b57a2a22225b99fb20cb6fd0ba69ea27156cab7b8b1ca6ed21"
+  },
+  "exceptions": [
+    {
+      "$ref": "sha256:8aabc2d1847fc666d8a40faa5c109b99ebf734886ce11c54442f3b30f81c8caf",
+      "contract": "sha256:a587092a0074c9b57a2a22225b99fb20cb6fd0ba69ea27156cab7b8b1ca6ed21"
+    }
+  ],
+  "attestation": {
+    "$ref": "sha256:f8c2a2d6b82db621ec4fe57f1d37bb0a9b9dea35f0e3aad62353aadaf01957fb",
+    "contract": "sha256:d521883b7a6a07fba996b6ff4dca34ea498428c0710e0fd7636d176d530afbd6"
+  }
+}

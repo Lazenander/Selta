@@ -1,0 +1,13 @@
+{
+  "revision": "selta.evidence.conformance-case/s2-1",
+  "id": "positive-controls-sequential-substantive-target-output",
+  "operation": {
+    "kind": "assess",
+    "context": "positive-controls-candidate-1",
+    "package_source": "sha256:e62fae6bf50a78663f09f2696e5ff39c7d1ad9eeaca413526e6f11e9420209d1",
+    "expected_basis": {
+      "$ref": "sha256:4da2a5bc48680c9e3a154c3ce599e5ad1b1d53a9afc9ec093093808e5cae74cd",
+      "contract": "sha256:938e5e124cb9648bb532949ff8588edeef0570eee18f6c7bfaf579af17a352a0"
+    }
+  }
+}

@@ -1,0 +1,13 @@
+{
+  "revision": "selta.evidence.conformance-case/s2-1",
+  "id": "positive-controls-sequential-missing-recovery-grant",
+  "operation": {
+    "kind": "assess",
+    "context": "positive-controls-candidate-1",
+    "package_source": "sha256:f874c1726e0e09df07c4d138cf608ff889ea95e8432b2511c673a888a59456ca",
+    "expected_basis": {
+      "$ref": "sha256:96b8603b3910b4302b8045f05e3e03ad96fc11fff2603f690f5ac9f38d4b3938",
+      "contract": "sha256:938e5e124cb9648bb532949ff8588edeef0570eee18f6c7bfaf579af17a352a0"
+    }
+  }
+}

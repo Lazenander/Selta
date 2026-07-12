@@ -121,6 +121,17 @@
                 }
               }
             },
+            "semantic_output_bytes": {
+              "type": "array",
+              "item": {
+                "type": "object",
+                "fields": {
+                  "call_ordinal": { "type": "int", "verify": [{ "ext": "range", "config": { "min": 0, "max": 9007199254740991 } }] },
+                  "semantics": { "type": "str", "verify": [{ "ext": "regex", "config": { "pattern": "\\Asha256:[0-9a-f]{64}\\z" } }] },
+                  "utf8_bytes": { "type": "int", "verify": [{ "ext": "range", "config": { "min": 0, "max": 9007199254740991 } }] }
+                }
+              }
+            },
             "verification_faults": {
               "type": "array",
               "item": {
@@ -168,6 +179,11 @@
                   "contract": { "type": "str", "verify": [{ "ext": "regex", "config": { "pattern": "\\Asha256:[0-9a-f]{64}\\z" } }] }
                 }
               }
+            },
+            "forbidden_boundary": {
+              "type": "str",
+              "required": false,
+              "verify": [{ "ext": "one_of", "config": { "values": ["concluded_outcome_insertion"] } }]
             }
           }
         }

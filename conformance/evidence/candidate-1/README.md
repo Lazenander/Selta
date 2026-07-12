@@ -78,23 +78,38 @@ from document 21. Encoded source fields use non-empty canonical Base64. A
 the arbiter independently verifies it under the candidate package schema and
 resolved document contracts before using it.
 
-If an assessment `controls` object is present, all five arrays are present,
-even when empty. `call_ordinal` is zero-based in document 16's dispatch order.
+If an assessment `controls` object is present, all six arrays are present,
+even when empty; the separate `forbidden_boundary` member remains optional.
+`call_ordinal` is zero-based in document 16's dispatch order.
 An `identity_results` entry carries a non-empty canonical-Base64 preimage and
 replaces the digest for exactly one matching canonical preimage at its named
 insertion boundary. The encoded bytes include the complete document-16 domain
 tag, `0x00` separator, and JCS or raw suffix actually passed to SHA-256.
 Multiple entries may map
 different preimages to one digest, so both collision and fixed-point/cycle
-identity cases are expressible. Semantic outputs, semantic-read attempts, and
-verification faults match exactly one scheduled call or defensive boundary. A
+identity cases are expressible. Semantic outputs, semantic-output-byte
+measurements, semantic-read attempts, and verification faults match exactly
+one scheduled call or defensive boundary. A `semantic_output_bytes` entry
+replaces only the `UTF8_bytes(JCS(output))` quantity used in dispatch step 3;
+the actual output remains unchanged for contract verification, comparison, and
+every other purpose. A call cannot occur in both `semantic_outputs` and
+`semantic_output_bytes`. A
 `semantic_reads` entry injects exactly one attempted `DocumentRef` dereference
 through the dispatch-time resolver at its named call and does not itself expose
 the value. A matching `forbidden_reads` entry returns
 `{ kind: "forbidden_read", reference: DocumentRef }` before the value is
-exposed. This is the protocol's only trap variant. Every control must match
-exactly once; unused, multiply matched, or out-of-scope controls fail the
-conformance case.
+exposed. This is the protocol's only trap variant. Every entry in the six
+arrays must match exactly once; unused, multiply matched, overlapping, or
+out-of-scope entries fail the conformance case.
+
+`forbidden_boundary: "concluded_outcome_insertion"` is an optional negative
+assertion rather than an ordinary control entry. Zero visits satisfies it at
+assessment completion. Its event is the start of O1 after O0 has accepted the
+ordinary concluded outcome's measured size and before retained-map comparison
+or insertion. A visit fails the private execution before O1 effects. Digest
+work performed while O0 measures or replaces an oversized outcome is not that
+event. The assertion never enters candidate values, semantics, identities,
+resources, or the product interface.
 
 A comparison observation uses an empty pointer for the whole selected view.
 `package_jcs` always uses the empty pointer and denotes JCS bytes of the returned

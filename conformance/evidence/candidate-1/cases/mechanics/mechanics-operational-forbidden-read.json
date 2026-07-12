@@ -12,6 +12,7 @@
     "controls": {
       "identity_results": [],
       "semantic_outputs": [],
+      "semantic_output_bytes": [],
       "semantic_reads": [
         {
           "call_ordinal": 4,

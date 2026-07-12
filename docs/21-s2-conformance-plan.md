@@ -204,9 +204,11 @@ controls {
   identity_results: [{ boundary: "input | state | outcome",
                        preimage_base64, returned_digest }],
   semantic_outputs: [{ call_ordinal, semantics, output }],
+  semantic_output_bytes: [{ call_ordinal, semantics, utf8_bytes }],
   semantic_reads: [{ call_ordinal, semantics, reference: DocumentRef }],
   verification_faults: [{ substage, document_index? }],
-  forbidden_reads: [DocumentRef]
+  forbidden_reads: [DocumentRef],
+  forbidden_boundary?: "concluded_outcome_insertion"
 }
 ```
 
@@ -217,6 +219,13 @@ document 16, not merely its JCS or raw-byte suffix. Repeating a returned digest
 for two unequal preimages creates an injected collision; binding the mutually
 referential preimages creates a fixed-point test without pretending to break
 SHA-256. A semantic override applies to exactly one scheduled call. A
+semantic-output-byte override also applies to exactly one scheduled call and
+replaces only the `UTF8_bytes(JCS(output))` quantity used by step 3 of document
+16's dispatch precedence. The actual output remains unchanged for output-
+contract verification, canonical result comparison, and every other purpose.
+One scheduled call MUST NOT be named by both `semantic_outputs` and
+`semantic_output_bytes`; such an overlap fails the conformance case before
+execution. A
 semantic-read control injects exactly one attempted `DocumentRef` dereference
 through the dispatch-time resolver at its named call; it does not expose the
 value itself.
@@ -224,10 +233,20 @@ A verification fault applies only at its named defensive boundary. A matching
 forbidden read returns the exact `forbidden_read` trap shown in the protocol
 above, with the attempted reference, before exposing the value. Package
 closure, schema verification, identity, and resource accounting retain their
-ordinary assessor access. Every declared control must match exactly once; an
-unused, multiply matched, or out-of-scope control fails the conformance case.
-These controls never enter the candidate package, semantics, identities,
-resources, or product interface.
+ordinary assessor access. Every entry in the six control arrays must match
+exactly once; an unused, multiply matched, overlapping, or out-of-scope entry
+fails the conformance case.
+
+`forbidden_boundary` is a separate negative assertion, not a match-once
+override. When present, zero visits satisfies it at assessment completion. The
+named event occurs at the start of O1, after O0 has accepted the ordinary
+concluded outcome's measured size and before any retained-map comparison or
+insertion. A visit fails the private conformance execution before any O1
+effect. Outcome-digest work needed by O0 and hashing an oversized replacement
+are not this event. The declaration and all other controls remain
+conformance-only: they never enter candidate package values, semantic inputs,
+identities, or product interfaces; their injected measurements and outputs are
+processed by the ordinary accounting and error schedule.
 
 Any disagreement is first a specification defect. It is resolved in the public
 documents and new held-out cases, never by copying one model or mechanically

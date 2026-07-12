@@ -32,6 +32,7 @@
           }
         }
       ],
+      "semantic_output_bytes": [],
       "semantic_reads": [],
       "verification_faults": [],
       "forbidden_reads": []

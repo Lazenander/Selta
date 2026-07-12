@@ -219,7 +219,7 @@
               "phase": { "type": "str", "verify": [{ "ext": "one_of", "config": { "values": ["parse", "schema", "identity", "relation", "interpret", "project", "output"] } }] },
               "code": { "type": "str", "verify": [{ "ext": "regex", "config": { "pattern": "\\A[a-z][a-z0-9_.]*\\z" } }] },
               "reachability": { "type": "str", "verify": [{ "ext": "one_of", "config": { "values": ["control"] } }] },
-              "control": { "type": "str", "verify": [{ "ext": "one_of", "config": { "values": ["identity_result", "semantic_output", "verification_fault"] } }] },
+              "control": { "type": "str", "verify": [{ "ext": "one_of", "config": { "values": ["identity_result", "semantic_output", "semantic_output_bytes", "verification_fault"] } }] },
               "cases": {
                 "type": "array",
                 "len": { "min": 1 },

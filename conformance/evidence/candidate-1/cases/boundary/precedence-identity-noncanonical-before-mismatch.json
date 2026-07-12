@@ -1,0 +1,13 @@
+{
+  "revision": "selta.evidence.conformance-case/s2-1",
+  "id": "precedence-identity-noncanonical-before-mismatch",
+  "operation": {
+    "kind": "assess",
+    "context": "boundary-candidate-1",
+    "package_source": "sha256:6bc5b8722e30b70940032ee67d5b4ce44f1b8bd2136574adb3182d5cca897005",
+    "expected_basis": {
+      "$ref": "sha256:8362b21c1aa7bcbe120b6c17bbcbd21b9e4a34b8d13f396ef9fc4de9bd963adb",
+      "contract": "sha256:938e5e124cb9648bb532949ff8588edeef0570eee18f6c7bfaf579af17a352a0"
+    }
+  }
+}

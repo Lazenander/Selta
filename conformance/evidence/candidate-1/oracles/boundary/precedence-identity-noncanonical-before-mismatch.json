@@ -1,0 +1,9 @@
+{
+  "revision": "selta.evidence.conformance-oracle/s2-1",
+  "case": "precedence-identity-noncanonical-before-mismatch",
+  "expected": {
+    "kind": "returned",
+    "package": "sha256:f37f4e519ea4fa9fe32957c366a61dd8a291dc86f6030317411f0ce124d77c5b",
+    "compare": "conformance_projection"
+  }
+}

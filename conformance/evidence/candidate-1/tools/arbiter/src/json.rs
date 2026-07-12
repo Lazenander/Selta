@@ -70,6 +70,13 @@ pub(crate) fn jcs(value: &Value) -> Result<Vec<u8>> {
     serde_json_canonicalizer::to_vec(value).context("RFC 8785 serialization failed")
 }
 
+/// Render one arbiter-generated typed record in its frozen retained form.
+pub(crate) fn render_record(value: &Value) -> Result<Vec<u8>> {
+    let mut bytes = jcs(value)?;
+    bytes.push(b'\n');
+    Ok(bytes)
+}
+
 struct ParseState {
     limits: ParseLimits,
     values: usize,
@@ -374,6 +381,10 @@ mod tests {
     fn emits_rfc_8785_bytes() {
         let value = parse_ijson(br#"{"b":1e30,"a":"x"}"#, SMALL).unwrap();
         assert_eq!(jcs(&value).unwrap(), br#"{"a":"x","b":1e+30}"#);
+        assert_eq!(
+            render_record(&value).unwrap(),
+            b"{\"a\":\"x\",\"b\":1e+30}\n"
+        );
     }
 
     #[test]

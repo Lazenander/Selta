@@ -41,9 +41,10 @@ input and constructs candidate states, closures, conclusions, or outcomes.
 - `digest` owns raw SHA-256 and domain-separated identities.
 - `path` owns repository-relative paths and a root handle retained for the
   whole operation. Its Unix adapter descends with component-relative,
-  no-follow opens and consumes bytes from the validated file handle. Other
-  platforms fail closed until their adapter provides equivalent semantics;
-  the remaining arbiter logic contains no operating-system path calls.
+  no-follow opens, exposes file identity from that same handle, and consumes
+  bytes only from retained handles. Other platforms fail closed until their
+  adapter provides equivalent semantics; the remaining arbiter logic contains
+  no operating-system path calls.
 - `records` contains only the conformance wire shapes.
 - `stable` is the sole module allowed to import `selta-core`.
 - `manifest`, `artifact`, and `kit` derive inventories and oracle-free kits.
@@ -73,6 +74,28 @@ Commands are added only when their complete invariant can be enforced. A
 watchdog, output ceiling, malformed record, or failed relational check aborts
 without emitting a ledger or seal; operational failure never becomes a
 candidate conformance outcome.
+
+The implemented generic-set admission command is:
+
+```text
+arbiter artifact-set admit \
+  --repository <physical-repository> \
+  --root <repository-relative-set-root-or-dot> \
+  --record <repository-relative-record>
+```
+
+It emits one JCS-plus-LF `{ id, bytes_sha256 }` result only after stable Selta
+verification, relational canonicality, pinned-handle file checks, streaming
+digests, and logical and hard-link self-exclusion all succeed. Its record,
+entry, per-file, and aggregate-byte flags are operational ceilings, not
+artifact-set semantics. Construction remains internal until an enclosing
+manifest, kit, or runtime operation supplies the closed member list; there is
+no second authored member-list DSL.
+
+`check-foundation` derives and admits the retained
+`fixtures/artifact-set/minimal` tree. That fixture includes a nested member and
+two distinct paths with equal bytes, and fixes both typed and exact-byte
+identities.
 
 ## Construction order
 

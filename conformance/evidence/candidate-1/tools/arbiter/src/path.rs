@@ -1,10 +1,12 @@
 //! Repository-relative paths and handle-pinned, no-follow artifact access.
 
 use std::fmt;
+use std::fs::File;
+use std::io::{Read, Result as IoResult};
 use std::path::Path;
 use std::str::FromStr;
 
-use anyhow::{bail, Result};
+use anyhow::{bail, Context, Result};
 use serde::{Deserialize, Deserializer, Serialize, Serializer};
 
 /// A non-empty, normalized, ASCII repository-relative path.
@@ -20,17 +22,39 @@ pub(crate) struct Repository(platform::Repository);
 /// One repository directory retained across inventory and child reads.
 pub(crate) struct PinnedDirectory(platform::PinnedDirectory);
 
+/// Physical identity of one regular file, observed from its retained handle.
+///
+/// This is not conformance identity. It is used only to detect a record that
+/// re-enters its own artifact set through a hard link.
+#[derive(Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash)]
+pub(crate) struct FileKey(platform::PlatformFileKey);
+
+/// One regular file retained after no-follow traversal and type validation.
+pub(crate) struct PinnedFile {
+    file: File,
+    len: u64,
+    key: FileKey,
+}
+
 impl Repository {
     pub(crate) fn open(root: &Path) -> Result<Self> {
         platform::Repository::open(root).map(Self)
     }
 
     pub(crate) fn read_regular_file(&self, path: &RepoPath, max_bytes: usize) -> Result<Vec<u8>> {
-        self.0.read_regular_file(path, max_bytes)
+        read_open_file(self.open_regular_file(path)?, &path.to_string(), max_bytes)
+    }
+
+    pub(crate) fn open_regular_file(&self, path: &RepoPath) -> Result<PinnedFile> {
+        self.0.open_regular_file(path)
     }
 
     pub(crate) fn open_directory(&self, path: &RepoPath) -> Result<PinnedDirectory> {
         self.0.open_directory(path).map(PinnedDirectory)
+    }
+
+    pub(crate) fn pinned_root(&self) -> Result<PinnedDirectory> {
+        self.0.pinned_root().map(PinnedDirectory)
     }
 }
 
@@ -44,8 +68,65 @@ impl PinnedDirectory {
         if path.0.contains('/') {
             bail!("pinned-directory child name must contain one component");
         }
-        self.0.read_regular_file(&path.0, max_bytes)
+        read_open_file(self.open_regular_file(&path)?, name, max_bytes)
     }
+
+    pub(crate) fn open_regular_file(&self, path: &RepoPath) -> Result<PinnedFile> {
+        self.0.open_regular_file(path)
+    }
+
+    pub(crate) fn open_directory(&self, path: &RepoPath) -> Result<PinnedDirectory> {
+        self.0.open_directory(path).map(PinnedDirectory)
+    }
+}
+
+impl PinnedFile {
+    pub(crate) const fn len(&self) -> u64 {
+        self.len
+    }
+
+    pub(crate) const fn key(&self) -> FileKey {
+        self.key
+    }
+}
+
+impl RepoPath {
+    pub(crate) fn as_str(&self) -> &str {
+        &self.0
+    }
+}
+
+impl Read for PinnedFile {
+    fn read(&mut self, buffer: &mut [u8]) -> IoResult<usize> {
+        self.file.read(buffer)
+    }
+}
+
+fn read_open_file(mut file: PinnedFile, label: &str, max_bytes: usize) -> Result<Vec<u8>> {
+    let max_u64 = u64::try_from(max_bytes).context("artifact byte ceiling exceeds u64")?;
+    if file.len() > max_u64 {
+        bail!(
+            "artifact {label} is {} bytes; limit is {max_bytes}",
+            file.len()
+        );
+    }
+
+    let read_limit = max_u64
+        .checked_add(1)
+        .context("artifact byte ceiling cannot be checked")?;
+    let capacity = usize::try_from(file.len()).context("artifact length exceeds usize")?;
+    let mut bytes = Vec::with_capacity(capacity);
+    file.by_ref()
+        .take(read_limit)
+        .read_to_end(&mut bytes)
+        .with_context(|| format!("cannot read open artifact {label}"))?;
+    if bytes.len() > max_bytes {
+        bail!("artifact {label} grew beyond its byte ceiling");
+    }
+    if bytes.len() as u64 != file.len() {
+        bail!("artifact {label} changed length while it was read");
+    }
+    Ok(bytes)
 }
 
 impl fmt::Display for RepoPath {
@@ -120,10 +201,9 @@ fn is_component_remainder(value: u8) -> bool {
 #[cfg(unix)]
 mod platform {
     use std::ffi::{CStr, CString, OsStr};
-    use std::fs::File;
-    use std::io::Read;
     use std::os::fd::{AsRawFd, FromRawFd, OwnedFd, RawFd};
     use std::os::unix::ffi::OsStrExt;
+    use std::os::unix::fs::MetadataExt;
     use std::path::Component;
 
     use anyhow::{Context, Result};
@@ -133,6 +213,12 @@ mod platform {
 
     pub(super) struct Repository {
         root: OwnedFd,
+    }
+
+    #[derive(Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash)]
+    pub(super) struct PlatformFileKey {
+        device: u64,
+        inode: u64,
     }
 
     impl Repository {
@@ -163,43 +249,32 @@ mod platform {
             Ok(Self { root: current })
         }
 
-        pub(super) fn read_regular_file(
-            &self,
-            relative: &RepoPath,
-            max_bytes: usize,
-        ) -> Result<Vec<u8>> {
-            let descriptor = self.open_relative(relative, false)?;
-            read_open_file(descriptor, &relative.to_string(), max_bytes)
+        pub(super) fn open_regular_file(&self, relative: &RepoPath) -> Result<PinnedFile> {
+            let descriptor = open_relative(self.root.as_raw_fd(), relative, false)?;
+            pinned_file(descriptor, &relative.to_string())
         }
 
         pub(super) fn open_directory(&self, relative: &RepoPath) -> Result<PinnedDirectory> {
-            self.open_relative(relative, true)
+            open_relative(self.root.as_raw_fd(), relative, true)
                 .map(|handle| PinnedDirectory { handle })
         }
 
-        fn open_relative(&self, relative: &RepoPath, directory: bool) -> Result<OwnedFd> {
-            let mut parent = self.root.as_raw_fd();
-            let mut opened = None;
-            let component_count = relative.0.split('/').count();
-            for (index, component) in relative.0.split('/').enumerate() {
-                let component = CString::new(component).expect("RepoPath excludes NUL");
-                let is_final = index + 1 == component_count;
-                let mut flags = libc::O_RDONLY | libc::O_CLOEXEC | libc::O_NOFOLLOW;
-                if !is_final || directory {
-                    flags |= libc::O_DIRECTORY;
-                } else {
-                    flags |= libc::O_NONBLOCK;
-                }
-                let descriptor = unsafe { libc::openat(parent, component.as_ptr(), flags) };
-                if descriptor < 0 {
-                    return Err(std::io::Error::last_os_error())
-                        .with_context(|| format!("cannot securely open artifact {relative}"));
-                }
-                let descriptor = unsafe { OwnedFd::from_raw_fd(descriptor) };
-                parent = descriptor.as_raw_fd();
-                opened = Some(descriptor);
+        pub(super) fn pinned_root(&self) -> Result<PinnedDirectory> {
+            let current = c".";
+            let descriptor = unsafe {
+                libc::openat(
+                    self.root.as_raw_fd(),
+                    current.as_ptr(),
+                    libc::O_RDONLY | libc::O_CLOEXEC | libc::O_DIRECTORY | libc::O_NOFOLLOW,
+                )
+            };
+            if descriptor < 0 {
+                return Err(std::io::Error::last_os_error())
+                    .context("cannot duplicate pinned repository root");
             }
-            opened.context("repository-relative path has no component")
+            Ok(PinnedDirectory {
+                handle: unsafe { OwnedFd::from_raw_fd(descriptor) },
+            })
         }
     }
 
@@ -208,21 +283,14 @@ mod platform {
     }
 
     impl PinnedDirectory {
-        pub(super) fn read_regular_file(&self, name: &str, max_bytes: usize) -> Result<Vec<u8>> {
-            let name = CString::new(name).expect("RepoPath child excludes NUL");
-            let descriptor = unsafe {
-                libc::openat(
-                    self.handle.as_raw_fd(),
-                    name.as_ptr(),
-                    libc::O_RDONLY | libc::O_CLOEXEC | libc::O_NOFOLLOW | libc::O_NONBLOCK,
-                )
-            };
-            if descriptor < 0 {
-                return Err(std::io::Error::last_os_error())
-                    .with_context(|| format!("cannot securely open directory child {name:?}"));
-            }
-            let descriptor = unsafe { OwnedFd::from_raw_fd(descriptor) };
-            read_open_file(descriptor, name.to_str().unwrap_or("<non-UTF8>"), max_bytes)
+        pub(super) fn open_regular_file(&self, relative: &RepoPath) -> Result<PinnedFile> {
+            let descriptor = open_relative(self.handle.as_raw_fd(), relative, false)?;
+            pinned_file(descriptor, &relative.to_string())
+        }
+
+        pub(super) fn open_directory(&self, relative: &RepoPath) -> Result<PinnedDirectory> {
+            open_relative(self.handle.as_raw_fd(), relative, true)
+                .map(|handle| PinnedDirectory { handle })
         }
 
         pub(super) fn list(&self, max_entries: usize) -> Result<Vec<Vec<u8>>> {
@@ -279,34 +347,47 @@ mod platform {
         }
     }
 
-    fn read_open_file(descriptor: OwnedFd, label: &str, max_bytes: usize) -> Result<Vec<u8>> {
-        let mut file = File::from(descriptor);
+    fn pinned_file(descriptor: OwnedFd, label: &str) -> Result<PinnedFile> {
+        let file = File::from(descriptor);
         let metadata = file
             .metadata()
             .with_context(|| format!("cannot inspect open artifact {label}"))?;
         if !metadata.is_file() {
             bail!("artifact path is not a regular file: {label}");
         }
-        let max_u64 = u64::try_from(max_bytes).context("artifact byte ceiling exceeds u64")?;
-        if metadata.len() > max_u64 {
-            bail!(
-                "artifact {label} is {} bytes; limit is {max_bytes}",
-                metadata.len()
-            );
-        }
+        Ok(PinnedFile {
+            len: metadata.len(),
+            key: FileKey(PlatformFileKey {
+                device: metadata.dev(),
+                inode: metadata.ino(),
+            }),
+            file,
+        })
+    }
 
-        let read_limit = max_u64
-            .checked_add(1)
-            .context("artifact byte ceiling cannot be checked")?;
-        let mut bytes = Vec::with_capacity(metadata.len() as usize);
-        file.by_ref()
-            .take(read_limit)
-            .read_to_end(&mut bytes)
-            .with_context(|| format!("cannot read open artifact {label}"))?;
-        if bytes.len() > max_bytes {
-            bail!("artifact {label} grew beyond its byte ceiling");
+    fn open_relative(root: RawFd, relative: &RepoPath, directory: bool) -> Result<OwnedFd> {
+        let mut parent = root;
+        let mut opened = None;
+        let component_count = relative.0.split('/').count();
+        for (index, component) in relative.0.split('/').enumerate() {
+            let component = CString::new(component).expect("RepoPath excludes NUL");
+            let is_final = index + 1 == component_count;
+            let mut flags = libc::O_RDONLY | libc::O_CLOEXEC | libc::O_NOFOLLOW;
+            if !is_final || directory {
+                flags |= libc::O_DIRECTORY;
+            } else {
+                flags |= libc::O_NONBLOCK;
+            }
+            let descriptor = unsafe { libc::openat(parent, component.as_ptr(), flags) };
+            if descriptor < 0 {
+                return Err(std::io::Error::last_os_error())
+                    .with_context(|| format!("cannot securely open artifact {relative}"));
+            }
+            let descriptor = unsafe { OwnedFd::from_raw_fd(descriptor) };
+            parent = descriptor.as_raw_fd();
+            opened = Some(descriptor);
         }
-        Ok(bytes)
+        opened.context("repository-relative path has no component")
     }
 
     fn open_directory(parent: RawFd, name: &OsStr, label: &str) -> Result<OwnedFd> {
@@ -333,20 +414,23 @@ mod platform {
 
     pub(super) struct Repository;
 
+    #[derive(Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash)]
+    pub(super) struct PlatformFileKey;
+
     impl Repository {
         pub(super) fn open(_root: &Path) -> Result<Self> {
             bail!("secure no-follow artifact access is not implemented on this platform")
         }
 
-        pub(super) fn read_regular_file(
-            &self,
-            _path: &RepoPath,
-            _max_bytes: usize,
-        ) -> Result<Vec<u8>> {
+        pub(super) fn open_regular_file(&self, _path: &RepoPath) -> Result<PinnedFile> {
             bail!("secure no-follow artifact access is not implemented on this platform")
         }
 
         pub(super) fn open_directory(&self, _path: &RepoPath) -> Result<PinnedDirectory> {
+            bail!("secure no-follow artifact access is not implemented on this platform")
+        }
+
+        pub(super) fn pinned_root(&self) -> Result<PinnedDirectory> {
             bail!("secure no-follow artifact access is not implemented on this platform")
         }
     }
@@ -354,7 +438,11 @@ mod platform {
     pub(super) struct PinnedDirectory;
 
     impl PinnedDirectory {
-        pub(super) fn read_regular_file(&self, _name: &str, _max_bytes: usize) -> Result<Vec<u8>> {
+        pub(super) fn open_regular_file(&self, _path: &RepoPath) -> Result<PinnedFile> {
+            bail!("secure no-follow artifact access is not implemented on this platform")
+        }
+
+        pub(super) fn open_directory(&self, _path: &RepoPath) -> Result<PinnedDirectory> {
             bail!("secure no-follow artifact access is not implemented on this platform")
         }
 
@@ -367,6 +455,7 @@ mod platform {
 #[cfg(test)]
 mod tests {
     use super::*;
+    #[cfg(unix)]
     use std::fs;
 
     #[test]
@@ -422,6 +511,67 @@ mod tests {
             [b"another.json".to_vec(), b"file.json".to_vec()]
         );
         assert_eq!(pinned.read_regular_file("file.json", 5).unwrap(), b"bytes");
+    }
+
+    #[cfg(unix)]
+    #[test]
+    fn pins_files_and_distinguishes_hard_links_from_copies() {
+        use std::io::Read as _;
+
+        let root = tempfile::tempdir().unwrap();
+        fs::write(root.path().join("original"), b"original").unwrap();
+        fs::hard_link(root.path().join("original"), root.path().join("linked")).unwrap();
+        fs::copy(root.path().join("original"), root.path().join("copied")).unwrap();
+        let physical_root = fs::canonicalize(root.path()).unwrap();
+        let repository = Repository::open(&physical_root).unwrap();
+
+        let original_path: RepoPath = "original".parse().unwrap();
+        let linked_path: RepoPath = "linked".parse().unwrap();
+        let copied_path: RepoPath = "copied".parse().unwrap();
+        let mut original = repository.open_regular_file(&original_path).unwrap();
+        assert_eq!(
+            original.key(),
+            repository.open_regular_file(&linked_path).unwrap().key()
+        );
+        assert_ne!(
+            original.key(),
+            repository.open_regular_file(&copied_path).unwrap().key()
+        );
+
+        fs::rename(
+            physical_root.join("original"),
+            physical_root.join("renamed"),
+        )
+        .unwrap();
+        fs::write(physical_root.join("original"), b"replacement").unwrap();
+        let mut bytes = Vec::new();
+        original.read_to_end(&mut bytes).unwrap();
+        assert_eq!(bytes, b"original");
+        assert_eq!(
+            repository.read_regular_file(&original_path, 11).unwrap(),
+            b"replacement"
+        );
+    }
+
+    #[cfg(unix)]
+    #[test]
+    fn descends_only_from_retained_directory_handles() {
+        let root = tempfile::tempdir().unwrap();
+        fs::create_dir_all(root.path().join("a/nested")).unwrap();
+        fs::write(root.path().join("a/nested/file"), b"nested").unwrap();
+        let physical_root = fs::canonicalize(root.path()).unwrap();
+        let repository = Repository::open(&physical_root).unwrap();
+        let pinned_root = repository.pinned_root().unwrap();
+        let a = pinned_root.open_directory(&"a".parse().unwrap()).unwrap();
+        let nested = a.open_directory(&"nested".parse().unwrap()).unwrap();
+        assert_eq!(nested.read_regular_file("file", 6).unwrap(), b"nested");
+        assert_eq!(
+            pinned_root
+                .open_regular_file(&"a/nested/file".parse().unwrap())
+                .unwrap()
+                .len(),
+            6
+        );
     }
 
     #[cfg(unix)]

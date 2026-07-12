@@ -1,0 +1,6 @@
+{
+  "type": "object",
+  "fields": {
+    "stop": { "type": "bool", "verify": [{ "ext": "one_of", "config": { "values": [true] } }] }
+  }
+}

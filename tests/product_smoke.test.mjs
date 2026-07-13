@@ -25,7 +25,9 @@ function waitForServer(child, stderr) {
     child.once("exit", onExit);
     child.stderr.on("data", (chunk) => {
       stderr.text += chunk;
-      const match = stderr.text.match(/listening on http:\/\/([^\s]+)/);
+      // Wait for the terminating whitespace as stderr may split the address
+      // immediately after the colon on Windows pipes.
+      const match = stderr.text.match(/listening on http:\/\/(127\.0\.0\.1:\d+)\s/);
       if (match) {
         clearTimeout(timeout);
         child.off("exit", onExit);

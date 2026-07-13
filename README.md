@@ -68,6 +68,7 @@ Selta is a type-check layer and nothing more.
 | [docs/23-positive-controls-profile.md](docs/23-positive-controls-profile.md) | Checked-witness and calibrated-sequential positive-control semantics |
 | [docs/24-presence-assessment.md](docs/24-presence-assessment.md) | Minimal opt-in four-state presence assessment and cautious projection |
 | [docs/25-assessment-compatibility.md](docs/25-assessment-compatibility.md) | Revision-1/2 admission, legacy embedding, optional RPC `assess`, and rollback |
+| [docs/26-windows-support.md](docs/26-windows-support.md) | Native Windows runtime-compatibility profile, evidence gate, exclusions, and VM boundary |
 
 ## Glossary
 
@@ -104,6 +105,12 @@ EOF
 echo '"hello-world"' > value.json
 ./target/debug/selta verify demo slug value.json --env 'expected_pattern=^[a-z-]+$'
 ```
+
+For the Windows W1 runtime candidate, run `target\debug\seltad.exe` in one PowerShell
+window and invoke `target\debug\selta.exe` from another. The all-default TCP + SQLite
+configuration is the candidate path; formal candidate-calculus OS support remains
+subject to [docs/16](docs/16-evidence-semantics.md). No Unix emulation layer or local
+Windows VM is required for W1 engineering.
 
 The schema fixes *that* the value must match some regular language; the actual language
 arrives online, with each request, through `env` — the `$env` mechanism of

@@ -12,7 +12,7 @@ use selta_core::{CmdTemplates, MemoryCache, Registry, RpcHost};
 use tokio::sync::RwLock;
 
 use seltad::api;
-use seltad::config::Config;
+use seltad::config::{Config, ListenEndpoint};
 use seltad::state::AppState;
 use seltad::stats::Stats;
 use seltad::storage::Storage;
@@ -52,18 +52,23 @@ async fn main() -> anyhow::Result<()> {
         .nth(1)
         .unwrap_or_else(|| "selta.toml".to_string());
     let config = Config::load(Path::new(&config_path))?;
+    let endpoint = config.listen_endpoint()?;
+    endpoint.ensure_supported()?;
+    config.storage.ensure_supported()?;
 
     let templates: Option<Arc<dyn CmdTemplates>> =
         (!config.cmd.is_empty()).then(|| Arc::new(config.cmd.clone()) as Arc<dyn CmdTemplates>);
     let mut registry = Registry::with_builtins(templates);
+    let mut spawned_hosts = Vec::new();
     for (name, host_config) in &config.hosts {
         let (decls, host) = RpcHost::spawn(&host_config.run, "seltad")
             .await
             .map_err(|e| anyhow::anyhow!("host '{name}': {e}"))?;
         let extensions: Vec<String> = decls.iter().map(|d| d.name.clone()).collect();
         registry
-            .register(decls, host)
+            .register(decls, host.clone())
             .map_err(|e| anyhow::anyhow!("host '{name}': {e}"))?;
+        spawned_hosts.push(host);
         eprintln!("seltad: host '{name}' up ({})", extensions.join(", "));
     }
 
@@ -94,24 +99,43 @@ async fn main() -> anyhow::Result<()> {
         })
     };
 
-    if let Some(socket_path) = config.listen.strip_prefix("unix:") {
-        let _ = std::fs::remove_file(socket_path);
-        let listener = tokio::net::UnixListener::bind(socket_path)
-            .with_context(|| format!("binding unix:{socket_path}"))?;
-        eprintln!("seltad: listening on unix:{socket_path}");
-        axum::serve(listener, app)
-            .with_graceful_shutdown(shutdown_signal())
-            .await?;
-    } else {
-        let listener = tokio::net::TcpListener::bind(&config.listen)
-            .await
-            .with_context(|| format!("binding {}", config.listen))?;
-        eprintln!("seltad: listening on http://{}", config.listen);
-        axum::serve(listener, app)
-            .with_graceful_shutdown(shutdown_signal())
-            .await?;
+    match endpoint {
+        ListenEndpoint::Tcp(address) => {
+            let listener = tokio::net::TcpListener::bind(&address)
+                .await
+                .with_context(|| format!("binding {address}"))?;
+            let bound = listener
+                .local_addr()
+                .context("reading TCP listener address")?;
+            eprintln!("seltad: listening on http://{bound}");
+            axum::serve(listener, app)
+                .with_graceful_shutdown(shutdown_signal())
+                .await?;
+        }
+        ListenEndpoint::Unix(socket_path) => {
+            #[cfg(unix)]
+            {
+                let _ = std::fs::remove_file(&socket_path);
+                let listener = tokio::net::UnixListener::bind(&socket_path)
+                    .with_context(|| format!("binding unix:{}", socket_path.display()))?;
+                eprintln!("seltad: listening on unix:{}", socket_path.display());
+                axum::serve(listener, app)
+                    .with_graceful_shutdown(shutdown_signal())
+                    .await?;
+            }
+            #[cfg(not(unix))]
+            {
+                anyhow::bail!(
+                    "unix listener endpoint '{}' is not supported on this platform",
+                    socket_path.display()
+                );
+            }
+        }
     }
     flusher.abort();
     flush_stats(&*catalog, &stats);
+    for host in spawned_hosts {
+        host.shutdown().await;
+    }
     Ok(())
 }

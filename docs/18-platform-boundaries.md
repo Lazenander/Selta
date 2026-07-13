@@ -1,9 +1,10 @@
 # 18 — Platform boundaries
 
-> **Status: portability design and gap record.** This document does not claim
-> Windows compatibility and does not authorize speculative Windows code. A
-> Windows implementation and support claim require compilation and conformance
-> tests on a real Windows environment.
+> **Status: portability design and gap record.** The product's first bounded
+> Windows runtime-compatibility implementation is specified in
+> [26-windows-support.md](26-windows-support.md). It becomes runtime-validated only
+> after its native Windows workflow passes. This document continues to record the
+> boundaries and excluded adapters outside that profile.
 
 ## Principle
 
@@ -90,11 +91,15 @@ exists.
 
 ### Listener and shutdown
 
-The daemon currently references `tokio::net::UnixListener` in
-[`crates/seltad/src/main.rs`](../crates/seltad/src/main.rs) without a Unix
-compilation gate. Only SIGTERM handling is gated. The overloaded `listen`
-string distinguishes a `unix:` prefix from TCP but provides no endpoint type,
-named-pipe adapter, access-control contract, or Windows service shutdown source.
+The daemon projects the configured string into a logical `ListenEndpoint`
+before opening hosts or storage. `tokio::net::UnixListener` is compilation-gated;
+non-Unix platforms reject the Unix variant explicitly, while TCP uses the same
+path on every supported platform. Console Ctrl+C is normalized by Tokio and Unix
+also observes SIGTERM.
+
+The configuration surface still uses one string rather than a closed serialized
+endpoint object. There is no named-pipe adapter, endpoint access-control contract,
+Windows service shutdown source, or Windows service mode.
 
 Unix-socket startup removes the configured path without first establishing the
 expected file type or a cleanup/ownership policy. These are daemon-shell
@@ -102,7 +107,7 @@ concerns, not reasons to condition the core.
 
 ### CLI and Unix-socket transport
 
-The daemon can listen only on a Unix-domain socket, but
+When the daemon is configured to listen only on a Unix-domain socket,
 [`selta-cli`](../crates/selta-cli/src/main.rs) treats `--server` as an HTTP URL
 and sends every request through `ureq`. It has no Unix-domain-socket transport
 or endpoint negotiation. Consequently, the bundled CLI cannot connect to a
@@ -130,7 +135,8 @@ behavior not expressed by the `Storage` trait:
 Rename-over-existing and durability behavior differ by platform and
 filesystem. The current backend must not be described as uniformly atomic or
 portable until its trait states, and each adapter proves, the required
-semantics.
+semantics. File-catalog construction therefore fails closed on Windows W1;
+SQLite is the W1 candidate catalog.
 
 SQLite is a promising cross-platform backend but does not itself prove support.
 Locking, WAL, durability, removable media, and network filesystem behavior must
@@ -157,13 +163,15 @@ contract.
 
 The command builtin and RPC host use native subprocesses directly.
 
-- `kill_on_drop` concerns one child handle, not a process-tree containment
-  contract;
-- the existing post-timeout side-effect test is Unix-only;
+- normal command timeout explicitly kills and reaps one child; `kill_on_drop`
+  remains a fallback, and neither is a process-tree containment contract;
+- a real cross-platform Node side-effect test proves immediate-child timeout
+  containment, but not descendant containment;
 - executable discovery, extensions, environment inheritance, quoting, and exit
   status differ by platform;
-- temporary paths are converted through lossy strings; and
-- a temporary file may remain open while another process receives its path.
+- command template paths are Unicode strings by contract; and
+- temporary file handles close before another process receives the path while a
+  separate guard retains cleanup ownership.
 
 These concerns belong behind process and temporary-artifact adapters. Evidence
 semantics receives normalized call, result, timeout, cancellation, and resource
@@ -173,17 +181,16 @@ those facts from native state nor supervises the process.
 ### RPC host shutdown
 
 [`RpcHost::shutdown`](../crates/selta-core/src/host/rpc.rs) sends a `shutdown`
-request and waits up to two seconds for the RPC response. It does not then wait
-for and reap the child, enforce a separate process-exit grace period, or
-escalate to a kill when a host acknowledges shutdown but remains alive. The
-child uses `kill_on_drop`, which applies when the final host handle is dropped
-and covers the immediate child rather than a declared descendant-containment
-policy.
+request, waits a separate process-exit grace period, escalates, and reaps the
+immediate child. A real host fixture acknowledges shutdown but stays alive; its
+late side effect proves that escalation occurred. Graceful daemon shutdown drains
+every configured stdio host through this path.
 
-Graceful server shutdown also has no explicit host-drain sequence proving that
-all registered hosts were asked to stop, given a grace interval, killed if
-necessary, and reaped. A future `ProcessSupervisor` must make each transition
-and its timeout observable.
+This is not a process-tree contract: descendants are not assigned to a Unix
+process group or Windows Job Object. Pool-connected hosts are owned by their
+application rather than by `seltad`. A future `ProcessSupervisor` must make
+descendant containment and every normalized transition explicit before either
+is claimed.
 
 ### TypeScript host cancellation
 
@@ -336,8 +343,9 @@ This research track will:
   that split;
 - record current coupling and the required seams;
 - avoid adding new direct OS dependencies to pure code; and
-- leave concrete Windows adapters and compatibility claims to work performed
-  and tested on a Windows computer.
+- keep W1 compatibility claims conditional on the native Windows workflow in
+  [26-windows-support.md](26-windows-support.md), while formal S2 operating-system
+  support remains conditional on its separate conformance and arbiter gate.
 
 It will not refactor unrelated daemon code merely to create unused abstraction
 layers. Platform seams should be introduced when the corresponding behavior is

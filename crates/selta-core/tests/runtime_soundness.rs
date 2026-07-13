@@ -15,6 +15,14 @@ use serde_json::json;
 
 use common::{err, fail, registry_with, schema, ScriptedHost};
 
+fn node_available() -> bool {
+    std::process::Command::new("node")
+        .arg("--version")
+        .output()
+        .map(|output| output.status.success())
+        .unwrap_or(false)
+}
+
 #[derive(Default)]
 struct ConcurrencyProbeHost {
     active: AtomicU32,
@@ -357,21 +365,23 @@ async fn at_least_zero_is_rejected_and_cannot_turn_a_failing_vote_into_pass() {
     assert_eq!(report.verdict, Verdict::Fail);
 }
 
-#[cfg(unix)]
 #[tokio::test]
 async fn a_timed_out_cmd_child_cannot_continue_after_the_report_returns() {
+    if !node_available() {
+        eprintln!("skipping timeout containment test: node not found");
+        return;
+    }
     let scratch = tempfile::tempdir().unwrap();
     let marker = scratch.path().join("late-side-effect");
+    let fixture = concat!(
+        env!("CARGO_MANIFEST_DIR"),
+        "/tests/fixtures/late_side_effect.mjs"
+    );
     let mut templates = HashMap::new();
     templates.insert(
         "timeout_probe".to_string(),
         CmdTemplate {
-            run: vec![
-                "/bin/sh".to_string(),
-                "-c".to_string(),
-                "sleep 0.2; touch \"$1\"".to_string(),
-                "selta-timeout-probe".to_string(),
-            ],
+            run: vec!["node".to_string(), fixture.to_string()],
             input: CmdInput::Stdin,
             timeout_ms: 20,
         },
@@ -383,13 +393,13 @@ async fn a_timed_out_cmd_child_cannot_continue_after_the_report_returns() {
             "ext": "cmd",
             "config": {
                 "name": "timeout_probe",
-                "args": [marker.to_string_lossy()]
+                "args": [marker.to_str().expect("temporary marker path is Unicode")]
             }
         }]
     }));
     let report = common::run(
         &node,
-        json!("payload"),
+        json!("x".repeat(2 * 1024 * 1024)),
         json!({}),
         &Options::default(),
         &registry,
@@ -402,4 +412,43 @@ async fn a_timed_out_cmd_child_cannot_continue_after_the_report_returns() {
         !marker.exists(),
         "timed-out child survived and touched marker"
     );
+}
+
+#[tokio::test]
+async fn a_cmd_child_can_read_its_closed_temporary_input_file() {
+    if !node_available() {
+        eprintln!("skipping temporary-file sharing test: node not found");
+        return;
+    }
+    let fixture = concat!(
+        env!("CARGO_MANIFEST_DIR"),
+        "/tests/fixtures/read_cmd_input.mjs"
+    );
+    let mut templates = HashMap::new();
+    templates.insert(
+        "file_probe".to_string(),
+        CmdTemplate {
+            run: vec![
+                "node".to_string(),
+                fixture.to_string(),
+                "{file}".to_string(),
+            ],
+            input: CmdInput::File,
+            timeout_ms: 1_000,
+        },
+    );
+    let registry = Registry::with_builtins(Some(Arc::new(templates)));
+    let node = schema(json!({
+        "type": "str",
+        "verify": [{ "ext": "cmd", "config": { "name": "file_probe" } }]
+    }));
+    let report = common::run(
+        &node,
+        json!("portable payload"),
+        json!({}),
+        &Options::default(),
+        &registry,
+    )
+    .await;
+    assert_eq!(report.verdict, Verdict::Pass, "{report:?}");
 }

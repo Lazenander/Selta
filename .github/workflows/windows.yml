@@ -1,0 +1,72 @@
+name: Windows W1
+
+on:
+  push:
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: windows-w1-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  windows-x64-msvc:
+    runs-on: windows-2022
+    timeout-minutes: 30
+    env:
+      RUST_BACKTRACE: "1"
+
+    steps:
+      - uses: actions/checkout@93cb6efe18208431cddfb8368fd83d5badbf9bfd # v5.0.1
+
+      - uses: actions/setup-node@a0853c24544627f65ddf259abe73b1d18a591444 # v5.0.0
+        with:
+          node-version: "22.18.0"
+
+      - name: Pin Rust toolchain
+        shell: pwsh
+        run: |
+          rustup toolchain install 1.93.0 --profile minimal --component rustfmt --component clippy
+          rustup default 1.93.0
+          Write-Host "ImageOS=$env:ImageOS"
+          Write-Host "ImageVersion=$env:ImageVersion"
+          Write-Host ([System.Environment]::OSVersion.VersionString)
+          rustc --version --verbose
+          node --version
+
+      - name: Verify identity-bound checkout bytes
+        shell: pwsh
+        run: |
+          $paths = git ls-files -- '*.json' '*.jsonl' '*.txt' '*.nonce' '*.raw'
+          foreach ($path in $paths) {
+            $working = (git hash-object --no-filters -- $path).Trim()
+            $indexed = (git rev-parse ":$path").Trim()
+            if ($working -ne $indexed) {
+              throw "Checkout bytes differ from the indexed blob: $path"
+            }
+          }
+
+      - name: Format
+        run: cargo fmt --all -- --check
+
+      - name: Clippy
+        run: cargo clippy --workspace --all-targets --locked -- -D warnings
+
+      - name: Build product binaries
+        run: cargo build --workspace --bins --locked
+
+      - name: Rust tests
+        run: cargo test --workspace --all-targets --locked
+
+      - name: JavaScript syntax and SDK tests
+        shell: pwsh
+        run: |
+          node --check packages/extension/index.js
+          node --check packages/lean-host/index.js
+          node --test packages/extension/tests/sdk.test.mjs
+
+      - name: Native daemon and CLI smoke test
+        run: node --test tests/product_smoke.test.mjs

@@ -4,7 +4,7 @@
 use std::collections::HashMap;
 use std::path::{Path, PathBuf};
 
-use anyhow::{Context, Result};
+use anyhow::{bail, Context, Result};
 use selta_core::CmdTemplate;
 use serde::Deserialize;
 
@@ -39,6 +39,38 @@ pub struct ExtensionConfig {
     pub settings: Option<toml::Value>,
 }
 
+/// Logical listener configuration. The syntax is platform-neutral; platform
+/// support is checked before any host or storage resource is opened.
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub enum ListenEndpoint {
+    Tcp(String),
+    Unix(PathBuf),
+}
+
+impl ListenEndpoint {
+    fn parse(value: &str) -> Result<Self> {
+        if let Some(path) = value.strip_prefix("unix:") {
+            if path.is_empty() {
+                bail!("unix listener path must not be empty");
+            }
+            Ok(Self::Unix(PathBuf::from(path)))
+        } else {
+            Ok(Self::Tcp(value.to_string()))
+        }
+    }
+
+    pub fn ensure_supported(&self) -> Result<()> {
+        #[cfg(not(unix))]
+        if matches!(self, Self::Unix(_)) {
+            bail!(
+                "unix listener endpoints are not supported on this platform; \
+                 configure a TCP address such as 127.0.0.1:7466"
+            );
+        }
+        Ok(())
+    }
+}
+
 fn default_listen() -> String {
     "127.0.0.1:7466".to_string()
 }
@@ -58,6 +90,10 @@ impl Config {
         }
     }
 
+    pub fn listen_endpoint(&self) -> Result<ListenEndpoint> {
+        ListenEndpoint::parse(&self.listen)
+    }
+
     /// Server-scope settings as JSON, keyed by extension name.
     pub fn server_settings(&self) -> std::collections::HashMap<String, serde_json::Value> {
         self.extensions
@@ -68,5 +104,33 @@ impl Config {
                 Some((name.clone(), value))
             })
             .collect()
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::{ListenEndpoint, PathBuf};
+
+    #[test]
+    fn listener_syntax_distinguishes_tcp_and_unix_without_guessing() {
+        assert_eq!(
+            ListenEndpoint::parse("127.0.0.1:7466").unwrap(),
+            ListenEndpoint::Tcp("127.0.0.1:7466".to_string())
+        );
+        assert_eq!(
+            ListenEndpoint::parse("unix:/tmp/selta.sock").unwrap(),
+            ListenEndpoint::Unix(PathBuf::from("/tmp/selta.sock"))
+        );
+        assert!(ListenEndpoint::parse("unix:").is_err());
+    }
+
+    #[cfg(not(unix))]
+    #[test]
+    fn unix_listener_fails_closed_on_non_unix() {
+        let error = ListenEndpoint::parse("unix:selta.sock")
+            .unwrap()
+            .ensure_supported()
+            .unwrap_err();
+        assert!(error.to_string().contains("not supported"));
     }
 }

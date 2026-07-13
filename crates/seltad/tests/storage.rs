@@ -124,9 +124,26 @@ fn exercise(storage: &dyn Storage) {
 }
 
 #[test]
+#[cfg(not(windows))]
 fn files_backend_honors_the_contract() {
     let dir = tempfile::tempdir().expect("tempdir");
     exercise(&FileStorage::open(dir.path().to_path_buf()).expect("opens"));
+}
+
+#[test]
+#[cfg(windows)]
+fn configured_files_backend_fails_closed_on_windows() {
+    let dir = tempfile::tempdir().expect("tempdir");
+    let Err(direct_error) = FileStorage::open(dir.path().to_path_buf()) else {
+        panic!("the public file catalog unexpectedly opened")
+    };
+    assert!(direct_error
+        .to_string()
+        .contains("not supported on Windows"));
+    let Err(error) = storage::open(StorageBackend::Files, dir.path()) else {
+        panic!("the unsupported file catalog unexpectedly opened")
+    };
+    assert!(error.to_string().contains("not supported on Windows"));
 }
 
 #[test]
@@ -161,6 +178,7 @@ fn sqlite_persists_across_reopen() {
 }
 
 #[test]
+#[cfg(not(windows))]
 fn fresh_sqlite_imports_an_existing_file_catalog_exactly_once() {
     let dir = tempfile::tempdir().expect("tempdir");
     let files = FileStorage::open(dir.path().to_path_buf()).expect("opens");
@@ -186,4 +204,16 @@ fn fresh_sqlite_imports_an_existing_file_catalog_exactly_once() {
     files.create_pool(&pool("late")).expect("create");
     let storage = storage::open(StorageBackend::Sqlite, dir.path()).expect("reopens");
     assert_eq!(storage.list_pools().expect("pools"), vec!["app"]);
+}
+
+#[test]
+#[cfg(windows)]
+fn fresh_sqlite_rejects_a_legacy_file_catalog_before_creating_a_database() {
+    let dir = tempfile::tempdir().expect("tempdir");
+    std::fs::create_dir_all(dir.path().join("pools")).expect("legacy catalog marker");
+    let Err(error) = storage::open(StorageBackend::Sqlite, dir.path()) else {
+        panic!("the unsupported automatic import unexpectedly opened")
+    };
+    assert!(error.to_string().contains("import"));
+    assert!(!dir.path().join("selta.db").exists());
 }

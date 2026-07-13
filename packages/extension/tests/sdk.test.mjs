@@ -36,7 +36,12 @@ test("the SDK keeps initialize closed and returns method-not-found precisely", a
     new URL("../../../crates/selta-core/tests/fixtures/host.mjs", import.meta.url),
   );
   const child = spawn(process.execPath, [fixture], { stdio: ["pipe", "pipe", "pipe"] });
-  t.after(() => child.kill("SIGKILL"));
+  t.after(async () => {
+    if (child.exitCode !== null || child.signalCode !== null) return;
+    const exited = new Promise((resolve) => child.once("exit", resolve));
+    child.kill();
+    await exited;
+  });
 
   let nextId = 1;
   let stdout = "";

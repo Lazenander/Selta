@@ -28,6 +28,7 @@ use crate::{AdmittedNode, MetaIssue, Node};
 
 const DEFAULT_CALL_TIMEOUT_MS: u64 = 30_000;
 const INITIALIZE_TIMEOUT_MS: u64 = 10_000;
+const HOST_EXIT_GRACE_MS: u64 = 2_000;
 
 type Pending = Mutex<HashMap<u64, oneshot::Sender<Result<Box<RawValue>, RpcCallError>>>>;
 
@@ -416,7 +417,7 @@ fn format_meta_issues(issues: &[MetaIssue]) -> String {
 /// A server host: spawned by seltad, spoken to over stdio (docs/05 §stdio).
 pub struct RpcHost {
     peer: Arc<RpcPeer>,
-    _child: Mutex<Child>,
+    child: tokio::sync::Mutex<Child>,
 }
 
 impl RpcHost {
@@ -462,13 +463,21 @@ impl RpcHost {
         let decls = initialize_over_peer(&peer, server_name).await?;
         let host = Arc::new(RpcHost {
             peer,
-            _child: Mutex::new(child),
+            child: tokio::sync::Mutex::new(child),
         });
         Ok((decls, host))
     }
 
     pub async fn shutdown(&self) {
         let _ = self.peer.call("shutdown", json!({}), 2_000).await;
+        let mut child = self.child.lock().await;
+        if !matches!(
+            tokio::time::timeout(Duration::from_millis(HOST_EXIT_GRACE_MS), child.wait()).await,
+            Ok(Ok(_))
+        ) {
+            let _ = child.kill().await;
+            let _ = child.wait().await;
+        }
     }
 }
 

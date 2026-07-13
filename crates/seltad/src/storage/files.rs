@@ -13,6 +13,12 @@ pub struct FileStorage {
 }
 
 impl FileStorage {
+    #[cfg(windows)]
+    pub fn open(_root: PathBuf) -> Result<FileStorage> {
+        bail!("the file catalog is not supported on Windows; use SQLite")
+    }
+
+    #[cfg(not(windows))]
     pub fn open(root: PathBuf) -> Result<FileStorage> {
         fs::create_dir_all(root.join("pools"))
             .with_context(|| format!("creating catalog at {}", root.display()))?;

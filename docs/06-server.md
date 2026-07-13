@@ -25,12 +25,14 @@ revision-2 core availability and its unpromoted catalog boundary are stated belo
 
 Persisted state — pools, immutable schema versions, monitoring counters — lives behind
 a storage trait with two backends, chosen by `storage` in `selta.toml`. One test suite
-pins them to identical behavior; nothing above the trait knows which one is running.
+pins them to identical behavior on their declared platforms; nothing above the trait
+knows which one is running.
 
 - **`sqlite`** (default): one file, `data/selta.db` — transactional version assignment,
   WAL, durable counters. The sqlite library is bundled; the daemon stays
-  dependency-free at deploy time. On first open, an existing file catalog at the same
-  `data` path is imported once, so switching backends never loses pools.
+  dependency-free at deploy time. On platforms supporting the file catalog, first open
+  imports an existing file catalog at the same `data` path once, so switching backends
+  never loses pools.
 - **`files`**: plain files, diffable and debuggable — the catalog reads as a tree:
 
 ```text
@@ -44,13 +46,20 @@ data/
                 └── 2.json
 ```
 
+The file catalog is not in the Windows W1 runtime candidate and configured use fails
+closed there. W1 uses the default bundled SQLite catalog; the remaining file-catalog
+name, locking, and crash-replacement work is tracked in
+[26-windows-support.md](26-windows-support.md). A fresh SQLite catalog also rejects a
+legacy `pools/` tree on Windows instead of silently importing through an excluded
+adapter or losing it.
+
 `pool.json`:
 
 ```jsonc
 {
   "name": "app_a",
   "extensions": ["llm_judge"],          // host extensions this pool may use
-  "cmd": ["rustc_check"],              // allowlisted command templates this pool may use
+  "cmd": ["rustfmt_check"],            // allowlisted command templates this pool may use
   "settings": {
     "llm_judge": { "model": "claude-haiku-4-5" }   // pool-scope overrides, validated
   },                                                // against the settings_schema
@@ -116,8 +125,9 @@ operational and accounting decision, not a per-schema or per-request one
 
 ## HTTP API
 
-JSON over HTTP on a local unix socket (default) or TCP. V1 isolation is namespacing and
-budgets; token auth arrives when it listens beyond localhost — correct single-machine
+JSON over HTTP on TCP by default (`127.0.0.1:7466`) or, on Unix, an explicitly
+configured local Unix socket. V1 isolation is namespacing and budgets; token auth
+arrives when it listens beyond localhost — correct single-machine
 semantics before half-built security.
 
 | Method and path | Purpose |
@@ -214,9 +224,9 @@ they survive restarts. Per-report history and analytics remain deferred
 
 ```toml
 # selta.toml
-listen  = "unix:/var/run/selta.sock"
-data    = "/var/lib/selta"
-storage = "sqlite"                    # default; "files" for the diffable tree
+listen  = "127.0.0.1:7466"           # default; use unix:/path only on Unix
+data    = "./selta-data"
+storage = "sqlite"                    # default and Windows W1 backend
 
 [hosts.ts]
 run = ["node", "/opt/selta/hosts/ts/main.js"]
@@ -225,14 +235,16 @@ run = ["node", "/opt/selta/hosts/ts/main.js"]
 model   = "claude-sonnet-5"
 api_key = { "$secret" = "ANTHROPIC_API_KEY" }   # from the daemon's environment
 
-[cmd.rustc_check]
-run = ["rustc", "--edition=2021", "--emit=metadata", "-o", "/dev/null", "{file}"]
+[cmd.rustfmt_check]
+run = ["rustfmt", "--check", "{file}"]
 input = "file"
 timeout_ms = 10000
 ```
 
 Hosts, command templates, and default settings are server-level resources; pools opt
-in — and override settings — by name.
+in — and override settings — by name. A Windows installation keeps executable paths
+as ordinary TOML strings and normally uses forward slashes (`C:/tools/host.js`) to
+avoid TOML backslash escaping.
 
 ## CLI
 

@@ -29,9 +29,18 @@ fn find_lean() -> Option<String> {
     if on_path {
         return Some("lean".to_string());
     }
-    let home = std::env::var("HOME").ok()?;
-    let elan = std::path::PathBuf::from(home).join(".elan/bin/lean");
-    elan.exists().then(|| elan.to_string_lossy().into_owned())
+    let elan_home = std::env::var_os("ELAN_HOME")
+        .map(std::path::PathBuf::from)
+        .or_else(|| {
+            std::env::var_os("HOME")
+                .or_else(|| std::env::var_os("USERPROFILE"))
+                .map(|home| std::path::PathBuf::from(home).join(".elan"))
+        })?;
+    let executable = format!("lean{}", std::env::consts::EXE_SUFFIX);
+    let lean = elan_home.join("bin").join(executable);
+    lean.exists()
+        .then(|| lean.to_str().map(str::to_owned))
+        .flatten()
 }
 
 async fn spawn_lean_host() -> Option<(Registry, Arc<RpcHost>)> {

@@ -83,8 +83,8 @@ the user's value.
 
 The pure in-process builtins opt into deterministic result caching. `cmd` does not:
 process state and toolchain identity are outside its current declaration, so identical
-input is executed again. A timed-out command child is killed when its wait future is
-canceled.
+input is executed again. One deadline covers stdin transfer and process wait; timeout
+kills and reaps the immediate child before temporary input cleanup.
 
 ### `cmd` and the allowlist
 
@@ -92,14 +92,14 @@ canceled.
 schemas. The server config defines named templates:
 
 ```toml
-[cmd.rustc_check]
-run  = ["rustc", "--edition=2021", "--emit=metadata", "-o", "/dev/null", "{file}"]
+[cmd.rustfmt_check]
+run  = ["rustfmt", "--check", "{file}"]
 input = "file"        # value is written to a temp file substituted at {file}
 timeout_ms = 10000
 ```
 
-A schema may only reference `{ "ext": "cmd", "config": { "name": "rustc_check" } }` where
-`rustc_check` exists in the allowlist and is enabled for its pool. Exit 0 is `pass`;
+A schema may only reference `{ "ext": "cmd", "config": { "name": "rustfmt_check" } }` where
+`rustfmt_check` exists in the allowlist and is enabled for its pool. Exit 0 is `pass`;
 non-zero exit is `fail` with stderr (truncated) as the delta message; timeout or spawn
 failure is an error.
 

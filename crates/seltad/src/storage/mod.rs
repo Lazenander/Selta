@@ -114,16 +114,37 @@ pub enum StorageBackend {
     Files,
 }
 
-/// Open the configured backend under `data`. A fresh sqlite catalog imports
-/// an existing file catalog at the same path once — switching the default
-/// must never make pools vanish.
+impl StorageBackend {
+    /// Reject a configured backend before the daemon opens any effectful
+    /// resources. Unsupported platforms never receive a weaker fallback.
+    pub fn ensure_supported(self) -> Result<()> {
+        #[cfg(windows)]
+        if matches!(self, Self::Files) {
+            anyhow::bail!("the file catalog is not supported on Windows; use storage = \"sqlite\"");
+        }
+        Ok(())
+    }
+}
+
+/// Open the configured backend under `data`. Where FileStorage is supported, a
+/// fresh sqlite catalog imports an existing file catalog at the same path once.
+/// Windows rejects that migration before creating the database.
 pub fn open(backend: StorageBackend, data: &Path) -> Result<Arc<dyn Storage>> {
+    backend.ensure_supported()?;
     match backend {
         StorageBackend::Files => Ok(Arc::new(FileStorage::open(data.to_path_buf())?)),
         StorageBackend::Sqlite => {
             let db = data.join("selta.db");
             let fresh = !db.exists();
+            #[cfg(windows)]
+            if fresh && data.join("pools").is_dir() {
+                anyhow::bail!(
+                    "automatic import of a file catalog is not supported on Windows; \
+                     migrate it on a supported platform before opening SQLite"
+                );
+            }
             let sqlite = SqliteStorage::open(&db)?;
+            #[cfg(not(windows))]
             if fresh && data.join("pools").is_dir() {
                 let files = FileStorage::open(data.to_path_buf())?;
                 let imported = copy(&files, &sqlite)?;

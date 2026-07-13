@@ -10,6 +10,7 @@ use std::time::Duration;
 use async_trait::async_trait;
 use serde::{Deserialize, Serialize};
 use serde_json::{json, Value};
+use tokio::io::{AsyncReadExt, AsyncWriteExt};
 
 use super::{
     ConfigPreflight, Determinism, EffectClass, Envelope, ExtensionDecl, ExtensionHost, HostCall,
@@ -36,6 +37,16 @@ pub enum CmdInput {
 
 fn default_timeout_ms() -> u64 {
     10_000
+}
+
+async fn terminate_and_discard_stderr(
+    child: &mut tokio::process::Child,
+    stderr_task: &mut tokio::task::JoinHandle<std::io::Result<Vec<u8>>>,
+) {
+    let _ = child.kill().await;
+    let _ = child.wait().await;
+    stderr_task.abort();
+    let _ = stderr_task.await;
 }
 
 pub trait CmdTemplates: Send + Sync {
@@ -379,8 +390,15 @@ impl BuiltinHost {
                 .map_err(|e| format!("cmd: temp file: {e}"))?;
             file.write_all(&payload)
                 .map_err(|e| format!("cmd: temp file: {e}"))?;
-            let path = file.path().to_string_lossy().into_owned();
-            file_guard = Some(file);
+            file.flush().map_err(|e| format!("cmd: temp file: {e}"))?;
+            let path = file
+                .path()
+                .to_str()
+                .ok_or("cmd: temp file path is not valid Unicode")?
+                .to_string();
+            // Close the handle before another process opens the path. The
+            // TempPath retains cleanup ownership across every return path.
+            file_guard = Some(file.into_temp_path());
             Some(path)
         } else {
             None
@@ -414,37 +432,76 @@ impl BuiltinHost {
         let mut child = command
             .spawn()
             .map_err(|e| format!("cmd: failed to spawn '{program}': {e}"))?;
+        let mut stderr = child
+            .stderr
+            .take()
+            .expect("cmd stderr was configured as piped");
+        let mut stderr_task = tokio::spawn(async move {
+            let mut bytes = Vec::new();
+            stderr.read_to_end(&mut bytes).await.map(|_| bytes)
+        });
+        let deadline = tokio::time::Instant::now() + Duration::from_millis(template.timeout_ms);
+
         if template.input == CmdInput::Stdin {
-            use tokio::io::AsyncWriteExt;
             if let Some(mut stdin) = child.stdin.take() {
-                stdin
-                    .write_all(&payload)
-                    .await
-                    .map_err(|e| format!("cmd: stdin: {e}"))?;
+                match tokio::time::timeout_at(deadline, stdin.write_all(&payload)).await {
+                    Ok(Ok(())) => {}
+                    Ok(Err(error)) => {
+                        terminate_and_discard_stderr(&mut child, &mut stderr_task).await;
+                        return Err(format!("cmd: stdin: {error}"));
+                    }
+                    Err(_) => {
+                        terminate_and_discard_stderr(&mut child, &mut stderr_task).await;
+                        return Err(format!(
+                            "cmd: '{name}' timed out after {} ms",
+                            template.timeout_ms
+                        ));
+                    }
+                }
             }
         }
 
-        let output = tokio::time::timeout(
-            Duration::from_millis(template.timeout_ms),
-            child.wait_with_output(),
-        )
-        .await
-        .map_err(|_| format!("cmd: '{name}' timed out after {} ms", template.timeout_ms))?
-        .map_err(|e| format!("cmd: {e}"))?;
+        let status = match tokio::time::timeout_at(deadline, child.wait()).await {
+            Ok(Ok(status)) => status,
+            Ok(Err(error)) => {
+                terminate_and_discard_stderr(&mut child, &mut stderr_task).await;
+                return Err(format!("cmd: {error}"));
+            }
+            Err(_) => {
+                terminate_and_discard_stderr(&mut child, &mut stderr_task).await;
+                return Err(format!(
+                    "cmd: '{name}' timed out after {} ms",
+                    template.timeout_ms
+                ));
+            }
+        };
+        let stderr = match tokio::time::timeout_at(deadline, &mut stderr_task).await {
+            Ok(Ok(Ok(stderr))) => stderr,
+            Ok(Ok(Err(error))) => return Err(format!("cmd: stderr: {error}")),
+            Ok(Err(error)) => return Err(format!("cmd: stderr task: {error}")),
+            Err(_) => {
+                stderr_task.abort();
+                let _ = stderr_task.await;
+                return Err(format!(
+                    "cmd: '{name}' timed out after {} ms",
+                    template.timeout_ms
+                ));
+            }
+        };
         drop(file_guard);
 
-        if output.status.success() {
+        if status.success() {
             return Ok(Envelope::pass());
         }
-        let stderr = String::from_utf8_lossy(&output.stderr);
+        let stderr = String::from_utf8_lossy(&stderr);
         let truncated: String = stderr.chars().take(2000).collect();
         Ok(Envelope::fail(WireDelta {
             message: if truncated.trim().is_empty() {
-                format!("'{name}' exited with {}", output.status)
+                format!("'{name}' exited with {status}")
             } else {
                 truncated
             },
-            data: Some(json!({ "exit_code": output.status.code() })),
+            data: Some(json!({ "exit_code": status.code() })),
             expected: None,
             actual: None,
         }))

@@ -156,8 +156,15 @@ impl CmdTemplates for CountingCmdTemplates {
             return None;
         }
         self.lookups.fetch_add(1, Ordering::SeqCst);
+        let test_binary = std::env::current_exe()
+            .expect("current test executable")
+            .into_os_string()
+            .into_string()
+            .expect("current test executable path is Unicode");
         Some(CmdTemplate {
-            run: vec!["true".to_string()],
+            // libtest's --list path exits successfully without recursively
+            // running the suite and exists on every supported Rust target.
+            run: vec![test_binary, "--list".to_string()],
             input: CmdInput::File,
             timeout_ms: 1_000,
         })

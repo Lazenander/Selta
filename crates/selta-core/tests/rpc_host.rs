@@ -7,6 +7,7 @@ use selta_core::host::{AssessmentEnvelope, ExtensionHost, HostCall};
 use selta_core::verdict::EvidenceState;
 use selta_core::{EffectClass, InputKind, Options, Registry, RpcHost, Verdict};
 use serde_json::json;
+use std::time::Duration;
 
 fn node_available() -> bool {
     std::process::Command::new("node")
@@ -165,4 +166,40 @@ async fn ts_host_end_to_end() {
     }
 
     host.shutdown().await;
+}
+
+#[tokio::test]
+async fn shutdown_reaps_a_host_that_acknowledges_but_does_not_exit() {
+    if !node_available() {
+        eprintln!("skipping RPC shutdown containment test: node not found");
+        return;
+    }
+    let scratch = tempfile::tempdir().expect("tempdir");
+    let marker = scratch.path().join("late-host-side-effect");
+    let fixture = concat!(
+        env!("CARGO_MANIFEST_DIR"),
+        "/tests/fixtures/hanging_shutdown_host.mjs"
+    );
+    let (_decls, host) = RpcHost::spawn(
+        &[
+            "node".to_string(),
+            fixture.to_string(),
+            marker
+                .to_str()
+                .expect("temporary marker path is Unicode")
+                .to_string(),
+        ],
+        "selta-shutdown-test",
+    )
+    .await
+    .expect("host spawns and initializes");
+
+    tokio::time::timeout(Duration::from_secs(4), host.shutdown())
+        .await
+        .expect("shutdown escalates and reaps the immediate child");
+    tokio::time::sleep(Duration::from_millis(1_200)).await;
+    assert!(
+        !marker.exists(),
+        "host survived the shutdown grace period and performed a late effect"
+    );
 }
